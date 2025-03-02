@@ -1,33 +1,33 @@
-import 'flavour.dart';
+import 'flavoring.dart';
 
 class SettingsByNic {
-  final String nicStrength;
-  final double defNicStrength;
-  final double defTargetVG;
-  final double defTargetPG;
-  final double defNicBaseVG;
-  final double defNicBasePG;
-  final List<Flavour> flavours;
+  final String name;
+  final double? nicStrength;
+  final double? targetVG;
+  final double? targetPG;
+  final double? nicBaseVG;
+  final double? nicBasePG;
+  final List<Flavoring> flavorings;
 
   SettingsByNic({
+    required this.name,
     required this.nicStrength,
-    required this.defNicStrength,
-    required this.defTargetVG,
-    required this.defTargetPG,
-    required this.defNicBaseVG,
-    required this.defNicBasePG,
-    required this.flavours,
+    required this.targetVG,
+    required this.targetPG,
+    required this.nicBaseVG,
+    required this.nicBasePG,
+    required this.flavorings,
   });
 
   factory SettingsByNic.fromMap(Map<String, dynamic> map) => SettingsByNic(
-        nicStrength: map["nicStrength"] as String,
-        defNicStrength: map["defNicStrength"] as double,
-        defTargetVG: map["defTargetVG"] as double,
-        defTargetPG: map["defTargetPG"] as double,
-        defNicBaseVG: map["defNicBaseVG"] as double,
-        defNicBasePG: map["defNicBasePG"] as double,
-        flavours: (map["flavours"] as List<Map<String, dynamic>>)
-            .map((flavour) => Flavour.fromMap(flavour))
+        name: map["name"] as String,
+        nicStrength: map["nicStrength"] as double,
+        targetVG: map["targetVG"] as double,
+        targetPG: map["targetPG"] as double,
+        nicBaseVG: map["nicBaseVG"] as double,
+        nicBasePG: map["nicBasePG"] as double,
+        flavorings: (map["flavours"] as List<Map<String, dynamic>>)
+            .map((flavouring) => Flavoring.fromMap(flavouring))
             .toList(),
       );
 }
