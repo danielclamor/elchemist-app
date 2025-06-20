@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
       nicType: NicType.salt,
       settingsByNic: [
         SettingsByNic(
-          name: "default",
+          name: "Default",
           nicStrength: null,
           targetVG: null,
           targetPG: null,
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
       nicType: NicType.salt,
       settingsByNic: [
         SettingsByNic(
-          name: "default",
+          name: "Default",
           nicStrength: null,
           targetVG: null,
           targetPG: null,
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
       nicType: NicType.salt,
       settingsByNic: [
         SettingsByNic(
-          name: "default",
+          name: "Default",
           nicStrength: null,
           targetVG: null,
           targetPG: null,
