@@ -1,3 +1,4 @@
+import 'package:elchemist_app/components/molecules/recipe_card.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:elchemist_app/models/settings_by_nic.dart';
@@ -45,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Recipe> recipes = [
     Recipe(
-      name: 'VIBE ARCTIC MINT',
+      name: 'ARCTIC MINT',
       brand: 'VIBE',
       nicType: NicType.salt,
       settingsByNic: [
@@ -64,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     ),
     Recipe(
-      name: 'VIBE GREEN NRG',
+      name: 'GREEN NRG',
       brand: 'VIBE',
       nicType: NicType.salt,
       settingsByNic: [
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     ),
     Recipe(
-      name: 'VIBE MASTER SAUCE',
+      name: 'MASTER SAUCE',
       brand: 'VIBE',
       nicType: NicType.salt,
       settingsByNic: [
@@ -145,43 +146,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   const Gap(8.0),
                   Column(
                     children: recipes.map((recipe) {
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: Card(
-                              margin: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  4.0,
-                                ),
-                              ),
-                              elevation: 0,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 8.0,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      recipe.name,
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      recipe.brand,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RecipeCard(recipe: recipe),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     }).toList(),
                   ),
