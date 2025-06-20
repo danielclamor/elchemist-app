@@ -5,8 +5,9 @@ class SettingsByNic {
   final double? nicStrength;
   final double? targetVG;
   final double? targetPG;
-  final double? nicBaseVG;
+  final double? nicBaseVGS;
   final double? nicBasePG;
+  final double? nicBaseVGF;
   final List<Flavoring> flavorings;
 
   SettingsByNic({
@@ -14,8 +15,9 @@ class SettingsByNic {
     required this.nicStrength,
     required this.targetVG,
     required this.targetPG,
-    required this.nicBaseVG,
+    required this.nicBaseVGS,
     required this.nicBasePG,
+    required this.nicBaseVGF,
     required this.flavorings,
   });
 
@@ -24,8 +26,9 @@ class SettingsByNic {
         nicStrength: map["nicStrength"] as double,
         targetVG: map["targetVG"] as double,
         targetPG: map["targetPG"] as double,
-        nicBaseVG: map["nicBaseVG"] as double,
+        nicBaseVGS: map["nicBaseVGS"] as double,
         nicBasePG: map["nicBasePG"] as double,
+        nicBaseVGF: map["nicBaseVGF"] as double,
         flavorings: (map["flavours"] as List<Map<String, dynamic>>)
             .map((flavouring) => Flavoring.fromMap(flavouring))
             .toList(),

@@ -54,8 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
           nicStrength: null,
           targetVG: null,
           targetPG: null,
-          nicBaseVG: null,
+          nicBaseVGS: null,
           nicBasePG: null,
+          nicBaseVGF: null,
           flavorings: [
             Flavoring(name: "ARCTIC MINT CONC", percentage: null, isVG: null),
           ],
@@ -72,8 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
           nicStrength: null,
           targetVG: null,
           targetPG: null,
-          nicBaseVG: null,
+          nicBaseVGS: null,
           nicBasePG: null,
+          nicBaseVGF: null,
           flavorings: [
             Flavoring(
               name: "GREEN NRG CONC",
@@ -94,8 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
           nicStrength: null,
           targetVG: null,
           targetPG: null,
-          nicBaseVG: null,
+          nicBaseVGS: null,
           nicBasePG: null,
+          nicBaseVGF: null,
           flavorings: [
             Flavoring(
               name: "MASTER SAUCE CONC",
