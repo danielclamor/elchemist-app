@@ -65,8 +65,8 @@ class _RecipeViewState extends State<RecipeView> {
                   dropdownMenuEntries: UnmodifiableListView<MenuEntry>(
                     recipe.settingsByNic?.map<MenuEntry>(
                           (setting) => MenuEntry(
-                            value: setting.nicStrength,
-                            label: setting.nicStrength,
+                            value: setting.name,
+                            label: setting.name,
                           ),
                         ) ??
                         [],
