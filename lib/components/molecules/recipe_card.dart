@@ -1,6 +1,6 @@
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:elchemist_app/transitions.dart';
-import 'package:elchemist_app/views/recipe_view.dart';
+import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
 
 class RecipeCard extends StatefulWidget {
@@ -61,7 +61,7 @@ class _RecipeCardState extends State<RecipeCard> {
               animation,
               secondaryAnimation,
             ) =>
-                RecipeView(recipe: recipe),
+                MixView(recipe: recipe),
             transitionsBuilder: (
               context,
               animation,

@@ -1,7 +1,9 @@
 import 'package:elchemist_app/components/molecules/recipe_card.dart';
 import 'package:elchemist_app/models/flavoring.dart';
+import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/recipe.dart';
-import 'package:elchemist_app/models/settings_by_nic.dart';
+import 'package:elchemist_app/models/nic_profile.dart';
+import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -22,7 +24,79 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Elchemist'),
+      // home: const MyHomePage(title: 'Elchemist'),
+      home: MixView(
+        recipe: Recipe(
+          name: 'Slice Big Island (Iced) Salt',
+          brand: 'Slice',
+          chilltype: ChillType.chilled,
+          nicType: NicType.salt,
+          nicProfiles: [
+            NicProfile(
+              name: "0MG",
+              isNewMix: true,
+              targetNicStr: 0.0,
+              targetVG: 0.40,
+              targetPG: 0.60,
+              nicBaseStr: 0.1,
+              nicBaseList: [],
+              flavoringList: [
+                Flavoring(
+                  name: "Slice Big Island (Iced) Conc",
+                  percentage: 0.225,
+                  isVG: false,
+                ),
+              ],
+            ),
+            NicProfile(
+              name: "10MG",
+              isNewMix: true,
+              targetNicStr: 0.01,
+              targetVG: 0.40,
+              targetPG: 0.60,
+              nicBaseStr: 0.1,
+              nicBaseList: [
+                NicBase(
+                  code: "2CNT",
+                  name: "PG S",
+                  isVg: false,
+                  percentage: 1.0,
+                ),
+              ],
+              flavoringList: [
+                Flavoring(
+                  name: "Slice Big Island (Iced) Conc",
+                  percentage: 0.225,
+                  isVG: false,
+                ),
+              ],
+            ),
+            NicProfile(
+              name: "20MG",
+              isNewMix: true,
+              targetNicStr: 0.02,
+              targetVG: 0.40,
+              targetPG: 0.60,
+              nicBaseStr: 0.1,
+              nicBaseList: [
+                NicBase(
+                  code: "2CNT",
+                  name: "PG S",
+                  isVg: false,
+                  percentage: 1,
+                ),
+              ],
+              flavoringList: [
+                Flavoring(
+                  name: "Slice Big Island (Iced) Conc",
+                  percentage: 0.225,
+                  isVG: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -46,65 +120,162 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Recipe> recipes = [
     Recipe(
-      name: 'ARCTIC MINT',
+      name: 'VIBE ARCTIC MINT (ICED) SALT',
       brand: 'VIBE',
+      chilltype: ChillType.chilled,
       nicType: NicType.salt,
-      settingsByNic: [
-        SettingsByNic(
-          name: "Default",
-          nicStrength: null,
-          targetVG: null,
-          targetPG: null,
-          nicBaseVGS: null,
-          nicBasePG: null,
-          nicBaseVGF: null,
-          flavorings: [
-            Flavoring(name: "ARCTIC MINT CONC", percentage: null, isVG: null),
+      nicProfiles: [
+        NicProfile(
+          name: "10MG",
+          isNewMix: false,
+          targetNicStr: 0.04,
+          targetVG: 0.35,
+          targetPG: 0.65,
+          nicBaseStr: 1,
+          nicBaseList: [
+            NicBase(
+              code: "1",
+              name: "VG S",
+              isVg: true,
+              percentage: 1,
+            ),
+          ],
+          flavoringList: [
+            Flavoring(
+              name: "Vibe Arctic Mint (Iced) Conc",
+              percentage: 0.145,
+              isVG: false,
+            ),
           ],
         ),
+        NicProfile(
+          name: "20MG",
+          isNewMix: false,
+          targetNicStr: 0.08,
+          targetVG: 0.35,
+          targetPG: 0.65,
+          nicBaseStr: 1,
+          nicBaseList: [
+            NicBase(
+              code: "1",
+              name: "VG S",
+              isVg: true,
+              percentage: 1,
+            ),
+          ],
+          flavoringList: [
+            Flavoring(
+              name: "Vibe Arctic Mint (Iced) Conc",
+              percentage: 0.145,
+              isVG: false,
+            ),
+          ],
+        )
       ],
     ),
     Recipe(
-      name: 'GREEN NRG',
+      name: 'VIBE GREEN NRG (ICED) SALT',
       brand: 'VIBE',
+      chilltype: ChillType.chilled,
       nicType: NicType.salt,
-      settingsByNic: [
-        SettingsByNic(
-          name: "Default",
-          nicStrength: null,
-          targetVG: null,
-          targetPG: null,
-          nicBaseVGS: null,
-          nicBasePG: null,
-          nicBaseVGF: null,
-          flavorings: [
+      nicProfiles: [
+        NicProfile(
+          name: "10MG",
+          isNewMix: true,
+          targetNicStr: 0.01,
+          targetVG: 0.35,
+          targetPG: 0.65,
+          nicBaseStr: 0.01,
+          nicBaseList: [
+            NicBase(
+              code: "1CNT",
+              name: "VG S",
+              isVg: false,
+              percentage: 1,
+            ),
+          ],
+          flavoringList: [
             Flavoring(
-              name: "GREEN NRG CONC",
-              percentage: null,
-              isVG: null,
+              name: "Vibe Green NRG (Iced) Conc",
+              percentage: 0.335,
+              isVG: false,
+            ),
+          ],
+        ),
+        NicProfile(
+          name: "20MG",
+          isNewMix: true,
+          targetNicStr: 0.02,
+          targetVG: 0.35,
+          targetPG: 0.65,
+          nicBaseStr: 0.01,
+          nicBaseList: [
+            NicBase(
+              code: "1CNT",
+              name: "VG S",
+              isVg: false,
+              percentage: 1,
+            ),
+          ],
+          flavoringList: [
+            Flavoring(
+              name: "Vibe Green NRG (Iced) Conc",
+              percentage: 0.335,
+              isVG: false,
             ),
           ],
         ),
       ],
     ),
     Recipe(
-      name: 'MASTER SAUCE',
-      brand: 'VIBE',
+      name: 'SLICE BIG ISLAND (ICED) SALT',
+      brand: 'SLICE',
+      chilltype: ChillType.chilled,
       nicType: NicType.salt,
-      settingsByNic: [
-        SettingsByNic(
-          name: "Default",
-          nicStrength: null,
-          targetVG: null,
-          targetPG: null,
-          nicBaseVGS: null,
-          nicBasePG: null,
-          nicBaseVGF: null,
-          flavorings: [
+      nicProfiles: [
+        NicProfile(
+          name: "10MG",
+          isNewMix: true,
+          targetNicStr: 0.01,
+          targetVG: 0.40,
+          targetPG: 0.60,
+          nicBaseStr: 0.01,
+          nicBaseList: [
+            NicBase(
+              code: "2CNT",
+              name: "PG ",
+              isVg: false,
+              percentage: 1,
+            ),
+          ],
+          flavoringList: [
             Flavoring(
-              name: "MASTER SAUCE CONC",
-              percentage: null,
-              isVG: null,
+              name: "Slice Big Island (Iced) Conc",
+              percentage: 0.225,
+              isVG: false,
+            ),
+          ],
+        ),
+        NicProfile(
+          name: "20MG",
+          isNewMix: true,
+          targetNicStr: 0.02,
+          targetVG: 0.40,
+          targetPG: 0.60,
+          nicBaseStr: 0.01,
+          nicBaseList: [
+            NicBase(
+              code: "2CNT",
+              name: "PG ",
+              isVg: false,
+              percentage: 1,
+            ),
+          ],
+          flavoringList: [
+            Flavoring(
+              name: "Slice Big Island (Iced) Conc",
+              percentage: 0.225,
+              isVG: false,
             ),
           ],
         ),
@@ -114,6 +285,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final recipeNames = recipes.map((e) => e.name);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
