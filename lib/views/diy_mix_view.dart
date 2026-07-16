@@ -1,3 +1,4 @@
+import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -9,6 +10,23 @@ class DiyMixView extends StatefulWidget {
 }
 
 class _DiyMixViewState extends State<DiyMixView> {
+  List<Ingredient> ingredients = <Ingredient>[
+    Ingredient(
+      name: "VG",
+      percentage: 0.0,
+      volume: 0.0,
+      weight: 0.0,
+      type: IngredientType.vg,
+    ),
+    Ingredient(
+      name: "PG",
+      percentage: 0.0,
+      volume: 0.0,
+      weight: 0.0,
+      type: IngredientType.pg,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -302,6 +320,112 @@ class _DiyMixViewState extends State<DiyMixView> {
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const Gap(24),
+                      DataTable(
+                        horizontalMargin: 0.0,
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              "Ingredient",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              "%",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text(
+                              "mL",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            numeric: true,
+                          ),
+                          DataColumn(
+                            label: Text(
+                              "g",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            numeric: true,
+                          ),
+                        ],
+                        rows: [
+                          ...ingredients.map(
+                            (ingredient) => DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(
+                                    ingredient.name,
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    '${(ingredient.percentage * 100).toStringAsFixed(2)} %',
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    '${ingredient.volume.toStringAsFixed(2)} mL',
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
+                                    '${ingredient.weight.toStringAsFixed(2)} g',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          DataRow(
+                            cells: [
+                              const DataCell(
+                                Text(
+                                  "Sum",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  '${(ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
