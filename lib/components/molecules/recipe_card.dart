@@ -1,6 +1,5 @@
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:elchemist_app/transitions.dart';
-import 'package:elchemist_app/views/mix_view.dart';
 import 'package:elchemist_app/views/recipe_details_view.dart';
 import 'package:flutter/material.dart';
 
