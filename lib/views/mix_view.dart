@@ -351,13 +351,12 @@ class _MixViewState extends State<MixView> {
             children: [
               Card(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    4.0,
-                  ),
+                  borderRadius: BorderRadius.circular(4.0),
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
-                  constraints: const BoxConstraints(maxWidth: 500),
+                  constraints:
+                      const BoxConstraints(minWidth: 500, maxWidth: 500),
                   child: recipe == null
                       ? SearchAnchor(
                           searchController: _searchController,
@@ -938,7 +937,8 @@ class _MixViewState extends State<MixView> {
                 ),
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
-                  constraints: const BoxConstraints(maxWidth: 500),
+                  constraints:
+                      const BoxConstraints(minWidth: 500, maxWidth: 500),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
