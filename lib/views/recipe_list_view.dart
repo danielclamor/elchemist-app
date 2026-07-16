@@ -36,17 +36,6 @@ class _RecipeListViewState extends State<RecipeListView> {
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(
-          "Mix",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        elevation: 2.0,
-      ),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 500),
