@@ -364,6 +364,14 @@ class _MixViewState extends State<MixView> {
                       child: recipe == null
                           ? SearchAnchor(
                               searchController: _searchController,
+                              viewShape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(4.0),
+                                ),
+                              ),
+                              viewSide: const BorderSide(
+                                color: Color(0xFF0E76BD),
+                              ),
                               builder: (context, controller) {
                                 return SearchBar(
                                   controller: controller,
@@ -377,14 +385,17 @@ class _MixViewState extends State<MixView> {
                                   elevation: const WidgetStatePropertyAll(0.0),
                                   shape: const WidgetStatePropertyAll(
                                     RoundedRectangleBorder(
-                                      side: BorderSide(color: Colors.black),
+                                      side: BorderSide(
+                                        color: Color(0xFF6CA0C4),
+                                      ),
                                       borderRadius: BorderRadius.all(
                                         Radius.circular(4.0),
                                       ),
                                     ),
                                   ),
                                   backgroundColor: const WidgetStatePropertyAll(
-                                      Colors.white),
+                                    Colors.white,
+                                  ),
                                 );
                               },
                               suggestionsBuilder: (context, controller) {
