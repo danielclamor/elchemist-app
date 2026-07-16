@@ -1057,7 +1057,7 @@ class _MixViewState extends State<MixView> {
                             ],
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
