@@ -1,6 +1,7 @@
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:elchemist_app/transitions.dart';
 import 'package:elchemist_app/views/mix_view.dart';
+import 'package:elchemist_app/views/recipe_details_view.dart';
 import 'package:flutter/material.dart';
 
 class RecipeCard extends StatefulWidget {
@@ -36,6 +37,12 @@ class _RecipeCardState extends State<RecipeCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
+                recipe.brand.toUpperCase(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+              Text(
                 recipe.name,
                 style: const TextStyle(
                   fontSize: 16.0,
@@ -43,7 +50,7 @@ class _RecipeCardState extends State<RecipeCard> {
                 ),
               ),
               Text(
-                "${recipe.brand} - ${recipe.nicType.name.toUpperCase()}",
+                "${recipe.nicType.toString()} — ${recipe.chilltype.toString()}",
                 style: const TextStyle(
                   fontWeight: FontWeight.w300,
                 ),
@@ -61,7 +68,7 @@ class _RecipeCardState extends State<RecipeCard> {
               animation,
               secondaryAnimation,
             ) =>
-                MixView(recipe: recipe),
+                RecipeDetailsView(recipe: recipe),
             transitionsBuilder: (
               context,
               animation,
