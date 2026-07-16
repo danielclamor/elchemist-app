@@ -124,7 +124,9 @@ class _MixViewState extends State<MixView> {
     }
 
     return (
-      _nicProfile?.targetNicStr ?? 0.0,
+      _nicProfile != null
+          ? _nicProfile!.targetNicStr / _nicProfile!.nicBaseStr
+          : 0.0,
       nicotineVol + nicBasePGVol + nicBaseVGVol,
       nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
     );
@@ -952,12 +954,22 @@ class _MixViewState extends State<MixView> {
                       ),
                       const Gap(24),
                       DataTable(
+                        horizontalMargin: 0.0,
                         columns: const <DataColumn>[
                           DataColumn(
                             label: Text(
                               "Ingredient",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              "%",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            numeric: true,
                           ),
                           DataColumn(
                             label: Text(
@@ -989,6 +1001,11 @@ class _MixViewState extends State<MixView> {
                                 ),
                                 DataCell(
                                   Text(
+                                    '${(ingredient.percentage * 100).toStringAsFixed(2)} %',
+                                  ),
+                                ),
+                                DataCell(
+                                  Text(
                                     '${ingredient.volume.toStringAsFixed(2)} mL',
                                   ),
                                 ),
@@ -1009,6 +1026,14 @@ class _MixViewState extends State<MixView> {
                                 Text(
                                   "Sum",
                                   style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              DataCell(
+                                Text(
+                                  '${(ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
