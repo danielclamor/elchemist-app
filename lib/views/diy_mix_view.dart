@@ -2,6 +2,23 @@ import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+class FlavorEntry {
+  FlavorEntry({String? flavor, String? percentage})
+      : id = UniqueKey(),
+        flavorController = TextEditingController(text: flavor),
+        percentageController = TextEditingController(text: percentage);
+
+  final Key id;
+  final TextEditingController flavorController;
+  final TextEditingController percentageController;
+  bool isVG = false;
+
+  void dispose() {
+    flavorController.dispose();
+    percentageController.dispose();
+  }
+}
+
 class DiyMixView extends StatefulWidget {
   const DiyMixView({super.key});
 
@@ -26,6 +43,8 @@ class _DiyMixViewState extends State<DiyMixView> {
       type: IngredientType.pg,
     ),
   ];
+
+  final List<FlavorEntry> _flavorEntries = [];
 
   late TextEditingController _volumeController;
 
@@ -62,6 +81,98 @@ class _DiyMixViewState extends State<DiyMixView> {
     return parts.length > 1 ? parts[1].length : 0;
   }
 
+  void _addEntry() {
+    setState(() {
+      _flavorEntries.add(
+        FlavorEntry(
+          flavor: 'Flavor ${_flavorEntries.length + 1}',
+          percentage: "0",
+        ),
+      );
+    });
+  }
+
+  void _removeEntry(FlavorEntry entry) {
+    setState(() {
+      entry.dispose();
+      _flavorEntries.remove(entry);
+    });
+  }
+
+  Widget _buildEntryRow(FlavorEntry entry) {
+    return Row(
+      key: entry.id,
+      spacing: 4.0,
+      children: [
+        IconButton(
+          onPressed: () {
+            _removeEntry(entry);
+          },
+          icon: const Icon(Icons.delete),
+        ),
+        Expanded(
+          child: TextField(
+            controller: entry.flavorController,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF6CA0C4),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF0E76BD),
+                ),
+              ),
+              filled: true,
+              fillColor: Colors.white60,
+              labelText: "Flavor",
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 8.0,
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: TextField(
+            controller: entry.percentageController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF6CA0C4),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color(0xFF0E76BD),
+                ),
+              ),
+              filled: true,
+              fillColor: Colors.white60,
+              labelText: "Percentage",
+              suffix: Text("%"),
+              contentPadding: EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 8.0,
+              ),
+            ),
+          ),
+        ),
+        Checkbox(
+          value: entry.isVG,
+          onChanged: (value) {
+            setState(() {
+              entry.isVG = value ?? false;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,56 +198,107 @@ class _DiyMixViewState extends State<DiyMixView> {
                 children: [
                   Expanded(
                     child: Wrap(
-                      spacing: 50.0,
+                      spacing: 32.0,
                       runSpacing: 8.0,
                       children: [
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          margin: EdgeInsets.zero,
-                          child: Container(
-                            padding: const EdgeInsets.all(16.0),
-                            constraints: const BoxConstraints(
-                                minWidth: 420, maxWidth: 420),
-                            child: Column(
-                              spacing: 12,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Batch",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        Column(
+                          spacing: 8.0,
+                          children: [
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              margin: EdgeInsets.zero,
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
+                                constraints: const BoxConstraints(
+                                  minWidth: 500,
+                                  maxWidth: 500,
                                 ),
-                                TextField(
-                                  controller: _volumeController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFF6CA0C4),
+                                child: Column(
+                                  spacing: 12,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Batch",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFF0E76BD),
+                                    TextField(
+                                      controller: _volumeController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF6CA0C4),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF0E76BD),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white60,
+                                        labelText: "Volume",
+                                        suffix: Text("mL"),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          horizontal: 8.0,
+                                        ),
                                       ),
                                     ),
-                                    filled: true,
-                                    fillColor: Colors.white60,
-                                    labelText: "Volume",
-                                    suffix: Text("mL"),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0,
-                                      horizontal: 8.0,
-                                    ),
-                                  ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              margin: EdgeInsets.zero,
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
+                                constraints: const BoxConstraints(
+                                  minWidth: 500,
+                                  maxWidth: 500,
+                                ),
+                                child: Column(
+                                  spacing: 12,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Flavoring",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Column(
+                                      spacing: 8.0,
+                                      children: [
+                                        for (final entry in _flavorEntries)
+                                          _buildEntryRow(entry)
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            _addEntry();
+                                          },
+                                          child: const Text("+ Add"),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         Wrap(
                           spacing: 8.0,
@@ -150,7 +312,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                               child: Container(
                                 padding: const EdgeInsets.all(16.0),
                                 constraints: const BoxConstraints(
-                                    minWidth: 420, maxWidth: 420),
+                                  minWidth: 400,
+                                  maxWidth: 400,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -286,7 +450,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                               child: Container(
                                 padding: const EdgeInsets.all(16.0),
                                 constraints: const BoxConstraints(
-                                    minWidth: 420, maxWidth: 420),
+                                  minWidth: 400,
+                                  maxWidth: 400,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -427,8 +593,10 @@ class _DiyMixViewState extends State<DiyMixView> {
                     margin: EdgeInsets.zero,
                     child: Container(
                       padding: const EdgeInsets.all(16.0),
-                      constraints:
-                          const BoxConstraints(minWidth: 500, maxWidth: 500),
+                      constraints: const BoxConstraints(
+                        minWidth: 500,
+                        maxWidth: 500,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
