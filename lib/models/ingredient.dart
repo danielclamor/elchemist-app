@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum IngredientType {
   nicotine,
   vg,
@@ -21,6 +23,7 @@ IngredientType getIngredientType(String ingredientType) {
 }
 
 class Ingredient {
+  final Key? id;
   final String name;
   double percentage;
   double volume;
@@ -33,5 +36,6 @@ class Ingredient {
     required this.volume,
     required this.weight,
     required this.type,
+    this.id,
   });
 }

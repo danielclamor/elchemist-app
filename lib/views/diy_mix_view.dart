@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -88,9 +89,12 @@ class _DiyMixViewState extends State<DiyMixView> {
   }
 
   void _addEntry() {
+    final flavor = 'Flavor ${_flavorEntries.length + 1}';
+    const percentage = "0";
+
     final entry = FlavorEntry(
-      flavor: 'Flavor ${_flavorEntries.length + 1}',
-      percentage: "0",
+      flavor: flavor,
+      percentage: percentage,
     );
     entry.flavorFocusNode.addListener(() {
       if (mounted) setState(() {});
@@ -100,6 +104,17 @@ class _DiyMixViewState extends State<DiyMixView> {
     });
     setState(() {
       _flavorEntries.add(entry);
+      ingredients.insert(
+        ingredients.length - 2,
+        Ingredient(
+          name: flavor,
+          percentage: double.parse(percentage),
+          volume: 0.0,
+          weight: 0.0,
+          type: IngredientType.pgFlavor,
+          id: entry.id,
+        ),
+      );
     });
   }
 
@@ -107,6 +122,9 @@ class _DiyMixViewState extends State<DiyMixView> {
     setState(() {
       entry.dispose();
       _flavorEntries.remove(entry);
+      ingredients.remove(
+        ingredients.firstWhereOrNull((ingredient) => ingredient.id == entry.id),
+      );
     });
   }
 
