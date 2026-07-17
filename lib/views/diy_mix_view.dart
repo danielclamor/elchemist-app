@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:elchemist_app/formulas.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -34,22 +35,7 @@ class DiyMixView extends StatefulWidget {
 }
 
 class _DiyMixViewState extends State<DiyMixView> {
-  List<Ingredient> ingredients = <Ingredient>[
-    Ingredient(
-      name: "VG",
-      percentage: 0.0,
-      volume: 0.0,
-      weight: 0.0,
-      type: IngredientType.vg,
-    ),
-    Ingredient(
-      name: "PG",
-      percentage: 0.0,
-      volume: 0.0,
-      weight: 0.0,
-      type: IngredientType.pg,
-    ),
-  ];
+  late List<Ingredient> ingredients;
 
   final List<FlavorEntry> _flavorEntries = [];
 
@@ -65,7 +51,7 @@ class _DiyMixViewState extends State<DiyMixView> {
 
   @override
   void initState() {
-    _volumeController = TextEditingController();
+    _volumeController = TextEditingController(text: "30");
 
     _targetNicStrController = TextEditingController(text: "2");
     _targetVGController = TextEditingController(text: "40");
@@ -74,6 +60,32 @@ class _DiyMixViewState extends State<DiyMixView> {
     _nicBaseNicStrController = TextEditingController(text: "10");
     _nicBaseVGController = TextEditingController(text: "0");
     _nicBasePGController = TextEditingController(text: "100");
+
+    final (nicBasePerc, nicBaseVol, nicBaseweight) = _getNicBaseValues();
+
+    ingredients = <Ingredient>[
+      Ingredient(
+        name: "Nicotine Base",
+        percentage: nicBasePerc,
+        volume: nicBaseVol,
+        weight: nicBaseweight,
+        type: IngredientType.nicotine,
+      ),
+      Ingredient(
+        name: "VG",
+        percentage: 0.0,
+        volume: 0.0,
+        weight: 0.0,
+        type: IngredientType.vg,
+      ),
+      Ingredient(
+        name: "PG",
+        percentage: 0.0,
+        volume: 0.0,
+        weight: 0.0,
+        type: IngredientType.pg,
+      ),
+    ];
 
     super.initState();
   }
@@ -86,6 +98,42 @@ class _DiyMixViewState extends State<DiyMixView> {
     List<String> parts = value.split('.');
 
     return parts.length > 1 ? parts[1].length : 0;
+  }
+
+  (double, double, double) _getNicBaseValues() {
+    final double volume = _volumeController.text == ""
+        ? 0.0
+        : double.parse(_volumeController.text) / 100;
+
+    final double targetNicStr =
+        double.parse(_targetNicStrController.text) / 100;
+    final double nicBaseNicStr =
+        double.parse(_nicBaseNicStrController.text) / 100;
+
+    double nicBaseVGVol = nicBaseCompVol(
+      volume,
+      targetNicStr,
+      nicBaseNicStr,
+      double.parse(_nicBaseVGController.text) / 100,
+    );
+
+    double nicBasePGVol = nicBaseCompVol(
+      volume,
+      targetNicStr,
+      nicBaseNicStr,
+      double.parse(_nicBasePGController.text) / 100,
+    );
+
+    double nicotineVol = nicVol(
+      volume,
+      targetNicStr,
+    );
+
+    return (
+      targetNicStr / nicBaseNicStr,
+      nicotineVol + nicBasePGVol + nicBaseVGVol,
+      nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
+    );
   }
 
   void _addEntry() {
