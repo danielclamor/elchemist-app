@@ -27,6 +27,41 @@ class _DiyMixViewState extends State<DiyMixView> {
     ),
   ];
 
+  late TextEditingController _volumeController;
+
+  late TextEditingController _targetNicStrController;
+  late TextEditingController _targetVGController;
+  late TextEditingController _targetPGController;
+
+  late TextEditingController _nicBaseNicStrController;
+  late TextEditingController _nicBaseVGController;
+  late TextEditingController _nicBasePGController;
+
+  @override
+  void initState() {
+    _volumeController = TextEditingController();
+
+    _targetNicStrController = TextEditingController(text: "2");
+    _targetVGController = TextEditingController(text: "40");
+    _targetPGController = TextEditingController(text: "60");
+
+    _nicBaseNicStrController = TextEditingController(text: "10");
+    _nicBaseVGController = TextEditingController(text: "0");
+    _nicBasePGController = TextEditingController(text: "100");
+
+    super.initState();
+  }
+
+  int _getDecimalPlaces(String value) {
+    double doubleValue = double.parse(value);
+
+    if (doubleValue == doubleValue.toInt()) return 0;
+
+    List<String> parts = value.split('.');
+
+    return parts.length > 1 ? parts[1].length : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +87,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                 children: [
                   Expanded(
                     child: Wrap(
-                      spacing: 32.0,
+                      spacing: 50.0,
                       runSpacing: 8.0,
                       children: [
                         Card(
@@ -76,6 +111,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                 ),
                                 TextField(
+                                  controller: _volumeController,
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
                                     enabledBorder: OutlineInputBorder(
@@ -119,7 +155,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      "Target",
+                                      "Nic Base",
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
@@ -127,6 +163,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     ),
                                     const Gap(12),
                                     TextField(
+                                      controller: _nicBaseNicStrController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
@@ -155,6 +192,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       children: [
                                         Expanded(
                                           child: TextField(
+                                            controller: _nicBaseVGController,
                                             keyboardType: TextInputType.number,
                                             decoration: const InputDecoration(
                                               enabledBorder: OutlineInputBorder(
@@ -177,10 +215,25 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                 horizontal: 8.0,
                                               ),
                                             ),
+                                            onSubmitted: (value) {
+                                              setState(() {
+                                                _nicBaseVGController.text =
+                                                    value;
+                                                _nicBasePGController
+                                                    .text = (100 -
+                                                        (double.parse(value)))
+                                                    .toStringAsFixed(
+                                                  _getDecimalPlaces(
+                                                    value,
+                                                  ),
+                                                );
+                                              });
+                                            },
                                           ),
                                         ),
                                         Expanded(
                                           child: TextField(
+                                            controller: _nicBasePGController,
                                             keyboardType: TextInputType.number,
                                             decoration: const InputDecoration(
                                               enabledBorder: OutlineInputBorder(
@@ -203,6 +256,20 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                 horizontal: 8.0,
                                               ),
                                             ),
+                                            onSubmitted: (value) {
+                                              setState(() {
+                                                _nicBasePGController.text =
+                                                    value;
+                                                _nicBaseVGController
+                                                    .text = (100 -
+                                                        (double.parse(value)))
+                                                    .toStringAsFixed(
+                                                  _getDecimalPlaces(
+                                                    value,
+                                                  ),
+                                                );
+                                              });
+                                            },
                                           ),
                                         ),
                                       ],
@@ -224,7 +291,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      "Nic Base",
+                                      "Target",
                                       style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
@@ -232,6 +299,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     ),
                                     const Gap(12),
                                     TextField(
+                                      controller: _targetNicStrController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
@@ -260,6 +328,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       children: [
                                         Expanded(
                                           child: TextField(
+                                            controller: _targetVGController,
                                             keyboardType: TextInputType.number,
                                             decoration: const InputDecoration(
                                               enabledBorder: OutlineInputBorder(
@@ -282,10 +351,25 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                 horizontal: 8.0,
                                               ),
                                             ),
+                                            onSubmitted: (value) {
+                                              setState(() {
+                                                _targetVGController.text =
+                                                    value;
+                                                _targetPGController
+                                                    .text = (100 -
+                                                        (double.parse(value)))
+                                                    .toStringAsFixed(
+                                                  _getDecimalPlaces(
+                                                    value,
+                                                  ),
+                                                );
+                                              });
+                                            },
                                           ),
                                         ),
                                         Expanded(
                                           child: TextField(
+                                            controller: _targetPGController,
                                             keyboardType: TextInputType.number,
                                             decoration: const InputDecoration(
                                               enabledBorder: OutlineInputBorder(
@@ -308,6 +392,20 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                 horizontal: 8.0,
                                               ),
                                             ),
+                                            onSubmitted: (value) {
+                                              setState(() {
+                                                _targetPGController.text =
+                                                    value;
+                                                _targetVGController
+                                                    .text = (100 -
+                                                        (double.parse(value)))
+                                                    .toStringAsFixed(
+                                                  _getDecimalPlaces(
+                                                    value,
+                                                  ),
+                                                );
+                                              });
+                                            },
                                           ),
                                         ),
                                       ],
@@ -321,6 +419,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                       ],
                     ),
                   ),
+                  const Gap(8.0),
                   Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4.0),
