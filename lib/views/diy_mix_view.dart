@@ -13,11 +13,15 @@ class FlavorEntry {
   final Key id;
   final TextEditingController flavorController;
   final TextEditingController percentageController;
+  final FocusNode flavorFocusNode = FocusNode();
+  final FocusNode percentageFocusNode = FocusNode();
   bool isVG = false;
 
   void dispose() {
     flavorController.dispose();
     percentageController.dispose();
+    flavorFocusNode.dispose();
+    percentageFocusNode.dispose();
   }
 }
 
@@ -84,13 +88,18 @@ class _DiyMixViewState extends State<DiyMixView> {
   }
 
   void _addEntry() {
+    final entry = FlavorEntry(
+      flavor: 'Flavor ${_flavorEntries.length + 1}',
+      percentage: "0",
+    );
+    entry.flavorFocusNode.addListener(() {
+      if (mounted) setState(() {});
+    });
+    entry.percentageFocusNode.addListener(() {
+      if (mounted) setState(() {});
+    });
     setState(() {
-      _flavorEntries.add(
-        FlavorEntry(
-          flavor: 'Flavor ${_flavorEntries.length + 1}',
-          percentage: "0",
-        ),
-      );
+      _flavorEntries.add(entry);
     });
   }
 
@@ -114,15 +123,21 @@ class _DiyMixViewState extends State<DiyMixView> {
         ),
         Expanded(
           child: TextField(
+            focusNode: entry.flavorFocusNode,
             controller: entry.flavorController,
             keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              enabledBorder: OutlineInputBorder(
+            onSubmitted: (value) {
+              setState(() {
+                entry.flavorController.text = value;
+              });
+            },
+            decoration: InputDecoration(
+              enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Color(0xFF6CA0C4),
                 ),
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Color(0xFF0E76BD),
                 ),
@@ -130,7 +145,45 @@ class _DiyMixViewState extends State<DiyMixView> {
               filled: true,
               fillColor: Colors.white60,
               labelText: "Flavor",
-              contentPadding: EdgeInsets.symmetric(
+              suffixIcon: !entry.flavorFocusNode.hasFocus
+                  ? null
+                  : entry.flavorController.text == ""
+                      ? null
+                      : Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color.fromRGBO(0, 0, 0, .10),
+                                  ),
+                                  shape: WidgetStatePropertyAll(
+                                    CircleBorder(),
+                                  ),
+                                  padding: WidgetStatePropertyAll(
+                                    EdgeInsets.all(12),
+                                  ),
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                iconSize: 12,
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () {
+                                  setState(() {
+                                    entry.flavorController.clear();
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+              contentPadding: const EdgeInsets.symmetric(
                 vertical: 0,
                 horizontal: 8.0,
               ),
@@ -139,15 +192,19 @@ class _DiyMixViewState extends State<DiyMixView> {
         ),
         Expanded(
           child: TextField(
+            focusNode: entry.percentageFocusNode,
             controller: entry.percentageController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              enabledBorder: OutlineInputBorder(
+            onSubmitted: (value) {
+              setState(() {});
+            },
+            decoration: InputDecoration(
+              enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Color(0xFF6CA0C4),
                 ),
               ),
-              focusedBorder: OutlineInputBorder(
+              focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Color(0xFF0E76BD),
                 ),
@@ -155,8 +212,51 @@ class _DiyMixViewState extends State<DiyMixView> {
               filled: true,
               fillColor: Colors.white60,
               labelText: "Percentage",
-              suffix: Text("%"),
-              contentPadding: EdgeInsets.symmetric(
+              suffix: entry.percentageFocusNode.hasFocus
+                  ? null
+                  : entry.percentageController.text == ""
+                      ? null
+                      : const Text("%"),
+              suffixIcon: !entry.percentageFocusNode.hasFocus
+                  ? null
+                  : entry.percentageController.text == ""
+                      ? null
+                      : Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color.fromRGBO(0, 0, 0, .10),
+                                  ),
+                                  shape: WidgetStatePropertyAll(
+                                    CircleBorder(),
+                                  ),
+                                  padding: WidgetStatePropertyAll(
+                                    EdgeInsets.all(12),
+                                  ),
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                iconSize: 12,
+                                visualDensity: VisualDensity.compact,
+                                onPressed: () {
+                                  setState(() {
+                                    entry.percentageController.text = "0";
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.close,
+                                ),
+                              ),
+                              const Text("%"),
+                            ],
+                          ),
+                        ),
+              contentPadding: const EdgeInsets.symmetric(
                 vertical: 0,
                 horizontal: 8.0,
               ),
@@ -231,6 +331,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _volumeController,
                                       keyboardType: TextInputType.number,
+                                      onSubmitted: (value) => setState(() {}),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -331,6 +432,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _nicBaseNicStrController,
                                       keyboardType: TextInputType.number,
+                                      onSubmitted: (value) => setState(() {}),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -383,8 +485,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                                             ),
                                             onSubmitted: (value) {
                                               setState(() {
-                                                _nicBaseVGController.text =
-                                                    value;
                                                 _nicBasePGController
                                                     .text = (100 -
                                                         (double.parse(value)))
@@ -424,8 +524,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                                             ),
                                             onSubmitted: (value) {
                                               setState(() {
-                                                _nicBasePGController.text =
-                                                    value;
                                                 _nicBaseVGController
                                                     .text = (100 -
                                                         (double.parse(value)))
@@ -469,6 +567,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _targetNicStrController,
                                       keyboardType: TextInputType.number,
+                                      onSubmitted: (value) => setState(() {}),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -521,8 +620,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                                             ),
                                             onSubmitted: (value) {
                                               setState(() {
-                                                _targetVGController.text =
-                                                    value;
                                                 _targetPGController
                                                     .text = (100 -
                                                         (double.parse(value)))
@@ -562,8 +659,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                                             ),
                                             onSubmitted: (value) {
                                               setState(() {
-                                                _targetPGController.text =
-                                                    value;
                                                 _targetVGController
                                                     .text = (100 -
                                                         (double.parse(value)))
