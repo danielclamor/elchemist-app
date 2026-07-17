@@ -593,7 +593,7 @@ class _MixViewState extends State<MixView> {
                                         ),
                                         onSubmitted: (value) {
                                           setState(() {
-                                            _nicStrController.text = value;
+                                            // _nicStrController.text = value;
                                           });
                                         },
                                       ),
@@ -654,7 +654,7 @@ class _MixViewState extends State<MixView> {
                                           }
 
                                           setState(() {
-                                            _volumeController.text = value;
+                                            // _volumeController.text = value;
                                             ingredients =
                                                 _populateIngredients();
                                           });
