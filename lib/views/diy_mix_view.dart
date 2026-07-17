@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class FlavorEntry {
-  FlavorEntry({String? flavor, String? percentage})
-      : id = UniqueKey(),
+  FlavorEntry({
+    String? flavor,
+    String? percentage,
+  })  : id = UniqueKey(),
         flavorController = TextEditingController(text: flavor),
         percentageController = TextEditingController(text: percentage);
 
