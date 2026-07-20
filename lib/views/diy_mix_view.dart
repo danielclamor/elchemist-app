@@ -508,14 +508,12 @@ class _DiyMixViewState extends State<DiyMixView> {
               ),
               const Gap(24),
               Wrap(
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                spacing: 32.0,
+                spacing: 30.0,
                 runSpacing: 8.0,
                 children: [
                   Expanded(
                     child: Wrap(
-                      spacing: 32.0,
+                      spacing: 20.0,
                       runSpacing: 8.0,
                       children: [
                         Column(
@@ -529,7 +527,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                               child: Container(
                                 padding: const EdgeInsets.all(16.0),
                                 constraints: const BoxConstraints(
-                                  minWidth: 500,
+                                  minWidth: 250,
                                   maxWidth: 500,
                                 ),
                                 child: Column(
@@ -580,7 +578,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                               child: Container(
                                 padding: const EdgeInsets.all(16.0),
                                 constraints: const BoxConstraints(
-                                  minWidth: 500,
+                                  minWidth: 250,
                                   maxWidth: 500,
                                 ),
                                 child: Column(
@@ -630,7 +628,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                               child: Container(
                                 padding: const EdgeInsets.all(16.0),
                                 constraints: const BoxConstraints(
-                                  minWidth: 400,
+                                  minWidth: 250,
                                   maxWidth: 400,
                                 ),
                                 child: Column(
@@ -767,7 +765,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                               child: Container(
                                 padding: const EdgeInsets.all(16.0),
                                 constraints: const BoxConstraints(
-                                  minWidth: 400,
+                                  minWidth: 250,
                                   maxWidth: 400,
                                 ),
                                 child: Column(
@@ -784,7 +782,33 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _targetNicStrController,
                                       keyboardType: TextInputType.number,
-                                      onSubmitted: (value) => _updateValues(),
+                                      onSubmitted: (value) {
+                                        final percentage = double.parse(value);
+
+                                        if (percentage == 0.0) {
+                                          ingredients.removeAt(0);
+                                        } else {
+                                          if (!ingredients
+                                              .map((ingredient) =>
+                                                  ingredient.name)
+                                              .contains("Nicotine Base")) {
+                                            setState(() {});
+                                            final (percentage, volume, weight) =
+                                                _getNicBaseValues();
+                                            ingredients.insert(
+                                              0,
+                                              Ingredient(
+                                                name: "Nicotine Base",
+                                                percentage: percentage,
+                                                volume: volume,
+                                                weight: weight,
+                                                type: IngredientType.nicotine,
+                                              ),
+                                            );
+                                          }
+                                        }
+                                        _updateValues();
+                                      },
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -909,7 +933,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                     child: Container(
                       padding: const EdgeInsets.all(16.0),
                       constraints: const BoxConstraints(
-                        minWidth: 500,
+                        minWidth: 250,
                         maxWidth: 500,
                       ),
                       child: Column(
