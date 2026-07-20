@@ -23,7 +23,7 @@ class MixView extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _MixViewState extends State<MixView> {
-  Recipe? recipe;
+  Recipe? _recipe;
   String? _selectedNicProfValue;
   NicProfile? _nicProfile;
   bool _isCustomChecked = false;
@@ -33,14 +33,14 @@ class _MixViewState extends State<MixView> {
   late TextEditingController _targetNicStrController;
   late TextEditingController _targetVGController;
   late TextEditingController _targetPGController;
-  List<NicBase>? nicBases;
-  List<Flavoring>? flavorings;
+  List<NicBase>? _nicBases;
+  List<Flavoring>? _flavorings;
 
   final FocusNode _volumeFocusNode = FocusNode();
   String _prevVolumeText = "";
   bool _hasVolumeChanged = false;
 
-  List<Ingredient> ingredients = <Ingredient>[
+  List<Ingredient> _ingredients = <Ingredient>[
     Ingredient(
       name: "VG",
       percentage: 0.0,
@@ -61,13 +61,37 @@ class _MixViewState extends State<MixView> {
   void initState() {
     _searchController = SearchController();
     _volumeController = TextEditingController();
-    _targetNicStrController = TextEditingController();
-    _targetVGController = TextEditingController();
-    _targetPGController = TextEditingController();
+    _targetNicStrController = TextEditingController(text: "0");
+    _targetVGController = TextEditingController(text: "0");
+    _targetPGController = TextEditingController(text: "0");
 
     _volumeFocusNode.addListener(_handleVolumeFocusChange);
+
     super.initState();
   }
+
+  InputBorder _enabledBorder() => _isCustomChecked
+      ? const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color(0xFF6CA0C4),
+          ),
+        )
+      : const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color(0xFFDCDCDC),
+          ),
+        );
+  InputBorder _focusedBorder() => _isCustomChecked
+      ? const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color(0xFF0E76BD),
+          ),
+        )
+      : const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color(0xFFDCDCDC),
+          ),
+        );
 
   void _handleVolumeFocusChange() {
     if (_volumeFocusNode.hasFocus) {
@@ -92,8 +116,8 @@ class _MixViewState extends State<MixView> {
     var nicBaseVGVol = 0.0;
     var nicBasePGVol = 0.0;
 
-    if (nicBases != null && nicBases!.isNotEmpty) {
-      nicBaseVGVol = nicBases!.where((nicBase) => nicBase.isVG).fold(
+    if (_nicBases != null && _nicBases!.isNotEmpty) {
+      nicBaseVGVol = _nicBases!.where((nicBase) => nicBase.isVG).fold(
             0.0,
             (sum, nicBase) =>
                 sum +
@@ -105,7 +129,7 @@ class _MixViewState extends State<MixView> {
                 ),
           );
 
-      nicBasePGVol = nicBases!.where((nicBase) => !nicBase.isVG).fold(
+      nicBasePGVol = _nicBases!.where((nicBase) => !nicBase.isVG).fold(
             0.0,
             (sum, nicBase) =>
                 sum +
@@ -156,12 +180,12 @@ class _MixViewState extends State<MixView> {
 
     final double nicStr = _nicProfile?.targetNicStr ?? 0.0;
 
-    double totalFlavVGPerc = flavorings
+    double totalFlavVGPerc = _flavorings
             ?.where((flavor) => flavor.isVG)
             .fold(0.0, (sum, flavor) => sum! + flavor.percentage) ??
         0.0;
 
-    double totalNicBaseVGPerc = nicBases
+    double totalNicBaseVGPerc = _nicBases
             ?.where((nicBase) => nicBase.isVG)
             .fold(0.0, (sum, nicBase) => sum! + nicBase.percentage) ??
         0.0;
@@ -187,12 +211,12 @@ class _MixViewState extends State<MixView> {
 
     final double nicStr = _nicProfile?.targetNicStr ?? 0.0;
 
-    double totalFlavPGPerc = flavorings
+    double totalFlavPGPerc = _flavorings
             ?.where((flavor) => !flavor.isVG)
             .fold(0.0, (sum, flavor) => sum! + flavor.percentage) ??
         0.0;
 
-    double totalNicBasePGPerc = nicBases
+    double totalNicBasePGPerc = _nicBases
             ?.where((nicBase) => !nicBase.isVG)
             .fold(0.0, (sum, nicBase) => sum! + nicBase.percentage) ??
         0.0;
@@ -212,16 +236,16 @@ class _MixViewState extends State<MixView> {
   }
 
   List<Ingredient> _populateIngredients() {
-    ingredients = <Ingredient>[];
+    _ingredients = <Ingredient>[];
 
-    if (nicBases != null && nicBases!.isNotEmpty) {
+    if (_nicBases != null && _nicBases!.isNotEmpty) {
       var nicBaseTitle =
-          'Nicotine base ${nicBases?.map((nicBase) => '(${nicBase.code})').join(" / ")}';
+          'Nicotine base ${_nicBases?.map((nicBase) => '(${nicBase.code})').join(" / ")}';
 
       var (nicBasePercentage, nicBaseVolume, nicBaseweight) =
           _getNicBaseValues();
 
-      ingredients.add(
+      _ingredients.add(
         Ingredient(
           name: nicBaseTitle,
           percentage: nicBasePercentage,
@@ -232,15 +256,15 @@ class _MixViewState extends State<MixView> {
       );
     }
 
-    if (flavorings != null && flavorings!.isNotEmpty) {
-      flavorings?.forEach(
+    if (_flavorings != null && _flavorings!.isNotEmpty) {
+      _flavorings?.forEach(
         (flavoring) {
           var (flavoringPerc, flavoringVol, flavoringWeight) = _getFlavorValues(
             flavoring.isVG,
             flavoring.percentage,
           );
 
-          ingredients.add(
+          _ingredients.add(
             Ingredient(
               name: flavoring.name,
               percentage: flavoring.percentage,
@@ -255,7 +279,7 @@ class _MixViewState extends State<MixView> {
       );
     }
 
-    final ingredientVG = ingredients.firstWhereOrNull(
+    final ingredientVG = _ingredients.firstWhereOrNull(
       (ingredient) => ingredient.name == "VG",
     );
     var (ingredientVGPerc, ingredientVGVol, ingredientVGWeight) =
@@ -266,7 +290,7 @@ class _MixViewState extends State<MixView> {
       ingredientVG.volume = ingredientVGVol;
       ingredientVG.weight = ingredientVGWeight;
     } else {
-      ingredients.add(
+      _ingredients.add(
         Ingredient(
           name: "VG",
           percentage: ingredientVGPerc,
@@ -277,7 +301,7 @@ class _MixViewState extends State<MixView> {
       );
     }
 
-    final ingredientPG = ingredients.firstWhereOrNull(
+    final ingredientPG = _ingredients.firstWhereOrNull(
       (ingredient) => ingredient.name == "PG",
     );
     var (ingredientPGPerc, ingredientPGVol, ingredientPGWeight) =
@@ -288,7 +312,7 @@ class _MixViewState extends State<MixView> {
       ingredientPG.volume = ingredientPGVol;
       ingredientPG.weight = ingredientPGWeight;
     } else {
-      ingredients.add(
+      _ingredients.add(
         Ingredient(
           name: "PG",
           percentage: ingredientPGPerc,
@@ -299,7 +323,7 @@ class _MixViewState extends State<MixView> {
       );
     }
 
-    return ingredients;
+    return _ingredients;
   }
 
   @override
@@ -344,7 +368,7 @@ class _MixViewState extends State<MixView> {
                               padding: const EdgeInsets.all(16.0),
                               constraints: const BoxConstraints(
                                   minWidth: 500, maxWidth: 500),
-                              child: recipe == null
+                              child: _recipe == null
                                   ? SearchAnchor(
                                       searchController: _searchController,
                                       viewShape: const RoundedRectangleBorder(
@@ -428,7 +452,7 @@ class _MixViewState extends State<MixView> {
                                               setState(() {
                                                 controller.closeView(
                                                     suggestionItem.name);
-                                                recipe = suggestionItem;
+                                                _recipe = suggestionItem;
                                               });
                                             },
                                           );
@@ -452,20 +476,20 @@ class _MixViewState extends State<MixView> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  recipe!.brand.toUpperCase(),
+                                                  _recipe!.brand.toUpperCase(),
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                                 Text(
-                                                  recipe!.name,
+                                                  _recipe!.name,
                                                   style: const TextStyle(
                                                     fontSize: 20,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                                 Text(
-                                                  '${recipe!.nicType.toString()} — ${recipe!.chilltype.toString()}',
+                                                  '${_recipe!.nicType.toString()} — ${_recipe!.chilltype.toString()}',
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
@@ -478,7 +502,7 @@ class _MixViewState extends State<MixView> {
                                               ),
                                               onPressed: () {
                                                 setState(() {
-                                                  recipe = null;
+                                                  _recipe = null;
                                                   _selectedNicProfValue = null;
                                                   _nicProfile = null;
                                                   _searchController.clear();
@@ -524,7 +548,7 @@ class _MixViewState extends State<MixView> {
                                               dropdownMenuEntries:
                                                   UnmodifiableListView<
                                                       MenuEntry>(
-                                                recipe!.nicProfiles
+                                                _recipe!.nicProfiles
                                                     .map<MenuEntry>(
                                                   (nicProfile) => MenuEntry(
                                                     value: nicProfile.name,
@@ -534,7 +558,7 @@ class _MixViewState extends State<MixView> {
                                                 ),
                                               ),
                                               onSelected: (String? value) {
-                                                _nicProfile = recipe!
+                                                _nicProfile = _recipe!
                                                     .nicProfiles
                                                     .firstWhere((nicProfile) =>
                                                         nicProfile.name ==
@@ -558,12 +582,12 @@ class _MixViewState extends State<MixView> {
                                                       targetPG
                                                           .toStringAsFixed(4);
 
-                                                  nicBases =
+                                                  _nicBases =
                                                       _nicProfile!.nicBaseList;
-                                                  flavorings = _nicProfile!
+                                                  _flavorings = _nicProfile!
                                                       .flavoringList;
 
-                                                  ingredients =
+                                                  _ingredients =
                                                       _populateIngredients();
                                                 });
 
@@ -587,6 +611,9 @@ class _MixViewState extends State<MixView> {
                                                 ),
                                                 Checkbox(
                                                   value: _isCustomChecked,
+                                                  side: const BorderSide(
+                                                    color: Color(0xFF6CA0C4),
+                                                  ),
                                                   onChanged: (bool? newValue) {
                                                     setState(() {
                                                       _isCustomChecked =
@@ -639,7 +666,7 @@ class _MixViewState extends State<MixView> {
 
                                                   setState(() {
                                                     // _volumeController.text = value;
-                                                    ingredients =
+                                                    _ingredients =
                                                         _populateIngredients();
                                                   });
                                                   _hasVolumeChanged =
@@ -674,7 +701,7 @@ class _MixViewState extends State<MixView> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        ...flavorings!.map(
+                                        ..._flavorings!.map(
                                           (flavoring) => Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -719,7 +746,8 @@ class _MixViewState extends State<MixView> {
                                                         const BoxConstraints(
                                                             maxWidth: 120),
                                                     child: TextField(
-                                                      readOnly: true,
+                                                      readOnly:
+                                                          !_isCustomChecked,
                                                       controller:
                                                           TextEditingController(
                                                         text: (flavoring
@@ -728,27 +756,15 @@ class _MixViewState extends State<MixView> {
                                                             .toStringAsFixed(4),
                                                       ),
                                                       decoration:
-                                                          const InputDecoration(
+                                                          InputDecoration(
                                                         enabledBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Color(
-                                                                0xFFDCDCDC),
-                                                          ),
-                                                        ),
+                                                            _enabledBorder(),
                                                         focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Color(
-                                                                0xFFDCDCDC),
-                                                          ),
-                                                        ),
+                                                            _focusedBorder(),
                                                         labelText: "Percentage",
-                                                        suffix: Text("%"),
+                                                        suffix: const Text("%"),
                                                         contentPadding:
-                                                            EdgeInsets
+                                                            const EdgeInsets
                                                                 .symmetric(
                                                           vertical: 0,
                                                           horizontal: 8.0,
@@ -808,7 +824,7 @@ class _MixViewState extends State<MixView> {
                                   ),
                                   const Gap(12),
                                   TextField(
-                                    readOnly: !_isCustomChecked,
+                                    readOnly: true,
                                     controller: TextEditingController(
                                       text: ((_nicProfile?.nicBaseStr ?? 0.0) *
                                               100)
@@ -840,15 +856,22 @@ class _MixViewState extends State<MixView> {
                                     children: [
                                       Expanded(
                                         child: TextField(
-                                          readOnly: !_isCustomChecked,
+                                          readOnly: true,
                                           controller: TextEditingController(
-                                              text:
-                                                  '${nicBases?.where((nicbase) => nicbase.isVG).fold(
-                                                        0.0,
-                                                        (sum, nicBase) =>
-                                                            sum +
-                                                            nicBase.percentage,
-                                                      ) ?? 0.0}'),
+                                            text: ((_nicBases
+                                                            ?.where((nicbase) =>
+                                                                nicbase.isVG)
+                                                            .fold(
+                                                              0.0,
+                                                              (sum, nicBase) =>
+                                                                  sum +
+                                                                  nicBase
+                                                                      .percentage,
+                                                            ) ??
+                                                        0.0) *
+                                                    100)
+                                                .toStringAsFixed(0),
+                                          ),
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
@@ -873,9 +896,9 @@ class _MixViewState extends State<MixView> {
                                       ),
                                       Expanded(
                                         child: TextField(
-                                          readOnly: !_isCustomChecked,
+                                          readOnly: true,
                                           controller: TextEditingController(
-                                              text: ((nicBases
+                                              text: ((_nicBases
                                                               ?.where(
                                                                   (nicbase) =>
                                                                       !nicbase
@@ -914,22 +937,32 @@ class _MixViewState extends State<MixView> {
                                       ),
                                     ],
                                   ),
-                                  const Gap(8.0),
                                   _selectedNicProfValue == null ||
-                                          nicBases!.isEmpty
+                                          _nicBases!.isEmpty
                                       ? const SizedBox.shrink()
                                       : Column(
                                           children: [
+                                            const Gap(8.0),
                                             Divider(
                                               thickness: 1,
                                               color: Colors.grey[350],
                                             ),
-                                            ...nicBases!.map(
+                                            const Gap(8.0),
+                                            ..._nicBases!.map(
                                               (nicBase) => Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
+                                                  _isCustomChecked &&
+                                                          _nicBases!.length > 1
+                                                      ? IconButton(
+                                                          onPressed: () {},
+                                                          icon: const Icon(
+                                                            Icons.delete,
+                                                          ),
+                                                        )
+                                                      : const SizedBox.shrink(),
                                                   Expanded(
                                                     child: TextField(
                                                       readOnly: true,
@@ -939,26 +972,14 @@ class _MixViewState extends State<MixView> {
                                                             '${nicBase.name} (${nicBase.code})',
                                                       ),
                                                       decoration:
-                                                          const InputDecoration(
+                                                          InputDecoration(
                                                         enabledBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Color(
-                                                                0xFFDCDCDC),
-                                                          ),
-                                                        ),
+                                                            _enabledBorder(),
                                                         focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Color(
-                                                                0xFFDCDCDC),
-                                                          ),
-                                                        ),
+                                                            _focusedBorder(),
                                                         labelText: "Name",
                                                         contentPadding:
-                                                            EdgeInsets
+                                                            const EdgeInsets
                                                                 .symmetric(
                                                           vertical: 0,
                                                           horizontal: 8.0,
@@ -967,74 +988,83 @@ class _MixViewState extends State<MixView> {
                                                     ),
                                                   ),
                                                   const Gap(8),
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        constraints:
-                                                            const BoxConstraints(
-                                                                maxWidth: 120),
-                                                        child: TextField(
-                                                          readOnly: true,
-                                                          controller:
-                                                              TextEditingController(
-                                                            text: (nicBase
-                                                                        .percentage *
-                                                                    100)
-                                                                .toStringAsFixed(
-                                                                    0),
-                                                          ),
-                                                          decoration:
-                                                              const InputDecoration(
-                                                            enabledBorder:
-                                                                OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                                color: Color(
-                                                                    0xFFDCDCDC),
-                                                              ),
-                                                            ),
-                                                            focusedBorder:
-                                                                OutlineInputBorder(
-                                                              borderSide:
-                                                                  BorderSide(
-                                                                color: Color(
-                                                                    0xFFDCDCDC),
-                                                              ),
-                                                            ),
-                                                            labelText:
-                                                                "Percentage",
-                                                            suffix: Text("%"),
-                                                            contentPadding:
-                                                                EdgeInsets
-                                                                    .symmetric(
-                                                              vertical: 0,
-                                                              horizontal: 8.0,
-                                                            ),
-                                                          ),
+                                                  Container(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                            maxWidth: 120),
+                                                    child: TextField(
+                                                      readOnly: true,
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: (nicBase
+                                                                    .percentage *
+                                                                100)
+                                                            .toStringAsFixed(0),
+                                                      ),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        enabledBorder:
+                                                            _enabledBorder(),
+                                                        focusedBorder:
+                                                            _focusedBorder(),
+                                                        labelText: "Percentage",
+                                                        suffix: const Text("%"),
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 8.0,
                                                         ),
                                                       ),
-                                                      Column(
-                                                        children: [
-                                                          const Text("VG"),
-                                                          Checkbox(
-                                                            value: nicBase.isVG,
-                                                            onChanged: null,
-                                                            side:
-                                                                const BorderSide(
-                                                              color: Color(
-                                                                0xFFB0B0B0,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
+                                                    ),
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      const Text("VG"),
+                                                      Checkbox(
+                                                        value: nicBase.isVG,
+                                                        onChanged:
+                                                            _isCustomChecked
+                                                                ? (value) {
+                                                                    if (value !=
+                                                                        null) {
+                                                                      setState(
+                                                                          () {
+                                                                        nicBase.isVG =
+                                                                            value;
+                                                                      });
+                                                                    }
+                                                                  }
+                                                                : null,
+                                                        side: BorderSide(
+                                                          color:
+                                                              _isCustomChecked
+                                                                  ? const Color(
+                                                                      0xFF6CA0C4)
+                                                                  : const Color(
+                                                                      0xFFB0B0B0,
+                                                                    ),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                 ],
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
+                                  _isCustomChecked
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {},
+                                              child: const Text("+ Add"),
+                                            ),
+                                          ],
+                                        )
+                                      : const SizedBox.shrink(),
                                 ],
                               ),
                             ),
@@ -1065,20 +1095,13 @@ class _MixViewState extends State<MixView> {
                                     readOnly: !_isCustomChecked,
                                     controller: _targetNicStrController,
                                     keyboardType: TextInputType.number,
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFDCDCDC),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFFDCDCDC),
-                                        ),
-                                      ),
+                                    decoration: InputDecoration(
+                                      enabledBorder: _enabledBorder(),
+                                      focusedBorder: _focusedBorder(),
                                       labelText: "Nic Str",
-                                      suffix: Text("%"),
-                                      contentPadding: EdgeInsets.symmetric(
+                                      suffix: const Text("%"),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
                                         vertical: 0,
                                         horizontal: 8.0,
                                       ),
@@ -1093,21 +1116,13 @@ class _MixViewState extends State<MixView> {
                                           readOnly: !_isCustomChecked,
                                           controller: _targetVGController,
                                           keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
-                                            ),
+                                          decoration: InputDecoration(
+                                            enabledBorder: _enabledBorder(),
+                                            focusedBorder: _focusedBorder(),
                                             labelText: "VG",
-                                            suffix: Text("%"),
+                                            suffix: const Text("%"),
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                               vertical: 0,
                                               horizontal: 8.0,
                                             ),
@@ -1119,21 +1134,13 @@ class _MixViewState extends State<MixView> {
                                           readOnly: !_isCustomChecked,
                                           controller: _targetPGController,
                                           keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
-                                            ),
+                                          decoration: InputDecoration(
+                                            enabledBorder: _enabledBorder(),
+                                            focusedBorder: _focusedBorder(),
                                             labelText: "PG",
-                                            suffix: Text("%"),
+                                            suffix: const Text("%"),
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                               vertical: 0,
                                               horizontal: 8.0,
                                             ),
@@ -1211,7 +1218,7 @@ class _MixViewState extends State<MixView> {
                               ),
                             ],
                             rows: [
-                              ...ingredients.map(
+                              ..._ingredients.map(
                                 (ingredient) => DataRow(
                                   cells: [
                                     DataCell(
@@ -1252,7 +1259,7 @@ class _MixViewState extends State<MixView> {
                                   ),
                                   DataCell(
                                     Text(
-                                      '${(ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
+                                      '${(_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -1260,7 +1267,7 @@ class _MixViewState extends State<MixView> {
                                   ),
                                   DataCell(
                                     Text(
-                                      '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
+                                      '${_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -1268,7 +1275,7 @@ class _MixViewState extends State<MixView> {
                                   ),
                                   DataCell(
                                     Text(
-                                      '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
+                                      '${_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),

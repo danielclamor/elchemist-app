@@ -1,8 +1,8 @@
 class NicBase {
   final String code;
   final String name;
-  final bool isVG;
-  final double percentage;
+  bool isVG;
+  double percentage;
 
   NicBase({
     required this.code,
