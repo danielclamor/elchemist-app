@@ -101,7 +101,7 @@ class _DiyMixViewState extends State<DiyMixView> {
   (double, double, double) _getNicBaseValues() {
     final double volume = _volumeController.text == ""
         ? 0.0
-        : double.parse(_volumeController.text) / 100;
+        : double.parse(_volumeController.text);
 
     final double targetNicStr =
         double.parse(_targetNicStrController.text) / 100;
@@ -134,10 +134,27 @@ class _DiyMixViewState extends State<DiyMixView> {
     );
   }
 
+  (double, double, double) _getFlavorValues(bool isVG, double percentage) {
+    final double volume = _volumeController.text == ""
+        ? 0.0
+        : double.parse(_volumeController.text);
+
+    var flavoringVol = flavVol(
+      volume,
+      percentage,
+    );
+
+    return (
+      percentage,
+      flavVol(volume, percentage),
+      isVG ? vgFlavGrams(flavoringVol) : pgFlavGrams(flavoringVol),
+    );
+  }
+
   (double, double, double) _getVGValues() {
     final double volume = _volumeController.text == ""
         ? 0.0
-        : double.parse(_volumeController.text) / 100;
+        : double.parse(_volumeController.text);
 
     final double targetNicStr =
         double.parse(_targetNicStrController.text) / 100;
@@ -148,7 +165,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         .where((ingredient) => ingredient.type == IngredientType.vgFlavor);
 
     double totalFlavVGPerc = vgFlavors.isNotEmpty
-        ? vgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage) / 100
+        ? vgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage)
         : 0.0;
 
     double nicBaseVGPerc = _nicBaseVGController.text != ""
@@ -172,7 +189,7 @@ class _DiyMixViewState extends State<DiyMixView> {
   (double, double, double) _getPGValues() {
     final double volume = _volumeController.text == ""
         ? 0.0
-        : double.parse(_volumeController.text) / 100;
+        : double.parse(_volumeController.text);
 
     final double targetNicStr =
         double.parse(_targetNicStrController.text) / 100;
@@ -183,7 +200,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         .where((ingredient) => ingredient.type == IngredientType.pgFlavor);
 
     double totalFlavPGPerc = pgFlavors.isNotEmpty
-        ? pgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage) / 100
+        ? pgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage)
         : 0.0;
 
     double nicBasePGPerc = _nicBasePGController.text != ""
@@ -201,7 +218,7 @@ class _DiyMixViewState extends State<DiyMixView> {
 
     double ingredientPGVol = volume * pgMixPerc;
 
-    return (pgMixPerc, ingredientPGVol, vgGrams(ingredientPGVol));
+    return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
   }
 
   void _addEntry() {
@@ -232,6 +249,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         ),
       );
     });
+    _updateValues();
   }
 
   void _removeEntry(FlavorEntry entry) {
@@ -242,6 +260,37 @@ class _DiyMixViewState extends State<DiyMixView> {
         ingredients.firstWhereOrNull((ingredient) => ingredient.id == entry.id),
       );
     });
+    _updateValues();
+  }
+
+  void _updateValues() {
+    for (Ingredient ingredient in ingredients) {
+      var (percentage, volume, weight) = (0.0, 0.0, 0.0);
+      switch (ingredient.type) {
+        case IngredientType.nicotine:
+          (percentage, volume, weight) = _getNicBaseValues();
+        case IngredientType.vg:
+          (percentage, volume, weight) = _getVGValues();
+        case IngredientType.pg:
+          (percentage, volume, weight) = _getPGValues();
+        case IngredientType.vgFlavor:
+          (percentage, volume, weight) = _getFlavorValues(
+            true,
+            ingredient.percentage,
+          );
+        case IngredientType.pgFlavor:
+          (percentage, volume, weight) = _getFlavorValues(
+            false,
+            ingredient.percentage,
+          );
+      }
+
+      setState(() {
+        ingredient.percentage = percentage;
+        ingredient.volume = volume;
+        ingredient.weight = weight;
+      });
+    }
   }
 
   Widget _buildEntryRow(FlavorEntry entry) {
@@ -261,9 +310,14 @@ class _DiyMixViewState extends State<DiyMixView> {
             controller: entry.flavorController,
             keyboardType: TextInputType.text,
             onSubmitted: (value) {
-              setState(() {
-                entry.flavorController.text = value;
-              });
+              final flavor = ingredients.firstWhereOrNull(
+                (ingredient) => ingredient.id == entry.id,
+              );
+              if (flavor != null) {
+                setState(() {
+                  flavor.name = value;
+                });
+              }
             },
             decoration: InputDecoration(
               enabledBorder: const OutlineInputBorder(
@@ -330,7 +384,21 @@ class _DiyMixViewState extends State<DiyMixView> {
             controller: entry.percentageController,
             keyboardType: TextInputType.number,
             onSubmitted: (value) {
-              setState(() {});
+              final flavor = ingredients.firstWhereOrNull(
+                (ingredient) => ingredient.id == entry.id,
+              );
+              if (flavor != null) {
+                setState(() {
+                  final (percentage, volume, weight) = _getFlavorValues(
+                    entry.isVG,
+                    double.parse(value) / 100,
+                  );
+                  flavor.percentage = percentage;
+                  flavor.volume = volume;
+                  flavor.weight = weight;
+                });
+                _updateValues();
+              }
             },
             decoration: InputDecoration(
               enabledBorder: const OutlineInputBorder(
@@ -403,6 +471,17 @@ class _DiyMixViewState extends State<DiyMixView> {
             setState(() {
               entry.isVG = value ?? false;
             });
+            final flavor = ingredients.firstWhereOrNull(
+              (ingredient) => ingredient.id == entry.id,
+            );
+            if (flavor != null) {
+              setState(() {
+                flavor.type = value == true
+                    ? IngredientType.vgFlavor
+                    : IngredientType.pgFlavor;
+              });
+              _updateValues();
+            }
           },
         ),
       ],
@@ -428,9 +507,11 @@ class _DiyMixViewState extends State<DiyMixView> {
                 ],
               ),
               const Gap(24),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                spacing: 32.0,
+                runSpacing: 8.0,
                 children: [
                   Expanded(
                     child: Wrap(
@@ -465,7 +546,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _volumeController,
                                       keyboardType: TextInputType.number,
-                                      onSubmitted: (value) => setState(() {}),
+                                      onSubmitted: (value) => _updateValues(),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -566,7 +647,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _nicBaseNicStrController,
                                       keyboardType: TextInputType.number,
-                                      onSubmitted: (value) => setState(() {}),
+                                      onSubmitted: (value) => _updateValues(),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -628,6 +709,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                   ),
                                                 );
                                               });
+                                              _updateValues();
                                             },
                                           ),
                                         ),
@@ -667,6 +749,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                   ),
                                                 );
                                               });
+                                              _updateValues();
                                             },
                                           ),
                                         ),
@@ -701,7 +784,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     TextField(
                                       controller: _targetNicStrController,
                                       keyboardType: TextInputType.number,
-                                      onSubmitted: (value) => setState(() {}),
+                                      onSubmitted: (value) => _updateValues(),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -763,6 +846,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                   ),
                                                 );
                                               });
+                                              _updateValues();
                                             },
                                           ),
                                         ),
@@ -802,6 +886,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                                   ),
                                                 );
                                               });
+                                              _updateValues();
                                             },
                                           ),
                                         ),
@@ -816,7 +901,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                       ],
                     ),
                   ),
-                  const Gap(8.0),
                   Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4.0),

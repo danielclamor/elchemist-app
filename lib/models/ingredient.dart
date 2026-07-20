@@ -6,6 +6,22 @@ enum IngredientType {
   pg,
   vgFlavor,
   pgFlavor;
+
+  @override
+  String toString() {
+    switch (this) {
+      case IngredientType.nicotine:
+        return "nicotine";
+      case IngredientType.vg:
+        return "vg";
+      case IngredientType.pg:
+        return "pg";
+      case IngredientType.vgFlavor:
+        return "vg flavor";
+      case IngredientType.pgFlavor:
+        return "pg flavor";
+    }
+  }
 }
 
 IngredientType getIngredientType(String ingredientType) {
@@ -24,11 +40,11 @@ IngredientType getIngredientType(String ingredientType) {
 
 class Ingredient {
   final Key? id;
-  final String name;
+  String name;
   double percentage;
   double volume;
   double weight;
-  final IngredientType type;
+  IngredientType type;
 
   Ingredient({
     required this.name,
@@ -38,4 +54,8 @@ class Ingredient {
     required this.type,
     this.id,
   });
+
+  @override
+  String toString() =>
+      'Ingredient: {name: $name, percentage: $percentage, volume: $volume, weight: $weight, type: $type}';
 }
