@@ -35,7 +35,7 @@ class DiyMixView extends StatefulWidget {
 }
 
 class _DiyMixViewState extends State<DiyMixView> {
-  late List<Ingredient> ingredients;
+  List<Ingredient> ingredients = [];
 
   final List<FlavorEntry> _flavorEntries = [];
 
@@ -61,28 +61,26 @@ class _DiyMixViewState extends State<DiyMixView> {
     _nicBaseVGController = TextEditingController(text: "0");
     _nicBasePGController = TextEditingController(text: "100");
 
-    final (nicBasePerc, nicBaseVol, nicBaseweight) = _getNicBaseValues();
-
     ingredients = <Ingredient>[
       Ingredient(
         name: "Nicotine Base",
-        percentage: nicBasePerc,
-        volume: nicBaseVol,
-        weight: nicBaseweight,
+        percentage: _getNicBaseValues().$1,
+        volume: _getNicBaseValues().$2,
+        weight: _getNicBaseValues().$3,
         type: IngredientType.nicotine,
       ),
       Ingredient(
         name: "VG",
-        percentage: 0.0,
-        volume: 0.0,
-        weight: 0.0,
+        percentage: _getVGValues().$1,
+        volume: _getVGValues().$2,
+        weight: _getVGValues().$3,
         type: IngredientType.vg,
       ),
       Ingredient(
         name: "PG",
-        percentage: 0.0,
-        volume: 0.0,
-        weight: 0.0,
+        percentage: _getPGValues().$1,
+        volume: _getPGValues().$2,
+        weight: _getPGValues().$3,
         type: IngredientType.pg,
       ),
     ];
@@ -134,6 +132,76 @@ class _DiyMixViewState extends State<DiyMixView> {
       nicotineVol + nicBasePGVol + nicBaseVGVol,
       nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
     );
+  }
+
+  (double, double, double) _getVGValues() {
+    final double volume = _volumeController.text == ""
+        ? 0.0
+        : double.parse(_volumeController.text) / 100;
+
+    final double targetNicStr =
+        double.parse(_targetNicStrController.text) / 100;
+    final double nicBaseNicStr =
+        double.parse(_nicBaseNicStrController.text) / 100;
+
+    final vgFlavors = ingredients
+        .where((ingredient) => ingredient.type == IngredientType.vgFlavor);
+
+    double totalFlavVGPerc = vgFlavors.isNotEmpty
+        ? vgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage) / 100
+        : 0.0;
+
+    double nicBaseVGPerc = _nicBaseVGController.text != ""
+        ? double.parse(_nicBaseVGController.text) / 100
+        : 0.0;
+
+    double targetVG = _targetVGController.text != ""
+        ? double.parse(_targetVGController.text) / 100
+        : 0.0;
+
+    double vgMixPerc = targetVG -
+        totalFlavVGPerc +
+        (targetNicStr *
+            (nicBaseVGPerc - targetVG - (nicBaseVGPerc / nicBaseNicStr)));
+
+    double ingredientVGVol = volume * vgMixPerc;
+
+    return (vgMixPerc, ingredientVGVol, vgGrams(ingredientVGVol));
+  }
+
+  (double, double, double) _getPGValues() {
+    final double volume = _volumeController.text == ""
+        ? 0.0
+        : double.parse(_volumeController.text) / 100;
+
+    final double targetNicStr =
+        double.parse(_targetNicStrController.text) / 100;
+    final double nicBaseNicStr =
+        double.parse(_nicBaseNicStrController.text) / 100;
+
+    final pgFlavors = ingredients
+        .where((ingredient) => ingredient.type == IngredientType.pgFlavor);
+
+    double totalFlavPGPerc = pgFlavors.isNotEmpty
+        ? pgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage) / 100
+        : 0.0;
+
+    double nicBasePGPerc = _nicBasePGController.text != ""
+        ? double.parse(_nicBasePGController.text) / 100
+        : 0.0;
+
+    double targetPG = _targetPGController.text != ""
+        ? double.parse(_targetPGController.text) / 100
+        : 0.0;
+
+    double pgMixPerc = targetPG -
+        totalFlavPGPerc +
+        (targetNicStr *
+            (nicBasePGPerc - targetPG - (nicBasePGPerc / nicBaseNicStr)));
+
+    double ingredientPGVol = volume * pgMixPerc;
+
+    return (pgMixPerc, ingredientPGVol, vgGrams(ingredientPGVol));
   }
 
   void _addEntry() {
