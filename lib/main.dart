@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NicBase(
               code: "1",
               name: "VG S",
-              isVg: true,
+              isVG: true,
               percentage: 1,
             ),
           ],
@@ -79,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NicBase(
               code: "1",
               name: "VG S",
-              isVg: true,
+              isVG: true,
               percentage: 1.0,
             ),
           ],
@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NicBase(
               code: "1CNT",
               name: "VG S",
-              isVg: false,
+              isVG: false,
               percentage: 1,
             ),
           ],
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NicBase(
               code: "1CNT",
               name: "VG S",
-              isVg: false,
+              isVG: false,
               percentage: 1,
             ),
           ],
@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NicBase(
               code: "2CNT",
               name: "PG S",
-              isVg: false,
+              isVG: false,
               percentage: 1.0,
             ),
           ],
@@ -203,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
             NicBase(
               code: "2CNT",
               name: "PG S",
-              isVg: false,
+              isVG: false,
               percentage: 1,
             ),
           ],
