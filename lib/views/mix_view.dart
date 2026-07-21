@@ -32,9 +32,9 @@ class NicBaseEntry {
 
   String get code {
     final label = nicBaseController.text;
-    final RegExp _labelPattern = RegExp(r'^(.*)\((.+)\)$');
+    final RegExp labelPattern = RegExp(r'^(.*)\((.+)\)$');
 
-    final match = _labelPattern.firstMatch(label.trim());
+    final match = labelPattern.firstMatch(label.trim());
     if (match == null) return "";
     return match.group(2)!.trim();
   }
@@ -100,6 +100,17 @@ class _MixViewState extends State<MixView> {
   late TextEditingController _nicBaseVGController;
   late TextEditingController _nicBasePGController;
 
+  List<TextEditingController> get _allControllers => [
+        _searchController,
+        _volumeController,
+        _targetNicStrController,
+        _targetVGController,
+        _targetPGController,
+        _nicBaseNicStrController,
+        _nicBaseVGController,
+        _nicBasePGController,
+      ];
+
   final List<NicBaseEntry> _nicBaseEntries = [];
   final List<Flavoring> _flavorings = [];
 
@@ -138,6 +149,15 @@ class _MixViewState extends State<MixView> {
     _volumeFocusNode.addListener(_handleVolumeFocusChange);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    for (final c in _allControllers) {
+      c.dispose();
+    }
+
+    super.dispose();
   }
 
   InputBorder _enabledBorder() => _isCustomChecked
@@ -332,8 +352,38 @@ class _MixViewState extends State<MixView> {
     return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
   }
 
+  void _changeRecipe() {
+    setState(() {
+      _recipe = null;
+      _selectedNicProfValue = null;
+      _nicProfile = null;
+      _nicBaseEntries.clear();
+      _isCustomChecked = false;
+      _ingredients = <Ingredient>[
+        Ingredient(
+          name: "VG",
+          percentage: 0.0,
+          volume: 0.0,
+          weight: 0.0,
+          type: IngredientType.vg,
+        ),
+        Ingredient(
+          name: "PG",
+          percentage: 0.0,
+          volume: 0.0,
+          weight: 0.0,
+          type: IngredientType.pg,
+        ),
+      ];
+
+      for (final c in _allControllers) {
+        c.clear();
+      }
+    });
+  }
+
   List<Ingredient> _populateIngredients() {
-    _ingredients = <Ingredient>[];
+    _ingredients.removeRange(0, _ingredients.length - 2);
 
     if (_nicBaseEntries.isNotEmpty) {
       var nicBaseTitle =
@@ -342,7 +392,8 @@ class _MixViewState extends State<MixView> {
       var (nicBasePercentage, nicBaseVolume, nicBaseweight) =
           _getNicBaseValues();
 
-      _ingredients.add(
+      _ingredients.insert(
+        0,
         Ingredient(
           name: nicBaseTitle,
           percentage: nicBasePercentage,
@@ -360,7 +411,8 @@ class _MixViewState extends State<MixView> {
           flavoring.percentage,
         );
 
-        _ingredients.add(
+        _ingredients.insert(
+          _ingredients.length - 2,
           Ingredient(
             name: flavoring.name,
             percentage: flavoring.percentage,
@@ -374,49 +426,19 @@ class _MixViewState extends State<MixView> {
       }
     }
 
-    final ingredientVG = _ingredients.firstWhereOrNull(
-      (ingredient) => ingredient.name == "VG",
-    );
+    final ingredientVG = _ingredients[_ingredients.length - 2];
     var (ingredientVGPerc, ingredientVGVol, ingredientVGWeight) =
         _getVGValues();
+    ingredientVG.percentage = ingredientVGPerc;
+    ingredientVG.volume = ingredientVGVol;
+    ingredientVG.weight = ingredientVGWeight;
 
-    if (ingredientVG != null) {
-      ingredientVG.percentage = ingredientVGPerc;
-      ingredientVG.volume = ingredientVGVol;
-      ingredientVG.weight = ingredientVGWeight;
-    } else {
-      _ingredients.add(
-        Ingredient(
-          name: "VG",
-          percentage: ingredientVGPerc,
-          volume: ingredientVGVol,
-          weight: ingredientVGWeight,
-          type: IngredientType.vg,
-        ),
-      );
-    }
-
-    final ingredientPG = _ingredients.firstWhereOrNull(
-      (ingredient) => ingredient.name == "PG",
-    );
+    final ingredientPG = _ingredients[_ingredients.length - 1];
     var (ingredientPGPerc, ingredientPGVol, ingredientPGWeight) =
         _getPGValues();
-
-    if (ingredientPG != null) {
-      ingredientPG.percentage = ingredientPGPerc;
-      ingredientPG.volume = ingredientPGVol;
-      ingredientPG.weight = ingredientPGWeight;
-    } else {
-      _ingredients.add(
-        Ingredient(
-          name: "PG",
-          percentage: ingredientPGPerc,
-          volume: ingredientPGVol,
-          weight: ingredientPGWeight,
-          type: IngredientType.pg,
-        ),
-      );
-    }
+    ingredientPG.percentage = ingredientPGPerc;
+    ingredientPG.volume = ingredientPGVol;
+    ingredientPG.weight = ingredientPGWeight;
 
     return _ingredients;
   }
@@ -701,7 +723,8 @@ class _MixViewState extends State<MixView> {
                                             onTap: () {
                                               setState(() {
                                                 controller.closeView(
-                                                    suggestionItem.name);
+                                                  suggestionItem.name,
+                                                );
                                                 _recipe = suggestionItem;
                                               });
                                             },
@@ -750,17 +773,7 @@ class _MixViewState extends State<MixView> {
                                               icon: const Icon(
                                                 Icons.change_circle_sharp,
                                               ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _recipe = null;
-                                                  _selectedNicProfValue = null;
-                                                  _nicProfile = null;
-                                                  _searchController.clear();
-                                                  _volumeController.clear();
-                                                  _targetNicStrController
-                                                      .clear();
-                                                });
-                                              },
+                                              onPressed: () => _changeRecipe(),
                                             ),
                                           ],
                                         ),
