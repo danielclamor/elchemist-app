@@ -17,4 +17,6 @@ class NicBase {
         isVG: map["is_vg"] as bool,
         percentage: map["percentage"] as double,
       );
+
+  String get label => '$name ($code)';
 }

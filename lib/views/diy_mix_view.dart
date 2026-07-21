@@ -221,6 +221,36 @@ class _DiyMixViewState extends State<DiyMixView> {
     return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
   }
 
+  void _updateValues() {
+    for (Ingredient ingredient in ingredients) {
+      var (percentage, volume, weight) = (0.0, 0.0, 0.0);
+      switch (ingredient.type) {
+        case IngredientType.nicotine:
+          (percentage, volume, weight) = _getNicBaseValues();
+        case IngredientType.vg:
+          (percentage, volume, weight) = _getVGValues();
+        case IngredientType.pg:
+          (percentage, volume, weight) = _getPGValues();
+        case IngredientType.vgFlavor:
+          (percentage, volume, weight) = _getFlavorValues(
+            true,
+            ingredient.percentage,
+          );
+        case IngredientType.pgFlavor:
+          (percentage, volume, weight) = _getFlavorValues(
+            false,
+            ingredient.percentage,
+          );
+      }
+
+      setState(() {
+        ingredient.percentage = percentage;
+        ingredient.volume = volume;
+        ingredient.weight = weight;
+      });
+    }
+  }
+
   void _addEntry() {
     final flavor = 'Flavor ${_flavorEntries.length + 1}';
     const percentage = "0";
@@ -261,36 +291,6 @@ class _DiyMixViewState extends State<DiyMixView> {
       );
     });
     _updateValues();
-  }
-
-  void _updateValues() {
-    for (Ingredient ingredient in ingredients) {
-      var (percentage, volume, weight) = (0.0, 0.0, 0.0);
-      switch (ingredient.type) {
-        case IngredientType.nicotine:
-          (percentage, volume, weight) = _getNicBaseValues();
-        case IngredientType.vg:
-          (percentage, volume, weight) = _getVGValues();
-        case IngredientType.pg:
-          (percentage, volume, weight) = _getPGValues();
-        case IngredientType.vgFlavor:
-          (percentage, volume, weight) = _getFlavorValues(
-            true,
-            ingredient.percentage,
-          );
-        case IngredientType.pgFlavor:
-          (percentage, volume, weight) = _getFlavorValues(
-            false,
-            ingredient.percentage,
-          );
-      }
-
-      setState(() {
-        ingredient.percentage = percentage;
-        ingredient.volume = volume;
-        ingredient.weight = weight;
-      });
-    }
   }
 
   Widget _buildEntryRow(FlavorEntry entry) {

@@ -8,6 +8,61 @@ import 'package:elchemist_app/models/recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+class NicBaseEntry {
+  NicBaseEntry({
+    String? nicBase,
+    String? percentage,
+    bool? isVG,
+  })  : id = UniqueKey(),
+        nicBaseController = TextEditingController(text: nicBase),
+        percentageController = TextEditingController(text: percentage),
+        isVG = isVG ?? false;
+
+  final Key id;
+  final TextEditingController nicBaseController;
+  final TextEditingController percentageController;
+  final FocusNode percentageFocusNode = FocusNode();
+  bool isVG;
+
+  void dispose() {
+    nicBaseController.dispose();
+    percentageController.dispose();
+    percentageFocusNode.dispose();
+  }
+
+  String get code {
+    final label = nicBaseController.text;
+    final RegExp _labelPattern = RegExp(r'^(.*)\((.+)\)$');
+
+    final match = _labelPattern.firstMatch(label.trim());
+    if (match == null) return "";
+    return match.group(2)!.trim();
+  }
+}
+
+class NicBaseOption {
+  final String code;
+  final String name;
+  final bool isVG;
+
+  NicBaseOption({
+    required this.code,
+    required this.name,
+    required this.isVG,
+  });
+
+  @override
+  bool operator ==(other) => other is NicBaseOption && code == other.code;
+
+  @override
+  int get hashCode => Object.hash(code.hashCode, name.hashCode);
+
+  String get label => '$name ($code)';
+
+  @override
+  String toString() => 'NicBaseOption: {label: $label, is_vg: $isVG"}';
+}
+
 class MixView extends StatefulWidget {
   final List<Recipe> recipes;
 
@@ -23,6 +78,14 @@ class MixView extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _MixViewState extends State<MixView> {
+  final List<NicBaseOption> _nicBaseOptions = [
+    NicBaseOption(code: "1", name: "VG S", isVG: true),
+    NicBaseOption(code: "2P", name: "PG S", isVG: false),
+    NicBaseOption(code: "3P", name: "VG F", isVG: true),
+    NicBaseOption(code: "1CNT", name: "VG S", isVG: true),
+    NicBaseOption(code: "2CNT", name: "PG S", isVG: false),
+  ];
+
   Recipe? _recipe;
   String? _selectedNicProfValue;
   NicProfile? _nicProfile;
@@ -33,8 +96,9 @@ class _MixViewState extends State<MixView> {
   late TextEditingController _targetNicStrController;
   late TextEditingController _targetVGController;
   late TextEditingController _targetPGController;
-  List<NicBase>? _nicBases;
-  List<Flavoring>? _flavorings;
+
+  final List<NicBaseEntry> _nicBaseEntries = [];
+  final List<Flavoring> _flavorings = [];
 
   final FocusNode _volumeFocusNode = FocusNode();
   String _prevVolumeText = "";
@@ -116,8 +180,8 @@ class _MixViewState extends State<MixView> {
     var nicBaseVGVol = 0.0;
     var nicBasePGVol = 0.0;
 
-    if (_nicBases != null && _nicBases!.isNotEmpty) {
-      nicBaseVGVol = _nicBases!.where((nicBase) => nicBase.isVG).fold(
+    if (_nicBaseEntries.isNotEmpty) {
+      nicBaseVGVol = _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
             0.0,
             (sum, nicBase) =>
                 sum +
@@ -125,11 +189,11 @@ class _MixViewState extends State<MixView> {
                   volume,
                   _nicProfile!.targetNicStr,
                   _nicProfile!.nicBaseStr,
-                  nicBase.percentage,
+                  double.parse(nicBase.percentageController.text),
                 ),
           );
 
-      nicBasePGVol = _nicBases!.where((nicBase) => !nicBase.isVG).fold(
+      nicBasePGVol = _nicBaseEntries.where((nicBase) => !nicBase.isVG).fold(
             0.0,
             (sum, nicBase) =>
                 sum +
@@ -137,7 +201,7 @@ class _MixViewState extends State<MixView> {
                   volume,
                   _nicProfile!.targetNicStr,
                   _nicProfile!.nicBaseStr,
-                  nicBase.percentage,
+                  double.parse(nicBase.percentageController.text),
                 ),
           );
 
@@ -181,14 +245,15 @@ class _MixViewState extends State<MixView> {
     final double nicStr = _nicProfile?.targetNicStr ?? 0.0;
 
     double totalFlavVGPerc = _flavorings
-            ?.where((flavor) => flavor.isVG)
-            .fold(0.0, (sum, flavor) => sum! + flavor.percentage) ??
-        0.0;
+        .where((flavor) => flavor.isVG)
+        .fold(0.0, (sum, flavor) => sum + flavor.percentage);
 
-    double totalNicBaseVGPerc = _nicBases
-            ?.where((nicBase) => nicBase.isVG)
-            .fold(0.0, (sum, nicBase) => sum! + nicBase.percentage) ??
-        0.0;
+    double totalNicBaseVGPerc =
+        _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
+              0.0,
+              (sum, nicBase) =>
+                  sum + (double.parse(nicBase.percentageController.text) / 100),
+            );
 
     double vgMixPerc = _nicProfile != null
         ? _nicProfile!.targetVG -
@@ -212,14 +277,15 @@ class _MixViewState extends State<MixView> {
     final double nicStr = _nicProfile?.targetNicStr ?? 0.0;
 
     double totalFlavPGPerc = _flavorings
-            ?.where((flavor) => !flavor.isVG)
-            .fold(0.0, (sum, flavor) => sum! + flavor.percentage) ??
-        0.0;
+        .where((flavor) => !flavor.isVG)
+        .fold(0.0, (sum, flavor) => sum + flavor.percentage);
 
-    double totalNicBasePGPerc = _nicBases
-            ?.where((nicBase) => !nicBase.isVG)
-            .fold(0.0, (sum, nicBase) => sum! + nicBase.percentage) ??
-        0.0;
+    double totalNicBasePGPerc = _nicBaseEntries
+        .where((nicBase) => !nicBase.isVG)
+        .fold(
+            0.0,
+            (sum, nicBase) =>
+                sum + (double.parse(nicBase.percentageController.text) / 100));
 
     double pgMixPerc = _nicProfile != null
         ? _nicProfile!.targetPG -
@@ -238,9 +304,9 @@ class _MixViewState extends State<MixView> {
   List<Ingredient> _populateIngredients() {
     _ingredients = <Ingredient>[];
 
-    if (_nicBases != null && _nicBases!.isNotEmpty) {
+    if (_nicBaseEntries.isNotEmpty) {
       var nicBaseTitle =
-          'Nicotine base ${_nicBases?.map((nicBase) => '(${nicBase.code})').join(" / ")}';
+          'Nicotine base${_nicBaseEntries.map((nicBase) => ' (${nicBase.code})').join(" / ")}';
 
       var (nicBasePercentage, nicBaseVolume, nicBaseweight) =
           _getNicBaseValues();
@@ -256,27 +322,25 @@ class _MixViewState extends State<MixView> {
       );
     }
 
-    if (_flavorings != null && _flavorings!.isNotEmpty) {
-      _flavorings?.forEach(
-        (flavoring) {
-          var (flavoringPerc, flavoringVol, flavoringWeight) = _getFlavorValues(
-            flavoring.isVG,
-            flavoring.percentage,
-          );
+    if (_flavorings.isNotEmpty) {
+      for (var flavoring in _flavorings) {
+        var (flavoringPerc, flavoringVol, flavoringWeight) = _getFlavorValues(
+          flavoring.isVG,
+          flavoring.percentage,
+        );
 
-          _ingredients.add(
-            Ingredient(
-              name: flavoring.name,
-              percentage: flavoring.percentage,
-              volume: flavoringVol,
-              weight: flavoringWeight,
-              type: flavoring.isVG
-                  ? IngredientType.vgFlavor
-                  : IngredientType.pgFlavor,
-            ),
-          );
-        },
-      );
+        _ingredients.add(
+          Ingredient(
+            name: flavoring.name,
+            percentage: flavoring.percentage,
+            volume: flavoringVol,
+            weight: flavoringWeight,
+            type: flavoring.isVG
+                ? IngredientType.vgFlavor
+                : IngredientType.pgFlavor,
+          ),
+        );
+      }
     }
 
     final ingredientVG = _ingredients.firstWhereOrNull(
@@ -324,6 +388,160 @@ class _MixViewState extends State<MixView> {
     }
 
     return _ingredients;
+  }
+
+  void _updateValues() {
+    for (Ingredient ingredient in _ingredients) {
+      var (percentage, volume, weight) = (0.0, 0.0, 0.0);
+      switch (ingredient.type) {
+        case IngredientType.nicotine:
+          (percentage, volume, weight) = _getNicBaseValues();
+        case IngredientType.vg:
+          (percentage, volume, weight) = _getVGValues();
+        case IngredientType.pg:
+          (percentage, volume, weight) = _getPGValues();
+        case IngredientType.vgFlavor:
+          (percentage, volume, weight) = _getFlavorValues(
+            true,
+            ingredient.percentage,
+          );
+        case IngredientType.pgFlavor:
+          (percentage, volume, weight) = _getFlavorValues(
+            false,
+            ingredient.percentage,
+          );
+      }
+
+      setState(() {
+        ingredient.percentage = percentage;
+        ingredient.volume = volume;
+        ingredient.weight = weight;
+      });
+    }
+  }
+
+  void _addEntry(NicBase? nicBase) {
+    final entry = NicBaseEntry(
+      nicBase: nicBase?.label ?? "",
+      percentage: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
+    );
+    entry.percentageFocusNode.addListener(() {
+      if (mounted) setState(() {});
+    });
+    setState(() {
+      _nicBaseEntries.add(entry);
+    });
+    _updateValues();
+  }
+
+  void _removeEntry(NicBaseEntry entry) {
+    setState(() {
+      entry.dispose();
+      _nicBaseEntries.remove(entry);
+    });
+    _updateValues();
+  }
+
+  Widget _buildEntryRow(NicBaseEntry entry) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _isCustomChecked && _nicBaseEntries.length > 1
+            ? IconButton(
+                onPressed: () => _removeEntry(entry),
+                icon: const Icon(
+                  Icons.delete,
+                ),
+              )
+            : const SizedBox.shrink(),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) => IgnorePointer(
+              ignoring: !_isCustomChecked,
+              child: DropdownMenu<String>(
+                width: constraints.maxWidth,
+                selectOnly: true,
+                initialSelection: _nicBaseOptions
+                    .firstWhereOrNull(
+                      (option) => option.label == entry.nicBaseController.text,
+                    )
+                    ?.label,
+                controller: entry.nicBaseController,
+                label: const Text('Name'),
+                inputDecorationTheme: InputDecorationTheme(
+                  enabledBorder: _enabledBorder(),
+                  disabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Color(0xFFDCDCDC),
+                    ),
+                  ),
+                  focusedBorder: _focusedBorder(),
+                  filled: _isCustomChecked,
+                  fillColor: _isCustomChecked ? Colors.white60 : null,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 8.0,
+                  ),
+                ),
+                dropdownMenuEntries: UnmodifiableListView<MenuEntry>(
+                  _nicBaseOptions.map<MenuEntry>(
+                    (option) => MenuEntry(
+                      value: option.code,
+                      label: option.label,
+                    ),
+                  ),
+                ),
+                onSelected: (value) {
+                  final nicBaseOption = _nicBaseOptions.firstWhere(
+                    (option) => option.code == value,
+                  );
+                  setState(() {
+                    entry.isVG = nicBaseOption.isVG;
+                  });
+                },
+              ),
+            ),
+          ),
+        ),
+        const Gap(8),
+        Container(
+          constraints: const BoxConstraints(maxWidth: 120),
+          child: TextField(
+            readOnly: !_isCustomChecked,
+            controller: entry.percentageController,
+            onSubmitted: (value) {
+              setState(() {});
+            },
+            decoration: InputDecoration(
+              enabledBorder: _enabledBorder(),
+              focusedBorder: _focusedBorder(),
+              filled: _isCustomChecked,
+              fillColor: _isCustomChecked ? Colors.white60 : null,
+              labelText: "Percentage",
+              suffix: const Text("%"),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 8.0,
+              ),
+            ),
+          ),
+        ),
+        Column(
+          children: [
+            const Text("VG"),
+            Checkbox(
+              value: entry.isVG,
+              onChanged: null,
+              side: const BorderSide(
+                color: Color(
+                  0xFFB0B0B0,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   @override
@@ -582,10 +800,19 @@ class _MixViewState extends State<MixView> {
                                                       targetPG
                                                           .toStringAsFixed(4);
 
-                                                  _nicBases =
-                                                      _nicProfile!.nicBaseList;
-                                                  _flavorings = _nicProfile!
-                                                      .flavoringList;
+                                                  _nicBaseEntries.clear();
+
+                                                  for (var nicBase
+                                                      in _nicProfile!
+                                                          .nicBaseList) {
+                                                    _addEntry(nicBase);
+                                                  }
+
+                                                  _flavorings.clear();
+
+                                                  _flavorings.addAll(
+                                                    _nicProfile!.flavoringList,
+                                                  );
 
                                                   _ingredients =
                                                       _populateIngredients();
@@ -688,7 +915,9 @@ class _MixViewState extends State<MixView> {
                                   child: Container(
                                     padding: const EdgeInsets.all(16.0),
                                     constraints: const BoxConstraints(
-                                        minWidth: 500, maxWidth: 500),
+                                      minWidth: 500,
+                                      maxWidth: 500,
+                                    ),
                                     child: Column(
                                       spacing: 12,
                                       crossAxisAlignment:
@@ -701,7 +930,7 @@ class _MixViewState extends State<MixView> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        ..._flavorings!.map(
+                                        ..._flavorings.map(
                                           (flavoring) => Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
@@ -744,7 +973,8 @@ class _MixViewState extends State<MixView> {
                                                   Container(
                                                     constraints:
                                                         const BoxConstraints(
-                                                            maxWidth: 120),
+                                                      maxWidth: 120,
+                                                    ),
                                                     child: TextField(
                                                       readOnly:
                                                           !_isCustomChecked,
@@ -761,6 +991,12 @@ class _MixViewState extends State<MixView> {
                                                             _enabledBorder(),
                                                         focusedBorder:
                                                             _focusedBorder(),
+                                                        filled:
+                                                            _isCustomChecked,
+                                                        fillColor:
+                                                            _isCustomChecked
+                                                                ? Colors.white60
+                                                                : null,
                                                         labelText: "Percentage",
                                                         suffix: const Text("%"),
                                                         contentPadding:
@@ -858,20 +1094,22 @@ class _MixViewState extends State<MixView> {
                                         child: TextField(
                                           readOnly: true,
                                           controller: TextEditingController(
-                                            text: ((_nicBases
-                                                            ?.where((nicbase) =>
-                                                                nicbase.isVG)
-                                                            .fold(
-                                                              0.0,
-                                                              (sum, nicBase) =>
-                                                                  sum +
-                                                                  nicBase
-                                                                      .percentage,
-                                                            ) ??
-                                                        0.0) *
+                                            text: (_nicBaseEntries
+                                                        .where((entry) =>
+                                                            entry.isVG)
+                                                        .fold(
+                                                          0.0,
+                                                          (sum, entry) =>
+                                                              sum +
+                                                              (double.parse(entry
+                                                                      .percentageController
+                                                                      .text) /
+                                                                  100),
+                                                        ) *
                                                     100)
                                                 .toStringAsFixed(0),
                                           ),
+                                          onChanged: (value) => _updateValues(),
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
@@ -898,21 +1136,21 @@ class _MixViewState extends State<MixView> {
                                         child: TextField(
                                           readOnly: true,
                                           controller: TextEditingController(
-                                              text: ((_nicBases
-                                                              ?.where(
-                                                                  (nicbase) =>
-                                                                      !nicbase
-                                                                          .isVG)
-                                                              .fold(
-                                                                0.0,
-                                                                (sum, nicBase) =>
-                                                                    sum +
-                                                                    nicBase
-                                                                        .percentage,
-                                                              ) ??
-                                                          0.0) *
+                                              text: (_nicBaseEntries
+                                                          .where((entry) =>
+                                                              !entry.isVG)
+                                                          .fold(
+                                                            0.0,
+                                                            (sum, entry) =>
+                                                                sum +
+                                                                (double.parse(entry
+                                                                        .percentageController
+                                                                        .text) /
+                                                                    100),
+                                                          ) *
                                                       100)
                                                   .toStringAsFixed(0)),
+                                          onChanged: (value) => _updateValues(),
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
@@ -937,8 +1175,7 @@ class _MixViewState extends State<MixView> {
                                       ),
                                     ],
                                   ),
-                                  _selectedNicProfValue == null ||
-                                          _nicBases!.isEmpty
+                                  _nicBaseEntries.isEmpty
                                       ? const SizedBox.shrink()
                                       : Column(
                                           children: [
@@ -948,108 +1185,8 @@ class _MixViewState extends State<MixView> {
                                               color: Colors.grey[350],
                                             ),
                                             const Gap(8.0),
-                                            ..._nicBases!.map(
-                                              (nicBase) => Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  _isCustomChecked &&
-                                                          _nicBases!.length > 1
-                                                      ? IconButton(
-                                                          onPressed: () {},
-                                                          icon: const Icon(
-                                                            Icons.delete,
-                                                          ),
-                                                        )
-                                                      : const SizedBox.shrink(),
-                                                  Expanded(
-                                                    child: TextField(
-                                                      readOnly: true,
-                                                      controller:
-                                                          TextEditingController(
-                                                        text:
-                                                            '${nicBase.name} (${nicBase.code})',
-                                                      ),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        enabledBorder:
-                                                            _enabledBorder(),
-                                                        focusedBorder:
-                                                            _focusedBorder(),
-                                                        labelText: "Name",
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 0,
-                                                          horizontal: 8.0,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const Gap(8),
-                                                  Container(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                            maxWidth: 120),
-                                                    child: TextField(
-                                                      readOnly: true,
-                                                      controller:
-                                                          TextEditingController(
-                                                        text: (nicBase
-                                                                    .percentage *
-                                                                100)
-                                                            .toStringAsFixed(0),
-                                                      ),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        enabledBorder:
-                                                            _enabledBorder(),
-                                                        focusedBorder:
-                                                            _focusedBorder(),
-                                                        labelText: "Percentage",
-                                                        suffix: const Text("%"),
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 0,
-                                                          horizontal: 8.0,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      const Text("VG"),
-                                                      Checkbox(
-                                                        value: nicBase.isVG,
-                                                        onChanged:
-                                                            _isCustomChecked
-                                                                ? (value) {
-                                                                    if (value !=
-                                                                        null) {
-                                                                      setState(
-                                                                          () {
-                                                                        nicBase.isVG =
-                                                                            value;
-                                                                      });
-                                                                    }
-                                                                  }
-                                                                : null,
-                                                        side: BorderSide(
-                                                          color:
-                                                              _isCustomChecked
-                                                                  ? const Color(
-                                                                      0xFF6CA0C4)
-                                                                  : const Color(
-                                                                      0xFFB0B0B0,
-                                                                    ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                            ..._nicBaseEntries.map(
+                                              (entry) => _buildEntryRow(entry),
                                             ),
                                           ],
                                         ),
@@ -1059,7 +1196,7 @@ class _MixViewState extends State<MixView> {
                                               MainAxisAlignment.end,
                                           children: [
                                             TextButton(
-                                              onPressed: () {},
+                                              onPressed: () => _addEntry(null),
                                               child: const Text("+ Add"),
                                             ),
                                           ],
@@ -1098,6 +1235,10 @@ class _MixViewState extends State<MixView> {
                                     decoration: InputDecoration(
                                       enabledBorder: _enabledBorder(),
                                       focusedBorder: _focusedBorder(),
+                                      filled: _isCustomChecked,
+                                      fillColor: _isCustomChecked
+                                          ? Colors.white60
+                                          : null,
                                       labelText: "Nic Str",
                                       suffix: const Text("%"),
                                       contentPadding:
@@ -1119,6 +1260,10 @@ class _MixViewState extends State<MixView> {
                                           decoration: InputDecoration(
                                             enabledBorder: _enabledBorder(),
                                             focusedBorder: _focusedBorder(),
+                                            filled: _isCustomChecked,
+                                            fillColor: _isCustomChecked
+                                                ? Colors.white60
+                                                : null,
                                             labelText: "VG",
                                             suffix: const Text("%"),
                                             contentPadding:
@@ -1137,6 +1282,10 @@ class _MixViewState extends State<MixView> {
                                           decoration: InputDecoration(
                                             enabledBorder: _enabledBorder(),
                                             focusedBorder: _focusedBorder(),
+                                            filled: _isCustomChecked,
+                                            fillColor: _isCustomChecked
+                                                ? Colors.white60
+                                                : null,
                                             labelText: "PG",
                                             suffix: const Text("%"),
                                             contentPadding:
