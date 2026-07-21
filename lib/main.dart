@@ -228,19 +228,19 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _widgetOptions = <Widget>[
-      MixView(recipes: recipes),
       const DiyMixView(),
+      MixView(recipes: recipes),
       RecipeListView(recipes: recipes),
     ];
 
     bottomNavigationBarItems = const <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: Icon(Icons.manage_search),
-        label: 'Search and Mix',
-      ),
-      BottomNavigationBarItem(
         icon: Icon(Icons.science),
         label: 'DIY',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.manage_search),
+        label: 'Search and Mix',
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.book),
