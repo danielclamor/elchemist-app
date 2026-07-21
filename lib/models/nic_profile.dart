@@ -8,7 +8,7 @@ class NicProfile {
   final double targetNicStr;
   final double targetVG;
   final double targetPG;
-  final double nicBaseStr;
+  final double nicBaseNicStr;
   final List<NicBase> nicBaseList;
   final List<Flavoring> flavoringList;
 
@@ -18,7 +18,7 @@ class NicProfile {
     required this.targetNicStr,
     required this.targetVG,
     required this.targetPG,
-    required this.nicBaseStr,
+    required this.nicBaseNicStr,
     required this.nicBaseList,
     required this.flavoringList,
   });
@@ -29,7 +29,7 @@ class NicProfile {
         targetNicStr: map["target_nic_str"] as double,
         targetVG: map["target_vg"] as double,
         targetPG: map["target_pg"] as double,
-        nicBaseStr: map["nic_base_str"] as double,
+        nicBaseNicStr: map["nic_base_str"] as double,
         nicBaseList: (map["nic_bases"] as List<Map<String, dynamic>>)
             .map((nicBase) => NicBase.fromMap(nicBase))
             .toList(),

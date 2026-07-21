@@ -51,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.04,
           targetVG: 0.35,
           targetPG: 0.65,
-          nicBaseStr: 1,
+          nicBaseNicStr: 1,
           nicBaseList: [
             NicBase(
               code: "1",
@@ -74,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.08,
           targetVG: 0.35,
           targetPG: 0.65,
-          nicBaseStr: 1.0,
+          nicBaseNicStr: 1.0,
           nicBaseList: [
             NicBase(
               code: "1",
@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.01,
           targetVG: 0.35,
           targetPG: 0.65,
-          nicBaseStr: 0.1,
+          nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
               code: "1CNT",
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.02,
           targetVG: 0.35,
           targetPG: 0.65,
-          nicBaseStr: 0.1,
+          nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
               code: "1CNT",
@@ -159,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.0,
           targetVG: 0.40,
           targetPG: 0.60,
-          nicBaseStr: 0.1,
+          nicBaseNicStr: 0.1,
           nicBaseList: [],
           flavoringList: [
             Flavoring(
@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.01,
           targetVG: 0.40,
           targetPG: 0.60,
-          nicBaseStr: 0.1,
+          nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
               code: "2CNT",
@@ -198,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetNicStr: 0.02,
           targetVG: 0.40,
           targetPG: 0.60,
-          nicBaseStr: 0.1,
+          nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
               code: "2CNT",

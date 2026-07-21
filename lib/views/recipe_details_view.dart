@@ -302,7 +302,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                       ),
                                     ),
                                     Text(
-                                      'Nic Str: ${(_nicProfile!.nicBaseStr * 100).toStringAsFixed(2)}%',
+                                      'Nic Str: ${(_nicProfile!.nicBaseNicStr * 100).toStringAsFixed(2)}%',
                                       style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
