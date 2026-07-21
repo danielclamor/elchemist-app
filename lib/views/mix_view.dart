@@ -477,6 +477,7 @@ class _MixViewState extends State<MixView> {
     final entry = NicBaseEntry(
       nicBase: nicBase?.label ?? "",
       percentage: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
+      isVG: nicBase?.isVG,
     );
     entry.percentageFocusNode.addListener(() {
       if (mounted) setState(() {});
@@ -933,6 +934,87 @@ class _MixViewState extends State<MixView> {
                                                 ),
                                               ],
                                             ),
+                                            !_isCustomChecked
+                                                ? const SizedBox.shrink()
+                                                : Expanded(
+                                                    child: TextField(
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: (_nicProfile!
+                                                                    .isNewMix
+                                                                ? double.parse(
+                                                                        _targetNicStrController
+                                                                            .text) *
+                                                                    10
+                                                                : double.parse(
+                                                                        _targetNicStrController
+                                                                            .text) *
+                                                                    2.5)
+                                                            .toString(),
+                                                      ),
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      decoration:
+                                                          const InputDecoration(
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: Color(
+                                                                0xFF6CA0C4),
+                                                          ),
+                                                        ),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                            color: Color(
+                                                                0xFF0E76BD),
+                                                          ),
+                                                        ),
+                                                        filled: true,
+                                                        fillColor:
+                                                            Colors.white60,
+                                                        labelText: "Nic Str",
+                                                        suffix: Text("mg"),
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 8.0,
+                                                        ),
+                                                      ),
+                                                      onSubmitted: (value) {
+                                                        if (value.isEmpty) {
+                                                          return;
+                                                        }
+                                                        final bool isNewMix =
+                                                            _nicProfile!
+                                                                .isNewMix;
+
+                                                        setState(() {
+                                                          if (isNewMix) {
+                                                            _targetNicStrController
+                                                                .text = (double
+                                                                        .parse(
+                                                                            value) /
+                                                                    10)
+                                                                .toStringAsFixed(
+                                                                    2);
+                                                          } else {
+                                                            _targetNicStrController
+                                                                .text = (double
+                                                                        .parse(
+                                                                            value) /
+                                                                    2.5)
+                                                                .toStringAsFixed(
+                                                                    2);
+                                                          }
+                                                        });
+                                                        _updateValues();
+                                                      },
+                                                    ),
+                                                  )
                                           ],
                                         ),
                                         const Gap(12),
@@ -973,12 +1055,7 @@ class _MixViewState extends State<MixView> {
                                                         _prevVolumeText;
                                                     return;
                                                   }
-
-                                                  setState(() {
-                                                    // _volumeController.text = value;
-                                                    _ingredients =
-                                                        _populateIngredients();
-                                                  });
+                                                  _updateValues();
                                                   _hasVolumeChanged =
                                                       value.isNotEmpty;
                                                 },
@@ -1282,21 +1359,24 @@ class _MixViewState extends State<MixView> {
                                   ),
                                   const Gap(12),
                                   TextField(
-                                    readOnly: !_isCustomChecked,
+                                    readOnly: true,
                                     controller: _targetNicStrController,
                                     keyboardType: TextInputType.number,
                                     onSubmitted: (value) => _updateValues(),
-                                    decoration: InputDecoration(
-                                      enabledBorder: _enabledBorder(),
-                                      focusedBorder: _focusedBorder(),
-                                      filled: _isCustomChecked,
-                                      fillColor: _isCustomChecked
-                                          ? Colors.white60
-                                          : null,
+                                    decoration: const InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
                                       labelText: "Nic Str",
-                                      suffix: const Text("%"),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
+                                      suffix: Text("%"),
+                                      contentPadding: EdgeInsets.symmetric(
                                         vertical: 0,
                                         horizontal: 8.0,
                                       ),
