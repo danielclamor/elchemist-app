@@ -24,8 +24,8 @@ typedef MenuEntry = DropdownMenuEntry<String>;
 class _RecipeDetailsViewState extends State<RecipeDetailsView> {
   String? _selectedNicProfValue;
   NicProfile? _nicProfile;
-  List<NicBase>? nicBases;
-  List<Flavoring>? flavorings;
+  List<NicBase> nicBases = [];
+  List<Flavoring> flavorings = [];
 
   late TextEditingController _nicStrController;
   late TextEditingController _targetVGController;
@@ -42,6 +42,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final availableWidth = screenSize.width - 96;
+    final sectionWidth = availableWidth / 4;
+
     final Recipe recipe = widget.recipe;
 
     return Scaffold(
@@ -60,9 +64,9 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Wrap(
+            spacing: 12.0,
+            runSpacing: 8.0,
             children: [
               Card(
                 shape: RoundedRectangleBorder(
@@ -71,8 +75,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                   ),
                 ),
                 child: Container(
+                  width: sectionWidth,
                   padding: const EdgeInsets.all(16.0),
-                  constraints: const BoxConstraints(maxWidth: 500),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -162,7 +166,6 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             child: TextField(
                               readOnly: true,
                               controller: _nicStrController,
-                              keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -190,194 +193,72 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           ),
                         ],
                       ),
-                      const Gap(12),
-                      _selectedNicProfValue == null
-                          ? const SizedBox.shrink()
-                          : Column(
-                              spacing: 12,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Gap(12),
-                                Divider(
-                                  thickness: 1,
-                                  color: Colors.grey[350],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Target",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Nic Str: ${(_nicProfile!.targetNicStr * 100).toStringAsFixed(2)}%',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  spacing: 12,
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        readOnly: true,
-                                        controller: _targetVGController,
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
-                                          ),
-                                          labelText: "VG",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: TextField(
-                                        readOnly: true,
-                                        controller: _targetPGController,
-                                        keyboardType: TextInputType.number,
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
-                                          ),
-                                          labelText: "PG",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                    ],
+                  ),
+                ),
+              ),
+              _selectedNicProfValue == null
+                  ? const SizedBox.shrink()
+                  : Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      margin: EdgeInsets.zero,
+                      child: Container(
+                        width: sectionWidth,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Flavouring",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                      _selectedNicProfValue == null || nicBases!.isEmpty
-                          ? const SizedBox.shrink()
-                          : Column(
-                              spacing: 12,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Gap(12),
-                                Divider(
-                                  thickness: 1,
-                                  color: Colors.grey[350],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Nic Base",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                            const Gap(12),
+                            ...flavorings.map(
+                              (flavoring) => Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      readOnly: true,
+                                      controller: TextEditingController(
+                                        text: flavoring.name,
+                                      ),
+                                      decoration: const InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFFDCDCDC),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFFDCDCDC),
+                                          ),
+                                        ),
+                                        labelText: "Name",
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          horizontal: 8.0,
+                                        ),
                                       ),
                                     ),
-                                    Text(
-                                      'Nic Str: ${(_nicProfile!.nicBaseNicStr * 100).toStringAsFixed(2)}%',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                ...nicBases!.map(
-                                  (nicBase) => Row(
+                                  ),
+                                  const Gap(8),
+                                  Row(
                                     children: [
-                                      Expanded(
+                                      Container(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 120),
                                         child: TextField(
                                           readOnly: true,
                                           controller: TextEditingController(
-                                            text: (nicBase.percentage * 100)
-                                                .toStringAsFixed(0),
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                          decoration: InputDecoration(
-                                            enabledBorder:
-                                                const OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
-                                            ),
-                                            focusedBorder:
-                                                const OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
-                                            ),
-                                            labelText:
-                                                '${nicBase.name} (${nicBase.code})',
-                                            suffix: const Text("%"),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                              vertical: 0,
-                                              horizontal: 8.0,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                      _selectedNicProfValue == null
-                          ? const SizedBox.shrink()
-                          : Column(
-                              spacing: 12,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Gap(12),
-                                Divider(
-                                  thickness: 1,
-                                  color: Colors.grey[350],
-                                ),
-                                const Text(
-                                  "Flavouring",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                ...flavorings!.map(
-                                  (flavoring) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          readOnly: true,
-                                          controller: TextEditingController(
-                                            text: flavoring.name,
+                                            text: (flavoring.percentage * 100)
+                                                .toStringAsFixed(4),
                                           ),
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
@@ -390,7 +271,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                 color: Color(0xFFDCDCDC),
                                               ),
                                             ),
-                                            labelText: "Name",
+                                            labelText: "Percentage",
+                                            suffix: Text("%"),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                               vertical: 0,
@@ -399,67 +281,357 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                           ),
                                         ),
                                       ),
-                                      const Gap(8),
-                                      Row(
+                                      Column(
                                         children: [
-                                          Container(
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 120),
-                                            child: TextField(
-                                              readOnly: true,
-                                              controller: TextEditingController(
-                                                text:
-                                                    (flavoring.percentage * 100)
-                                                        .toStringAsFixed(4),
-                                              ),
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFFDCDCDC),
-                                                  ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFFDCDCDC),
-                                                  ),
-                                                ),
-                                                labelText: "Percentage",
-                                                suffix: Text("%"),
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 0,
-                                                  horizontal: 8.0,
-                                                ),
+                                          const Text("VG"),
+                                          Checkbox(
+                                            value: flavoring.isVG,
+                                            onChanged: null,
+                                            side: const BorderSide(
+                                              color: Color(
+                                                0xFFB0B0B0,
                                               ),
                                             ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              const Text("VG"),
-                                              Checkbox(
-                                                value: flavoring.isVG,
-                                                onChanged: null,
-                                                side: const BorderSide(
-                                                  color: Color(
-                                                    0xFFB0B0B0,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+              _selectedNicProfValue == null
+                  ? const SizedBox.shrink()
+                  : Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      margin: EdgeInsets.zero,
+                      child: Container(
+                        width: sectionWidth,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Nic Base",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Gap(12),
+                            TextField(
+                              readOnly: true,
+                              controller: TextEditingController(
+                                text:
+                                    ((_nicProfile?.nicBaseNicStr ?? 0.0) * 100)
+                                        .toStringAsFixed(0),
+                              ),
+                              decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFDCDCDC),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFDCDCDC),
+                                  ),
+                                ),
+                                labelText: "Nic Str",
+                                suffix: Text("%"),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 0,
+                                  horizontal: 8.0,
+                                ),
+                              ),
+                            ),
+                            const Gap(8),
+                            Row(
+                              spacing: 8.0,
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                      text: (nicBases
+                                                  .where(
+                                                      (nicBase) => nicBase.isVG)
+                                                  .fold(
+                                                      0.0,
+                                                      (sum, nicBase) =>
+                                                          sum +
+                                                          nicBase.percentage) *
+                                              100)
+                                          .toStringAsFixed(0),
+                                    ),
+                                    decoration: const InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      labelText: "VG",
+                                      suffix: Text("%"),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 8.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                      text: (nicBases
+                                                  .where((nicBase) =>
+                                                      !nicBase.isVG)
+                                                  .fold(
+                                                      0.0,
+                                                      (sum, nicBase) =>
+                                                          sum +
+                                                          nicBase.percentage) *
+                                              100)
+                                          .toStringAsFixed(0),
+                                    ),
+                                    decoration: const InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      labelText: "PG",
+                                      suffix: Text("%"),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 8.0,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                    ],
-                  ),
-                ),
-              ),
+                            nicBases.isEmpty
+                                ? const SizedBox.shrink()
+                                : Column(
+                                    children: [
+                                      const Gap(8.0),
+                                      Divider(
+                                        thickness: 1,
+                                        color: Colors.grey[350],
+                                      ),
+                                      const Gap(8.0),
+                                      ...nicBases.map(
+                                        (nicBase) => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: TextField(
+                                                readOnly: true,
+                                                controller:
+                                                    TextEditingController(
+                                                  text: nicBase.label,
+                                                ),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Color(0xFFDCDCDC),
+                                                    ),
+                                                  ),
+                                                  labelText: "Percentage",
+                                                  suffix: Text("%"),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 8.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const Gap(8),
+                                            Container(
+                                              constraints: const BoxConstraints(
+                                                  maxWidth: 120),
+                                              child: TextField(
+                                                readOnly: true,
+                                                controller:
+                                                    TextEditingController(
+                                                  text:
+                                                      (nicBase.percentage * 100)
+                                                          .toStringAsFixed(0),
+                                                ),
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Color(0xFFDCDCDC),
+                                                    ),
+                                                  ),
+                                                  labelText: "Percentage",
+                                                  suffix: Text("%"),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 8.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Column(
+                                              children: [
+                                                const Text("VG"),
+                                                Checkbox(
+                                                  value: nicBase.isVG,
+                                                  onChanged: null,
+                                                  side: const BorderSide(
+                                                    color: Color(
+                                                      0xFFB0B0B0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ],
+                        ),
+                      ),
+                    ),
+              _selectedNicProfValue == null
+                  ? const SizedBox.shrink()
+                  : Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0),
+                      ),
+                      margin: EdgeInsets.zero,
+                      child: Container(
+                        width: sectionWidth,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Target",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Gap(12),
+                            TextField(
+                              readOnly: true,
+                              controller: TextEditingController(
+                                text: ((_nicProfile?.targetNicStr ?? 0.0) * 100)
+                                    .toString(),
+                              ),
+                              decoration: const InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFDCDCDC),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Color(0xFFDCDCDC),
+                                  ),
+                                ),
+                                labelText: "Nic Str",
+                                suffix: Text("%"),
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 0,
+                                  horizontal: 8.0,
+                                ),
+                              ),
+                            ),
+                            const Gap(8),
+                            Row(
+                              spacing: 8.0,
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                      text:
+                                          ((_nicProfile?.targetVG ?? 0.0) * 100)
+                                              .toString(),
+                                    ),
+                                    decoration: const InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      labelText: "VG",
+                                      suffix: Text("%"),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 8.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    readOnly: true,
+                                    controller: TextEditingController(
+                                      text:
+                                          ((_nicProfile?.targetPG ?? 0.0) * 100)
+                                              .toString(),
+                                    ),
+                                    decoration: const InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color(0xFFDCDCDC),
+                                        ),
+                                      ),
+                                      labelText: "PG",
+                                      suffix: Text("%"),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0,
+                                        horizontal: 8.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
             ],
           ),
         ),
