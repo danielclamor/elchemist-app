@@ -54,9 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
           nicBaseNicStr: 1,
           nicBaseList: [
             NicBase(
-              code: "1",
-              name: "VG S",
-              isVG: true,
+              nicBase: NicBaseOption(
+                code: "1",
+                name: "VG S",
+                isVG: true,
+              ),
               percentage: 1,
             ),
           ],
@@ -77,9 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
           nicBaseNicStr: 1.0,
           nicBaseList: [
             NicBase(
-              code: "1",
-              name: "VG S",
-              isVG: true,
+              nicBase: NicBaseOption(
+                code: "1",
+                name: "VG S",
+                isVG: true,
+              ),
               percentage: 1.0,
             ),
           ],
@@ -108,9 +112,11 @@ class _MyHomePageState extends State<MyHomePage> {
           nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
-              code: "1CNT",
-              name: "VG S",
-              isVG: false,
+              nicBase: NicBaseOption(
+                code: "1CNT",
+                name: "VG S",
+                isVG: false,
+              ),
               percentage: 1,
             ),
           ],
@@ -131,9 +137,11 @@ class _MyHomePageState extends State<MyHomePage> {
           nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
-              code: "1CNT",
-              name: "VG S",
-              isVG: false,
+              nicBase: NicBaseOption(
+                code: "1CNT",
+                name: "VG S",
+                isVG: false,
+              ),
               percentage: 1,
             ),
           ],
@@ -178,9 +186,11 @@ class _MyHomePageState extends State<MyHomePage> {
           nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
-              code: "2CNT",
-              name: "PG S",
-              isVG: false,
+              nicBase: NicBaseOption(
+                code: "2CNT",
+                name: "PG S",
+                isVG: false,
+              ),
               percentage: 1.0,
             ),
           ],
@@ -201,9 +211,11 @@ class _MyHomePageState extends State<MyHomePage> {
           nicBaseNicStr: 0.1,
           nicBaseList: [
             NicBase(
-              code: "2CNT",
-              name: "PG S",
-              isVG: false,
+              nicBase: NicBaseOption(
+                code: "2CNT",
+                name: "PG S",
+                isVG: false,
+              ),
               percentage: 1,
             ),
           ],

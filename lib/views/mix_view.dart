@@ -40,29 +40,6 @@ class NicBaseEntry {
   }
 }
 
-class NicBaseOption {
-  final String code;
-  final String name;
-  final bool isVG;
-
-  NicBaseOption({
-    required this.code,
-    required this.name,
-    required this.isVG,
-  });
-
-  @override
-  bool operator ==(other) => other is NicBaseOption && code == other.code;
-
-  @override
-  int get hashCode => Object.hash(code.hashCode, name.hashCode);
-
-  String get label => '$name ($code)';
-
-  @override
-  String toString() => 'NicBaseOption: {label: $label, is_vg: $isVG"}';
-}
-
 class MixView extends StatefulWidget {
   final List<Recipe> recipes;
 
