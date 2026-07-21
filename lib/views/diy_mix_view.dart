@@ -127,9 +127,11 @@ class _DiyMixViewState extends State<DiyMixView> {
       targetNicStr,
     );
 
+    final nicBaseMixPerc = targetNicStr / nicBaseNicStr;
+
     return (
-      targetNicStr / nicBaseNicStr,
-      nicotineVol + nicBasePGVol + nicBaseVGVol,
+      nicBaseMixPerc,
+      nicBaseMixPerc * volume,
       nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
     );
   }
