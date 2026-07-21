@@ -96,6 +96,9 @@ class _MixViewState extends State<MixView> {
   late TextEditingController _targetNicStrController;
   late TextEditingController _targetVGController;
   late TextEditingController _targetPGController;
+  late TextEditingController _nicBaseNicStrController;
+  late TextEditingController _nicBaseVGController;
+  late TextEditingController _nicBasePGController;
 
   final List<NicBaseEntry> _nicBaseEntries = [];
   final List<Flavoring> _flavorings = [];
@@ -128,6 +131,9 @@ class _MixViewState extends State<MixView> {
     _targetNicStrController = TextEditingController(text: "0");
     _targetVGController = TextEditingController(text: "0");
     _targetPGController = TextEditingController(text: "0");
+    _nicBaseNicStrController = TextEditingController(text: "0");
+    _nicBaseVGController = TextEditingController(text: "0");
+    _nicBasePGController = TextEditingController(text: "0");
 
     _volumeFocusNode.addListener(_handleVolumeFocusChange);
 
@@ -171,51 +177,64 @@ class _MixViewState extends State<MixView> {
     }
   }
 
+  int _getDecimalPlaces(String value) {
+    double doubleValue = double.parse(value);
+
+    if (doubleValue == doubleValue.toInt()) return 0;
+
+    List<String> parts = value.split('.');
+
+    return parts.length > 1 ? parts[1].length : 0;
+  }
+
   (double, double, double) _getNicBaseValues() {
     final double volume = _volumeController.text == ""
         ? 0.0
         : double.parse(_volumeController.text);
 
-    var nicotineVol = 0.0;
-    var nicBaseVGVol = 0.0;
-    var nicBasePGVol = 0.0;
+    final double targetNicStr = _targetNicStrController.text != ""
+        ? double.parse(_targetNicStrController.text) / 100
+        : 0.0;
 
-    if (_nicBaseEntries.isNotEmpty) {
-      nicBaseVGVol = _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
-            0.0,
-            (sum, nicBase) =>
-                sum +
-                nicBaseCompVol(
-                  volume,
-                  _nicProfile!.targetNicStr,
-                  _nicProfile!.nicBaseStr,
-                  double.parse(nicBase.percentageController.text),
-                ),
-          );
+    final double nicBaseNicStr = _nicBaseNicStrController.text != ""
+        ? double.parse(_nicBaseNicStrController.text) / 100
+        : 0.0;
 
-      nicBasePGVol = _nicBaseEntries.where((nicBase) => !nicBase.isVG).fold(
-            0.0,
-            (sum, nicBase) =>
-                sum +
-                nicBaseCompVol(
-                  volume,
-                  _nicProfile!.targetNicStr,
-                  _nicProfile!.nicBaseStr,
-                  double.parse(nicBase.percentageController.text),
-                ),
-          );
+    double nicBaseVGVol = _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
+          0.0,
+          (sum, nicBase) =>
+              sum +
+              nicBaseCompVol(
+                volume,
+                targetNicStr,
+                nicBaseNicStr,
+                double.parse(nicBase.percentageController.text) / 100,
+              ),
+        );
 
-      nicotineVol = nicVol(
-        volume,
-        _nicProfile!.targetNicStr,
-      );
-    }
+    double nicBasePGVol =
+        _nicBaseEntries.where((nicBase) => !nicBase.isVG).fold(
+              0.0,
+              (sum, nicBase) =>
+                  sum +
+                  nicBaseCompVol(
+                    volume,
+                    targetNicStr,
+                    nicBaseNicStr,
+                    double.parse(nicBase.percentageController.text) / 100,
+                  ),
+            );
+
+    double nicotineVol = nicVol(
+      volume,
+      targetNicStr,
+    );
+
+    final nicBaseMixPerc = targetNicStr / nicBaseNicStr;
 
     return (
-      _nicProfile != null
-          ? _nicProfile!.targetNicStr / _nicProfile!.nicBaseStr
-          : 0.0,
-      nicotineVol + nicBasePGVol + nicBaseVGVol,
+      nicBaseMixPerc,
+      nicBaseMixPerc * volume,
       nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
     );
   }
@@ -242,27 +261,33 @@ class _MixViewState extends State<MixView> {
         ? 0.0
         : double.parse(_volumeController.text);
 
-    final double nicStr = _nicProfile?.targetNicStr ?? 0.0;
+    final double targetNicStr = _targetNicStrController.text != ""
+        ? double.parse(_targetNicStrController.text) / 100
+        : 0.0;
 
-    double totalFlavVGPerc = _flavorings
-        .where((flavor) => flavor.isVG)
+    final double targetVG = _targetVGController.text != ""
+        ? double.parse(_targetVGController.text) / 100
+        : 0.0;
+
+    final double nicBaseNicStr = _nicBaseNicStrController.text != ""
+        ? double.parse(_nicBaseNicStrController.text) / 100
+        : 0.0;
+
+    double totalFlavVGPerc = _ingredients
+        .where((ingredient) => ingredient.type == IngredientType.vgFlavor)
         .fold(0.0, (sum, flavor) => sum + flavor.percentage);
 
-    double totalNicBaseVGPerc =
+    double nicBaseVGPerc =
         _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
               0.0,
               (sum, nicBase) =>
                   sum + (double.parse(nicBase.percentageController.text) / 100),
             );
 
-    double vgMixPerc = _nicProfile != null
-        ? _nicProfile!.targetVG -
-            totalFlavVGPerc +
-            (nicStr *
-                (totalNicBaseVGPerc -
-                    _nicProfile!.targetVG -
-                    (totalNicBaseVGPerc / _nicProfile!.nicBaseStr)))
-        : 0.0;
+    double vgMixPerc = targetVG -
+        totalFlavVGPerc +
+        (targetNicStr *
+            (nicBaseVGPerc - targetVG - (nicBaseVGPerc / nicBaseNicStr)));
 
     double ingredientVGVol = volume * vgMixPerc;
 
@@ -274,29 +299,35 @@ class _MixViewState extends State<MixView> {
         ? 0.0
         : double.parse(_volumeController.text);
 
-    final double nicStr = _nicProfile?.targetNicStr ?? 0.0;
-
-    double totalFlavPGPerc = _flavorings
-        .where((flavor) => !flavor.isVG)
-        .fold(0.0, (sum, flavor) => sum + flavor.percentage);
-
-    double totalNicBasePGPerc = _nicBaseEntries
-        .where((nicBase) => !nicBase.isVG)
-        .fold(
-            0.0,
-            (sum, nicBase) =>
-                sum + (double.parse(nicBase.percentageController.text) / 100));
-
-    double pgMixPerc = _nicProfile != null
-        ? _nicProfile!.targetPG -
-            totalFlavPGPerc +
-            (nicStr *
-                (totalNicBasePGPerc -
-                    _nicProfile!.targetPG -
-                    (totalNicBasePGPerc / _nicProfile!.nicBaseStr)))
+    final double targetNicStr = _targetNicStrController.text != ""
+        ? double.parse(_targetNicStrController.text) / 100
         : 0.0;
 
-    double ingredientPGVol = volume * pgMixPerc;
+    final double targetPG = _targetPGController.text != ""
+        ? double.parse(_targetPGController.text) / 100
+        : 0.0;
+
+    final double nicBaseNicStr = _nicBaseNicStrController.text != ""
+        ? double.parse(_nicBaseNicStrController.text) / 100
+        : 0.0;
+
+    final double totalFlavPGPerc = _ingredients
+        .where((ingredient) => ingredient.type == IngredientType.pgFlavor)
+        .fold(0.0, (sum, flavor) => sum + flavor.percentage);
+
+    final double nicBasePGPerc =
+        _nicBaseEntries.where((nicBase) => !nicBase.isVG).fold(
+              0.0,
+              (sum, nicBase) =>
+                  sum + (double.parse(nicBase.percentageController.text) / 100),
+            );
+
+    final double pgMixPerc = targetPG -
+        totalFlavPGPerc +
+        (targetNicStr *
+            (nicBasePGPerc - targetPG - (nicBasePGPerc / nicBaseNicStr)));
+
+    final double ingredientPGVol = volume * pgMixPerc;
 
     return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
   }
@@ -498,6 +529,7 @@ class _MixViewState extends State<MixView> {
                   setState(() {
                     entry.isVG = nicBaseOption.isVG;
                   });
+                  _updateValues();
                 },
               ),
             ),
@@ -510,7 +542,7 @@ class _MixViewState extends State<MixView> {
             readOnly: !_isCustomChecked,
             controller: entry.percentageController,
             onSubmitted: (value) {
-              setState(() {});
+              _updateValues();
             },
             decoration: InputDecoration(
               enabledBorder: _enabledBorder(),
@@ -788,6 +820,9 @@ class _MixViewState extends State<MixView> {
                                                     _nicProfile!.targetVG * 100;
                                                 var targetPG =
                                                     _nicProfile!.targetPG * 100;
+                                                var nicBaseNicStr =
+                                                    _nicProfile!.nicBaseNicStr *
+                                                        100;
 
                                                 setState(() {
                                                   _selectedNicProfValue = value;
@@ -799,7 +834,10 @@ class _MixViewState extends State<MixView> {
                                                   _targetPGController.text =
                                                       targetPG
                                                           .toStringAsFixed(4);
-
+                                                  _nicBaseNicStrController
+                                                          .text =
+                                                      nicBaseNicStr
+                                                          .toStringAsFixed(0);
                                                   _nicBaseEntries.clear();
 
                                                   for (var nicBase
@@ -807,6 +845,38 @@ class _MixViewState extends State<MixView> {
                                                           .nicBaseList) {
                                                     _addEntry(nicBase);
                                                   }
+
+                                                  _nicBaseVGController
+                                                      .text = (_nicBaseEntries
+                                                              .where((entry) =>
+                                                                  entry.isVG)
+                                                              .fold(
+                                                                0.0,
+                                                                (sum, entry) =>
+                                                                    sum +
+                                                                    (double.parse(entry
+                                                                            .percentageController
+                                                                            .text) /
+                                                                        100),
+                                                              ) *
+                                                          100)
+                                                      .toStringAsFixed(0);
+
+                                                  _nicBasePGController
+                                                      .text = (_nicBaseEntries
+                                                              .where((entry) =>
+                                                                  !entry.isVG)
+                                                              .fold(
+                                                                0.0,
+                                                                (sum, entry) =>
+                                                                    sum +
+                                                                    (double.parse(entry
+                                                                            .percentageController
+                                                                            .text) /
+                                                                        100),
+                                                              ) *
+                                                          100)
+                                                      .toStringAsFixed(0);
 
                                                   _flavorings.clear();
 
@@ -1062,9 +1132,10 @@ class _MixViewState extends State<MixView> {
                                   TextField(
                                     readOnly: true,
                                     controller: TextEditingController(
-                                      text: ((_nicProfile?.nicBaseStr ?? 0.0) *
-                                              100)
-                                          .toStringAsFixed(0),
+                                      text:
+                                          ((_nicProfile?.nicBaseNicStr ?? 0.0) *
+                                                  100)
+                                              .toStringAsFixed(0),
                                     ),
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
@@ -1093,23 +1164,7 @@ class _MixViewState extends State<MixView> {
                                       Expanded(
                                         child: TextField(
                                           readOnly: true,
-                                          controller: TextEditingController(
-                                            text: (_nicBaseEntries
-                                                        .where((entry) =>
-                                                            entry.isVG)
-                                                        .fold(
-                                                          0.0,
-                                                          (sum, entry) =>
-                                                              sum +
-                                                              (double.parse(entry
-                                                                      .percentageController
-                                                                      .text) /
-                                                                  100),
-                                                        ) *
-                                                    100)
-                                                .toStringAsFixed(0),
-                                          ),
-                                          onChanged: (value) => _updateValues(),
+                                          controller: _nicBaseVGController,
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
@@ -1135,22 +1190,7 @@ class _MixViewState extends State<MixView> {
                                       Expanded(
                                         child: TextField(
                                           readOnly: true,
-                                          controller: TextEditingController(
-                                              text: (_nicBaseEntries
-                                                          .where((entry) =>
-                                                              !entry.isVG)
-                                                          .fold(
-                                                            0.0,
-                                                            (sum, entry) =>
-                                                                sum +
-                                                                (double.parse(entry
-                                                                        .percentageController
-                                                                        .text) /
-                                                                    100),
-                                                          ) *
-                                                      100)
-                                                  .toStringAsFixed(0)),
-                                          onChanged: (value) => _updateValues(),
+                                          controller: _nicBasePGController,
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
@@ -1232,6 +1272,7 @@ class _MixViewState extends State<MixView> {
                                     readOnly: !_isCustomChecked,
                                     controller: _targetNicStrController,
                                     keyboardType: TextInputType.number,
+                                    onSubmitted: (value) => _updateValues(),
                                     decoration: InputDecoration(
                                       enabledBorder: _enabledBorder(),
                                       focusedBorder: _focusedBorder(),
@@ -1257,6 +1298,15 @@ class _MixViewState extends State<MixView> {
                                           readOnly: !_isCustomChecked,
                                           controller: _targetVGController,
                                           keyboardType: TextInputType.number,
+                                          onSubmitted: (value) {
+                                            setState(() {
+                                              _targetPGController.text = (100 -
+                                                      (double.parse(value)))
+                                                  .toStringAsFixed(
+                                                      _getDecimalPlaces(value));
+                                            });
+                                            _updateValues();
+                                          },
                                           decoration: InputDecoration(
                                             enabledBorder: _enabledBorder(),
                                             focusedBorder: _focusedBorder(),
@@ -1279,6 +1329,15 @@ class _MixViewState extends State<MixView> {
                                           readOnly: !_isCustomChecked,
                                           controller: _targetPGController,
                                           keyboardType: TextInputType.number,
+                                          onSubmitted: (value) {
+                                            setState(() {
+                                              _targetVGController.text = (100 -
+                                                      (double.parse(value)))
+                                                  .toStringAsFixed(
+                                                      _getDecimalPlaces(value));
+                                            });
+                                            _updateValues();
+                                          },
                                           decoration: InputDecoration(
                                             enabledBorder: _enabledBorder(),
                                             focusedBorder: _focusedBorder(),
