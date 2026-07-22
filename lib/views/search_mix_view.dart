@@ -356,25 +356,28 @@ class _SearchMixViewState extends State<SearchMixView> {
     });
   }
 
+  Ingredient get _nicBaseIngredient {
+    var nicBaseTitle =
+        'Nicotine base${_nicBaseEntries.map((nicBase) => ' (${nicBase.code})').join(" / ")}';
+
+    var (nicBasePercentage, nicBaseVolume, nicBaseweight) = _getNicBaseValues();
+
+    return Ingredient(
+      name: nicBaseTitle,
+      percentage: nicBasePercentage,
+      volume: nicBaseVolume,
+      weight: nicBaseweight,
+      type: IngredientType.nicotine,
+    );
+  }
+
   List<Ingredient> _populateIngredients() {
     _ingredients.removeRange(0, _ingredients.length - 2);
 
     if (_nicBaseEntries.isNotEmpty) {
-      var nicBaseTitle =
-          'Nicotine base${_nicBaseEntries.map((nicBase) => ' (${nicBase.code})').join(" / ")}';
-
-      var (nicBasePercentage, nicBaseVolume, nicBaseweight) =
-          _getNicBaseValues();
-
       _ingredients.insert(
         0,
-        Ingredient(
-          name: nicBaseTitle,
-          percentage: nicBasePercentage,
-          volume: nicBaseVolume,
-          weight: nicBaseweight,
-          type: IngredientType.nicotine,
-        ),
+        _nicBaseIngredient,
       );
     }
 
@@ -525,6 +528,32 @@ class _SearchMixViewState extends State<SearchMixView> {
                   );
                   setState(() {
                     entry.isVG = nicBaseOption.isVG;
+                    _ingredients[0] = _nicBaseIngredient;
+                    _nicBaseVGController.text = (_nicBaseEntries
+                                .where((nicBaseEntry) => nicBaseEntry.isVG)
+                                .fold(
+                                  0.0,
+                                  (sum, nicBaseEntry) =>
+                                      sum +
+                                      (double.parse(nicBaseEntry
+                                              .percentageController.text) /
+                                          100),
+                                ) *
+                            100)
+                        .toStringAsFixed(0);
+
+                    _nicBasePGController.text = (_nicBaseEntries
+                                .where((nicBaseEntry) => !nicBaseEntry.isVG)
+                                .fold(
+                                  0.0,
+                                  (sum, nicBaseEntry) =>
+                                      sum +
+                                      (double.parse(nicBaseEntry
+                                              .percentageController.text) /
+                                          100),
+                                ) *
+                            100)
+                        .toStringAsFixed(0);
                   });
                   _updateValues();
                 },
@@ -538,9 +567,7 @@ class _SearchMixViewState extends State<SearchMixView> {
           child: TextField(
             readOnly: !_isCustomChecked,
             controller: entry.percentageController,
-            onSubmitted: (value) {
-              _updateValues();
-            },
+            onSubmitted: (value) => _updateValues(),
             decoration: InputDecoration(
               enabledBorder: _enabledBorder(),
               focusedBorder: _focusedBorder(),
