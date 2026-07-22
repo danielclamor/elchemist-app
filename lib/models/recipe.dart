@@ -6,13 +6,16 @@ enum ChillType {
 
   @override
   String toString() => this == ChillType.chilled ? "Chilled" : "Non-chilled";
-}
 
-ChillType getChillType(String chillType) {
-  if (chillType == "chilled") {
-    return ChillType.chilled;
-  } else {
-    return ChillType.nonChilled;
+  static ChillType fromString(String value) {
+    switch (value) {
+      case 'non-chilled':
+        return ChillType.nonChilled;
+      case 'chilled':
+        return ChillType.chilled;
+      default:
+        throw ArgumentError('Unknown ChillType: $value');
+    }
   }
 }
 
@@ -22,13 +25,16 @@ enum NicType {
 
   @override
   String toString() => this == NicType.salt ? "Salt" : "Freebase";
-}
 
-NicType getNicType(String nicType) {
-  if (nicType == "salt") {
-    return NicType.salt;
-  } else {
-    return NicType.freebase;
+  static NicType fromString(String value) {
+    switch (value) {
+      case 'salt':
+        return NicType.salt;
+      case 'freebase':
+        return NicType.freebase;
+      default:
+        throw ArgumentError('Unknown NicType: $value');
+    }
   }
 }
 
@@ -50,8 +56,8 @@ class Recipe {
   factory Recipe.fromMap(Map<String, dynamic> map) => Recipe(
         name: map["name"] as String,
         brand: map["brand"] as String,
-        chilltype: getChillType(map["chill_type"]),
-        nicType: getNicType(map["nic_type"]),
+        chilltype: ChillType.fromString(map["chill_type"]),
+        nicType: NicType.fromString(map["nic_type"]),
         nicProfiles: (map["nic_profiles"] as List<Map<String, dynamic>>)
             .map((nicProfile) => NicProfile.fromMap(nicProfile))
             .toList(),
