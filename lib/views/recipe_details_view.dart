@@ -27,17 +27,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
   List<NicBase> nicBases = [];
   List<Flavoring> flavorings = [];
 
-  late TextEditingController _nicStrController;
-  late TextEditingController _targetVGController;
-  late TextEditingController _targetPGController;
+  int _getDecimalPlaces(double value) {
+    if (value == value.toInt()) return 0;
+    List<String> parts = value.toString().split('.');
 
-  @override
-  void initState() {
-    _nicStrController = TextEditingController();
-    _targetVGController = TextEditingController();
-    _targetPGController = TextEditingController();
-
-    super.initState();
+    return parts.length > 1 ? parts[1].length : 0;
   }
 
   @override
@@ -145,17 +139,9 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             onSelected: (String? value) {
                               _nicProfile = recipe.nicProfiles.firstWhere(
                                   (nicProfile) => nicProfile.nicLevel == value);
-                              var nicStr = _nicProfile!.targetNicStr * 100;
-                              var targetVG = _nicProfile!.targetVG * 100;
-                              var targetPG = _nicProfile!.targetPG * 100;
 
                               setState(() {
                                 _selectedNicProfValue = value;
-                                _nicStrController.text = nicStr.toString();
-                                _targetVGController.text =
-                                    targetVG.toStringAsFixed(4);
-                                _targetPGController.text =
-                                    targetPG.toStringAsFixed(4);
 
                                 nicBases = _nicProfile!.nicBases;
                                 flavorings = _nicProfile!.flavorings;
@@ -165,7 +151,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           Expanded(
                             child: TextField(
                               readOnly: true,
-                              controller: _nicStrController,
+                              controller: TextEditingController(
+                                text: ((_nicProfile?.targetNicStr ?? 0.0) * 100)
+                                    .toStringAsFixed(2),
+                              ),
                               decoration: const InputDecoration(
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
@@ -184,11 +173,6 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   horizontal: 8.0,
                                 ),
                               ),
-                              onSubmitted: (value) {
-                                setState(() {
-                                  _nicStrController.text = value;
-                                });
-                              },
                             ),
                           ),
                         ],
@@ -545,7 +529,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               readOnly: true,
                               controller: TextEditingController(
                                 text: ((_nicProfile?.targetNicStr ?? 0.0) * 100)
-                                    .toString(),
+                                    .toStringAsFixed(2),
                               ),
                               decoration: const InputDecoration(
                                 enabledBorder: OutlineInputBorder(
@@ -574,9 +558,19 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   child: TextField(
                                     readOnly: true,
                                     controller: TextEditingController(
-                                      text:
-                                          ((_nicProfile?.targetVG ?? 0.0) * 100)
-                                              .toString(),
+                                      text: ((_nicProfile?.targetVG ?? 0.0) *
+                                              100)
+                                          .toStringAsFixed(_getDecimalPlaces(
+                                                          _nicProfile
+                                                                  ?.targetVG ??
+                                                              0.0) -
+                                                      2 >
+                                                  4
+                                              ? _getDecimalPlaces(
+                                                      _nicProfile?.targetVG ??
+                                                          0.0) -
+                                                  2
+                                              : 4),
                                     ),
                                     decoration: const InputDecoration(
                                       enabledBorder: OutlineInputBorder(
@@ -602,9 +596,19 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   child: TextField(
                                     readOnly: true,
                                     controller: TextEditingController(
-                                      text:
-                                          ((_nicProfile?.targetPG ?? 0.0) * 100)
-                                              .toString(),
+                                      text: ((_nicProfile?.targetPG ?? 0.0) *
+                                              100)
+                                          .toStringAsFixed(_getDecimalPlaces(
+                                                          _nicProfile
+                                                                  ?.targetPG ??
+                                                              0.0) -
+                                                      2 >
+                                                  4
+                                              ? _getDecimalPlaces(
+                                                      _nicProfile?.targetPG ??
+                                                          0.0) -
+                                                  2
+                                              : 4),
                                     ),
                                     decoration: const InputDecoration(
                                       enabledBorder: OutlineInputBorder(
