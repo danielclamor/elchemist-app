@@ -356,6 +356,54 @@ class _SearchMixViewState extends State<SearchMixView> {
     });
   }
 
+  void _onSelectNicProfile(String? value) {
+    var nicStr = _nicProfile!.targetNicStr * 100;
+    var targetVG = _nicProfile!.targetVG * 100;
+    var targetPG = _nicProfile!.targetPG * 100;
+    var nicBaseNicStr = _nicProfile!.nicBaseNicStr * 100;
+
+    setState(() {
+      _selectedNicProfValue = value;
+      _targetNicStrController.text = nicStr.toStringAsFixed(2);
+      _targetVGController.text = targetVG.toStringAsFixed(4);
+      _targetPGController.text = targetPG.toStringAsFixed(4);
+      _nicBaseNicStrController.text = nicBaseNicStr.toStringAsFixed(0);
+      _nicBaseEntries.clear();
+
+      for (var nicBase in _nicProfile!.nicBases) {
+        _addEntry(nicBase);
+      }
+
+      _nicBaseVGController
+          .text = (_nicBaseEntries.where((entry) => entry.isVG).fold(
+                    0.0,
+                    (sum, entry) =>
+                        sum +
+                        (double.parse(entry.percentageController.text) / 100),
+                  ) *
+              100)
+          .toStringAsFixed(0);
+
+      _nicBasePGController
+          .text = (_nicBaseEntries.where((entry) => !entry.isVG).fold(
+                    0.0,
+                    (sum, entry) =>
+                        sum +
+                        (double.parse(entry.percentageController.text) / 100),
+                  ) *
+              100)
+          .toStringAsFixed(0);
+
+      _flavorings.clear();
+
+      _flavorings.addAll(
+        _nicProfile!.flavorings,
+      );
+
+      _ingredients = _populateIngredients();
+    });
+  }
+
   Ingredient get _nicBaseIngredient {
     var nicBaseTitle =
         'Nicotine base${_nicBaseEntries.map((nicBase) => ' (${nicBase.code})').join(" / ")}';
@@ -567,7 +615,36 @@ class _SearchMixViewState extends State<SearchMixView> {
           child: TextField(
             readOnly: !_isCustomChecked,
             controller: entry.percentageController,
-            onSubmitted: (value) => _updateValues(),
+            onSubmitted: (value) {
+              setState(() {
+                _nicBaseVGController.text = (_nicBaseEntries
+                            .where((nicBaseEntry) => nicBaseEntry.isVG)
+                            .fold(
+                              0.0,
+                              (sum, nicBaseEntry) =>
+                                  sum +
+                                  (double.parse(nicBaseEntry
+                                          .percentageController.text) /
+                                      100),
+                            ) *
+                        100)
+                    .toStringAsFixed(0);
+
+                _nicBasePGController.text = (_nicBaseEntries
+                            .where((nicBaseEntry) => !nicBaseEntry.isVG)
+                            .fold(
+                              0.0,
+                              (sum, nicBaseEntry) =>
+                                  sum +
+                                  (double.parse(nicBaseEntry
+                                          .percentageController.text) /
+                                      100),
+                            ) *
+                        100)
+                    .toStringAsFixed(0);
+              });
+              _updateValues();
+            },
             decoration: InputDecoration(
               enabledBorder: _enabledBorder(),
               focusedBorder: _focusedBorder(),
@@ -828,80 +905,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                     .firstWhere((nicProfile) =>
                                                         nicProfile.nicLevel ==
                                                         value);
-                                                var nicStr =
-                                                    _nicProfile!.targetNicStr *
-                                                        100;
-                                                var targetVG =
-                                                    _nicProfile!.targetVG * 100;
-                                                var targetPG =
-                                                    _nicProfile!.targetPG * 100;
-                                                var nicBaseNicStr =
-                                                    _nicProfile!.nicBaseNicStr *
-                                                        100;
 
-                                                setState(() {
-                                                  _selectedNicProfValue = value;
-                                                  _targetNicStrController.text =
-                                                      nicStr.toStringAsFixed(2);
-                                                  _targetVGController.text =
-                                                      targetVG
-                                                          .toStringAsFixed(4);
-                                                  _targetPGController.text =
-                                                      targetPG
-                                                          .toStringAsFixed(4);
-                                                  _nicBaseNicStrController
-                                                          .text =
-                                                      nicBaseNicStr
-                                                          .toStringAsFixed(0);
-                                                  _nicBaseEntries.clear();
-
-                                                  for (var nicBase
-                                                      in _nicProfile!
-                                                          .nicBases) {
-                                                    _addEntry(nicBase);
-                                                  }
-
-                                                  _nicBaseVGController
-                                                      .text = (_nicBaseEntries
-                                                              .where((entry) =>
-                                                                  entry.isVG)
-                                                              .fold(
-                                                                0.0,
-                                                                (sum, entry) =>
-                                                                    sum +
-                                                                    (double.parse(entry
-                                                                            .percentageController
-                                                                            .text) /
-                                                                        100),
-                                                              ) *
-                                                          100)
-                                                      .toStringAsFixed(0);
-
-                                                  _nicBasePGController
-                                                      .text = (_nicBaseEntries
-                                                              .where((entry) =>
-                                                                  !entry.isVG)
-                                                              .fold(
-                                                                0.0,
-                                                                (sum, entry) =>
-                                                                    sum +
-                                                                    (double.parse(entry
-                                                                            .percentageController
-                                                                            .text) /
-                                                                        100),
-                                                              ) *
-                                                          100)
-                                                      .toStringAsFixed(0);
-
-                                                  _flavorings.clear();
-
-                                                  _flavorings.addAll(
-                                                    _nicProfile!.flavorings,
-                                                  );
-
-                                                  _ingredients =
-                                                      _populateIngredients();
-                                                });
+                                                _onSelectNicProfile(value);
 
                                                 if (_volumeController.text ==
                                                     "") {
@@ -931,6 +936,12 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                       _isCustomChecked =
                                                           newValue ?? false;
                                                     });
+
+                                                    if (newValue == false) {
+                                                      _onSelectNicProfile(
+                                                        _selectedNicProfValue,
+                                                      );
+                                                    }
                                                   },
                                                 ),
                                               ],
