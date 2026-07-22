@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/formulas.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
@@ -55,13 +56,9 @@ class SearchMixView extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _SearchMixViewState extends State<SearchMixView> {
-  final List<NicBaseOption> _nicBaseOptions = [
-    NicBaseOption(code: "1", name: "VG S", isVG: true),
-    NicBaseOption(code: "2P", name: "PG S", isVG: false),
-    NicBaseOption(code: "3P", name: "VG F", isVG: true),
-    NicBaseOption(code: "1CNT", name: "VG S", isVG: true),
-    NicBaseOption(code: "2CNT", name: "PG S", isVG: false),
-  ];
+  final List<NicBaseOption> _nicBaseOptions = nicBaseOptionsData
+      .map((option) => NicBaseOption.fromMap(option))
+      .toList();
 
   Recipe? _recipe;
   String? _selectedNicProfValue;
