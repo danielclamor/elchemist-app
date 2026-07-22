@@ -1,7 +1,7 @@
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
-import 'package:elchemist_app/views/mix_view.dart';
+import 'package:elchemist_app/views/search_mix_view.dart';
 import 'package:elchemist_app/views/recipe_list_view.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     _widgetOptions = <Widget>[
       const DiyMixView(),
-      MixView(recipes: recipes),
+      SearchMixView(recipes: recipes),
       RecipeListView(recipes: recipes),
     ];
 

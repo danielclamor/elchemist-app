@@ -40,21 +40,21 @@ class NicBaseEntry {
   }
 }
 
-class MixView extends StatefulWidget {
+class SearchMixView extends StatefulWidget {
   final List<Recipe> recipes;
 
-  const MixView({
+  const SearchMixView({
     super.key,
     required this.recipes,
   });
 
   @override
-  State<MixView> createState() => _MixViewState();
+  State<SearchMixView> createState() => _SearchMixViewState();
 }
 
 typedef MenuEntry = DropdownMenuEntry<String>;
 
-class _MixViewState extends State<MixView> {
+class _SearchMixViewState extends State<SearchMixView> {
   final List<NicBaseOption> _nicBaseOptions = [
     NicBaseOption(code: "1", name: "VG S", isVG: true),
     NicBaseOption(code: "2P", name: "PG S", isVG: false),
