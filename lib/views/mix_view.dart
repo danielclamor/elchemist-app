@@ -792,9 +792,9 @@ class _MixViewState extends State<MixView> {
                                                 _recipe!.nicProfiles
                                                     .map<MenuEntry>(
                                                   (nicProfile) => MenuEntry(
-                                                    value: nicProfile.name,
+                                                    value: nicProfile.nicLevel,
                                                     label:
-                                                        '${nicProfile.name} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
+                                                        '${nicProfile.nicLevel} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
                                                   ),
                                                 ),
                                               ),
@@ -802,7 +802,7 @@ class _MixViewState extends State<MixView> {
                                                 _nicProfile = _recipe!
                                                     .nicProfiles
                                                     .firstWhere((nicProfile) =>
-                                                        nicProfile.name ==
+                                                        nicProfile.nicLevel ==
                                                         value);
                                                 var nicStr =
                                                     _nicProfile!.targetNicStr *

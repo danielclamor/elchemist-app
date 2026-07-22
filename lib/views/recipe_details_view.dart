@@ -136,15 +136,15 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 UnmodifiableListView<MenuEntry>(
                               recipe.nicProfiles.map<MenuEntry>(
                                 (nicProfile) => MenuEntry(
-                                  value: nicProfile.name,
+                                  value: nicProfile.nicLevel,
                                   label:
-                                      '${nicProfile.name} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
+                                      '${nicProfile.nicLevel} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
                                 ),
                               ),
                             ),
                             onSelected: (String? value) {
                               _nicProfile = recipe.nicProfiles.firstWhere(
-                                  (nicProfile) => nicProfile.name == value);
+                                  (nicProfile) => nicProfile.nicLevel == value);
                               var nicStr = _nicProfile!.targetNicStr * 100;
                               var targetVG = _nicProfile!.targetVG * 100;
                               var targetPG = _nicProfile!.targetPG * 100;

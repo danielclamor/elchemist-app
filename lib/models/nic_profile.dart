@@ -3,7 +3,7 @@ import 'package:elchemist_app/models/nic_base.dart';
 import 'flavoring.dart';
 
 class NicProfile {
-  final String name;
+  final String nicLevel;
   final bool isNewMix;
   final double targetNicStr;
   final double targetVG;
@@ -13,7 +13,7 @@ class NicProfile {
   final List<Flavoring> flavoringList;
 
   NicProfile({
-    required this.name,
+    required this.nicLevel,
     required this.isNewMix,
     required this.targetNicStr,
     required this.targetVG,
@@ -24,7 +24,7 @@ class NicProfile {
   });
 
   factory NicProfile.fromMap(Map<String, dynamic> map) => NicProfile(
-        name: map["name"] as String,
+        nicLevel: map["name"] as String,
         isNewMix: map["new_mix"] as bool,
         targetNicStr: map["target_nic_str"] as double,
         targetVG: map["target_vg"] as double,
