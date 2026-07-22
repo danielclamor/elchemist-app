@@ -818,7 +818,7 @@ class _MixViewState extends State<MixView> {
                                                 setState(() {
                                                   _selectedNicProfValue = value;
                                                   _targetNicStrController.text =
-                                                      nicStr.toString();
+                                                      nicStr.toStringAsFixed(2);
                                                   _targetVGController.text =
                                                       targetVG
                                                           .toStringAsFixed(4);
