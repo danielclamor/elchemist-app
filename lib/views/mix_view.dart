@@ -833,7 +833,7 @@ class _MixViewState extends State<MixView> {
 
                                                   for (var nicBase
                                                       in _nicProfile!
-                                                          .nicBaseList) {
+                                                          .nicBases) {
                                                     _addEntry(nicBase);
                                                   }
 
@@ -872,7 +872,7 @@ class _MixViewState extends State<MixView> {
                                                   _flavorings.clear();
 
                                                   _flavorings.addAll(
-                                                    _nicProfile!.flavoringList,
+                                                    _nicProfile!.flavorings,
                                                   );
 
                                                   _ingredients =

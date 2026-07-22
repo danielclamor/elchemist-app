@@ -157,8 +157,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 _targetPGController.text =
                                     targetPG.toStringAsFixed(4);
 
-                                nicBases = _nicProfile!.nicBaseList;
-                                flavorings = _nicProfile!.flavoringList;
+                                nicBases = _nicProfile!.nicBases;
+                                flavorings = _nicProfile!.flavorings;
                               });
                             },
                           ),

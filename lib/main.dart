@@ -52,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.6,
           targetPG: 0.4,
           nicBaseNicStr: 1.0,
-          nicBaseList: [],
-          flavoringList: [
+          nicBases: [],
+          flavorings: [
             Flavoring(
               name: "TB Marbro Conc",
               percentage: 0.0425,
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.6065,
           targetPG: 0.3935,
           nicBaseNicStr: 1.0,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1", name: "VG S", isVG: true),
               percentage: 0.5,
@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 0.5,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Marbro Conc",
               percentage: 0.0425,
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.614755,
           targetPG: 0.385245,
           nicBaseNicStr: 1.0,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1", name: "VG S", isVG: true),
               percentage: 0.5,
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 0.5,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Marbro Conc",
               percentage: 0.0425,
@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.63026,
           targetPG: 0.36974,
           nicBaseNicStr: 1.0,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1", name: "VG S", isVG: true),
               percentage: 0.6,
@@ -143,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 0.4,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Marbro Conc",
               percentage: 0.0425,
@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.64655,
           targetPG: 0.35345,
           nicBaseNicStr: 1.0,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1", name: "VG S", isVG: true),
               percentage: 0.7,
@@ -173,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 0.3,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Marbro Conc",
               percentage: 0.0425,
@@ -201,8 +201,8 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.40,
           targetPG: 0.60,
           nicBaseNicStr: 0.1,
-          nicBaseList: [],
-          flavoringList: [
+          nicBases: [],
+          flavorings: [
             Flavoring(
               name: "Slice Big Island (Iced) Conc",
               percentage: 0.225,
@@ -217,7 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.40,
           targetPG: 0.60,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(
                 code: "2CNT",
@@ -227,7 +227,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 1.0,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "Slice Big Island (Iced) Conc",
               percentage: 0.225,
@@ -242,7 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.40,
           targetPG: 0.60,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(
                 code: "2CNT",
@@ -252,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 1,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "Slice Big Island (Iced) Conc",
               percentage: 0.225,
@@ -275,13 +275,13 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.69635,
           targetPG: 0.30365,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1CNT", name: "VG S", isVG: true),
               percentage: 1.0,
             )
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Da Bears Conc",
               percentage: 0.193,
@@ -296,13 +296,13 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.692625,
           targetPG: 0.307375,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1CNT", name: "VG S", isVG: true),
               percentage: 1.0,
             )
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Da Bears Conc",
               percentage: 0.193,
@@ -317,13 +317,13 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.68487,
           targetPG: 0.31513,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(code: "1CNT", name: "VG S", isVG: true),
               percentage: 1.0,
             )
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "TB Da Bears Conc",
               percentage: 0.193,
@@ -346,7 +346,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.35,
           targetPG: 0.65,
           nicBaseNicStr: 1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(
                 code: "1",
@@ -356,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 1,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "Vibe Arctic Mint (Iced) Conc",
               percentage: 0.145,
@@ -371,7 +371,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.35,
           targetPG: 0.65,
           nicBaseNicStr: 1.0,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(
                 code: "1",
@@ -381,7 +381,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 1.0,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "Vibe Arctic Mint (Iced) Conc",
               percentage: 0.145,
@@ -404,7 +404,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.35,
           targetPG: 0.65,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(
                 code: "1CNT",
@@ -414,7 +414,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 1,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "Vibe Green NRG (Iced) Conc",
               percentage: 0.335,
@@ -429,7 +429,7 @@ class _MyHomePageState extends State<MyHomePage> {
           targetVG: 0.35,
           targetPG: 0.65,
           nicBaseNicStr: 0.1,
-          nicBaseList: [
+          nicBases: [
             NicBase(
               nicBase: NicBaseOption(
                 code: "1CNT",
@@ -439,7 +439,7 @@ class _MyHomePageState extends State<MyHomePage> {
               percentage: 1,
             ),
           ],
-          flavoringList: [
+          flavorings: [
             Flavoring(
               name: "Vibe Green NRG (Iced) Conc",
               percentage: 0.335,

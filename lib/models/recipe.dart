@@ -37,7 +37,6 @@ class Recipe {
   final String brand;
   final ChillType chilltype;
   final NicType nicType;
-  // final List<SettingsByNic>? settingsByNic;
   final List<NicProfile> nicProfiles;
 
   Recipe({
@@ -45,7 +44,6 @@ class Recipe {
     required this.brand,
     required this.chilltype,
     required this.nicType,
-    // required this.settingsByNic,
     required this.nicProfiles,
   });
 
@@ -54,9 +52,6 @@ class Recipe {
         brand: map["brand"] as String,
         chilltype: getChillType(map["chill_type"]),
         nicType: getNicType(map["nic_type"]),
-        // settingsByNic: (map["settingsByNic"] as List<Map<String, dynamic>>)
-        //     .map((setting) => SettingsByNic.fromMap(setting))
-        //     .toList(),
         nicProfiles: (map["nic_profiles"] as List<Map<String, dynamic>>)
             .map((nicProfile) => NicProfile.fromMap(nicProfile))
             .toList(),
