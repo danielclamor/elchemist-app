@@ -24,17 +24,21 @@ class NicProfile {
   });
 
   factory NicProfile.fromMap(Map<String, dynamic> map) => NicProfile(
-        nicLevel: map["name"] as String,
-        isNewMix: map["new_mix"] as bool,
+        nicLevel: map["nic_level"] as String,
+        isNewMix: map["is_new_mix"] as bool,
         targetNicStr: map["target_nic_str"] as double,
         targetVG: map["target_vg"] as double,
         targetPG: map["target_pg"] as double,
-        nicBaseNicStr: map["nic_base_str"] as double,
-        nicBases: (map["nic_bases"] as List<Map<String, dynamic>>)
-            .map((nicBase) => NicBase.fromMap(nicBase))
-            .toList(),
-        flavorings: (map["flavourings"] as List<Map<String, dynamic>>)
-            .map((flavouring) => Flavoring.fromMap(flavouring))
-            .toList(),
+        nicBaseNicStr: map["nic_base_nic_str"] as double,
+        nicBases: (map["nic_bases"] as List).isEmpty
+            ? []
+            : (map["nic_bases"] as List<Map<String, dynamic>>)
+                .map((nicBase) => NicBase.fromMap(nicBase))
+                .toList(),
+        flavorings: (map["flavorings"] as List).isEmpty
+            ? []
+            : (map["flavorings"] as List<Map<String, dynamic>>)
+                .map((flavouring) => Flavoring.fromMap(flavouring))
+                .toList(),
       );
 }

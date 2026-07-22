@@ -12,6 +12,6 @@ class Flavoring {
   factory Flavoring.fromMap(Map<String, dynamic> map) => Flavoring(
         name: map["name"] as String,
         percentage: map["percentage"] as double,
-        isVG: map["isVG"] as bool,
+        isVG: map["is_vg"] as bool,
       );
 }

@@ -37,7 +37,7 @@ class NicBase {
   });
 
   factory NicBase.fromMap(Map<String, dynamic> map) => NicBase(
-        nicBase: NicBaseOption.fromMap(map["nic_base"]),
+        nicBase: NicBaseOption.fromMap(map["nic_base"] as Map<String, dynamic>),
         percentage: map["percentage"] as double,
       );
 
