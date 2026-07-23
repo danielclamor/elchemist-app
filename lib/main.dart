@@ -1,11 +1,31 @@
+import 'dart:io';
+
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
 import 'package:elchemist_app/views/search_mix_view.dart';
 import 'package:elchemist_app/views/recipe_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await windowManager.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(1280, 720),
+      center: true,
+    );
+
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.setMinimumSize(const Size(800, 600));
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
+
   runApp(const MyApp());
 }
 
