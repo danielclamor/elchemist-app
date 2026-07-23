@@ -28,10 +28,8 @@ class _RecipeCardState extends State<RecipeCard> {
         surfaceTintColor: Colors.transparent,
         elevation: 1,
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 8.0,
-          ),
+          padding: const EdgeInsetsGeometry.symmetric(
+              vertical: 16.0, horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
