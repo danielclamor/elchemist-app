@@ -6,6 +6,7 @@ import 'package:elchemist_app/views/diy_mix_view.dart';
 import 'package:elchemist_app/views/search_mix_view.dart';
 import 'package:elchemist_app/views/recipe_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -40,12 +41,26 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF0E76BD),
           brightness: Brightness.dark,
-          contrastLevel: 0.25,
+          contrastLevel: 1,
           dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
+        ),
+        textTheme: GoogleFonts.robotoMonoTextTheme(
+          ThemeData(brightness: Brightness.dark).textTheme,
         ),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'ELChemist'),
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: MediaQuery.of(context).textScaler.clamp(
+                  minScaleFactor: 1.15,
+                  maxScaleFactor: 2.5,
+                ),
+          ),
+          child: child!,
+        );
+      },
     );
   }
 }
