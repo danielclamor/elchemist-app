@@ -45,19 +45,8 @@ class _RecipeListViewState extends State<RecipeListView> {
               children: [
                 SizedBox(
                   width: double.infinity,
-                  child: SearchBar(
+                  child: TextField(
                     controller: _controller,
-                    leading: const Icon(Icons.search),
-                    elevation: const WidgetStatePropertyAll(0.0),
-                    shape: const WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(4.0),
-                        ),
-                      ),
-                    ),
-                    backgroundColor: const WidgetStatePropertyAll(Colors.white),
                     onChanged: (value) {
                       setState(() {
                         searchText = value;
@@ -68,6 +57,23 @@ class _RecipeListViewState extends State<RecipeListView> {
                         searchText = value;
                       });
                     },
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Color(0xFF6CA0C4),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1.5,
+                          color: Color(0xFF0E76BD),
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsetsGeometry.all(20.0),
+                    ),
                   ),
                 ),
                 const Gap(12),
