@@ -16,20 +16,46 @@ class _RecipeCardState extends State<RecipeCard> {
   @override
   Widget build(BuildContext context) {
     final recipe = widget.recipe;
-    return InkWell(
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-            4.0,
-          ),
-        ),
-        color: Colors.white,
-        surfaceTintColor: Colors.transparent,
-        elevation: 1,
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+      ),
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0.0,
+      child: InkWell(
+        hoverColor: Colors.grey[5],
+        onTap: () {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (
+                context,
+                animation,
+                secondaryAnimation,
+              ) =>
+                  RecipeDetailsView(recipe: recipe),
+              transitionsBuilder: (
+                context,
+                animation,
+                secondaryAnimation,
+                child,
+              ) =>
+                  slideTransitionBuilder(
+                context,
+                animation,
+                secondaryAnimation,
+                child,
+              ),
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsetsGeometry.symmetric(
-              vertical: 16.0, horizontal: 20.0),
+            vertical: 16.0,
+            horizontal: 20.0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,31 +82,6 @@ class _RecipeCardState extends State<RecipeCard> {
           ),
         ),
       ),
-      onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (
-              context,
-              animation,
-              secondaryAnimation,
-            ) =>
-                RecipeDetailsView(recipe: recipe),
-            transitionsBuilder: (
-              context,
-              animation,
-              secondaryAnimation,
-              child,
-            ) =>
-                slideTransitionBuilder(
-              context,
-              animation,
-              secondaryAnimation,
-              child,
-            ),
-          ),
-        );
-      },
     );
   }
 }
