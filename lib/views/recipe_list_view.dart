@@ -39,6 +39,7 @@ class _RecipeListViewState extends State<RecipeListView> {
         child: Padding(
           padding: const EdgeInsetsGeometry.all(24.0),
           child: Card(
+            clipBehavior: Clip.hardEdge,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
             ),
