@@ -601,6 +601,7 @@ class _SearchMixViewState extends State<SearchMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: TextField(
+            textAlign: TextAlign.end,
             readOnly: !_isCustomChecked,
             controller: entry.percentageController,
             onSubmitted: (value) {
@@ -710,90 +711,112 @@ class _SearchMixViewState extends State<SearchMixView> {
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: _recipe == null
-                                  ? SearchAnchor(
-                                      searchController: _searchController,
-                                      viewShape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(4.0),
+                                  ? Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          "Recipe",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      viewSide: const BorderSide(
-                                        color: Colors.white,
-                                      ),
-                                      builder: (context, controller) {
-                                        return SearchBar(
-                                          controller: controller,
-                                          onTap: () {
-                                            controller.openView();
-                                          },
-                                          onChanged: (value) {
-                                            controller.openView();
-                                          },
-                                          leading: const Icon(Icons.search),
-                                          elevation:
-                                              const WidgetStatePropertyAll(0.0),
-                                          shape: const WidgetStatePropertyAll(
-                                            RoundedRectangleBorder(
-                                              side: BorderSide(),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(4.0),
-                                              ),
+                                        const Gap(20.0),
+                                        SearchAnchor(
+                                          searchController: _searchController,
+                                          viewShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(4.0),
                                             ),
                                           ),
-                                        );
-                                      },
-                                      suggestionsBuilder:
-                                          (context, controller) {
-                                        final String input =
-                                            controller.value.text.toLowerCase();
-                                        final Iterable<Recipe>
-                                            filteredSuggestions =
-                                            recipes.where((recipeItem) {
-                                          return recipeItem.name
-                                              .toLowerCase()
-                                              .contains(input);
-                                        });
+                                          viewSide: const BorderSide(
+                                            color: Colors.white,
+                                          ),
+                                          builder: (context, controller) {
+                                            return SearchBar(
+                                              controller: controller,
+                                              onTap: () {
+                                                controller.openView();
+                                              },
+                                              onChanged: (value) {
+                                                controller.openView();
+                                              },
+                                              leading: const Icon(Icons.search),
+                                              elevation:
+                                                  const WidgetStatePropertyAll(
+                                                      0.0),
+                                              shape:
+                                                  const WidgetStatePropertyAll(
+                                                RoundedRectangleBorder(
+                                                  side: BorderSide(),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(4.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          suggestionsBuilder:
+                                              (context, controller) {
+                                            final String input = controller
+                                                .value.text
+                                                .toLowerCase();
+                                            final Iterable<Recipe>
+                                                filteredSuggestions =
+                                                recipes.where((recipeItem) {
+                                              return recipeItem.name
+                                                  .toLowerCase()
+                                                  .contains(input);
+                                            });
 
-                                        return filteredSuggestions
-                                            .map((suggestionItem) {
-                                          return ListTile(
-                                            title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  suggestionItem.brand
-                                                      .toUpperCase(),
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
+                                            return filteredSuggestions
+                                                .map((suggestionItem) {
+                                              return ListTile(
+                                                title: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      suggestionItem.brand
+                                                          .toUpperCase(),
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      suggestionItem.name,
+                                                      style: const TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Text(
-                                                  suggestionItem.name,
-                                                  style: const TextStyle(
-                                                    fontSize: 16.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            onTap: () {
-                                              setState(() {
-                                                controller.closeView(
-                                                  suggestionItem.name,
-                                                );
-                                                _recipe = suggestionItem;
-                                              });
-                                            },
-                                          );
-                                        });
-                                      },
+                                                onTap: () {
+                                                  setState(() {
+                                                    controller.closeView(
+                                                      suggestionItem.name,
+                                                    );
+                                                    _recipe = suggestionItem;
+                                                  });
+                                                },
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ],
                                     )
                                   : Column(
                                       crossAxisAlignment:
@@ -840,7 +863,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             ),
                                           ],
                                         ),
-                                        const Gap(24),
+                                        const Gap(25),
                                         Row(
                                           spacing: 12,
                                           children: [
@@ -943,6 +966,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 ? const SizedBox.shrink()
                                                 : Expanded(
                                                     child: TextField(
+                                                      textAlign: TextAlign.end,
                                                       controller:
                                                           TextEditingController(
                                                         text: (_nicProfile!
@@ -1017,46 +1041,53 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   )
                                           ],
                                         ),
-                                        const Gap(16),
                                         _selectedNicProfValue == null
                                             ? const SizedBox.shrink()
-                                            : TextField(
-                                                focusNode: _volumeFocusNode,
-                                                controller: _volumeController,
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                decoration:
-                                                    const InputDecoration(
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1.5,
+                                            : Column(
+                                                children: [
+                                                  const Gap(16),
+                                                  TextField(
+                                                    textAlign: TextAlign.end,
+                                                    focusNode: _volumeFocusNode,
+                                                    controller:
+                                                        _volumeController,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      enabledBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide:
+                                                            BorderSide(),
+                                                      ),
+                                                      focusedBorder:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: Colors.white,
+                                                          width: 1.5,
+                                                        ),
+                                                      ),
+                                                      filled: true,
+                                                      labelText: "Volume",
+                                                      suffix: Text("mL"),
+                                                      contentPadding:
+                                                          EdgeInsets.symmetric(
+                                                        vertical: 20.0,
+                                                        horizontal: 8.0,
+                                                      ),
                                                     ),
+                                                    onSubmitted: (value) {
+                                                      if (value.isEmpty) {
+                                                        _volumeController.text =
+                                                            _prevVolumeText;
+                                                        return;
+                                                      }
+                                                      _updateValues();
+                                                      _hasVolumeChanged =
+                                                          value.isNotEmpty;
+                                                    },
                                                   ),
-                                                  filled: true,
-                                                  labelText: "Volume",
-                                                  suffix: Text("mL"),
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                    vertical: 20.0,
-                                                    horizontal: 8.0,
-                                                  ),
-                                                ),
-                                                onSubmitted: (value) {
-                                                  if (value.isEmpty) {
-                                                    _volumeController.text =
-                                                        _prevVolumeText;
-                                                    return;
-                                                  }
-                                                  _updateValues();
-                                                  _hasVolumeChanged =
-                                                      value.isNotEmpty;
-                                                },
+                                                ],
                                               ),
                                       ],
                                     ),
@@ -1134,6 +1165,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           maxWidth: 120,
                                                         ),
                                                         child: TextField(
+                                                          textAlign:
+                                                              TextAlign.end,
                                                           readOnly:
                                                               !_isCustomChecked,
                                                           controller:
@@ -1214,6 +1247,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                               ),
                               const Gap(20),
                               TextField(
+                                textAlign: TextAlign.end,
                                 readOnly: true,
                                 controller: TextEditingController(
                                   text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
@@ -1242,6 +1276,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 children: [
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       readOnly: true,
                                       controller: _nicBaseVGController,
                                       keyboardType: TextInputType.number,
@@ -1263,6 +1298,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   ),
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       readOnly: true,
                                       controller: _nicBasePGController,
                                       keyboardType: TextInputType.number,
@@ -1288,11 +1324,11 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   ? const SizedBox.shrink()
                                   : Column(
                                       children: [
-                                        const Gap(20.0),
+                                        const Gap(16.0),
                                         const Divider(
                                           thickness: 1,
                                         ),
-                                        const Gap(20.0),
+                                        const Gap(16.0),
                                         Column(
                                           spacing: 16.0,
                                           children: [
@@ -1342,6 +1378,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                               ),
                               const Gap(20),
                               TextField(
+                                textAlign: TextAlign.end,
                                 readOnly: true,
                                 controller: _targetNicStrController,
                                 keyboardType: TextInputType.number,
@@ -1367,6 +1404,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 children: [
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       readOnly: !_isCustomChecked,
                                       controller: _targetVGController,
                                       keyboardType: TextInputType.number,
@@ -1395,6 +1433,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   ),
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       readOnly: !_isCustomChecked,
                                       controller: _targetPGController,
                                       keyboardType: TextInputType.number,

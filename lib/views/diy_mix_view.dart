@@ -537,7 +537,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                   runSpacing: 8.0,
                   children: [
                     Column(
-                      spacing: 8.0,
+                      spacing: 12.0,
                       children: [
                         Card(
                           shape: RoundedRectangleBorder(
@@ -550,7 +550,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                               maxWidth: 500,
                             ),
                             child: Column(
-                              spacing: 12,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
@@ -560,6 +559,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                const Gap(20.0),
                                 TextField(
                                   textAlign: TextAlign.end,
                                   controller: _volumeController,
@@ -654,7 +654,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Gap(12),
+                              const Gap(20),
                               TextField(
                                 textAlign: TextAlign.end,
                                 controller: _nicBaseNicStrController,
@@ -679,7 +679,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                 ),
                               ),
-                              const Gap(8),
+                              const Gap(16),
                               Row(
                                 spacing: 8.0,
                                 children: [
@@ -785,7 +785,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Gap(12),
+                              const Gap(20),
                               TextField(
                                 textAlign: TextAlign.end,
                                 controller: _targetNicStrController,
@@ -835,7 +835,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                 ),
                               ),
-                              const Gap(8),
+                              const Gap(16),
                               Row(
                                 spacing: 8.0,
                                 children: [
