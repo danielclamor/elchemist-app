@@ -523,10 +523,12 @@ class _DiyMixViewState extends State<DiyMixView> {
               ),
               const Gap(24),
               Wrap(
+                alignment: WrapAlignment.center,
                 spacing: 30.0,
                 runSpacing: 8.0,
                 children: [
                   Wrap(
+                    alignment: WrapAlignment.center,
                     spacing: 20.0,
                     runSpacing: 8.0,
                     children: [
@@ -631,6 +633,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                         ],
                       ),
                       Wrap(
+                        alignment: WrapAlignment.center,
                         spacing: 8.0,
                         runSpacing: 8.0,
                         children: [
