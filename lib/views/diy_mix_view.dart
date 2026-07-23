@@ -505,6 +505,10 @@ class _DiyMixViewState extends State<DiyMixView> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var wrapperWidth = screenSize.width < 1920 ? 500.0 : null;
+    var section2Width = screenSize.width < 1920 ? 500.0 : 400.0;
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SingleChildScrollView(
@@ -516,560 +520,591 @@ class _DiyMixViewState extends State<DiyMixView> {
                 children: [
                   Text(
                     "DIY Mix",
-                    style:
-                        TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   )
                 ],
               ),
               const Gap(24),
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 30.0,
-                runSpacing: 8.0,
-                children: [
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 20.0,
-                    runSpacing: 8.0,
-                    children: [
-                      Column(
-                        spacing: 8.0,
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            margin: EdgeInsets.zero,
-                            child: Container(
-                              padding: const EdgeInsets.all(16.0),
-                              constraints: const BoxConstraints(
-                                minWidth: 250,
-                                maxWidth: 500,
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: wrapperWidth ?? double.infinity,
+                ),
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 20.0,
+                  runSpacing: 8.0,
+                  children: [
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 20.0,
+                      runSpacing: 8.0,
+                      children: [
+                        Column(
+                          spacing: 8.0,
+                          children: [
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
                               ),
-                              child: Column(
-                                spacing: 12,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Batch",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  TextField(
-                                    controller: _volumeController,
-                                    keyboardType: TextInputType.number,
-                                    onSubmitted: (value) => _updateValues(),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF6CA0C4),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF0E76BD),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white60,
-                                      labelText: "Volume",
-                                      suffix: Text("mL"),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0,
-                                        horizontal: 8.0,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            margin: EdgeInsets.zero,
-                            child: Container(
-                              padding: const EdgeInsets.all(16.0),
-                              constraints: const BoxConstraints(
-                                minWidth: 250,
-                                maxWidth: 500,
-                              ),
-                              child: Column(
-                                spacing: 12,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Flavoring",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Column(
-                                    spacing: 8.0,
-                                    children: [
-                                      for (final entry in _flavorEntries)
-                                        _buildEntryRow(entry)
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () {
-                                          _addEntry();
-                                        },
-                                        child: const Text("+ Add"),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 8.0,
-                        runSpacing: 8.0,
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            margin: EdgeInsets.zero,
-                            child: Container(
-                              padding: const EdgeInsets.all(16.0),
-                              constraints: const BoxConstraints(
-                                minWidth: 250,
-                                maxWidth: 400,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Nic Base",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const Gap(12),
-                                  TextField(
-                                    controller: _nicBaseNicStrController,
-                                    keyboardType: TextInputType.number,
-                                    onSubmitted: (value) => _updateValues(),
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF6CA0C4),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF0E76BD),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white60,
-                                      labelText: "Nic Str",
-                                      suffix: Text("%"),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0,
-                                        horizontal: 8.0,
-                                      ),
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Row(
-                                    spacing: 8.0,
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _nicBaseVGController,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF6CA0C4),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF0E76BD),
-                                              ),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white60,
-                                            labelText: "VG",
-                                            suffix: Text("%"),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              vertical: 0,
-                                              horizontal: 8.0,
-                                            ),
-                                          ),
-                                          onSubmitted: (value) {
-                                            setState(() {
-                                              _nicBasePGController.text =
-                                                  (100 - (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                _getDecimalPlaces(
-                                                  value,
-                                                ),
-                                              );
-                                            });
-                                            _updateValues();
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _nicBasePGController,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF6CA0C4),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF0E76BD),
-                                              ),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white60,
-                                            labelText: "PG",
-                                            suffix: Text("%"),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              vertical: 0,
-                                              horizontal: 8.0,
-                                            ),
-                                          ),
-                                          onSubmitted: (value) {
-                                            setState(() {
-                                              _nicBaseVGController.text =
-                                                  (100 - (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                _getDecimalPlaces(
-                                                  value,
-                                                ),
-                                              );
-                                            });
-                                            _updateValues();
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            margin: EdgeInsets.zero,
-                            child: Container(
-                              padding: const EdgeInsets.all(16.0),
-                              constraints: const BoxConstraints(
-                                minWidth: 250,
-                                maxWidth: 400,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Target",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const Gap(12),
-                                  TextField(
-                                    controller: _targetNicStrController,
-                                    keyboardType: TextInputType.number,
-                                    onSubmitted: (value) {
-                                      final percentage = double.parse(value);
-
-                                      if (percentage == 0.0) {
-                                        ingredients.removeAt(0);
-                                      } else {
-                                        if (!ingredients
-                                            .map(
-                                                (ingredient) => ingredient.name)
-                                            .contains("Nicotine Base")) {
-                                          setState(() {});
-                                          final (percentage, volume, weight) =
-                                              _getNicBaseValues();
-                                          ingredients.insert(
-                                            0,
-                                            Ingredient(
-                                              name: "Nicotine Base",
-                                              percentage: percentage,
-                                              volume: volume,
-                                              weight: weight,
-                                              type: IngredientType.nicotine,
-                                            ),
-                                          );
-                                        }
-                                      }
-                                      _updateValues();
-                                    },
-                                    decoration: const InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF6CA0C4),
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color(0xFF0E76BD),
-                                        ),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white60,
-                                      labelText: "Nic Str",
-                                      suffix: Text("%"),
-                                      contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0,
-                                        horizontal: 8.0,
-                                      ),
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Row(
-                                    spacing: 8.0,
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _targetVGController,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF6CA0C4),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF0E76BD),
-                                              ),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white60,
-                                            labelText: "VG",
-                                            suffix: Text("%"),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              vertical: 0,
-                                              horizontal: 8.0,
-                                            ),
-                                          ),
-                                          onSubmitted: (value) {
-                                            setState(() {
-                                              _targetPGController.text =
-                                                  (100 - (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                _getDecimalPlaces(
-                                                  value,
-                                                ),
-                                              );
-                                            });
-                                            _updateValues();
-                                          },
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _targetPGController,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF6CA0C4),
-                                              ),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFF0E76BD),
-                                              ),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white60,
-                                            labelText: "PG",
-                                            suffix: Text("%"),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              vertical: 0,
-                                              horizontal: 8.0,
-                                            ),
-                                          ),
-                                          onSubmitted: (value) {
-                                            setState(() {
-                                              _targetVGController.text =
-                                                  (100 - (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                _getDecimalPlaces(
-                                                  value,
-                                                ),
-                                              );
-                                            });
-                                            _updateValues();
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4.0),
-                    ),
-                    margin: EdgeInsets.zero,
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      constraints: const BoxConstraints(
-                        minWidth: 250,
-                        maxWidth: 500,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Recipe",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Gap(24),
-                          DataTable(
-                            horizontalMargin: 0.0,
-                            columns: const <DataColumn>[
-                              DataColumn(
-                                label: Text(
-                                  "Ingredient",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                              margin: EdgeInsets.zero,
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 500,
                                 ),
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "%",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                numeric: true,
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "mL",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                numeric: true,
-                              ),
-                              DataColumn(
-                                label: Text(
-                                  "g",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                numeric: true,
-                              ),
-                            ],
-                            rows: [
-                              ...ingredients.map(
-                                (ingredient) => DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        ingredient.name,
+                                child: Column(
+                                  spacing: 12,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Batch",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    DataCell(
-                                      Text(
-                                        '${(ingredient.percentage * 100).toStringAsFixed(2)} %',
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${ingredient.volume.toStringAsFixed(2)} mL',
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${ingredient.weight.toStringAsFixed(2)} g',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                    TextField(
+                                      controller: _volumeController,
+                                      keyboardType: TextInputType.number,
+                                      onSubmitted: (value) => _updateValues(),
+                                      decoration: const InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF6CA0C4),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF0E76BD),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white60,
+                                        labelText: "Volume",
+                                        suffix: Text("mL"),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          horizontal: 8.0,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              DataRow(
-                                cells: [
-                                  const DataCell(
-                                    Text(
-                                      "Sum",
+                            ),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              margin: EdgeInsets.zero,
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
+                                constraints: const BoxConstraints(
+                                  maxWidth: 500,
+                                ),
+                                child: Column(
+                                  spacing: 12,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Flavoring",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Column(
+                                      spacing: 8.0,
+                                      children: [
+                                        for (final entry in _flavorEntries)
+                                          _buildEntryRow(entry)
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            _addEntry();
+                                          },
+                                          child: const Text("+ Add"),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 8.0,
+                          runSpacing: 8.0,
+                          children: [
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: section2Width,
+                              ),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                margin: EdgeInsets.zero,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Nic Base",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Gap(12),
+                                      TextField(
+                                        controller: _nicBaseNicStrController,
+                                        keyboardType: TextInputType.number,
+                                        onSubmitted: (value) => _updateValues(),
+                                        decoration: const InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xFF6CA0C4),
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xFF0E76BD),
+                                            ),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white60,
+                                          labelText: "Nic Str",
+                                          suffix: Text("%"),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0,
+                                            horizontal: 8.0,
+                                          ),
+                                        ),
+                                      ),
+                                      const Gap(8),
+                                      Row(
+                                        spacing: 8.0,
+                                        children: [
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _nicBaseVGController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF6CA0C4),
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF0E76BD),
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.white60,
+                                                labelText: "VG",
+                                                suffix: Text("%"),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  vertical: 0,
+                                                  horizontal: 8.0,
+                                                ),
+                                              ),
+                                              onSubmitted: (value) {
+                                                setState(() {
+                                                  _nicBasePGController
+                                                      .text = (100 -
+                                                          (double.parse(value)))
+                                                      .toStringAsFixed(
+                                                    _getDecimalPlaces(
+                                                      value,
+                                                    ),
+                                                  );
+                                                });
+                                                _updateValues();
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _nicBasePGController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF6CA0C4),
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF0E76BD),
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.white60,
+                                                labelText: "PG",
+                                                suffix: Text("%"),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  vertical: 0,
+                                                  horizontal: 8.0,
+                                                ),
+                                              ),
+                                              onSubmitted: (value) {
+                                                setState(() {
+                                                  _nicBaseVGController
+                                                      .text = (100 -
+                                                          (double.parse(value)))
+                                                      .toStringAsFixed(
+                                                    _getDecimalPlaces(
+                                                      value,
+                                                    ),
+                                                  );
+                                                });
+                                                _updateValues();
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              constraints: BoxConstraints(
+                                maxWidth: section2Width,
+                              ),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                margin: EdgeInsets.zero,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Target",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Gap(12),
+                                      TextField(
+                                        controller: _targetNicStrController,
+                                        keyboardType: TextInputType.number,
+                                        onSubmitted: (value) {
+                                          final percentage =
+                                              double.parse(value);
+
+                                          if (percentage == 0.0) {
+                                            ingredients.removeAt(0);
+                                          } else {
+                                            if (!ingredients
+                                                .map((ingredient) =>
+                                                    ingredient.name)
+                                                .contains("Nicotine Base")) {
+                                              setState(() {});
+                                              final (
+                                                percentage,
+                                                volume,
+                                                weight
+                                              ) = _getNicBaseValues();
+                                              ingredients.insert(
+                                                0,
+                                                Ingredient(
+                                                  name: "Nicotine Base",
+                                                  percentage: percentage,
+                                                  volume: volume,
+                                                  weight: weight,
+                                                  type: IngredientType.nicotine,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                          _updateValues();
+                                        },
+                                        decoration: const InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xFF6CA0C4),
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color(0xFF0E76BD),
+                                            ),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white60,
+                                          labelText: "Nic Str",
+                                          suffix: Text("%"),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0,
+                                            horizontal: 8.0,
+                                          ),
+                                        ),
+                                      ),
+                                      const Gap(8),
+                                      Row(
+                                        spacing: 8.0,
+                                        children: [
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _targetVGController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF6CA0C4),
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF0E76BD),
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.white60,
+                                                labelText: "VG",
+                                                suffix: Text("%"),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  vertical: 0,
+                                                  horizontal: 8.0,
+                                                ),
+                                              ),
+                                              onSubmitted: (value) {
+                                                setState(() {
+                                                  _targetPGController
+                                                      .text = (100 -
+                                                          (double.parse(value)))
+                                                      .toStringAsFixed(
+                                                    _getDecimalPlaces(
+                                                      value,
+                                                    ),
+                                                  );
+                                                });
+                                                _updateValues();
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: _targetPGController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF6CA0C4),
+                                                  ),
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                    color: Color(0xFF0E76BD),
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.white60,
+                                                labelText: "PG",
+                                                suffix: Text("%"),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  vertical: 0,
+                                                  horizontal: 8.0,
+                                                ),
+                                              ),
+                                              onSubmitted: (value) {
+                                                setState(() {
+                                                  _targetVGController
+                                                      .text = (100 -
+                                                          (double.parse(value)))
+                                                      .toStringAsFixed(
+                                                    _getDecimalPlaces(
+                                                      value,
+                                                    ),
+                                                  );
+                                                });
+                                                _updateValues();
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 500,
+                      ),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Recipe",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Gap(24),
+                              DataTable(
+                                horizontalMargin: 0.0,
+                                columns: const <DataColumn>[
+                                  DataColumn(
+                                    label: Text(
+                                      "Ingredient",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  DataColumn(
+                                    label: Text(
+                                      "%",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                    numeric: true,
                                   ),
-                                  DataCell(
-                                    Text(
-                                      '${(ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
-                                      style: const TextStyle(
+                                  DataColumn(
+                                    label: Text(
+                                      "mL",
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                    numeric: true,
                                   ),
-                                  DataCell(
-                                    Text(
-                                      '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
-                                      style: const TextStyle(
+                                  DataColumn(
+                                    label: Text(
+                                      "g",
+                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
+                                    numeric: true,
                                   ),
-                                  DataCell(
-                                    Text(
-                                      '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                ],
+                                rows: [
+                                  ...ingredients.map(
+                                    (ingredient) => DataRow(
+                                      cells: [
+                                        DataCell(
+                                          Text(
+                                            ingredient.name,
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            '${(ingredient.percentage * 100).toStringAsFixed(2)} %',
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            '${ingredient.volume.toStringAsFixed(2)} mL',
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Text(
+                                            '${ingredient.weight.toStringAsFixed(2)} g',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                  ),
+                                  DataRow(
+                                    cells: [
+                                      const DataCell(
+                                        Text(
+                                          "Sum",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          '${(ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          '${ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ],
           ),
