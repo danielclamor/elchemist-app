@@ -21,11 +21,10 @@ class _RecipeCardState extends State<RecipeCard> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.zero,
       ),
-      color: Colors.white,
       surfaceTintColor: Colors.transparent,
       elevation: 0.0,
       child: InkWell(
-        hoverColor: Colors.grey[5],
+        // hoverColor: Colors.grey[5],
         onTap: () {
           Navigator.push(
             context,

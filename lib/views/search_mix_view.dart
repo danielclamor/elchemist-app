@@ -134,27 +134,18 @@ class _SearchMixViewState extends State<SearchMixView> {
     super.dispose();
   }
 
-  InputBorder _enabledBorder() => _isCustomChecked
-      ? const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFF6CA0C4),
-          ),
-        )
-      : const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFDCDCDC),
-          ),
-        );
+  InputBorder _enabledBorder() => const OutlineInputBorder(
+        borderSide: BorderSide(),
+      );
   InputBorder _focusedBorder() => _isCustomChecked
       ? const OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFF0E76BD),
+            color: Colors.white,
+            width: 1.5,
           ),
         )
       : const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xFFDCDCDC),
-          ),
+          borderSide: BorderSide(),
         );
 
   void _handleVolumeFocusChange() {
@@ -550,13 +541,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                 inputDecorationTheme: InputDecorationTheme(
                   enabledBorder: _enabledBorder(),
                   disabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFFDCDCDC),
-                    ),
+                    borderSide: BorderSide(),
                   ),
                   focusedBorder: _focusedBorder(),
                   filled: _isCustomChecked,
-                  fillColor: _isCustomChecked ? Colors.white60 : null,
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 8.0,
@@ -649,7 +637,6 @@ class _SearchMixViewState extends State<SearchMixView> {
               enabledBorder: _enabledBorder(),
               focusedBorder: _focusedBorder(),
               filled: _isCustomChecked,
-              fillColor: _isCustomChecked ? Colors.white60 : null,
               labelText: "Percentage",
               suffix: const Text("%"),
               contentPadding: const EdgeInsets.symmetric(
@@ -686,7 +673,6 @@ class _SearchMixViewState extends State<SearchMixView> {
     final List<Recipe> recipes = widget.recipes;
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -724,7 +710,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                               borderRadius: BorderRadius.circular(4.0),
                             ),
                             elevation: 0,
-                            color: Colors.white,
                             margin: EdgeInsets.zero,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
@@ -737,7 +722,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         ),
                                       ),
                                       viewSide: const BorderSide(
-                                        color: Color(0xFF0E76BD),
+                                        color: Colors.white,
                                       ),
                                       builder: (context, controller) {
                                         return SearchBar(
@@ -753,17 +738,11 @@ class _SearchMixViewState extends State<SearchMixView> {
                                               const WidgetStatePropertyAll(0.0),
                                           shape: const WidgetStatePropertyAll(
                                             RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                color: Color(0xFF6CA0C4),
-                                              ),
+                                              side: BorderSide(),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(4.0),
                                               ),
                                             ),
-                                          ),
-                                          backgroundColor:
-                                              const WidgetStatePropertyAll(
-                                            Colors.white,
                                           ),
                                         );
                                       },
@@ -878,18 +857,16 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   const InputDecorationTheme(
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF6CA0C4),
-                                                  ),
+                                                  borderSide: BorderSide(),
                                                 ),
                                                 focusedBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                    color: Color(0xFF0E76BD),
+                                                    color: Colors.white,
+                                                    width: 1.5,
                                                   ),
                                                 ),
                                                 filled: true,
-                                                fillColor: Colors.white60,
                                                 contentPadding:
                                                     EdgeInsets.symmetric(
                                                   vertical: 8,
@@ -937,21 +914,32 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 ),
                                                 Checkbox(
                                                   value: _isCustomChecked,
-                                                  side: const BorderSide(
-                                                    color: Color(0xFF6CA0C4),
+                                                  side: BorderSide(
+                                                    color: _selectedNicProfValue !=
+                                                            null
+                                                        ? Theme.of(context)
+                                                            .primaryColorLight
+                                                        : Theme.of(context)
+                                                            .primaryColorDark,
                                                   ),
-                                                  onChanged: (bool? newValue) {
-                                                    setState(() {
-                                                      _isCustomChecked =
-                                                          newValue ?? false;
-                                                    });
+                                                  onChanged:
+                                                      _selectedNicProfValue !=
+                                                              null
+                                                          ? (bool? newValue) {
+                                                              setState(() {
+                                                                _isCustomChecked =
+                                                                    newValue ??
+                                                                        false;
+                                                              });
 
-                                                    if (newValue == false) {
-                                                      _onSelectNicProfile(
-                                                        _selectedNicProfValue,
-                                                      );
-                                                    }
-                                                  },
+                                                              if (newValue ==
+                                                                  false) {
+                                                                _onSelectNicProfile(
+                                                                  _selectedNicProfValue,
+                                                                );
+                                                              }
+                                                            }
+                                                          : null,
                                                 ),
                                               ],
                                             ),
@@ -980,22 +968,17 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         enabledBorder:
                                                             OutlineInputBorder(
                                                           borderSide:
-                                                              BorderSide(
-                                                            color: Color(
-                                                                0xFF6CA0C4),
-                                                          ),
+                                                              BorderSide(),
                                                         ),
                                                         focusedBorder:
                                                             OutlineInputBorder(
                                                           borderSide:
                                                               BorderSide(
-                                                            color: Color(
-                                                                0xFF0E76BD),
+                                                            color: Colors.white,
+                                                            width: 1.5,
                                                           ),
                                                         ),
                                                         filled: true,
-                                                        fillColor:
-                                                            Colors.white60,
                                                         labelText: "Nic Str",
                                                         suffix: Text("mg"),
                                                         contentPadding:
@@ -1050,18 +1033,16 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                     const InputDecoration(
                                                   enabledBorder:
                                                       OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      color: Color(0xFF6CA0C4),
-                                                    ),
+                                                    borderSide: BorderSide(),
                                                   ),
                                                   focusedBorder:
                                                       OutlineInputBorder(
                                                     borderSide: BorderSide(
-                                                      color: Color(0xFF0E76BD),
+                                                      color: Colors.white,
+                                                      width: 1.5,
                                                     ),
                                                   ),
                                                   filled: true,
-                                                  fillColor: Colors.white60,
                                                   labelText: "Volume",
                                                   suffix: Text("mL"),
                                                   contentPadding:
@@ -1092,7 +1073,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(4.0),
                                   ),
-                                  color: Colors.white,
                                   margin: EdgeInsets.zero,
                                   child: Padding(
                                     padding: const EdgeInsets.all(16.0),
@@ -1124,17 +1104,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                       const InputDecoration(
                                                     enabledBorder:
                                                         OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Color(0xFFDCDCDC),
-                                                      ),
-                                                    ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                        color:
-                                                            Color(0xFFDCDCDC),
-                                                      ),
+                                                      borderSide: BorderSide(),
                                                     ),
                                                     labelText: "Name",
                                                     contentPadding:
@@ -1171,10 +1141,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                             _focusedBorder(),
                                                         filled:
                                                             _isCustomChecked,
-                                                        fillColor:
-                                                            _isCustomChecked
-                                                                ? Colors.white60
-                                                                : null,
                                                         labelText: "Percentage",
                                                         suffix: const Text("%"),
                                                         contentPadding:
@@ -1192,11 +1158,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                       Checkbox(
                                                         value: flavoring.isVG,
                                                         onChanged: null,
-                                                        side: const BorderSide(
-                                                          color: Color(
-                                                            0xFFB0B0B0,
-                                                          ),
-                                                        ),
+                                                        side:
+                                                            const BorderSide(),
                                                       ),
                                                     ],
                                                   ),
@@ -1220,7 +1183,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -1245,14 +1207,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFDCDCDC),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFDCDCDC),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
@@ -1273,14 +1231,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFFDCDCDC),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFFDCDCDC),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         labelText: "VG",
                                         suffix: Text("%"),
@@ -1298,14 +1252,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFFDCDCDC),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFFDCDCDC),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         labelText: "PG",
                                         suffix: Text("%"),
@@ -1323,9 +1273,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   : Column(
                                       children: [
                                         const Gap(8.0),
-                                        Divider(
+                                        const Divider(
                                           thickness: 1,
-                                          color: Colors.grey[350],
                                         ),
                                         const Gap(8.0),
                                         ..._nicBaseEntries.map(
@@ -1357,7 +1306,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -1379,13 +1327,12 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 onSubmitted: (value) => _updateValues(),
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFFDCDCDC),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xFFDCDCDC),
+                                      color: Colors.white,
+                                      width: 1.5,
                                     ),
                                   ),
                                   labelText: "Nic Str",
@@ -1418,9 +1365,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         enabledBorder: _enabledBorder(),
                                         focusedBorder: _focusedBorder(),
                                         filled: _isCustomChecked,
-                                        fillColor: _isCustomChecked
-                                            ? Colors.white60
-                                            : null,
                                         labelText: "VG",
                                         suffix: const Text("%"),
                                         contentPadding:
@@ -1449,9 +1393,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         enabledBorder: _enabledBorder(),
                                         focusedBorder: _focusedBorder(),
                                         filled: _isCustomChecked,
-                                        fillColor: _isCustomChecked
-                                            ? Colors.white60
-                                            : null,
                                         labelText: "PG",
                                         suffix: const Text("%"),
                                         contentPadding:
@@ -1479,7 +1420,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                             4.0,
                           ),
                         ),
-                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),

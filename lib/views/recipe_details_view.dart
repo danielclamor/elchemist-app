@@ -42,7 +42,6 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
     final Recipe recipe = widget.recipe;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
@@ -69,7 +68,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                         4.0,
                       ),
                     ),
-                    color: Colors.white,
+                    elevation: 0.0,
                     margin: EdgeInsets.zero,
                     child: Padding(
                       padding: cardPadding,
@@ -113,17 +112,12 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 inputDecorationTheme:
                                     const InputDecorationTheme(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF6CA0C4),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF0E76BD),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   filled: true,
-                                  fillColor: Colors.white60,
                                   contentPadding: EdgeInsets.symmetric(
                                     vertical: 8,
                                     horizontal: 8.0,
@@ -162,14 +156,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   ),
                                   decoration: const InputDecoration(
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFDCDCDC),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFDCDCDC),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     labelText: "Nic Strength",
                                     suffix: Text("%"),
@@ -192,7 +182,6 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: cardPadding,
@@ -220,14 +209,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                           ),
                                           decoration: const InputDecoration(
                                             enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
+                                              borderSide: BorderSide(),
                                             ),
                                             focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                color: Color(0xFFDCDCDC),
-                                              ),
+                                              borderSide: BorderSide(),
                                             ),
                                             labelText: "Name",
                                             contentPadding:
@@ -254,15 +239,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                               decoration: const InputDecoration(
                                                 enabledBorder:
                                                     OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFFDCDCDC),
-                                                  ),
+                                                  borderSide: BorderSide(),
                                                 ),
                                                 focusedBorder:
                                                     OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFFDCDCDC),
-                                                  ),
+                                                  borderSide: BorderSide(),
                                                 ),
                                                 labelText: "Percentage",
                                                 suffix: Text("%"),
@@ -280,11 +261,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                               Checkbox(
                                                 value: flavoring.isVG,
                                                 onChanged: null,
-                                                side: const BorderSide(
-                                                  color: Color(
-                                                    0xFFB0B0B0,
-                                                  ),
-                                                ),
+                                                side: const BorderSide(),
                                               ),
                                             ],
                                           ),
@@ -303,7 +280,6 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: cardPadding,
@@ -327,14 +303,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   ),
                                   decoration: const InputDecoration(
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFDCDCDC),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFDCDCDC),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     labelText: "Nic Str",
                                     suffix: Text("%"),
@@ -366,14 +338,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         ),
                                         decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           labelText: "VG",
                                           suffix: Text("%"),
@@ -402,14 +370,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         ),
                                         decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           labelText: "PG",
                                           suffix: Text("%"),
@@ -427,9 +391,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     : Column(
                                         children: [
                                           const Gap(8.0),
-                                          Divider(
+                                          const Divider(
                                             thickness: 1,
-                                            color: Colors.grey[350],
                                           ),
                                           const Gap(8.0),
                                           ...nicBases.map(
@@ -449,10 +412,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                         const InputDecoration(
                                                       enabledBorder:
                                                           OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color:
-                                                              Color(0xFFDCDCDC),
-                                                        ),
+                                                        borderSide:
+                                                            BorderSide(),
                                                       ),
                                                       labelText: "Percentage",
                                                       suffix: Text("%"),
@@ -468,7 +429,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                 Container(
                                                   constraints:
                                                       const BoxConstraints(
-                                                          maxWidth: 120),
+                                                    maxWidth: 120,
+                                                  ),
                                                   child: TextField(
                                                     readOnly: true,
                                                     controller:
@@ -482,10 +444,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                         const InputDecoration(
                                                       enabledBorder:
                                                           OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color:
-                                                              Color(0xFFDCDCDC),
-                                                        ),
+                                                        borderSide:
+                                                            BorderSide(),
                                                       ),
                                                       labelText: "Percentage",
                                                       suffix: Text("%"),
@@ -503,11 +463,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                     Checkbox(
                                                       value: nicBase.isVG,
                                                       onChanged: null,
-                                                      side: const BorderSide(
-                                                        color: Color(
-                                                          0xFFB0B0B0,
-                                                        ),
-                                                      ),
+                                                      side: const BorderSide(),
                                                     ),
                                                   ],
                                                 ),
@@ -526,7 +482,6 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: cardPadding,
@@ -550,14 +505,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   ),
                                   decoration: const InputDecoration(
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFDCDCDC),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFDCDCDC),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     labelText: "Nic Str",
                                     suffix: Text("%"),
@@ -593,14 +544,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         ),
                                         decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           labelText: "VG",
                                           suffix: Text("%"),
@@ -633,14 +580,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         ),
                                         decoration: const InputDecoration(
                                           enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFFDCDCDC),
-                                            ),
+                                            borderSide: BorderSide(),
                                           ),
                                           labelText: "PG",
                                           suffix: Text("%"),

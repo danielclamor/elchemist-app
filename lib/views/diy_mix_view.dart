@@ -323,17 +323,15 @@ class _DiyMixViewState extends State<DiyMixView> {
             },
             decoration: InputDecoration(
               enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF6CA0C4),
-                ),
+                borderSide: BorderSide(),
               ),
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF0E76BD),
+                  color: Colors.white,
+                  width: 1.5,
                 ),
               ),
               filled: true,
-              fillColor: Colors.white60,
               labelText: "Flavor",
               suffixIcon: !entry.flavorFocusNode.hasFocus
                   ? null
@@ -405,17 +403,15 @@ class _DiyMixViewState extends State<DiyMixView> {
             },
             decoration: InputDecoration(
               enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0xFF6CA0C4),
-                ),
+                borderSide: BorderSide(),
               ),
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF0E76BD),
+                  color: Colors.white,
+                  width: 1.5,
                 ),
               ),
               filled: true,
-              fillColor: Colors.white60,
               labelText: "Percentage",
               suffix: entry.percentageFocusNode.hasFocus
                   ? null
@@ -510,7 +506,6 @@ class _DiyMixViewState extends State<DiyMixView> {
     var section2Width = screenSize.width < 1920 ? 500.0 : 400.0;
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -544,7 +539,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Container(
                             padding: const EdgeInsets.all(16.0),
@@ -568,17 +562,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   onSubmitted: (value) => _updateValues(),
                                   decoration: const InputDecoration(
                                     enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Color(0xFF6CA0C4),
-                                      ),
+                                      borderSide: BorderSide(),
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
-                                        color: Color(0xFF0E76BD),
+                                        color: Colors.white,
+                                        width: 1.5,
                                       ),
                                     ),
                                     filled: true,
-                                    fillColor: Colors.white60,
                                     labelText: "Volume",
                                     suffix: Text("mL"),
                                     contentPadding: EdgeInsets.symmetric(
@@ -595,7 +587,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
-                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Container(
                             padding: const EdgeInsets.all(16.0),
@@ -645,7 +636,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -666,17 +656,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 onSubmitted: (value) => _updateValues(),
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF6CA0C4),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xFF0E76BD),
+                                      color: Colors.white,
+                                      width: 1.5,
                                     ),
                                   ),
                                   filled: true,
-                                  fillColor: Colors.white60,
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
                                   contentPadding: EdgeInsets.symmetric(
@@ -695,17 +683,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF6CA0C4),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Color(0xFF0E76BD),
+                                            color: Colors.white,
+                                            width: 1.5,
                                           ),
                                         ),
                                         filled: true,
-                                        fillColor: Colors.white60,
                                         labelText: "VG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
@@ -733,17 +719,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF6CA0C4),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Color(0xFF0E76BD),
+                                            color: Colors.white,
+                                            width: 1.5,
                                           ),
                                         ),
                                         filled: true,
-                                        fillColor: Colors.white60,
                                         labelText: "PG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
@@ -780,7 +764,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -826,17 +809,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 },
                                 decoration: const InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color(0xFF6CA0C4),
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                      color: Color(0xFF0E76BD),
+                                      color: Colors.white,
+                                      width: 1.5,
                                     ),
                                   ),
                                   filled: true,
-                                  fillColor: Colors.white60,
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
                                   contentPadding: EdgeInsets.symmetric(
@@ -855,17 +836,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF6CA0C4),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Color(0xFF0E76BD),
+                                            color: Colors.white,
+                                            width: 1.5,
                                           ),
                                         ),
                                         filled: true,
-                                        fillColor: Colors.white60,
                                         labelText: "VG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
@@ -893,17 +872,15 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color(0xFF6CA0C4),
-                                          ),
+                                          borderSide: BorderSide(),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
-                                            color: Color(0xFF0E76BD),
+                                            color: Colors.white,
+                                            width: 1.5,
                                           ),
                                         ),
                                         filled: true,
-                                        fillColor: Colors.white60,
                                         labelText: "PG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
@@ -940,7 +917,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
-                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),

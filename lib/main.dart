@@ -39,6 +39,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF0E76BD),
+          brightness: Brightness.dark,
+          contrastLevel: 0.25,
+          dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
         ),
         useMaterial3: true,
       ),
@@ -115,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: bottomNavigationBarItems,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
       ),
     );

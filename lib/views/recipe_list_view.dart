@@ -34,7 +34,6 @@ class _RecipeListViewState extends State<RecipeListView> {
         .toList();
 
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       body: Center(
         child: Padding(
           padding: const EdgeInsetsGeometry.all(24.0),
@@ -43,7 +42,6 @@ class _RecipeListViewState extends State<RecipeListView> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(4.0),
             ),
-            color: Colors.white,
             margin: EdgeInsetsGeometry.zero,
             child: Container(
               constraints: const BoxConstraints(maxWidth: 500),
@@ -66,18 +64,15 @@ class _RecipeListViewState extends State<RecipeListView> {
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6CA0C4),
-                          ),
+                          borderSide: BorderSide(),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 1.5,
-                            color: Color(0xFF0E76BD),
+                            color: Colors.white,
                           ),
                         ),
                         filled: true,
-                        fillColor: Colors.white,
                         contentPadding: EdgeInsetsGeometry.all(20.0),
                       ),
                     ),
