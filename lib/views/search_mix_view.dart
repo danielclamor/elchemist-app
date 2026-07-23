@@ -546,7 +546,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                   focusedBorder: _focusedBorder(),
                   filled: _isCustomChecked,
                   contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
+                    vertical: 20.0,
                     horizontal: 8.0,
                   ),
                 ),
@@ -640,7 +640,7 @@ class _SearchMixViewState extends State<SearchMixView> {
               labelText: "Percentage",
               suffix: const Text("%"),
               contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
+                vertical: 20.0,
                 horizontal: 8.0,
               ),
             ),
@@ -652,11 +652,7 @@ class _SearchMixViewState extends State<SearchMixView> {
             Checkbox(
               value: entry.isVG,
               onChanged: null,
-              side: const BorderSide(
-                color: Color(
-                  0xFFB0B0B0,
-                ),
-              ),
+              side: const BorderSide(),
             ),
           ],
         ),
@@ -869,7 +865,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 filled: true,
                                                 contentPadding:
                                                     EdgeInsets.symmetric(
-                                                  vertical: 8,
+                                                  vertical: 20.0,
                                                   horizontal: 8.0,
                                                 ),
                                               ),
@@ -984,7 +980,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         contentPadding:
                                                             EdgeInsets
                                                                 .symmetric(
-                                                          vertical: 0,
+                                                          vertical: 20.0,
                                                           horizontal: 8.0,
                                                         ),
                                                       ),
@@ -1021,7 +1017,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   )
                                           ],
                                         ),
-                                        const Gap(12),
+                                        const Gap(16),
                                         _selectedNicProfValue == null
                                             ? const SizedBox.shrink()
                                             : TextField(
@@ -1047,7 +1043,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   suffix: Text("mL"),
                                                   contentPadding:
                                                       EdgeInsets.symmetric(
-                                                    vertical: 0,
+                                                    vertical: 20.0,
                                                     horizontal: 8.0,
                                                   ),
                                                 ),
@@ -1077,7 +1073,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(16.0),
                                     child: Column(
-                                      spacing: 12,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
@@ -1088,86 +1083,107 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        ..._flavorings.map(
-                                          (flavoring) => Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: TextField(
-                                                  readOnly: true,
-                                                  controller:
-                                                      TextEditingController(
-                                                    text: flavoring.name,
-                                                  ),
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide: BorderSide(),
-                                                    ),
-                                                    labelText: "Name",
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                      vertical: 0,
-                                                      horizontal: 8.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const Gap(8),
-                                              Row(
+                                        const Gap(20),
+                                        Column(
+                                          spacing: 16.0,
+                                          children: [
+                                            ..._flavorings.map(
+                                              (flavoring) => Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Container(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                      maxWidth: 120,
-                                                    ),
-                                                    child: TextField(
-                                                      readOnly:
-                                                          !_isCustomChecked,
-                                                      controller:
-                                                          TextEditingController(
-                                                        text: (flavoring
-                                                                    .percentage *
-                                                                100)
-                                                            .toStringAsFixed(4),
-                                                      ),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        enabledBorder:
-                                                            _enabledBorder(),
-                                                        focusedBorder:
-                                                            _focusedBorder(),
-                                                        filled:
-                                                            _isCustomChecked,
-                                                        labelText: "Percentage",
-                                                        suffix: const Text("%"),
-                                                        contentPadding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 0,
-                                                          horizontal: 8.0,
+                                                  Expanded(
+                                                    child: Tooltip(
+                                                      message: flavoring.name,
+                                                      child: TextField(
+                                                        readOnly: true,
+                                                        controller:
+                                                            TextEditingController(
+                                                          text: flavoring.name,
+                                                        ),
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          enabledBorder:
+                                                              OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(),
+                                                          ),
+                                                          focusedBorder:
+                                                              OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(),
+                                                          ),
+                                                          labelText: "Name",
+                                                          contentPadding:
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                            vertical: 20.0,
+                                                            horizontal: 8.0,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                  Column(
+                                                  const Gap(8),
+                                                  Row(
                                                     children: [
-                                                      const Text("VG"),
-                                                      Checkbox(
-                                                        value: flavoring.isVG,
-                                                        onChanged: null,
-                                                        side:
-                                                            const BorderSide(),
+                                                      Container(
+                                                        constraints:
+                                                            const BoxConstraints(
+                                                          maxWidth: 120,
+                                                        ),
+                                                        child: TextField(
+                                                          readOnly:
+                                                              !_isCustomChecked,
+                                                          controller:
+                                                              TextEditingController(
+                                                            text: (flavoring
+                                                                        .percentage *
+                                                                    100)
+                                                                .toStringAsFixed(
+                                                                    4),
+                                                          ),
+                                                          decoration:
+                                                              InputDecoration(
+                                                            enabledBorder:
+                                                                _enabledBorder(),
+                                                            focusedBorder:
+                                                                _focusedBorder(),
+                                                            filled:
+                                                                _isCustomChecked,
+                                                            labelText:
+                                                                "Percentage",
+                                                            suffix:
+                                                                const Text("%"),
+                                                            contentPadding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              vertical: 20.0,
+                                                              horizontal: 8.0,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        children: [
+                                                          const Text("VG"),
+                                                          Checkbox(
+                                                            value:
+                                                                flavoring.isVG,
+                                                            onChanged: null,
+                                                            side:
+                                                                const BorderSide(),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                   ),
@@ -1196,7 +1212,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Gap(12),
+                              const Gap(20),
                               TextField(
                                 readOnly: true,
                                 controller: TextEditingController(
@@ -1215,12 +1231,12 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0,
+                                    vertical: 20.0,
                                     horizontal: 8.0,
                                   ),
                                 ),
                               ),
-                              const Gap(8),
+                              const Gap(16),
                               Row(
                                 spacing: 8.0,
                                 children: [
@@ -1239,7 +1255,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         labelText: "VG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -1260,7 +1276,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         labelText: "PG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -1272,13 +1288,18 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   ? const SizedBox.shrink()
                                   : Column(
                                       children: [
-                                        const Gap(8.0),
+                                        const Gap(20.0),
                                         const Divider(
                                           thickness: 1,
                                         ),
-                                        const Gap(8.0),
-                                        ..._nicBaseEntries.map(
-                                          (entry) => _buildEntryRow(entry),
+                                        const Gap(20.0),
+                                        Column(
+                                          spacing: 16.0,
+                                          children: [
+                                            ..._nicBaseEntries.map(
+                                              (entry) => _buildEntryRow(entry),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -1319,7 +1340,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const Gap(12),
+                              const Gap(20),
                               TextField(
                                 readOnly: true,
                                 controller: _targetNicStrController,
@@ -1330,20 +1351,17 @@ class _SearchMixViewState extends State<SearchMixView> {
                                     borderSide: BorderSide(),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                      width: 1.5,
-                                    ),
+                                    borderSide: BorderSide(),
                                   ),
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0,
+                                    vertical: 20.0,
                                     horizontal: 8.0,
                                   ),
                                 ),
                               ),
-                              const Gap(8),
+                              const Gap(16),
                               Row(
                                 spacing: 8.0,
                                 children: [
@@ -1369,7 +1387,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         suffix: const Text("%"),
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -1397,7 +1415,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         suffix: const Text("%"),
                                         contentPadding:
                                             const EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -1442,17 +1460,9 @@ class _SearchMixViewState extends State<SearchMixView> {
                                     label: Text(
                                       "Ingredient",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      "%",
-                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    numeric: true,
                                   ),
                                   DataColumn(
                                     label: Text(
@@ -1484,11 +1494,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         ),
                                         DataCell(
                                           Text(
-                                            '${(ingredient.percentage * 100).toStringAsFixed(2)} %',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
                                             '${ingredient.volume.toStringAsFixed(2)} mL',
                                           ),
                                         ),
@@ -1509,14 +1514,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         Text(
                                           "Sum",
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${(_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
-                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
