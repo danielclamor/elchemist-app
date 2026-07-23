@@ -1,7 +1,6 @@
 import 'package:elchemist_app/components/molecules/recipe_card.dart';
 import 'package:elchemist_app/models/recipe.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class RecipeListView extends StatefulWidget {
   final List<Recipe> recipes;
