@@ -36,8 +36,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    const sectionWidth = 680.0;
-    const cardPadding = EdgeInsets.all(24.0);
+    const sectionWidth = 500.0;
+    const cardPadding = EdgeInsetsGeometry.all(24.0);
 
     final Recipe recipe = widget.recipe;
 
@@ -56,10 +56,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: sectionWidth),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
+          child: Padding(
+            padding: const EdgeInsetsGeometry.all(24.0),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: sectionWidth),
               child: Column(
                 spacing: 8.0,
                 children: [
@@ -69,6 +69,8 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                         4.0,
                       ),
                     ),
+                    color: Colors.white,
+                    margin: EdgeInsets.zero,
                     child: Padding(
                       padding: cardPadding,
                       child: Column(
@@ -190,6 +192,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
+                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: cardPadding,
@@ -300,6 +303,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
+                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: cardPadding,
@@ -522,6 +526,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.0),
                           ),
+                          color: Colors.white,
                           margin: EdgeInsets.zero,
                           child: Padding(
                             padding: cardPadding,
