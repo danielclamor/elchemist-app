@@ -537,39 +537,162 @@ class _DiyMixViewState extends State<DiyMixView> {
                   spacing: 20.0,
                   runSpacing: 8.0,
                   children: [
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 20.0,
-                      runSpacing: 8.0,
+                    Column(
+                      spacing: 8.0,
                       children: [
-                        Column(
-                          spacing: 8.0,
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              margin: EdgeInsets.zero,
-                              child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                constraints: const BoxConstraints(
-                                  maxWidth: 500,
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          color: Colors.white,
+                          margin: EdgeInsets.zero,
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            constraints: const BoxConstraints(
+                              maxWidth: 500,
+                            ),
+                            child: Column(
+                              spacing: 12,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Batch",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                child: Column(
-                                  spacing: 12,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Batch",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                                TextField(
+                                  controller: _volumeController,
+                                  keyboardType: TextInputType.number,
+                                  onSubmitted: (value) => _updateValues(),
+                                  decoration: const InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF6CA0C4),
                                       ),
                                     ),
-                                    TextField(
-                                      controller: _volumeController,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color(0xFF0E76BD),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white60,
+                                    labelText: "Volume",
+                                    suffix: Text("mL"),
+                                    contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0,
+                                      horizontal: 8.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          color: Colors.white,
+                          margin: EdgeInsets.zero,
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            constraints: const BoxConstraints(
+                              maxWidth: 500,
+                            ),
+                            child: Column(
+                              spacing: 12,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Flavoring",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Column(
+                                  spacing: 8.0,
+                                  children: [
+                                    for (final entry in _flavorEntries)
+                                      _buildEntryRow(entry)
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        _addEntry();
+                                      },
+                                      child: const Text("+ Add"),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: section2Width,
+                      ),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        color: Colors.white,
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Nic Base",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Gap(12),
+                              TextField(
+                                controller: _nicBaseNicStrController,
+                                keyboardType: TextInputType.number,
+                                onSubmitted: (value) => _updateValues(),
+                                decoration: const InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF6CA0C4),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF0E76BD),
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white60,
+                                  labelText: "Nic Str",
+                                  suffix: Text("%"),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0,
+                                    horizontal: 8.0,
+                                  ),
+                                ),
+                              ),
+                              const Gap(8),
+                              Row(
+                                spacing: 8.0,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _nicBaseVGController,
                                       keyboardType: TextInputType.number,
-                                      onSubmitted: (value) => _updateValues(),
                                       decoration: const InputDecoration(
                                         enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
@@ -583,391 +706,231 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         ),
                                         filled: true,
                                         fillColor: Colors.white60,
-                                        labelText: "Volume",
-                                        suffix: Text("mL"),
+                                        labelText: "VG",
+                                        suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
                                           vertical: 0,
                                           horizontal: 8.0,
                                         ),
                                       ),
+                                      onSubmitted: (value) {
+                                        setState(() {
+                                          _nicBasePGController.text =
+                                              (100 - (double.parse(value)))
+                                                  .toStringAsFixed(
+                                            _getDecimalPlaces(
+                                              value,
+                                            ),
+                                          );
+                                        });
+                                        _updateValues();
+                                      },
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              margin: EdgeInsets.zero,
-                              child: Container(
-                                padding: const EdgeInsets.all(16.0),
-                                constraints: const BoxConstraints(
-                                  maxWidth: 500,
-                                ),
-                                child: Column(
-                                  spacing: 12,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Flavoring",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Column(
-                                      spacing: 8.0,
-                                      children: [
-                                        for (final entry in _flavorEntries)
-                                          _buildEntryRow(entry)
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            _addEntry();
-                                          },
-                                          child: const Text("+ Add"),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8.0,
-                          runSpacing: 8.0,
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                maxWidth: section2Width,
-                              ),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                margin: EdgeInsets.zero,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Nic Base",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const Gap(12),
-                                      TextField(
-                                        controller: _nicBaseNicStrController,
-                                        keyboardType: TextInputType.number,
-                                        onSubmitted: (value) => _updateValues(),
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF6CA0C4),
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF0E76BD),
-                                            ),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white60,
-                                          labelText: "Nic Str",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
-                                      ),
-                                      const Gap(8),
-                                      Row(
-                                        spacing: 8.0,
-                                        children: [
-                                          Expanded(
-                                            child: TextField(
-                                              controller: _nicBaseVGController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF6CA0C4),
-                                                  ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF0E76BD),
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white60,
-                                                labelText: "VG",
-                                                suffix: Text("%"),
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 0,
-                                                  horizontal: 8.0,
-                                                ),
-                                              ),
-                                              onSubmitted: (value) {
-                                                setState(() {
-                                                  _nicBasePGController
-                                                      .text = (100 -
-                                                          (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                    _getDecimalPlaces(
-                                                      value,
-                                                    ),
-                                                  );
-                                                });
-                                                _updateValues();
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: TextField(
-                                              controller: _nicBasePGController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF6CA0C4),
-                                                  ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF0E76BD),
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white60,
-                                                labelText: "PG",
-                                                suffix: Text("%"),
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 0,
-                                                  horizontal: 8.0,
-                                                ),
-                                              ),
-                                              onSubmitted: (value) {
-                                                setState(() {
-                                                  _nicBaseVGController
-                                                      .text = (100 -
-                                                          (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                    _getDecimalPlaces(
-                                                      value,
-                                                    ),
-                                                  );
-                                                });
-                                                _updateValues();
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
                                   ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              constraints: BoxConstraints(
-                                maxWidth: section2Width,
-                              ),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4.0),
-                                ),
-                                margin: EdgeInsets.zero,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Target",
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _nicBasePGController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF6CA0C4),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF0E76BD),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white60,
+                                        labelText: "PG",
+                                        suffix: Text("%"),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          horizontal: 8.0,
                                         ),
                                       ),
-                                      const Gap(12),
-                                      TextField(
-                                        controller: _targetNicStrController,
-                                        keyboardType: TextInputType.number,
-                                        onSubmitted: (value) {
-                                          final percentage =
-                                              double.parse(value);
+                                      onSubmitted: (value) {
+                                        setState(() {
+                                          _nicBaseVGController.text =
+                                              (100 - (double.parse(value)))
+                                                  .toStringAsFixed(
+                                            _getDecimalPlaces(
+                                              value,
+                                            ),
+                                          );
+                                        });
+                                        _updateValues();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: section2Width,
+                      ),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        color: Colors.white,
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Target",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Gap(12),
+                              TextField(
+                                controller: _targetNicStrController,
+                                keyboardType: TextInputType.number,
+                                onSubmitted: (value) {
+                                  final percentage = double.parse(value);
 
-                                          if (percentage == 0.0) {
-                                            ingredients.removeAt(0);
-                                          } else {
-                                            if (!ingredients
-                                                .map((ingredient) =>
-                                                    ingredient.name)
-                                                .contains("Nicotine Base")) {
-                                              setState(() {});
-                                              final (
-                                                percentage,
-                                                volume,
-                                                weight
-                                              ) = _getNicBaseValues();
-                                              ingredients.insert(
-                                                0,
-                                                Ingredient(
-                                                  name: "Nicotine Base",
-                                                  percentage: percentage,
-                                                  volume: volume,
-                                                  weight: weight,
-                                                  type: IngredientType.nicotine,
-                                                ),
-                                              );
-                                            }
-                                          }
-                                          _updateValues();
-                                        },
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF6CA0C4),
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color(0xFF0E76BD),
-                                            ),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white60,
-                                          labelText: "Nic Str",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 8.0,
-                                          ),
+                                  if (percentage == 0.0) {
+                                    ingredients.removeAt(0);
+                                  } else {
+                                    if (!ingredients
+                                        .map((ingredient) => ingredient.name)
+                                        .contains("Nicotine Base")) {
+                                      setState(() {});
+                                      final (percentage, volume, weight) =
+                                          _getNicBaseValues();
+                                      ingredients.insert(
+                                        0,
+                                        Ingredient(
+                                          name: "Nicotine Base",
+                                          percentage: percentage,
+                                          volume: volume,
+                                          weight: weight,
+                                          type: IngredientType.nicotine,
                                         ),
-                                      ),
-                                      const Gap(8),
-                                      Row(
-                                        spacing: 8.0,
-                                        children: [
-                                          Expanded(
-                                            child: TextField(
-                                              controller: _targetVGController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF6CA0C4),
-                                                  ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF0E76BD),
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white60,
-                                                labelText: "VG",
-                                                suffix: Text("%"),
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 0,
-                                                  horizontal: 8.0,
-                                                ),
-                                              ),
-                                              onSubmitted: (value) {
-                                                setState(() {
-                                                  _targetPGController
-                                                      .text = (100 -
-                                                          (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                    _getDecimalPlaces(
-                                                      value,
-                                                    ),
-                                                  );
-                                                });
-                                                _updateValues();
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: TextField(
-                                              controller: _targetPGController,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF6CA0C4),
-                                                  ),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Color(0xFF0E76BD),
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white60,
-                                                labelText: "PG",
-                                                suffix: Text("%"),
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 0,
-                                                  horizontal: 8.0,
-                                                ),
-                                              ),
-                                              onSubmitted: (value) {
-                                                setState(() {
-                                                  _targetVGController
-                                                      .text = (100 -
-                                                          (double.parse(value)))
-                                                      .toStringAsFixed(
-                                                    _getDecimalPlaces(
-                                                      value,
-                                                    ),
-                                                  );
-                                                });
-                                                _updateValues();
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                      );
+                                    }
+                                  }
+                                  _updateValues();
+                                },
+                                decoration: const InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF6CA0C4),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0xFF0E76BD),
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white60,
+                                  labelText: "Nic Str",
+                                  suffix: Text("%"),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0,
+                                    horizontal: 8.0,
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                              const Gap(8),
+                              Row(
+                                spacing: 8.0,
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _targetVGController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF6CA0C4),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF0E76BD),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white60,
+                                        labelText: "VG",
+                                        suffix: Text("%"),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          horizontal: 8.0,
+                                        ),
+                                      ),
+                                      onSubmitted: (value) {
+                                        setState(() {
+                                          _targetPGController.text =
+                                              (100 - (double.parse(value)))
+                                                  .toStringAsFixed(
+                                            _getDecimalPlaces(
+                                              value,
+                                            ),
+                                          );
+                                        });
+                                        _updateValues();
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _targetPGController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF6CA0C4),
+                                          ),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            color: Color(0xFF0E76BD),
+                                          ),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white60,
+                                        labelText: "PG",
+                                        suffix: Text("%"),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0,
+                                          horizontal: 8.0,
+                                        ),
+                                      ),
+                                      onSubmitted: (value) {
+                                        setState(() {
+                                          _targetVGController.text =
+                                              (100 - (double.parse(value)))
+                                                  .toStringAsFixed(
+                                            _getDecimalPlaces(
+                                              value,
+                                            ),
+                                          );
+                                        });
+                                        _updateValues();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
                     Container(
                       constraints: const BoxConstraints(
@@ -977,6 +940,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
                         ),
+                        color: Colors.white,
                         margin: EdgeInsets.zero,
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
