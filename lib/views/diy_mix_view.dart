@@ -307,73 +307,76 @@ class _DiyMixViewState extends State<DiyMixView> {
           icon: const Icon(Icons.delete),
         ),
         Expanded(
-          child: TextField(
-            focusNode: entry.flavorFocusNode,
-            controller: entry.flavorController,
-            keyboardType: TextInputType.text,
-            onSubmitted: (value) {
-              final flavor = ingredients.firstWhereOrNull(
-                (ingredient) => ingredient.id == entry.id,
-              );
-              if (flavor != null) {
-                setState(() {
-                  flavor.name = value;
-                });
-              }
-            },
-            decoration: InputDecoration(
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 1.5,
+          child: Tooltip(
+            message: entry.flavorController.text,
+            child: TextField(
+              focusNode: entry.flavorFocusNode,
+              controller: entry.flavorController,
+              keyboardType: TextInputType.text,
+              onSubmitted: (value) {
+                final flavor = ingredients.firstWhereOrNull(
+                  (ingredient) => ingredient.id == entry.id,
+                );
+                if (flavor != null) {
+                  setState(() {
+                    flavor.name = value;
+                  });
+                }
+              },
+              decoration: InputDecoration(
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(),
                 ),
-              ),
-              filled: true,
-              labelText: "Flavor",
-              suffixIcon: !entry.flavorFocusNode.hasFocus
-                  ? null
-                  : entry.flavorController.text == ""
-                      ? null
-                      : Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                style: const ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Color.fromRGBO(0, 0, 0, .10),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white,
+                    width: 1.5,
+                  ),
+                ),
+                filled: true,
+                labelText: "Flavor",
+                suffixIcon: !entry.flavorFocusNode.hasFocus
+                    ? null
+                    : entry.flavorController.text == ""
+                        ? null
+                        : Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  style: const ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                      Color.fromRGBO(0, 0, 0, .10),
+                                    ),
+                                    shape: WidgetStatePropertyAll(
+                                      CircleBorder(),
+                                    ),
+                                    padding: WidgetStatePropertyAll(
+                                      EdgeInsets.all(12),
+                                    ),
                                   ),
-                                  shape: WidgetStatePropertyAll(
-                                    CircleBorder(),
-                                  ),
-                                  padding: WidgetStatePropertyAll(
-                                    EdgeInsets.all(12),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  iconSize: 12,
+                                  visualDensity: VisualDensity.compact,
+                                  onPressed: () {
+                                    setState(() {
+                                      entry.flavorController.clear();
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.close,
                                   ),
                                 ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                iconSize: 12,
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () {
-                                  setState(() {
-                                    entry.flavorController.clear();
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.close,
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
-                horizontal: 8.0,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 20.0,
+                  horizontal: 8.0,
+                ),
               ),
             ),
           ),
@@ -381,6 +384,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: TextField(
+            textAlign: TextAlign.end,
             focusNode: entry.percentageFocusNode,
             controller: entry.percentageController,
             keyboardType: TextInputType.number,
@@ -458,7 +462,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                           ),
                         ),
               contentPadding: const EdgeInsets.symmetric(
-                vertical: 0,
+                vertical: 20.0,
                 horizontal: 8.0,
               ),
             ),
@@ -557,6 +561,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                 ),
                                 TextField(
+                                  textAlign: TextAlign.end,
                                   controller: _volumeController,
                                   keyboardType: TextInputType.number,
                                   onSubmitted: (value) => _updateValues(),
@@ -574,7 +579,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     labelText: "Volume",
                                     suffix: Text("mL"),
                                     contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0,
+                                      vertical: 20.0,
                                       horizontal: 8.0,
                                     ),
                                   ),
@@ -651,6 +656,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                               ),
                               const Gap(12),
                               TextField(
+                                textAlign: TextAlign.end,
                                 controller: _nicBaseNicStrController,
                                 keyboardType: TextInputType.number,
                                 onSubmitted: (value) => _updateValues(),
@@ -668,7 +674,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0,
+                                    vertical: 20.0,
                                     horizontal: 8.0,
                                   ),
                                 ),
@@ -679,6 +685,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 children: [
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       controller: _nicBaseVGController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
@@ -695,7 +702,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         labelText: "VG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -715,6 +722,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       controller: _nicBasePGController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
@@ -731,7 +739,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         labelText: "PG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -779,6 +787,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                               ),
                               const Gap(12),
                               TextField(
+                                textAlign: TextAlign.end,
                                 controller: _targetNicStrController,
                                 keyboardType: TextInputType.number,
                                 onSubmitted: (value) {
@@ -821,7 +830,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   labelText: "Nic Str",
                                   suffix: Text("%"),
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0,
+                                    vertical: 20.0,
                                     horizontal: 8.0,
                                   ),
                                 ),
@@ -832,6 +841,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 children: [
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       controller: _targetVGController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
@@ -848,7 +858,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         labelText: "VG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -868,6 +878,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                   Expanded(
                                     child: TextField(
+                                      textAlign: TextAlign.end,
                                       controller: _targetPGController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
@@ -884,7 +895,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         labelText: "PG",
                                         suffix: Text("%"),
                                         contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
+                                          vertical: 20.0,
                                           horizontal: 8.0,
                                         ),
                                       ),
@@ -939,17 +950,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     label: Text(
                                       "Ingredient",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      "%",
-                                      style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    numeric: true,
                                   ),
                                   DataColumn(
                                     label: Text(
@@ -981,11 +984,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         ),
                                         DataCell(
                                           Text(
-                                            '${(ingredient.percentage * 100).toStringAsFixed(2)} %',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
                                             '${ingredient.volume.toStringAsFixed(2)} mL',
                                           ),
                                         ),
@@ -1006,14 +1004,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         Text(
                                           "Sum",
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${(ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.percentage) * 100).toStringAsFixed(2)} %',
-                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
