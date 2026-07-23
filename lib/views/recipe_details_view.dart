@@ -119,7 +119,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   ),
                                   filled: true,
                                   contentPadding: EdgeInsets.symmetric(
-                                    vertical: 8,
+                                    vertical: 20.0,
                                     horizontal: 8.0,
                                   ),
                                 ),
@@ -164,7 +164,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     labelText: "Nic Strength",
                                     suffix: Text("%"),
                                     contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0,
+                                      vertical: 20.0,
                                       horizontal: 8.0,
                                     ),
                                   ),
@@ -195,7 +195,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Gap(12),
+                                const Gap(20),
                                 ...flavorings.map(
                                   (flavoring) => Row(
                                     mainAxisAlignment:
@@ -217,7 +217,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                             labelText: "Name",
                                             contentPadding:
                                                 EdgeInsets.symmetric(
-                                              vertical: 0,
+                                              vertical: 20.0,
                                               horizontal: 8.0,
                                             ),
                                           ),
@@ -249,7 +249,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                 suffix: Text("%"),
                                                 contentPadding:
                                                     EdgeInsets.symmetric(
-                                                  vertical: 0,
+                                                  vertical: 20.0,
                                                   horizontal: 8.0,
                                                 ),
                                               ),
@@ -293,7 +293,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Gap(12),
+                                const Gap(20),
                                 TextField(
                                   readOnly: true,
                                   controller: TextEditingController(
@@ -316,7 +316,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     ),
                                   ),
                                 ),
-                                const Gap(8),
+                                const Gap(16),
                                 Row(
                                   spacing: 8.0,
                                   children: [
@@ -390,11 +390,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     ? const SizedBox.shrink()
                                     : Column(
                                         children: [
-                                          const Gap(8.0),
+                                          const Gap(16.0),
                                           const Divider(
                                             thickness: 1,
                                           ),
-                                          const Gap(8.0),
+                                          const Gap(16.0),
                                           ...nicBases.map(
                                             (nicBase) => Row(
                                               mainAxisAlignment:
@@ -419,7 +419,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                       suffix: Text("%"),
                                                       contentPadding:
                                                           EdgeInsets.symmetric(
-                                                        vertical: 0,
+                                                        vertical: 20.0,
                                                         horizontal: 8.0,
                                                       ),
                                                     ),
@@ -451,7 +451,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                       suffix: Text("%"),
                                                       contentPadding:
                                                           EdgeInsets.symmetric(
-                                                        vertical: 0,
+                                                        vertical: 20.0,
                                                         horizontal: 8.0,
                                                       ),
                                                     ),
@@ -495,7 +495,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Gap(12),
+                                const Gap(20),
                                 TextField(
                                   readOnly: true,
                                   controller: TextEditingController(
@@ -513,12 +513,12 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     labelText: "Nic Str",
                                     suffix: Text("%"),
                                     contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0,
+                                      vertical: 20.0,
                                       horizontal: 8.0,
                                     ),
                                   ),
                                 ),
-                                const Gap(8),
+                                const Gap(16),
                                 Row(
                                   spacing: 8.0,
                                   children: [
@@ -552,7 +552,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                           labelText: "VG",
                                           suffix: Text("%"),
                                           contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
+                                            vertical: 20.0,
                                             horizontal: 8.0,
                                           ),
                                         ),
@@ -588,7 +588,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                           labelText: "PG",
                                           suffix: Text("%"),
                                           contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
+                                            vertical: 20.0,
                                             horizontal: 8.0,
                                           ),
                                         ),
