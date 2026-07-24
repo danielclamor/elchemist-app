@@ -36,6 +36,7 @@ class ElTextField extends StatelessWidget {
         : TextInputType.text;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         label == ''
             ? const SizedBox.shrink()
