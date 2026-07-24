@@ -587,7 +587,7 @@ class _SearchMixViewState extends State<SearchMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
-            label: "Percentage",
+            labelText: "Percentage",
             readOnly: !_isCustomChecked,
             value: entry.nicBase?.percentage.toString() ?? "",
             contentType: ContentType.numeric,
@@ -842,6 +842,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         ),
                                         const Gap(25),
                                         Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           spacing: 12,
                                           children: [
                                             ElDropdownMenu<NicProfile>(
@@ -880,53 +882,13 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 }
                                               },
                                             ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Text(
-                                                  "Custom?",
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                                Checkbox(
-                                                  value: _isCustomChecked,
-                                                  side: BorderSide(
-                                                    color: _selectedNicProfValue !=
-                                                            null
-                                                        ? Theme.of(context)
-                                                            .primaryColorLight
-                                                        : Theme.of(context)
-                                                            .primaryColorDark,
-                                                  ),
-                                                  onChanged:
-                                                      _selectedNicProfValue !=
-                                                              null
-                                                          ? (bool? newValue) {
-                                                              setState(() {
-                                                                _isCustomChecked =
-                                                                    newValue ??
-                                                                        false;
-                                                              });
-
-                                                              if (newValue ==
-                                                                  false) {
-                                                                _onSelectNicProfile(
-                                                                  _selectedNicProfValue,
-                                                                );
-                                                              }
-                                                            }
-                                                          : null,
-                                                ),
-                                              ],
-                                            ),
                                             !_isCustomChecked
-                                                ? const SizedBox.shrink()
+                                                ? const Expanded(
+                                                    child: SizedBox(),
+                                                  )
                                                 : Expanded(
                                                     child: ElTextField(
-                                                      label: "Nic Level",
+                                                      labelText: "Nic Level",
                                                       value: (_nicProfile!.isNewMix
                                                               ? double.parse(
                                                                       _targetNicStrController
@@ -971,6 +933,46 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                       },
                                                     ),
                                                   ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                const Text(
+                                                  "Custom?",
+                                                ),
+                                                const Gap(4.0),
+                                                Checkbox(
+                                                  value: _isCustomChecked,
+                                                  side: BorderSide(
+                                                    color: _selectedNicProfValue !=
+                                                            null
+                                                        ? Theme.of(context)
+                                                            .primaryColorLight
+                                                        : Theme.of(context)
+                                                            .primaryColorDark,
+                                                  ),
+                                                  onChanged:
+                                                      _selectedNicProfValue !=
+                                                              null
+                                                          ? (bool? newValue) {
+                                                              setState(() {
+                                                                _isCustomChecked =
+                                                                    newValue ??
+                                                                        false;
+                                                              });
+
+                                                              if (newValue ==
+                                                                  false) {
+                                                                _onSelectNicProfile(
+                                                                  _selectedNicProfValue,
+                                                                );
+                                                              }
+                                                            }
+                                                          : null,
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ),
                                         _selectedNicProfValue == null
@@ -978,42 +980,23 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             : Column(
                                                 children: [
                                                   const Gap(16),
-                                                  TextField(
-                                                    textAlign: TextAlign.end,
-                                                    focusNode: _volumeFocusNode,
-                                                    controller:
-                                                        _volumeController,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(),
-                                                      ),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                          color: Colors.white,
-                                                          width: 1.5,
-                                                        ),
-                                                      ),
-                                                      filled: true,
-                                                      labelText: "Volume",
-                                                      suffix: Text("mL"),
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                        vertical: 20.0,
-                                                        horizontal: 8.0,
-                                                      ),
-                                                    ),
+                                                  ElTextField(
+                                                    labelText: "Volume",
+                                                    contentType:
+                                                        ContentType.numeric,
+                                                    value:
+                                                        _volumeController.text,
+                                                    suffix: const Text("mL"),
                                                     onSubmitted: (value) {
                                                       if (value.isEmpty) {
                                                         _volumeController.text =
                                                             _prevVolumeText;
                                                         return;
                                                       }
+                                                      setState(() {
+                                                        _volumeController.text =
+                                                            value;
+                                                      });
                                                       _updateValues();
                                                       _hasVolumeChanged =
                                                           value.isNotEmpty;
@@ -1048,107 +1031,132 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         ),
                                         const Gap(20),
                                         Column(
-                                          spacing: 16.0,
-                                          children: [
-                                            ..._flavorings.map(
-                                              (flavoring) => Row(
+                                          spacing: 8.0,
+                                          children: List.generate(
+                                            _flavorings.length,
+                                            (index) {
+                                              final flavoring =
+                                                  _flavorings[index];
+                                              if (index == 0) {
+                                                return Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: ElTextField(
+                                                        readOnly: true,
+                                                        // label: const SizedBox(
+                                                        //   height: 20.0,
+                                                        // ),
+                                                        labelText: 'Name',
+                                                        value: flavoring.name,
+                                                        contentType:
+                                                            ContentType.text,
+                                                      ),
+                                                    ),
+                                                    const Gap(8.0),
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 120,
+                                                          child: ElTextField(
+                                                            labelText:
+                                                                'Percentage',
+                                                            readOnly:
+                                                                !_isCustomChecked,
+                                                            value: (flavoring
+                                                                        .percentage *
+                                                                    100)
+                                                                .toStringAsFixed(
+                                                                    4),
+                                                            contentType:
+                                                                ContentType
+                                                                    .numeric,
+                                                            suffix:
+                                                                const Text("%"),
+                                                          ),
+                                                        ),
+                                                        const Gap(8.0),
+                                                        SizedBox(
+                                                          width: 24,
+                                                          child: Column(
+                                                            children: [
+                                                              const Text('VG'),
+                                                              const Gap(4.0),
+                                                              Checkbox(
+                                                                value: flavoring
+                                                                    .isVG,
+                                                                onChanged: null,
+                                                                side:
+                                                                    const BorderSide(),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                );
+                                              }
+                                              return Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    child: Tooltip(
-                                                      message: flavoring.name,
-                                                      child: TextField(
-                                                        readOnly: true,
-                                                        controller:
-                                                            TextEditingController(
-                                                          text: flavoring.name,
-                                                        ),
-                                                        decoration:
-                                                            const InputDecoration(
-                                                          enabledBorder:
-                                                              OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(),
-                                                          ),
-                                                          focusedBorder:
-                                                              OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(),
-                                                          ),
-                                                          labelText: "Name",
-                                                          contentPadding:
-                                                              EdgeInsets
-                                                                  .symmetric(
-                                                            vertical: 20.0,
-                                                            horizontal: 8.0,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                    child: ElTextField(
+                                                      readOnly: true,
+                                                      value: flavoring.name,
+                                                      contentType:
+                                                          ContentType.text,
                                                     ),
                                                   ),
-                                                  const Gap(8),
+                                                  const Gap(8.0),
                                                   Row(
                                                     children: [
-                                                      Container(
-                                                        constraints:
-                                                            const BoxConstraints(
-                                                          maxWidth: 120,
-                                                        ),
-                                                        child: TextField(
-                                                          textAlign:
-                                                              TextAlign.end,
+                                                      SizedBox(
+                                                        width: 120,
+                                                        child: ElTextField(
                                                           readOnly:
                                                               !_isCustomChecked,
-                                                          controller:
-                                                              TextEditingController(
-                                                            text: (flavoring
-                                                                        .percentage *
-                                                                    100)
-                                                                .toStringAsFixed(
-                                                                    4),
-                                                          ),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            enabledBorder:
-                                                                _enabledBorder(),
-                                                            focusedBorder:
-                                                                _focusedBorder(),
-                                                            filled:
-                                                                _isCustomChecked,
-                                                            labelText:
-                                                                "Percentage",
-                                                            suffix:
-                                                                const Text("%"),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              vertical: 20.0,
-                                                              horizontal: 8.0,
-                                                            ),
-                                                          ),
+                                                          value: (flavoring
+                                                                      .percentage *
+                                                                  100)
+                                                              .toStringAsFixed(
+                                                                  4),
+                                                          contentType:
+                                                              ContentType
+                                                                  .numeric,
+                                                          suffix:
+                                                              const Text("%"),
                                                         ),
                                                       ),
-                                                      Column(
-                                                        children: [
-                                                          const Text("VG"),
-                                                          Checkbox(
-                                                            value:
-                                                                flavoring.isVG,
-                                                            onChanged: null,
-                                                            side:
-                                                                const BorderSide(),
-                                                          ),
-                                                        ],
+                                                      const Gap(8.0),
+                                                      SizedBox(
+                                                        width: 24,
+                                                        child: Column(
+                                                          children: [
+                                                            Checkbox(
+                                                              value: flavoring
+                                                                  .isVG,
+                                                              onChanged: null,
+                                                              side:
+                                                                  const BorderSide(),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                 ],
-                                              ),
-                                            ),
-                                          ],
-                                        )
+                                              );
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
