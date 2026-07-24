@@ -1046,10 +1046,26 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                     Expanded(
                                                       child: ElTextField(
                                                         readOnly: true,
-                                                        // label: const SizedBox(
-                                                        //   height: 20.0,
-                                                        // ),
-                                                        labelText: 'Name',
+                                                        label: const Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  bottom: 6.0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                'Name',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      14.0,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
                                                         value: flavoring.name,
                                                         contentType:
                                                             ContentType.text,
@@ -1064,8 +1080,28 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         SizedBox(
                                                           width: 120,
                                                           child: ElTextField(
-                                                            labelText:
-                                                                'Percentage',
+                                                            label:
+                                                                const Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          6.0),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    'Percentage',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          14.0,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
                                                             readOnly:
                                                                 !_isCustomChecked,
                                                             value: (flavoring
@@ -1085,7 +1121,21 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           width: 24,
                                                           child: Column(
                                                             children: [
-                                                              const Text('VG'),
+                                                              const Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .only(
+                                                                  bottom: 8.0,
+                                                                ),
+                                                                child: Text(
+                                                                  'VG',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14.0,
+                                                                  ),
+                                                                ),
+                                                              ),
                                                               const Gap(4.0),
                                                               Checkbox(
                                                                 value: flavoring
