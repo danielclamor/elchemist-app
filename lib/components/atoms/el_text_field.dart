@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 enum ContentType { text, numeric }
 
 class ElTextField extends StatelessWidget {
-  final String label;
+  final Widget? label;
+  final String? labelText;
   final String value;
   final bool readOnly;
   final ContentType contentType;
@@ -16,7 +17,8 @@ class ElTextField extends StatelessWidget {
 
   const ElTextField({
     super.key,
-    this.label = '',
+    this.label,
+    this.labelText,
     required this.value,
     required this.contentType,
     this.prefix,
@@ -38,19 +40,20 @@ class ElTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        label == ''
-            ? const SizedBox.shrink()
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ],
-              ),
+        label ??
+            (labelText == null
+                ? const SizedBox.shrink()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        labelText ?? '',
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                        ),
+                      ),
+                    ],
+                  )),
         const Gap(2.0),
         Tooltip(
           message: value,
