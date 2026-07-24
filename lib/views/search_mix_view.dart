@@ -1089,7 +1089,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                               child: Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
-                                                                        .start,
+                                                                        .end,
                                                                 children: [
                                                                   Text(
                                                                     'Percentage',
@@ -1116,7 +1116,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                                 const Text("%"),
                                                           ),
                                                         ),
-                                                        const Gap(8.0),
+                                                        const Gap(12.0),
                                                         SizedBox(
                                                           width: 24,
                                                           child: Column(
@@ -1185,7 +1185,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                               const Text("%"),
                                                         ),
                                                       ),
-                                                      const Gap(8.0),
+                                                      const Gap(12.0),
                                                       SizedBox(
                                                         width: 24,
                                                         child: Column(
