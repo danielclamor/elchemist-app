@@ -3,22 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-typedef MenuEntry = DropdownMenuEntry<dynamic>;
-
-class ElDropdownMenu extends StatelessWidget {
+class ElDropdownMenu<T> extends StatelessWidget {
   final String label;
-  final double width;
+  final double? width;
   final bool ignoring;
-  final dynamic initialSelection;
-  final UnmodifiableListView<MenuEntry> dropdownMenuEntries;
-  final ValueChanged? onSelected;
+  final T? initialSelection;
+  final UnmodifiableListView<DropdownMenuEntry<T>> dropdownMenuEntries;
+  final ValueChanged<T?>? onSelected;
 
   const ElDropdownMenu({
     super.key,
     this.label = '',
-    required this.width,
+    this.width,
     this.ignoring = true,
-    required this.initialSelection,
+    this.initialSelection,
     required this.dropdownMenuEntries,
     this.onSelected,
   });
@@ -26,6 +24,7 @@ class ElDropdownMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         label == ''
             ? const SizedBox.shrink()
@@ -43,7 +42,7 @@ class ElDropdownMenu extends StatelessWidget {
         const Gap(2.0),
         IgnorePointer(
           ignoring: ignoring,
-          child: DropdownMenu<dynamic>(
+          child: DropdownMenu<T>(
             width: width,
             selectOnly: true,
             initialSelection: initialSelection,
