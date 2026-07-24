@@ -1,4 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
+import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/formulas.dart';
 import 'package:elchemist_app/models/flavoring.dart';
@@ -11,15 +13,20 @@ import 'package:gap/gap.dart';
 
 class NicBaseEntry {
   NicBaseEntry({
-    String? nicBase,
-    String? percentage,
+    NicBase? nicBase,
     bool? isVG,
   })  : id = UniqueKey(),
-        nicBaseController = TextEditingController(text: nicBase),
-        percentageController = TextEditingController(text: percentage),
+        nicBase = nicBase,
+        nicBaseController = TextEditingController(
+          text: nicBase?.label,
+        ),
+        percentageController = TextEditingController(
+          text: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
+        ),
         isVG = isVG ?? false;
 
   final Key id;
+  final NicBase? nicBase;
   final TextEditingController nicBaseController;
   final TextEditingController percentageController;
   final FocusNode percentageFocusNode = FocusNode();
@@ -52,8 +59,6 @@ class SearchMixView extends StatefulWidget {
   @override
   State<SearchMixView> createState() => _SearchMixViewState();
 }
-
-typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _SearchMixViewState extends State<SearchMixView> {
   final List<NicBaseOption> _nicBaseOptions = nicBaseOptionsData
@@ -491,8 +496,7 @@ class _SearchMixViewState extends State<SearchMixView> {
 
   void _addEntry(NicBase? nicBase) {
     final entry = NicBaseEntry(
-      nicBase: nicBase?.label ?? "",
-      percentage: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
+      nicBase: nicBase,
       isVG: nicBase?.isVG,
     );
     entry.percentageFocusNode.addListener(() {
@@ -515,6 +519,7 @@ class _SearchMixViewState extends State<SearchMixView> {
   Widget _buildEntryRow(NicBaseEntry entry) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _isCustomChecked && _nicBaseEntries.length > 1
             ? IconButton(
@@ -526,84 +531,66 @@ class _SearchMixViewState extends State<SearchMixView> {
             : const SizedBox.shrink(),
         Expanded(
           child: LayoutBuilder(
-            builder: (context, constraints) => IgnorePointer(
+            builder: (context, constraints) => ElDropdownMenu<NicBaseOption>(
+              width: constraints.maxWidth,
               ignoring: !_isCustomChecked,
-              child: DropdownMenu<String>(
-                width: constraints.maxWidth,
-                selectOnly: true,
-                initialSelection: _nicBaseOptions
-                    .firstWhereOrNull(
-                      (option) => option.label == entry.nicBaseController.text,
-                    )
-                    ?.label,
-                controller: entry.nicBaseController,
-                label: const Text('Name'),
-                inputDecorationTheme: InputDecorationTheme(
-                  enabledBorder: _enabledBorder(),
-                  disabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(),
-                  ),
-                  focusedBorder: _focusedBorder(),
-                  filled: _isCustomChecked,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 20.0,
-                    horizontal: 8.0,
-                  ),
-                ),
-                dropdownMenuEntries: UnmodifiableListView<MenuEntry>(
-                  _nicBaseOptions.map<MenuEntry>(
-                    (option) => MenuEntry(
-                      value: option.code,
-                      label: option.label,
-                    ),
-                  ),
-                ),
-                onSelected: (value) {
-                  final nicBaseOption = _nicBaseOptions.firstWhere(
-                    (option) => option.code == value,
-                  );
-                  setState(() {
-                    entry.isVG = nicBaseOption.isVG;
-                    _ingredients[0] = _nicBaseIngredient;
-                    _nicBaseVGController.text = (_nicBaseEntries
-                                .where((nicBaseEntry) => nicBaseEntry.isVG)
-                                .fold(
-                                  0.0,
-                                  (sum, nicBaseEntry) =>
-                                      sum +
-                                      (double.parse(nicBaseEntry
-                                              .percentageController.text) /
-                                          100),
-                                ) *
-                            100)
-                        .toStringAsFixed(0);
-
-                    _nicBasePGController.text = (_nicBaseEntries
-                                .where((nicBaseEntry) => !nicBaseEntry.isVG)
-                                .fold(
-                                  0.0,
-                                  (sum, nicBaseEntry) =>
-                                      sum +
-                                      (double.parse(nicBaseEntry
-                                              .percentageController.text) /
-                                          100),
-                                ) *
-                            100)
-                        .toStringAsFixed(0);
-                  });
-                  _updateValues();
-                },
+              initialSelection: _nicBaseOptions.firstWhereOrNull(
+                (option) => option == entry.nicBase?.nicBase,
               ),
+              label: 'Name',
+              dropdownMenuEntries:
+                  UnmodifiableListView<DropdownMenuEntry<NicBaseOption>>(
+                _nicBaseOptions.map<DropdownMenuEntry<NicBaseOption>>(
+                  (option) => DropdownMenuEntry<NicBaseOption>(
+                    value: option,
+                    label: option.label,
+                  ),
+                ),
+              ),
+              onSelected: (value) {
+                final nicBaseOption = value;
+                setState(() {
+                  entry.isVG = nicBaseOption?.isVG ?? false;
+                  _ingredients[0] = _nicBaseIngredient;
+                  _nicBaseVGController.text = (_nicBaseEntries
+                              .where((nicBaseEntry) => nicBaseEntry.isVG)
+                              .fold(
+                                0.0,
+                                (sum, nicBaseEntry) =>
+                                    sum +
+                                    (double.parse(nicBaseEntry
+                                            .percentageController.text) /
+                                        100),
+                              ) *
+                          100)
+                      .toStringAsFixed(0);
+
+                  _nicBasePGController.text = (_nicBaseEntries
+                              .where((nicBaseEntry) => !nicBaseEntry.isVG)
+                              .fold(
+                                0.0,
+                                (sum, nicBaseEntry) =>
+                                    sum +
+                                    (double.parse(nicBaseEntry
+                                            .percentageController.text) /
+                                        100),
+                              ) *
+                          100)
+                      .toStringAsFixed(0);
+                });
+                _updateValues();
+              },
             ),
           ),
         ),
         const Gap(8),
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
-          child: TextField(
-            textAlign: TextAlign.end,
+          child: ElTextField(
+            label: "Percentage",
             readOnly: !_isCustomChecked,
-            controller: entry.percentageController,
+            value: entry.nicBase?.percentage.toString() ?? "",
+            contentType: ContentType.numeric,
             onSubmitted: (value) {
               setState(() {
                 _nicBaseVGController.text = (_nicBaseEntries
@@ -634,22 +621,12 @@ class _SearchMixViewState extends State<SearchMixView> {
               });
               _updateValues();
             },
-            decoration: InputDecoration(
-              enabledBorder: _enabledBorder(),
-              focusedBorder: _focusedBorder(),
-              filled: _isCustomChecked,
-              labelText: "Percentage",
-              suffix: const Text("%"),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 20.0,
-                horizontal: 8.0,
-              ),
-            ),
           ),
         ),
         Column(
           children: [
             const Text("VG"),
+            const Gap(4.0),
             Checkbox(
               value: entry.isVG,
               onChanged: null,
@@ -867,51 +844,34 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         Row(
                                           spacing: 12,
                                           children: [
-                                            DropdownMenu<String>(
-                                              selectOnly: true,
-                                              label: const Text('Profile'),
-                                              initialSelection:
-                                                  _selectedNicProfValue,
-                                              inputDecorationTheme:
-                                                  const InputDecorationTheme(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: Colors.white,
-                                                    width: 1.5,
-                                                  ),
-                                                ),
-                                                filled: true,
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 20.0,
-                                                  horizontal: 8.0,
-                                                ),
-                                              ),
+                                            ElDropdownMenu<NicProfile>(
+                                              label: 'Profile',
+                                              initialSelection: _nicProfile,
+                                              ignoring: false,
                                               dropdownMenuEntries:
                                                   UnmodifiableListView<
-                                                      MenuEntry>(
-                                                _recipe!.nicProfiles
-                                                    .map<MenuEntry>(
-                                                  (nicProfile) => MenuEntry(
-                                                    value: nicProfile.nicLevel,
+                                                      DropdownMenuEntry<
+                                                          NicProfile>>(
+                                                _recipe!.nicProfiles.map<
+                                                    DropdownMenuEntry<
+                                                        NicProfile>>(
+                                                  (nicProfile) =>
+                                                      DropdownMenuEntry<
+                                                          NicProfile>(
+                                                    value: nicProfile,
                                                     label:
                                                         '${nicProfile.nicLevel} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
                                                   ),
                                                 ),
                                               ),
-                                              onSelected: (String? value) {
-                                                _nicProfile = _recipe!
-                                                    .nicProfiles
-                                                    .firstWhere((nicProfile) =>
-                                                        nicProfile.nicLevel ==
-                                                        value);
+                                              onSelected: (NicProfile? value) {
+                                                setState(() {
+                                                  _nicProfile = value;
+                                                });
 
-                                                _onSelectNicProfile(value);
+                                                _onSelectNicProfile(
+                                                  value?.nicLevel,
+                                                );
 
                                                 if (_volumeController.text ==
                                                     "") {
@@ -965,49 +925,21 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             !_isCustomChecked
                                                 ? const SizedBox.shrink()
                                                 : Expanded(
-                                                    child: TextField(
-                                                      textAlign: TextAlign.end,
-                                                      controller:
-                                                          TextEditingController(
-                                                        text: (_nicProfile!
-                                                                    .isNewMix
-                                                                ? double.parse(
-                                                                        _targetNicStrController
-                                                                            .text) *
-                                                                    10
-                                                                : double.parse(
-                                                                        _targetNicStrController
-                                                                            .text) *
-                                                                    2.5)
-                                                            .toString(),
-                                                      ),
-                                                      keyboardType:
-                                                          TextInputType.number,
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        enabledBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(),
-                                                        ),
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Colors.white,
-                                                            width: 1.5,
-                                                          ),
-                                                        ),
-                                                        filled: true,
-                                                        labelText: "Nic Str",
-                                                        suffix: Text("mg"),
-                                                        contentPadding:
-                                                            EdgeInsets
-                                                                .symmetric(
-                                                          vertical: 20.0,
-                                                          horizontal: 8.0,
-                                                        ),
-                                                      ),
+                                                    child: ElTextField(
+                                                      label: "Nic Level",
+                                                      value: (_nicProfile!.isNewMix
+                                                              ? double.parse(
+                                                                      _targetNicStrController
+                                                                          .text) *
+                                                                  10
+                                                              : double.parse(
+                                                                      _targetNicStrController
+                                                                          .text) *
+                                                                  2.5)
+                                                          .toString(),
+                                                      contentType:
+                                                          ContentType.numeric,
+                                                      suffix: const Text("mg"),
                                                       onSubmitted: (value) {
                                                         if (value.isEmpty) {
                                                           return;
@@ -1038,7 +970,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         _updateValues();
                                                       },
                                                     ),
-                                                  )
+                                                  ),
                                           ],
                                         ),
                                         _selectedNicProfValue == null
