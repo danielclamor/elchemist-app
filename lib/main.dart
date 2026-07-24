@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           contrastLevel: 1,
           dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
         ),
-        textTheme: GoogleFonts.robotoMonoTextTheme(
+        textTheme: GoogleFonts.interTextTheme(
           ThemeData(brightness: Brightness.dark).textTheme,
         ),
         useMaterial3: true,
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
             textScaler: MediaQuery.of(context).textScaler.clamp(
-                  minScaleFactor: 1.15,
+                  minScaleFactor: 1,
                   maxScaleFactor: 2.5,
                 ),
           ),
