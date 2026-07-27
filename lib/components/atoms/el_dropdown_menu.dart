@@ -4,7 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ElDropdownMenu<T> extends StatelessWidget {
-  final String label;
+  final Widget? label;
+  final String? labelText;
   final double? width;
   final bool ignoring;
   final T? initialSelection;
@@ -13,7 +14,8 @@ class ElDropdownMenu<T> extends StatelessWidget {
 
   const ElDropdownMenu({
     super.key,
-    this.label = '',
+    this.label,
+    this.labelText,
     this.width,
     this.ignoring = true,
     this.initialSelection,
@@ -26,20 +28,25 @@ class ElDropdownMenu<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        label == ''
-            ? const SizedBox.shrink()
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ],
-              ),
-        const Gap(2.0),
+        label ??
+            (labelText == null
+                ? const SizedBox.shrink()
+                : Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            labelText ?? '',
+                            style: const TextStyle(
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Gap(8.0),
+                    ],
+                  )),
         IgnorePointer(
           ignoring: ignoring,
           child: DropdownMenu<T>(
@@ -63,10 +70,6 @@ class ElDropdownMenu<T> extends StatelessWidget {
                 ),
               ),
               filled: !ignoring,
-              // contentPadding: const EdgeInsets.symmetric(
-              //   vertical: 20.0,
-              //   horizontal: 8.0,
-              // ),
             ),
             dropdownMenuEntries: dropdownMenuEntries,
             onSelected: onSelected,

@@ -53,24 +53,22 @@ class ElTextField extends StatelessWidget {
               label ??
                   (labelText == null
                       ? const SizedBox.shrink()
-                      : Row(
-                          mainAxisAlignment: rowLabelAlignment,
+                      : Column(
                           children: [
-                            Padding(
-                              padding:
-                                  contentType == ElTextFieldContentType.numeric
-                                      ? const EdgeInsets.only(right: 8.0)
-                                      : const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                labelText ?? '',
-                                style: const TextStyle(
-                                  fontSize: 14.0,
+                            Row(
+                              mainAxisAlignment: rowLabelAlignment,
+                              children: [
+                                Text(
+                                  labelText ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 12.0,
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
+                            const Gap(8.0),
                           ],
                         )),
-              const Gap(2.0),
               Tooltip(
                 message: value,
                 child: TextField(
@@ -160,6 +158,7 @@ class ElTextField extends StatelessWidget {
                                   labelText ?? '',
                                   style: const TextStyle(
                                     fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),

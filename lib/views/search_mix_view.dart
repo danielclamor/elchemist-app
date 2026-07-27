@@ -516,7 +516,7 @@ class _SearchMixViewState extends State<SearchMixView> {
     _updateValues();
   }
 
-  Widget _buildEntryRow(NicBaseEntry entry) {
+  Widget _buildEntryRow(NicBaseEntry entry, bool withHeaders) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -537,7 +537,7 @@ class _SearchMixViewState extends State<SearchMixView> {
               initialSelection: _nicBaseOptions.firstWhereOrNull(
                 (option) => option == entry.nicBase?.nicBase,
               ),
-              label: 'Name',
+              labelText: withHeaders ? 'Name' : null,
               dropdownMenuEntries:
                   UnmodifiableListView<DropdownMenuEntry<NicBaseOption>>(
                 _nicBaseOptions.map<DropdownMenuEntry<NicBaseOption>>(
@@ -587,10 +587,11 @@ class _SearchMixViewState extends State<SearchMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
-            labelText: "Percentage",
+            labelText: withHeaders ? 'Percentage' : null,
             readOnly: !_isCustomChecked,
-            value: entry.nicBase?.percentage.toString() ?? "",
-            contentType: ContentType.numeric,
+            value: ((entry.nicBase?.percentage ?? 0.0) * 100).toString(),
+            contentType: ElTextFieldContentType.numeric,
+            suffix: const Text("%"),
             onSubmitted: (value) {
               setState(() {
                 _nicBaseVGController.text = (_nicBaseEntries
@@ -623,16 +624,25 @@ class _SearchMixViewState extends State<SearchMixView> {
             },
           ),
         ),
-        Column(
-          children: [
-            const Text("VG"),
-            const Gap(4.0),
-            Checkbox(
-              value: entry.isVG,
-              onChanged: null,
-              side: const BorderSide(),
-            ),
-          ],
+        const Gap(12.0),
+        SizedBox(
+          width: 24,
+          child: Column(
+            children: [
+              withHeaders
+                  ? const Text('VG',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ))
+                  : const SizedBox.shrink(),
+              withHeaders ? const Gap(10.0) : const Gap(2.0),
+              Checkbox(
+                value: entry.isVG,
+                onChanged: null,
+                side: const BorderSide(),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -847,7 +857,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                           spacing: 12,
                                           children: [
                                             ElDropdownMenu<NicProfile>(
-                                              label: 'Profile',
+                                              labelText: 'Profile',
                                               initialSelection: _nicProfile,
                                               ignoring: false,
                                               dropdownMenuEntries:
@@ -900,7 +910,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                                   2.5)
                                                           .toString(),
                                                       contentType:
-                                                          ContentType.numeric,
+                                                          ElTextFieldContentType
+                                                              .numeric,
                                                       suffix: const Text("mg"),
                                                       onSubmitted: (value) {
                                                         if (value.isEmpty) {
@@ -979,13 +990,16 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             ? const SizedBox.shrink()
                                             : Column(
                                                 children: [
-                                                  const Gap(16),
+                                                  const Gap(8.0),
                                                   ElTextField(
-                                                    labelText: "Volume",
+                                                    // labelText: "Volume",
                                                     contentType:
-                                                        ContentType.numeric,
+                                                        ElTextFieldContentType
+                                                            .numeric,
                                                     value:
                                                         _volumeController.text,
+                                                    prefix:
+                                                        const Text("Volume"),
                                                     suffix: const Text("mL"),
                                                     onSubmitted: (value) {
                                                       if (value.isEmpty) {
@@ -1023,9 +1037,9 @@ class _SearchMixViewState extends State<SearchMixView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          "Flavouring",
+                                          "FLAVOURING",
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -1046,29 +1060,11 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                     Expanded(
                                                       child: ElTextField(
                                                         readOnly: true,
-                                                        label: const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 6.0),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                'Name',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      14.0,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
+                                                        labelText: 'Name',
                                                         value: flavoring.name,
                                                         contentType:
-                                                            ContentType.text,
+                                                            ElTextFieldContentType
+                                                                .text,
                                                       ),
                                                     ),
                                                     const Gap(8.0),
@@ -1078,30 +1074,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                               .start,
                                                       children: [
                                                         SizedBox(
-                                                          width: 120,
+                                                          width: 140,
                                                           child: ElTextField(
-                                                            label:
-                                                                const Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      bottom:
-                                                                          6.0),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .end,
-                                                                children: [
-                                                                  Text(
-                                                                    'Percentage',
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          14.0,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
+                                                            labelText:
+                                                                'Percentage',
                                                             readOnly:
                                                                 !_isCustomChecked,
                                                             value: (flavoring
@@ -1110,7 +1086,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                                 .toStringAsFixed(
                                                                     4),
                                                             contentType:
-                                                                ContentType
+                                                                ElTextFieldContentType
                                                                     .numeric,
                                                             suffix:
                                                                 const Text("%"),
@@ -1121,22 +1097,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           width: 24,
                                                           child: Column(
                                                             children: [
-                                                              const Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .only(
-                                                                  bottom: 8.0,
-                                                                ),
-                                                                child: Text(
-                                                                  'VG',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        14.0,
-                                                                  ),
+                                                              const Text(
+                                                                'VG',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      12.0,
                                                                 ),
                                                               ),
-                                                              const Gap(4.0),
+                                                              const Gap(12.0),
                                                               Checkbox(
                                                                 value: flavoring
                                                                     .isVG,
@@ -1162,14 +1131,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                       readOnly: true,
                                                       value: flavoring.name,
                                                       contentType:
-                                                          ContentType.text,
+                                                          ElTextFieldContentType
+                                                              .text,
                                                     ),
                                                   ),
                                                   const Gap(8.0),
                                                   Row(
                                                     children: [
                                                       SizedBox(
-                                                        width: 120,
+                                                        width: 140,
                                                         child: ElTextField(
                                                           readOnly:
                                                               !_isCustomChecked,
@@ -1179,7 +1149,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                               .toStringAsFixed(
                                                                   4),
                                                           contentType:
-                                                              ContentType
+                                                              ElTextFieldContentType
                                                                   .numeric,
                                                           suffix:
                                                               const Text("%"),
@@ -1229,83 +1199,49 @@ class _SearchMixViewState extends State<SearchMixView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Nic Base",
+                                "NIC BASE",
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const Gap(20),
-                              TextField(
-                                textAlign: TextAlign.end,
+                              ElTextField(
+                                labelText: 'Nic Str',
+                                labelPosition: ElTextFieldLabelPosition.left,
+                                value:
+                                    ((_nicProfile?.nicBaseNicStr ?? 0.0) * 100)
+                                        .toStringAsFixed(0),
+                                contentType: ElTextFieldContentType.numeric,
                                 readOnly: true,
-                                controller: TextEditingController(
-                                  text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
-                                          100)
-                                      .toStringAsFixed(0),
-                                ),
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(),
-                                  ),
-                                  labelText: "Nic Str",
-                                  suffix: Text("%"),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20.0,
-                                    horizontal: 8.0,
-                                  ),
-                                ),
+                                suffix: const Text('%'),
                               ),
-                              const Gap(16),
+                              const Gap(8.0),
                               Row(
                                 spacing: 8.0,
                                 children: [
                                   Expanded(
-                                    child: TextField(
-                                      textAlign: TextAlign.end,
+                                    child: ElTextField(
+                                      labelText: "VG",
+                                      labelPosition:
+                                          ElTextFieldLabelPosition.left,
+                                      value: _nicBaseVGController.text,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       readOnly: true,
-                                      controller: _nicBaseVGController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        labelText: "VG",
-                                        suffix: Text("%"),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20.0,
-                                          horizontal: 8.0,
-                                        ),
-                                      ),
+                                      suffix: const Text('%'),
                                     ),
                                   ),
                                   Expanded(
-                                    child: TextField(
-                                      textAlign: TextAlign.end,
+                                    child: ElTextField(
+                                      labelText: "PG",
+                                      labelPosition:
+                                          ElTextFieldLabelPosition.left,
+                                      value: _nicBasePGController.text,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       readOnly: true,
-                                      controller: _nicBasePGController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        labelText: "PG",
-                                        suffix: Text("%"),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20.0,
-                                          horizontal: 8.0,
-                                        ),
-                                      ),
+                                      suffix: const Text('%'),
                                     ),
                                   ),
                                 ],
@@ -1320,12 +1256,24 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         ),
                                         const Gap(16.0),
                                         Column(
-                                          spacing: 16.0,
-                                          children: [
-                                            ..._nicBaseEntries.map(
-                                              (entry) => _buildEntryRow(entry),
-                                            ),
-                                          ],
+                                          spacing: 8.0,
+                                          children: List.generate(
+                                            _nicBaseEntries.length,
+                                            (index) {
+                                              final nicBaseEntry =
+                                                  _nicBaseEntries[index];
+                                              if (index == 0) {
+                                                return _buildEntryRow(
+                                                  nicBaseEntry,
+                                                  true,
+                                                );
+                                              }
+                                              return _buildEntryRow(
+                                                nicBaseEntry,
+                                                false,
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -1360,9 +1308,9 @@ class _SearchMixViewState extends State<SearchMixView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Target",
+                                "TARGET",
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
