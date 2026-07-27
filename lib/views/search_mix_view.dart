@@ -1348,7 +1348,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 suffix: const Text('%'),
                                 onSubmitted: (value) => _updateValues(),
                               ),
-                              const Gap(16),
+                              const Gap(8),
                               Row(
                                 spacing: 8.0,
                                 children: [
