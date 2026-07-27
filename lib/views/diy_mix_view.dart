@@ -296,100 +296,53 @@ class _DiyMixViewState extends State<DiyMixView> {
     _updateValues();
   }
 
-  Widget _buildEntryRow(FlavorEntry entry) {
+  Widget _buildEntryRow(FlavorEntry entry, bool withHeaders) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       key: entry.id,
-      spacing: 4.0,
       children: [
-        IconButton(
-          onPressed: () {
-            _removeEntry(entry);
-          },
-          icon: const Icon(Icons.delete),
-        ),
-        Expanded(
-          child: Tooltip(
-            message: entry.flavorController.text,
-            child: TextField(
-              focusNode: entry.flavorFocusNode,
-              controller: entry.flavorController,
-              keyboardType: TextInputType.text,
-              onSubmitted: (value) {
-                final flavor = ingredients.firstWhereOrNull(
-                  (ingredient) => ingredient.id == entry.id,
-                );
-                if (flavor != null) {
-                  setState(() {
-                    flavor.name = value;
-                  });
-                }
-              },
-              decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.white,
-                    width: 1.5,
-                  ),
-                ),
-                filled: true,
-                labelText: "Flavor",
-                suffixIcon: !entry.flavorFocusNode.hasFocus
-                    ? null
-                    : entry.flavorController.text == ""
-                        ? null
-                        : Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(
-                                      Color.fromRGBO(0, 0, 0, .10),
-                                    ),
-                                    shape: WidgetStatePropertyAll(
-                                      CircleBorder(),
-                                    ),
-                                    padding: WidgetStatePropertyAll(
-                                      EdgeInsets.all(12),
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                  iconSize: 12,
-                                  visualDensity: VisualDensity.compact,
-                                  onPressed: () {
-                                    setState(() {
-                                      entry.flavorController.clear();
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.close,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 20.0,
-                  horizontal: 8.0,
-                ),
-              ),
-            ),
+        Padding(
+          padding: EdgeInsets.only(top: withHeaders ? 28.0 : 4.0),
+          child: IconButton(
+            onPressed: () {
+              _removeEntry(entry);
+            },
+            icon: const Icon(Icons.delete),
           ),
         ),
+        Expanded(
+          child: ElTextField(
+            value: entry.flavorController.text,
+            contentType: ElTextFieldContentType.text,
+            labelText: withHeaders ? 'Name' : null,
+            onSubmitted: (value) {
+              setState(() {
+                entry.flavorController.text = value;
+              });
+              final flavor = ingredients.firstWhereOrNull(
+                (ingredient) => ingredient.id == entry.id,
+              );
+              if (flavor != null) {
+                setState(() {
+                  flavor.name = value;
+                });
+              }
+            },
+          ),
+        ),
+        const Gap(8.0),
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
-          child: TextField(
-            textAlign: TextAlign.end,
-            focusNode: entry.percentageFocusNode,
-            controller: entry.percentageController,
-            keyboardType: TextInputType.number,
+          child: ElTextField(
+            value: entry.percentageController.text,
+            contentType: ElTextFieldContentType.numeric,
+            labelText: withHeaders ? 'Percentage' : null,
+            suffix: const Text('%'),
             onSubmitted: (value) {
+              setState(() {
+                entry.percentageController.text = value;
+              });
               final flavor = ingredients.firstWhereOrNull(
                 (ingredient) => ingredient.id == entry.id,
               );
@@ -406,99 +359,41 @@ class _DiyMixViewState extends State<DiyMixView> {
                 _updateValues();
               }
             },
-            decoration: InputDecoration(
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 1.5,
-                ),
-              ),
-              filled: true,
-              labelText: "Percentage",
-              suffix: entry.percentageFocusNode.hasFocus
-                  ? null
-                  : entry.percentageController.text == ""
-                      ? null
-                      : const Text("%"),
-              suffixIcon: !entry.percentageFocusNode.hasFocus
-                  ? null
-                  : entry.percentageController.text == ""
-                      ? null
-                      : Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                style: const ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Color.fromRGBO(0, 0, 0, .10),
-                                  ),
-                                  shape: WidgetStatePropertyAll(
-                                    CircleBorder(),
-                                  ),
-                                  padding: WidgetStatePropertyAll(
-                                    EdgeInsets.all(12),
-                                  ),
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                iconSize: 12,
-                                visualDensity: VisualDensity.compact,
-                                onPressed: () {
-                                  setState(() {
-                                    entry.percentageController.text = "0";
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.close,
-                                ),
-                              ),
-                              const Text("%"),
-                            ],
-                          ),
-                        ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 20.0,
-                horizontal: 8.0,
-              ),
-            ),
           ),
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "VG",
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            Checkbox(
-              value: entry.isVG,
-              onChanged: (value) {
-                setState(() {
-                  entry.isVG = value ?? false;
-                });
-                final flavor = ingredients.firstWhereOrNull(
-                  (ingredient) => ingredient.id == entry.id,
-                );
-                if (flavor != null) {
+        const Gap(12.0),
+        SizedBox(
+          width: 24,
+          child: Column(
+            children: [
+              withHeaders
+                  ? const Text('VG',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ))
+                  : const SizedBox.shrink(),
+              withHeaders ? const Gap(10.0) : const Gap(2.0),
+              Checkbox(
+                value: entry.isVG,
+                onChanged: (value) {
                   setState(() {
-                    flavor.type = value == true
-                        ? IngredientType.vgFlavor
-                        : IngredientType.pgFlavor;
+                    entry.isVG = value ?? false;
                   });
-                  _updateValues();
-                }
-              },
-            ),
-          ],
+                  final flavor = ingredients.firstWhereOrNull(
+                    (ingredient) => ingredient.id == entry.id,
+                  );
+                  if (flavor != null) {
+                    setState(() {
+                      flavor.type = value == true
+                          ? IngredientType.vgFlavor
+                          : IngredientType.pgFlavor;
+                    });
+                    _updateValues();
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -589,7 +484,6 @@ class _DiyMixViewState extends State<DiyMixView> {
                               maxWidth: 500,
                             ),
                             child: Column(
-                              spacing: 12,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
@@ -599,23 +493,31 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                const Gap(20),
                                 Column(
                                   spacing: 8.0,
-                                  children: [
-                                    for (final entry in _flavorEntries)
-                                      _buildEntryRow(entry)
-                                  ],
+                                  children: List.generate(_flavorEntries.length,
+                                      (index) {
+                                    final withHeaders =
+                                        index == 0 ? true : false;
+
+                                    return _buildEntryRow(
+                                      _flavorEntries[index],
+                                      withHeaders,
+                                    );
+                                  }),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        _addEntry();
-                                      },
-                                      child: const Text("+ Add"),
-                                    ),
-                                  ],
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () => _addEntry(),
+                                        child: const Text("+ Add"),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             ),
@@ -743,6 +645,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 value: _targetNicStrController.text,
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
+                                labelPosition: ElTextFieldLabelPosition.left,
                                 suffix: const Text('%'),
                                 onSubmitted: (value) {
                                   final percentage = double.parse(value);
@@ -788,6 +691,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       labelText: 'VG',
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
+                                      suffix: const Text('%'),
                                       onSubmitted: (value) {
                                         setState(() {
                                           _targetVGController.text = value;
@@ -811,6 +715,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       labelText: 'PG',
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
+                                      suffix: const Text('%'),
                                       onSubmitted: (value) {
                                         setState(() {
                                           _targetPGController.text = value;
