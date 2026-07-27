@@ -692,9 +692,9 @@ class _SearchMixViewState extends State<SearchMixView> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          "Recipe",
+                                          "RECIPE",
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -712,17 +712,14 @@ class _SearchMixViewState extends State<SearchMixView> {
                                           ),
                                           builder: (context, controller) {
                                             return SearchBar(
-                                              controller: controller,
                                               onTap: () {
-                                                controller.openView();
-                                              },
-                                              onChanged: (value) {
-                                                controller.openView();
+                                                _searchController.openView();
                                               },
                                               leading: const Icon(Icons.search),
                                               elevation:
                                                   const WidgetStatePropertyAll(
-                                                      0.0),
+                                                0.0,
+                                              ),
                                               shape:
                                                   const WidgetStatePropertyAll(
                                                 RoundedRectangleBorder(
@@ -782,7 +779,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 ),
                                                 onTap: () {
                                                   setState(() {
-                                                    controller.closeView(
+                                                    _searchController.closeView(
                                                       suggestionItem.name,
                                                     );
                                                     _recipe = suggestionItem;
@@ -998,14 +995,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 children: [
                                                   const Gap(8.0),
                                                   ElTextField(
-                                                    // labelText: "Volume",
+                                                    labelText: "Volume",
+                                                    labelPosition:
+                                                        ElTextFieldLabelPosition
+                                                            .left,
                                                     contentType:
                                                         ElTextFieldContentType
                                                             .numeric,
                                                     value:
                                                         _volumeController.text,
-                                                    prefix:
-                                                        const Text("Volume"),
                                                     suffix: const Text("mL"),
                                                     onSubmitted: (value) {
                                                       if (value.isEmpty) {
@@ -1266,17 +1264,11 @@ class _SearchMixViewState extends State<SearchMixView> {
                                           children: List.generate(
                                             _nicBaseEntries.length,
                                             (index) {
-                                              final nicBaseEntry =
-                                                  _nicBaseEntries[index];
-                                              if (index == 0) {
-                                                return _buildEntryRow(
-                                                  nicBaseEntry,
-                                                  true,
-                                                );
-                                              }
+                                              final withHeaders =
+                                                  index == 0 ? true : false;
                                               return _buildEntryRow(
-                                                nicBaseEntry,
-                                                false,
+                                                _nicBaseEntries[index],
+                                                withHeaders,
                                               );
                                             },
                                           ),
