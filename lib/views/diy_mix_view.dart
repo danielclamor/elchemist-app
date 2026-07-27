@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/formulas.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
@@ -553,36 +554,25 @@ class _DiyMixViewState extends State<DiyMixView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Batch",
+                                  "BATCH",
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const Gap(20.0),
-                                TextField(
-                                  textAlign: TextAlign.end,
-                                  controller: _volumeController,
-                                  keyboardType: TextInputType.number,
-                                  onSubmitted: (value) => _updateValues(),
-                                  decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.white,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    labelText: "Volume",
-                                    suffix: Text("mL"),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                      horizontal: 8.0,
-                                    ),
-                                  ),
+                                const Gap(16.0),
+                                ElTextField(
+                                  value: _volumeController.text,
+                                  contentType: ElTextFieldContentType.numeric,
+                                  labelText: 'Volume',
+                                  labelPosition: ElTextFieldLabelPosition.left,
+                                  suffix: const Text('mL'),
+                                  onSubmitted: (value) {
+                                    setState(() {
+                                      _volumeController.text = value;
+                                    });
+                                    _updateValues();
+                                  },
                                 ),
                               ],
                             ),
@@ -603,9 +593,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Flavoring",
+                                  "FLAVOURING",
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -648,66 +638,42 @@ class _DiyMixViewState extends State<DiyMixView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Nic Base",
+                                "NIC BASE",
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const Gap(20),
-                              TextField(
-                                textAlign: TextAlign.end,
-                                controller: _nicBaseNicStrController,
-                                keyboardType: TextInputType.number,
-                                onSubmitted: (value) => _updateValues(),
-                                decoration: const InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  labelText: "Nic Str",
-                                  suffix: Text("%"),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20.0,
-                                    horizontal: 8.0,
-                                  ),
-                                ),
+                              ElTextField(
+                                value: _nicBaseNicStrController.text,
+                                contentType: ElTextFieldContentType.numeric,
+                                labelText: 'Nic Str',
+                                labelPosition: ElTextFieldLabelPosition.left,
+                                onSubmitted: (value) {
+                                  setState(() {
+                                    _nicBaseNicStrController.text = value;
+                                  });
+                                  _updateValues();
+                                },
+                                suffix: const Text("%"),
                               ),
-                              const Gap(16),
+                              const Gap(8),
                               Row(
                                 spacing: 8.0,
                                 children: [
                                   Expanded(
-                                    child: TextField(
-                                      textAlign: TextAlign.end,
-                                      controller: _nicBaseVGController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.white,
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        labelText: "VG",
-                                        suffix: Text("%"),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20.0,
-                                          horizontal: 8.0,
-                                        ),
-                                      ),
+                                    child: ElTextField(
+                                      value: _nicBaseVGController.text,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
+                                      labelText: 'VG',
+                                      labelPosition:
+                                          ElTextFieldLabelPosition.left,
+                                      suffix: const Text('%'),
                                       onSubmitted: (value) {
                                         setState(() {
+                                          _nicBaseVGController.text = value;
                                           _nicBasePGController.text =
                                               (100 - (double.parse(value)))
                                                   .toStringAsFixed(
@@ -721,30 +687,17 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: TextField(
-                                      textAlign: TextAlign.end,
-                                      controller: _nicBasePGController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.white,
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        labelText: "PG",
-                                        suffix: Text("%"),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20.0,
-                                          horizontal: 8.0,
-                                        ),
-                                      ),
+                                    child: ElTextField(
+                                      value: _nicBasePGController.text,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
+                                      labelText: 'PG',
+                                      labelPosition:
+                                          ElTextFieldLabelPosition.left,
+                                      suffix: const Text('%'),
                                       onSubmitted: (value) {
                                         setState(() {
+                                          _nicBasePGController.text = value;
                                           _nicBaseVGController.text =
                                               (100 - (double.parse(value)))
                                                   .toStringAsFixed(
@@ -779,17 +732,18 @@ class _DiyMixViewState extends State<DiyMixView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Target",
+                                "TARGET",
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const Gap(20),
-                              TextField(
-                                textAlign: TextAlign.end,
-                                controller: _targetNicStrController,
-                                keyboardType: TextInputType.number,
+                              ElTextField(
+                                value: _targetNicStrController.text,
+                                contentType: ElTextFieldContentType.numeric,
+                                labelText: 'Nic Str',
+                                suffix: const Text('%'),
                                 onSubmitted: (value) {
                                   final percentage = double.parse(value);
 
@@ -814,56 +768,29 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       );
                                     }
                                   }
+
+                                  setState(() {
+                                    _targetNicStrController.text = value;
+                                  });
+
                                   _updateValues();
                                 },
-                                decoration: const InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.white,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  filled: true,
-                                  labelText: "Nic Str",
-                                  suffix: Text("%"),
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20.0,
-                                    horizontal: 8.0,
-                                  ),
-                                ),
                               ),
-                              const Gap(16),
+                              const Gap(8.0),
                               Row(
                                 spacing: 8.0,
                                 children: [
                                   Expanded(
-                                    child: TextField(
-                                      textAlign: TextAlign.end,
-                                      controller: _targetVGController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.white,
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        labelText: "VG",
-                                        suffix: Text("%"),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20.0,
-                                          horizontal: 8.0,
-                                        ),
-                                      ),
+                                    child: ElTextField(
+                                      value: _targetVGController.text,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
+                                      labelText: 'VG',
+                                      labelPosition:
+                                          ElTextFieldLabelPosition.left,
                                       onSubmitted: (value) {
                                         setState(() {
+                                          _targetVGController.text = value;
                                           _targetPGController.text =
                                               (100 - (double.parse(value)))
                                                   .toStringAsFixed(
@@ -877,30 +804,16 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: TextField(
-                                      textAlign: TextAlign.end,
-                                      controller: _targetPGController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Colors.white,
-                                            width: 1.5,
-                                          ),
-                                        ),
-                                        filled: true,
-                                        labelText: "PG",
-                                        suffix: Text("%"),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20.0,
-                                          horizontal: 8.0,
-                                        ),
-                                      ),
+                                    child: ElTextField(
+                                      value: _targetPGController.text,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
+                                      labelText: 'PG',
+                                      labelPosition:
+                                          ElTextFieldLabelPosition.left,
                                       onSubmitted: (value) {
                                         setState(() {
+                                          _targetPGController.text = value;
                                           _targetVGController.text =
                                               (100 - (double.parse(value)))
                                                   .toStringAsFixed(
