@@ -139,20 +139,6 @@ class _SearchMixViewState extends State<SearchMixView> {
     super.dispose();
   }
 
-  InputBorder _enabledBorder() => const OutlineInputBorder(
-        borderSide: BorderSide(),
-      );
-  InputBorder _focusedBorder() => _isCustomChecked
-      ? const OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Colors.white,
-            width: 1.5,
-          ),
-        )
-      : const OutlineInputBorder(
-          borderSide: BorderSide(),
-        );
-
   void _handleVolumeFocusChange() {
     if (_volumeFocusNode.hasFocus) {
       _prevVolumeText = _volumeController.text;
