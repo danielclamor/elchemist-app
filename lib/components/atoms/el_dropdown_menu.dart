@@ -57,8 +57,8 @@ class ElDropdownMenu<T> extends StatelessWidget {
               ThemeData(brightness: Brightness.dark).textTheme,
             ).bodyMedium,
             inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Theme.of(context).focusColor),
               ),
               disabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(),
@@ -70,6 +70,7 @@ class ElDropdownMenu<T> extends StatelessWidget {
                 ),
               ),
               filled: !ignoring,
+              fillColor: Theme.of(context).colorScheme.surfaceContainer,
             ),
             dropdownMenuEntries: dropdownMenuEntries,
             onSelected: onSelected,

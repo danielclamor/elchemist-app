@@ -86,6 +86,7 @@ class ElTextField extends StatelessWidget {
                 ),
         ),
         filled: !readOnly,
+        fillColor: Theme.of(context).colorScheme.surfaceContainer,
         prefixIcon: prefix != null
             ? Padding(
                 padding: const EdgeInsets.fromLTRB(
