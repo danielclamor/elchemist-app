@@ -123,7 +123,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                             DropdownMenuEntry<NicProfile>(
                                           value: nicProfile,
                                           label:
-                                              '${nicProfile.nicLevel} (${nicProfile.isNewMixLabel})',
+                                              '${nicProfile.nicLevel} (${nicProfile.newMixLabel})',
                                         ),
                                       ),
                                     ),

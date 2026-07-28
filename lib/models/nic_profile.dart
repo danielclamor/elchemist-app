@@ -41,4 +41,6 @@ class NicProfile {
                 .map((flavouring) => Flavoring.fromMap(flavouring))
                 .toList(),
       );
+
+  String get newMixLabel => isNewMix ? 'New Mix' : 'Old Mix';
 }
