@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
+import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
@@ -22,7 +24,6 @@ class RecipeDetailsView extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _RecipeDetailsViewState extends State<RecipeDetailsView> {
-  String? _selectedNicProfValue;
   NicProfile? _nicProfile;
   List<NicBase> nicBases = [];
   List<Flavoring> flavorings = [];
@@ -103,72 +104,57 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                           ),
                           const Gap(24),
                           Row(
-                            spacing: 12,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            spacing: 8,
                             children: [
-                              DropdownMenu<String>(
-                                selectOnly: true,
-                                label: const Text('Profile'),
-                                initialSelection: _selectedNicProfValue,
-                                inputDecorationTheme:
-                                    const InputDecorationTheme(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(),
-                                  ),
-                                  filled: true,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    vertical: 20.0,
-                                    horizontal: 8.0,
-                                  ),
-                                ),
-                                dropdownMenuEntries:
-                                    UnmodifiableListView<MenuEntry>(
-                                  recipe.nicProfiles.map<MenuEntry>(
-                                    (nicProfile) => MenuEntry(
-                                      value: nicProfile.nicLevel,
-                                      label:
-                                          '${nicProfile.nicLevel} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
-                                    ),
-                                  ),
-                                ),
-                                onSelected: (String? value) {
-                                  _nicProfile = recipe.nicProfiles.firstWhere(
-                                      (nicProfile) =>
-                                          nicProfile.nicLevel == value);
-
-                                  setState(() {
-                                    _selectedNicProfValue = value;
-
-                                    nicBases = _nicProfile!.nicBases;
-                                    flavorings = _nicProfile!.flavorings;
-                                  });
-                                },
-                              ),
                               Expanded(
-                                child: TextField(
-                                  readOnly: true,
-                                  controller: TextEditingController(
-                                    text: ((_nicProfile?.targetNicStr ?? 0.0) *
-                                            100)
-                                        .toStringAsFixed(2),
-                                  ),
-                                  decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) =>
+                                      ElDropdownMenu<NicProfile>(
+                                    width: constraints.maxWidth,
+                                    labelText: 'Profile',
+                                    initialSelection: _nicProfile,
+                                    ignoring: false,
+                                    dropdownMenuEntries: UnmodifiableListView<
+                                        DropdownMenuEntry<NicProfile>>(
+                                      recipe.nicProfiles
+                                          .map<DropdownMenuEntry<NicProfile>>(
+                                        (nicProfile) =>
+                                            DropdownMenuEntry<NicProfile>(
+                                          value: nicProfile,
+                                          label:
+                                              '${nicProfile.nicLevel} (${nicProfile.isNewMixLabel})',
+                                        ),
+                                      ),
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                    labelText: "Nic Strength",
-                                    suffix: Text("%"),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                      horizontal: 8.0,
-                                    ),
+                                    onSelected: (NicProfile? value) {
+                                      setState(() {
+                                        _nicProfile = value;
+
+                                        nicBases = _nicProfile!.nicBases;
+                                        flavorings = _nicProfile!.flavorings;
+                                      });
+                                    },
                                   ),
                                 ),
+                              ),
+                              SizedBox(
+                                width: 155,
+                                child: _nicProfile == null
+                                    ? const SizedBox()
+                                    : ElTextField(
+                                        value: ((_nicProfile?.targetNicStr ??
+                                                    0.0) *
+                                                100)
+                                            .toStringAsFixed(2),
+                                        readOnly: true,
+                                        contentType:
+                                            ElTextFieldContentType.numeric,
+                                        labelText: 'Nic Str',
+                                        // labelPosition:
+                                        //     ElTextFieldLabelPosition.left,
+                                        suffix: const Text('%'),
+                                      ),
                               ),
                             ],
                           ),
@@ -176,7 +162,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                       ),
                     ),
                   ),
-                  _selectedNicProfValue == null
+                  _nicProfile == null
                       ? const SizedBox.shrink()
                       : Card(
                           shape: RoundedRectangleBorder(
@@ -189,92 +175,103 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Flavouring",
+                                  'FLAVOURING',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const Gap(20),
-                                ...flavorings.map(
-                                  (flavoring) => Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: TextField(
-                                          readOnly: true,
-                                          controller: TextEditingController(
-                                            text: flavoring.name,
-                                          ),
-                                          decoration: const InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(),
-                                            ),
-                                            labelText: "Name",
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                              vertical: 20.0,
-                                              horizontal: 8.0,
-                                            ),
+                                Column(
+                                  spacing: 8.0,
+                                  children:
+                                      List.generate(flavorings.length, (index) {
+                                    final flavoring = flavorings[index];
+                                    String? nameLabelText;
+                                    String? percentageLabelText;
+
+                                    if (index == 0) {
+                                      nameLabelText = 'Name';
+                                      percentageLabelText = 'Percentage';
+                                    }
+
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: ElTextField(
+                                            readOnly: true,
+                                            value: flavoring.name,
+                                            contentType:
+                                                ElTextFieldContentType.text,
+                                            labelText: nameLabelText,
                                           ),
                                         ),
-                                      ),
-                                      const Gap(8),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 120),
-                                            child: TextField(
-                                              readOnly: true,
-                                              controller: TextEditingController(
-                                                text:
+                                        const Gap(8),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              constraints: const BoxConstraints(
+                                                maxWidth: 120,
+                                              ),
+                                              child: ElTextField(
+                                                readOnly: true,
+                                                value:
                                                     (flavoring.percentage * 100)
                                                         .toStringAsFixed(4),
-                                              ),
-                                              decoration: const InputDecoration(
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(),
-                                                ),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(),
-                                                ),
-                                                labelText: "Percentage",
-                                                suffix: Text("%"),
-                                                contentPadding:
-                                                    EdgeInsets.symmetric(
-                                                  vertical: 20.0,
-                                                  horizontal: 8.0,
-                                                ),
+                                                contentType:
+                                                    ElTextFieldContentType
+                                                        .numeric,
+                                                labelText: percentageLabelText,
+                                                suffix: const Text('%'),
                                               ),
                                             ),
-                                          ),
-                                          Column(
-                                            children: [
-                                              const Text("VG"),
-                                              Checkbox(
-                                                value: flavoring.isVG,
-                                                onChanged: null,
-                                                side: const BorderSide(),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                            const Gap(12.0),
+                                            SizedBox(
+                                              width: 24,
+                                              child: index == 0
+                                                  ? Column(
+                                                      children: [
+                                                        const Text(
+                                                          'VG',
+                                                          style: TextStyle(
+                                                            fontSize: 12.0,
+                                                          ),
+                                                        ),
+                                                        const Gap(12.0),
+                                                        Checkbox(
+                                                          value: flavoring.isVG,
+                                                          onChanged: null,
+                                                          side:
+                                                              const BorderSide(),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Column(
+                                                      children: [
+                                                        Checkbox(
+                                                          value: flavoring.isVG,
+                                                          onChanged: null,
+                                                          side:
+                                                              const BorderSide(),
+                                                        ),
+                                                      ],
+                                                    ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    );
+                                  }),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                  _selectedNicProfValue == null
+                  _nicProfile == null
                       ? const SizedBox.shrink()
                       : Card(
                           shape: RoundedRectangleBorder(
@@ -287,101 +284,69 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Nic Base",
+                                  'NIC BASE',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const Gap(20),
-                                TextField(
+                                ElTextField(
                                   readOnly: true,
-                                  controller: TextEditingController(
-                                    text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
-                                            100)
-                                        .toStringAsFixed(0),
-                                  ),
-                                  decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                    labelText: "Nic Str",
-                                    suffix: Text("%"),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0,
-                                      horizontal: 8.0,
-                                    ),
-                                  ),
+                                  value: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
+                                          100)
+                                      .toStringAsFixed(0),
+                                  contentType: ElTextFieldContentType.numeric,
+                                  labelText: "Nic Str",
+                                  labelPosition: ElTextFieldLabelPosition.left,
+                                  suffix: const Text('%'),
                                 ),
-                                const Gap(16),
+                                const Gap(8),
                                 Row(
                                   spacing: 8.0,
                                   children: [
                                     Expanded(
-                                      child: TextField(
+                                      child: ElTextField(
                                         readOnly: true,
-                                        controller: TextEditingController(
-                                          text: (nicBases
-                                                      .where((nicBase) =>
-                                                          nicBase.isVG)
-                                                      .fold(
-                                                          0.0,
-                                                          (sum, nicBase) =>
-                                                              sum +
-                                                              nicBase
-                                                                  .percentage) *
-                                                  100)
-                                              .toStringAsFixed(0),
-                                        ),
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          labelText: "VG",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
+                                        value: (nicBases
+                                                    .where((nicBase) =>
+                                                        nicBase.isVG)
+                                                    .fold(
+                                                        0.0,
+                                                        (sum, nicBase) =>
+                                                            sum +
+                                                            nicBase
+                                                                .percentage) *
+                                                100)
+                                            .toStringAsFixed(0),
+                                        contentType:
+                                            ElTextFieldContentType.numeric,
+                                        labelText: 'VG',
+                                        labelPosition:
+                                            ElTextFieldLabelPosition.left,
+                                        suffix: const Text('%'),
                                       ),
                                     ),
                                     Expanded(
-                                      child: TextField(
+                                      child: ElTextField(
                                         readOnly: true,
-                                        controller: TextEditingController(
-                                          text: (nicBases
-                                                      .where((nicBase) =>
-                                                          !nicBase.isVG)
-                                                      .fold(
-                                                          0.0,
-                                                          (sum, nicBase) =>
-                                                              sum +
-                                                              nicBase
-                                                                  .percentage) *
-                                                  100)
-                                              .toStringAsFixed(0),
-                                        ),
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          labelText: "PG",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
+                                        value: (nicBases
+                                                    .where((nicBase) =>
+                                                        !nicBase.isVG)
+                                                    .fold(
+                                                        0.0,
+                                                        (sum, nicBase) =>
+                                                            sum +
+                                                            nicBase
+                                                                .percentage) *
+                                                100)
+                                            .toStringAsFixed(0),
+                                        contentType:
+                                            ElTextFieldContentType.numeric,
+                                        labelText: 'PG',
+                                        labelPosition:
+                                            ElTextFieldLabelPosition.left,
+                                        suffix: const Text('%'),
                                       ),
                                     ),
                                   ],
@@ -395,80 +360,90 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                             thickness: 1,
                                           ),
                                           const Gap(16.0),
-                                          ...nicBases.map(
-                                            (nicBase) => Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: TextField(
-                                                    readOnly: true,
-                                                    controller:
-                                                        TextEditingController(
-                                                      text: nicBase.label,
-                                                    ),
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(),
-                                                      ),
-                                                      labelText: "Percentage",
-                                                      suffix: Text("%"),
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                        vertical: 20.0,
-                                                        horizontal: 8.0,
-                                                      ),
+                                          Column(
+                                            spacing: 8.0,
+                                            children: List.generate(
+                                                nicBases.length, (index) {
+                                              final nicBase = nicBases[index];
+                                              return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: ElTextField(
+                                                      readOnly: true,
+                                                      value: nicBase.label,
+                                                      contentType:
+                                                          ElTextFieldContentType
+                                                              .text,
+                                                      labelText: index == 0
+                                                          ? 'Name'
+                                                          : null,
                                                     ),
                                                   ),
-                                                ),
-                                                const Gap(8),
-                                                Container(
-                                                  constraints:
-                                                      const BoxConstraints(
-                                                    maxWidth: 120,
-                                                  ),
-                                                  child: TextField(
-                                                    readOnly: true,
-                                                    controller:
-                                                        TextEditingController(
-                                                      text: (nicBase
+                                                  const Gap(8),
+                                                  Container(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                      maxWidth: 120,
+                                                    ),
+                                                    child: ElTextField(
+                                                      readOnly: true,
+                                                      value: (nicBase
                                                                   .percentage *
                                                               100)
                                                           .toStringAsFixed(0),
-                                                    ),
-                                                    decoration:
-                                                        const InputDecoration(
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(),
-                                                      ),
-                                                      labelText: "Percentage",
-                                                      suffix: Text("%"),
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                        vertical: 20.0,
-                                                        horizontal: 8.0,
-                                                      ),
+                                                      contentType:
+                                                          ElTextFieldContentType
+                                                              .numeric,
+                                                      labelText: index == 0
+                                                          ? 'Percentage'
+                                                          : null,
+                                                      suffix: const Text('%'),
                                                     ),
                                                   ),
-                                                ),
-                                                Column(
-                                                  children: [
-                                                    const Text("VG"),
-                                                    Checkbox(
-                                                      value: nicBase.isVG,
-                                                      onChanged: null,
-                                                      side: const BorderSide(),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
+                                                  const Gap(12.0),
+                                                  SizedBox(
+                                                    width: 24,
+                                                    child: index == 0
+                                                        ? Column(
+                                                            children: [
+                                                              const Text(
+                                                                'VG',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      12.0,
+                                                                ),
+                                                              ),
+                                                              const Gap(12.0),
+                                                              Checkbox(
+                                                                value: nicBase
+                                                                    .isVG,
+                                                                onChanged: null,
+                                                                side:
+                                                                    const BorderSide(),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        : Column(
+                                                            children: [
+                                                              Checkbox(
+                                                                value: nicBase
+                                                                    .isVG,
+                                                                onChanged: null,
+                                                                side:
+                                                                    const BorderSide(),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                  ),
+                                                ],
+                                              );
+                                            }),
                                           ),
                                         ],
                                       ),
@@ -476,7 +451,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             ),
                           ),
                         ),
-                  _selectedNicProfValue == null
+                  _nicProfile == null
                       ? const SizedBox.shrink()
                       : Card(
                           shape: RoundedRectangleBorder(
@@ -489,109 +464,73 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Target",
+                                  'TARGET',
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 const Gap(20),
-                                TextField(
+                                ElTextField(
                                   readOnly: true,
-                                  controller: TextEditingController(
-                                    text: ((_nicProfile?.targetNicStr ?? 0.0) *
-                                            100)
-                                        .toStringAsFixed(2),
-                                  ),
-                                  decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(),
-                                    ),
-                                    labelText: "Nic Str",
-                                    suffix: Text("%"),
-                                    contentPadding: EdgeInsets.symmetric(
-                                      vertical: 20.0,
-                                      horizontal: 8.0,
-                                    ),
-                                  ),
+                                  value:
+                                      ((_nicProfile?.targetNicStr ?? 0.0) * 100)
+                                          .toStringAsFixed(2),
+                                  contentType: ElTextFieldContentType.numeric,
+                                  labelText: "Nic Str",
+                                  labelPosition: ElTextFieldLabelPosition.left,
+                                  suffix: const Text("%"),
                                 ),
-                                const Gap(16),
+                                const Gap(8),
                                 Row(
                                   spacing: 8.0,
                                   children: [
                                     Expanded(
-                                      child: TextField(
+                                      child: ElTextField(
                                         readOnly: true,
-                                        controller: TextEditingController(
-                                          text: ((_nicProfile?.targetVG ??
-                                                      0.0) *
-                                                  100)
-                                              .toStringAsFixed(_getDecimalPlaces(
-                                                              _nicProfile
-                                                                      ?.targetVG ??
-                                                                  0.0) -
-                                                          2 >
-                                                      4
-                                                  ? _getDecimalPlaces(
-                                                          _nicProfile
-                                                                  ?.targetVG ??
-                                                              0.0) -
-                                                      2
-                                                  : 4),
-                                        ),
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          labelText: "VG",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 20.0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
+                                        value: ((_nicProfile?.targetVG ?? 0.0) *
+                                                100)
+                                            .toStringAsFixed(_getDecimalPlaces(
+                                                            _nicProfile
+                                                                    ?.targetVG ??
+                                                                0.0) -
+                                                        2 >
+                                                    4
+                                                ? _getDecimalPlaces(
+                                                        _nicProfile?.targetVG ??
+                                                            0.0) -
+                                                    2
+                                                : 4),
+                                        contentType:
+                                            ElTextFieldContentType.numeric,
+                                        labelText: "VG",
+                                        labelPosition:
+                                            ElTextFieldLabelPosition.left,
+                                        suffix: const Text("%"),
                                       ),
                                     ),
                                     Expanded(
-                                      child: TextField(
+                                      child: ElTextField(
                                         readOnly: true,
-                                        controller: TextEditingController(
-                                          text: ((_nicProfile?.targetPG ??
-                                                      0.0) *
-                                                  100)
-                                              .toStringAsFixed(_getDecimalPlaces(
-                                                              _nicProfile
-                                                                      ?.targetPG ??
-                                                                  0.0) -
-                                                          2 >
-                                                      4
-                                                  ? _getDecimalPlaces(
-                                                          _nicProfile
-                                                                  ?.targetPG ??
-                                                              0.0) -
-                                                      2
-                                                  : 4),
-                                        ),
-                                        decoration: const InputDecoration(
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(),
-                                          ),
-                                          labelText: "PG",
-                                          suffix: Text("%"),
-                                          contentPadding: EdgeInsets.symmetric(
-                                            vertical: 20.0,
-                                            horizontal: 8.0,
-                                          ),
-                                        ),
+                                        value: ((_nicProfile?.targetPG ?? 0.0) *
+                                                100)
+                                            .toStringAsFixed(_getDecimalPlaces(
+                                                            _nicProfile
+                                                                    ?.targetPG ??
+                                                                0.0) -
+                                                        2 >
+                                                    4
+                                                ? _getDecimalPlaces(
+                                                        _nicProfile?.targetPG ??
+                                                            0.0) -
+                                                    2
+                                                : 4),
+                                        contentType:
+                                            ElTextFieldContentType.numeric,
+                                        labelText: "PG",
+                                        labelPosition:
+                                            ElTextFieldLabelPosition.left,
+                                        suffix: const Text("%"),
                                       ),
                                     ),
                                   ],
