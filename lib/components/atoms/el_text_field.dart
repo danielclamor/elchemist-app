@@ -17,6 +17,7 @@ class ElTextField extends StatelessWidget {
   final Widget? suffix;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final TapRegionCallback? onTapOutside;
 
   const ElTextField({
     super.key,
@@ -30,6 +31,7 @@ class ElTextField extends StatelessWidget {
     this.readOnly = false,
     this.onChanged,
     this.onSubmitted,
+    this.onTapOutside,
   });
 
   @override
@@ -45,6 +47,107 @@ class ElTextField extends StatelessWidget {
     final rowLabelAlignment = contentType == ElTextFieldContentType.numeric
         ? MainAxisAlignment.end
         : MainAxisAlignment.start;
+
+    final inputDecoration = labelPosition == ElTextFieldLabelPosition.top
+        ? InputDecoration(
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(),
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: readOnly
+                  ? const BorderSide()
+                  : const BorderSide(
+                      color: Colors.white,
+                      width: 1.5,
+                    ),
+            ),
+            filled: !readOnly,
+            prefixIcon: prefix != null
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      12.0,
+                      12.0,
+                      4.0,
+                      12.0,
+                    ),
+                    child: prefix,
+                  )
+                : null,
+            suffixIcon: suffix != null
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      4.0,
+                      12.0,
+                      12.0,
+                      12.0,
+                    ),
+                    child: suffix,
+                  )
+                : null,
+          )
+        : InputDecoration(
+            enabledBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.horizontal(
+                left: Radius.zero,
+                right: Radius.circular(4.0),
+              ),
+              borderSide: BorderSide(),
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.horizontal(
+                left: Radius.zero,
+                right: Radius.circular(4.0),
+              ),
+              borderSide: readOnly
+                  ? const BorderSide()
+                  : const BorderSide(
+                      color: Colors.white,
+                      width: 1.5,
+                    ),
+            ),
+            filled: !readOnly,
+            prefixIcon: prefix != null
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      12.0,
+                      12.0,
+                      4.0,
+                      12.0,
+                    ),
+                    child: prefix,
+                  )
+                : null,
+            suffixIcon: suffix != null
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      4.0,
+                      12.0,
+                      12.0,
+                      12.0,
+                    ),
+                    child: suffix,
+                  )
+                : null,
+          );
+
+    final textField = TextField(
+      style: GoogleFonts.robotoMonoTextTheme(
+        ThemeData(brightness: Brightness.dark).textTheme,
+      ).bodyMedium,
+      textAlign: alignment,
+      readOnly: readOnly,
+      controller: TextEditingController(text: value),
+      keyboardType: keyboardType,
+      onSubmitted: onSubmitted,
+      onTapOutside: onTapOutside,
+      decoration: inputDecoration,
+    );
 
     return labelPosition == ElTextFieldLabelPosition.top
         ? Column(
@@ -71,55 +174,7 @@ class ElTextField extends StatelessWidget {
                         )),
               Tooltip(
                 message: value,
-                child: TextField(
-                  style: GoogleFonts.robotoMonoTextTheme(
-                    ThemeData(brightness: Brightness.dark).textTheme,
-                  ).bodyMedium,
-                  textAlign: alignment,
-                  readOnly: readOnly,
-                  controller: TextEditingController(text: value),
-                  keyboardType: keyboardType,
-                  onSubmitted: onSubmitted,
-                  decoration: InputDecoration(
-                    enabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    disabledBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: readOnly
-                          ? const BorderSide()
-                          : const BorderSide(
-                              color: Colors.white,
-                              width: 1.5,
-                            ),
-                    ),
-                    filled: !readOnly,
-                    prefixIcon: prefix != null
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              12.0,
-                              12.0,
-                              4.0,
-                              12.0,
-                            ),
-                            child: prefix,
-                          )
-                        : null,
-                    suffixIcon: suffix != null
-                        ? Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                              4.0,
-                              12.0,
-                              12.0,
-                              12.0,
-                            ),
-                            child: suffix,
-                          )
-                        : null,
-                  ),
-                ),
+                child: textField,
               ),
             ],
           )
@@ -164,63 +219,7 @@ class ElTextField extends StatelessWidget {
                               ),
                             )),
                   Expanded(
-                    child: TextField(
-                      style: GoogleFonts.robotoMonoTextTheme(
-                        ThemeData(brightness: Brightness.dark).textTheme,
-                      ).bodyMedium,
-                      textAlign: alignment,
-                      readOnly: readOnly,
-                      controller: TextEditingController(text: value),
-                      keyboardType: keyboardType,
-                      onSubmitted: onSubmitted,
-                      decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.horizontal(
-                            left: Radius.zero,
-                            right: Radius.circular(4.0),
-                          ),
-                          borderSide: BorderSide(),
-                        ),
-                        disabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.horizontal(
-                            left: Radius.zero,
-                            right: Radius.circular(4.0),
-                          ),
-                          borderSide: readOnly
-                              ? const BorderSide()
-                              : const BorderSide(
-                                  color: Colors.white,
-                                  width: 1.5,
-                                ),
-                        ),
-                        filled: !readOnly,
-                        prefixIcon: prefix != null
-                            ? Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  12.0,
-                                  12.0,
-                                  4.0,
-                                  12.0,
-                                ),
-                                child: prefix,
-                              )
-                            : null,
-                        suffixIcon: suffix != null
-                            ? Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  4.0,
-                                  12.0,
-                                  12.0,
-                                  12.0,
-                                ),
-                                child: suffix,
-                              )
-                            : null,
-                      ),
-                    ),
+                    child: textField,
                   ),
                 ],
               ),
