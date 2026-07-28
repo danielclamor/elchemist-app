@@ -40,6 +40,7 @@ class ElDropdownMenu<T> extends StatelessWidget {
                             labelText ?? '',
                             style: const TextStyle(
                               fontSize: 12.0,
+                              color: Colors.grey,
                             ),
                           ),
                         ],
