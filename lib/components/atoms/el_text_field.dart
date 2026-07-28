@@ -48,92 +48,13 @@ class ElTextField extends StatelessWidget {
         ? MainAxisAlignment.end
         : MainAxisAlignment.start;
 
-    final inputDecoration = labelPosition == ElTextFieldLabelPosition.top
-        ? InputDecoration(
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(),
-            ),
-            disabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: readOnly
-                  ? const BorderSide()
-                  : const BorderSide(
-                      color: Colors.white,
-                      width: 1.5,
-                    ),
-            ),
-            filled: !readOnly,
-            prefixIcon: prefix != null
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      12.0,
-                      12.0,
-                      4.0,
-                      12.0,
-                    ),
-                    child: prefix,
-                  )
-                : null,
-            suffixIcon: suffix != null
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      4.0,
-                      12.0,
-                      12.0,
-                      12.0,
-                    ),
-                    child: suffix,
-                  )
-                : null,
+    final borderRadius = labelPosition == ElTextFieldLabelPosition.top
+        ? const BorderRadius.all(
+            Radius.circular(4.0),
           )
-        : InputDecoration(
-            enabledBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.horizontal(
-                left: Radius.zero,
-                right: Radius.circular(4.0),
-              ),
-              borderSide: BorderSide(),
-            ),
-            disabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.horizontal(
-                left: Radius.zero,
-                right: Radius.circular(4.0),
-              ),
-              borderSide: readOnly
-                  ? const BorderSide()
-                  : const BorderSide(
-                      color: Colors.white,
-                      width: 1.5,
-                    ),
-            ),
-            filled: !readOnly,
-            prefixIcon: prefix != null
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      12.0,
-                      12.0,
-                      4.0,
-                      12.0,
-                    ),
-                    child: prefix,
-                  )
-                : null,
-            suffixIcon: suffix != null
-                ? Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      4.0,
-                      12.0,
-                      12.0,
-                      12.0,
-                    ),
-                    child: suffix,
-                  )
-                : null,
+        : const BorderRadius.horizontal(
+            left: Radius.zero,
+            right: Radius.circular(4.0),
           );
 
     final textField = TextField(
@@ -146,7 +67,48 @@ class ElTextField extends StatelessWidget {
       keyboardType: keyboardType,
       onSubmitted: onSubmitted,
       onTapOutside: onTapOutside,
-      decoration: inputDecoration,
+      decoration: InputDecoration(
+        enabledBorder: OutlineInputBorder(
+          borderRadius: borderRadius,
+          borderSide: BorderSide(color: Theme.of(context).focusColor),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: borderRadius,
+          borderSide: const BorderSide(),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: borderRadius,
+          borderSide: readOnly
+              ? BorderSide(color: Theme.of(context).focusColor)
+              : const BorderSide(
+                  color: Colors.white,
+                  width: 1.5,
+                ),
+        ),
+        filled: !readOnly,
+        prefixIcon: prefix != null
+            ? Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  12.0,
+                  12.0,
+                  4.0,
+                  12.0,
+                ),
+                child: prefix,
+              )
+            : null,
+        suffixIcon: suffix != null
+            ? Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  4.0,
+                  12.0,
+                  12.0,
+                  12.0,
+                ),
+                child: suffix,
+              )
+            : null,
+      ),
     );
 
     return labelPosition == ElTextFieldLabelPosition.top
@@ -165,6 +127,7 @@ class ElTextField extends StatelessWidget {
                                   labelText ?? '',
                                   style: const TextStyle(
                                     fontSize: 12.0,
+                                    color: Colors.grey,
                                   ),
                                 ),
                               ],
@@ -191,10 +154,16 @@ class ElTextField extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color:
                                     Theme.of(context).scaffoldBackgroundColor,
-                                border: const Border(
-                                  top: BorderSide(width: 1.0),
-                                  bottom: BorderSide(width: 1.0),
-                                  left: BorderSide(width: 1.0),
+                                border: Border(
+                                  top: BorderSide(
+                                      width: 1.0,
+                                      color: Theme.of(context).focusColor),
+                                  bottom: BorderSide(
+                                      width: 1.0,
+                                      color: Theme.of(context).focusColor),
+                                  left: BorderSide(
+                                      width: 1.0,
+                                      color: Theme.of(context).focusColor),
                                   right: BorderSide.none,
                                 ),
                                 borderRadius: const BorderRadius.horizontal(
@@ -213,7 +182,8 @@ class ElTextField extends StatelessWidget {
                                   labelText ?? '',
                                   style: const TextStyle(
                                     fontSize: 14.0,
-                                    fontWeight: FontWeight.bold,
+                                    // fontWeight: FontWeight.bold,
+                                    color: Colors.grey,
                                   ),
                                 ),
                               ),
