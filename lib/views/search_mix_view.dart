@@ -844,8 +844,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         DropdownMenuEntry<
                                                             NicProfile>(
                                                       value: nicProfile,
-                                                      label:
-                                                          '${nicProfile.nicLevel} (${nicProfile.isNewMix ? 'New Mix' : 'Old Mix'})',
+                                                      label: nicProfile.label,
                                                     ),
                                                   ),
                                                 ),
@@ -856,7 +855,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   });
 
                                                   _onSelectNicProfile(
-                                                    value?.nicLevel,
+                                                    value?.name,
                                                   );
 
                                                   if (_volumeController.text ==
