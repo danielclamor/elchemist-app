@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
-import 'package:elchemist_app/formulas.dart';
+import 'package:elchemist_app/value_getters.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

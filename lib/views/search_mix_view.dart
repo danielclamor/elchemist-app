@@ -3,7 +3,7 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/constants.dart';
-import 'package:elchemist_app/formulas.dart';
+import 'package:elchemist_app/value_getters.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:elchemist_app/models/nic_base.dart';
