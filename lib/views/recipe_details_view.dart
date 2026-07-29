@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/models/flavoring.dart';
@@ -230,36 +231,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                               ),
                                             ),
                                             const Gap(12.0),
-                                            SizedBox(
-                                              width: 24,
-                                              child: index == 0
-                                                  ? Column(
-                                                      children: [
-                                                        const Text(
-                                                          'VG',
-                                                          style: TextStyle(
-                                                            fontSize: 12.0,
-                                                          ),
-                                                        ),
-                                                        const Gap(12.0),
-                                                        Checkbox(
-                                                          value: flavoring.isVG,
-                                                          onChanged: null,
-                                                          side:
-                                                              const BorderSide(),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Column(
-                                                      children: [
-                                                        Checkbox(
-                                                          value: flavoring.isVG,
-                                                          onChanged: null,
-                                                          side:
-                                                              const BorderSide(),
-                                                        ),
-                                                      ],
-                                                    ),
+                                            ElCheckbox(
+                                              labelText:
+                                                  index == 0 ? 'VG' : null,
+                                              value: flavoring.isVG,
+                                              onChanged: null,
                                             ),
                                           ],
                                         ),
@@ -406,40 +382,12 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                     ),
                                                   ),
                                                   const Gap(12.0),
-                                                  SizedBox(
-                                                    width: 24,
-                                                    child: index == 0
-                                                        ? Column(
-                                                            children: [
-                                                              const Text(
-                                                                'VG',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      12.0,
-                                                                ),
-                                                              ),
-                                                              const Gap(12.0),
-                                                              Checkbox(
-                                                                value: nicBase
-                                                                    .isVG,
-                                                                onChanged: null,
-                                                                side:
-                                                                    const BorderSide(),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        : Column(
-                                                            children: [
-                                                              Checkbox(
-                                                                value: nicBase
-                                                                    .isVG,
-                                                                onChanged: null,
-                                                                side:
-                                                                    const BorderSide(),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                  ElCheckbox(
+                                                    labelText: index == 0
+                                                        ? 'VG'
+                                                        : null,
+                                                    value: nicBase.isVG,
+                                                    onChanged: null,
                                                   ),
                                                 ],
                                               );

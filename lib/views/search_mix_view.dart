@@ -1110,17 +1110,9 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         ),
                                                       ),
                                                       const Gap(12.0),
-                                                      SizedBox(
-                                                        width: 24,
-                                                        child: Column(
-                                                          children: [
-                                                            ElCheckbox(
-                                                              value: flavoring
-                                                                  .isVG,
-                                                              onChanged: null,
-                                                            ),
-                                                          ],
-                                                        ),
+                                                      ElCheckbox(
+                                                        value: flavoring.isVG,
+                                                        onChanged: null,
                                                       ),
                                                     ],
                                                   ),
