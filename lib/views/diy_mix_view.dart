@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/formulas.dart';
 import 'package:elchemist_app/models/ingredient.dart';
@@ -350,7 +351,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                       ))
                   : const SizedBox.shrink(),
               withHeaders ? const Gap(10.0) : const Gap(2.0),
-              Checkbox(
+              ElCheckbox(
                 value: entry.isVG,
                 onChanged: (value) {
                   setState(() {

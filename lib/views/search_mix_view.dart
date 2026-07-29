@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/constants.dart';
@@ -614,24 +615,9 @@ class _SearchMixViewState extends State<SearchMixView> {
           ),
         ),
         const Gap(12.0),
-        SizedBox(
-          width: 24,
-          child: Column(
-            children: [
-              withHeaders
-                  ? const Text('VG',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ))
-                  : const SizedBox.shrink(),
-              withHeaders ? const Gap(10.0) : const Gap(2.0),
-              Checkbox(
-                value: entry.isVG,
-                onChanged: null,
-                side: const BorderSide(),
-              ),
-            ],
-          ),
+        ElCheckbox(
+          labelText: withHeaders ? 'VG' : null,
+          value: entry.isVG,
         ),
       ],
     );
@@ -883,109 +869,91 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             ),
                                             SizedBox(
                                               width: 140,
-                                              child: !_isCustomChecked
-                                                  ? const SizedBox()
-                                                  : Padding(
-                                                      padding:
-                                                          const EdgeInsetsGeometry
-                                                              .only(
-                                                        left: 8.0,
-                                                        right: 12.0,
-                                                      ),
-                                                      child: ElTextField(
-                                                        labelText: "Nic Level",
-                                                        value: (_nicProfile!
-                                                                    .isNewMix
-                                                                ? double.parse(
-                                                                        _targetNicStrController
-                                                                            .text) *
-                                                                    10
-                                                                : double.parse(
-                                                                        _targetNicStrController
-                                                                            .text) *
-                                                                    2.5)
-                                                            .toString(),
-                                                        contentType:
-                                                            ElTextFieldContentType
-                                                                .numeric,
-                                                        suffix:
-                                                            const Text("mg"),
-                                                        onSubmitted: (value) {
-                                                          if (value.isEmpty) {
-                                                            return;
-                                                          }
-                                                          final bool isNewMix =
-                                                              _nicProfile!
-                                                                  .isNewMix;
-
-                                                          setState(() {
-                                                            if (isNewMix) {
-                                                              _targetNicStrController
-                                                                  .text = (double
-                                                                          .parse(
-                                                                              value) /
-                                                                      10)
-                                                                  .toStringAsFixed(
-                                                                      2);
-                                                            } else {
-                                                              _targetNicStrController
-                                                                  .text = (double
-                                                                          .parse(
-                                                                              value) /
-                                                                      2.5)
-                                                                  .toStringAsFixed(
-                                                                      2);
-                                                            }
-                                                          });
-                                                          _updateValues();
-                                                        },
-                                                      ),
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: 60,
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Text(
-                                                    "Custom?",
-                                                    style: TextStyle(
-                                                        fontSize: 12.0),
-                                                  ),
-                                                  const Gap(12.0),
-                                                  Checkbox(
-                                                    value: _isCustomChecked,
-                                                    side: BorderSide(
-                                                      color: _selectedNicProfValue !=
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsetsGeometry
+                                                        .only(
+                                                  left: 8.0,
+                                                  right: 12.0,
+                                                ),
+                                                child: ElTextField(
+                                                  readOnly:
+                                                      _selectedNicProfValue ==
+                                                          null,
+                                                  labelText: "Nic Level",
+                                                  value: _nicProfile != null
+                                                      ? (_nicProfile!.isNewMix
+                                                              ? double.parse(
+                                                                      _targetNicStrController
+                                                                          .text) *
+                                                                  10
+                                                              : double.parse(
+                                                                      _targetNicStrController
+                                                                          .text) *
+                                                                  2.5)
+                                                          .toString()
+                                                      : "",
+                                                  contentType:
+                                                      ElTextFieldContentType
+                                                          .numeric,
+                                                  suffix: const Text("mg"),
+                                                  onSubmitted:
+                                                      _selectedNicProfValue !=
                                                               null
-                                                          ? Theme.of(context)
-                                                              .primaryColorLight
-                                                          : Theme.of(context)
-                                                              .primaryColorDark,
-                                                    ),
-                                                    onChanged:
-                                                        _selectedNicProfValue !=
-                                                                null
-                                                            ? (bool? newValue) {
-                                                                setState(() {
-                                                                  _isCustomChecked =
-                                                                      newValue ??
-                                                                          false;
-                                                                });
-
-                                                                if (newValue ==
-                                                                    false) {
-                                                                  _onSelectNicProfile(
-                                                                    _selectedNicProfValue,
-                                                                  );
-                                                                }
+                                                          ? (value) {
+                                                              if (value
+                                                                  .isEmpty) {
+                                                                return;
                                                               }
-                                                            : null,
-                                                  ),
-                                                ],
+                                                              final bool
+                                                                  isNewMix =
+                                                                  _nicProfile!
+                                                                      .isNewMix;
+
+                                                              setState(() {
+                                                                if (isNewMix) {
+                                                                  _targetNicStrController
+                                                                      .text = (double.parse(
+                                                                              value) /
+                                                                          10)
+                                                                      .toStringAsFixed(
+                                                                          2);
+                                                                } else {
+                                                                  _targetNicStrController
+                                                                      .text = (double.parse(
+                                                                              value) /
+                                                                          2.5)
+                                                                      .toStringAsFixed(
+                                                                          2);
+                                                                }
+                                                              });
+                                                              _updateValues();
+                                                            }
+                                                          : null,
+                                                ),
                                               ),
+                                            ),
+                                            ElCheckbox(
+                                              width: 50,
+                                              value: _isCustomChecked,
+                                              labelText: 'Custom',
+                                              onChanged:
+                                                  _selectedNicProfValue != null
+                                                      ? (bool? newValue) {
+                                                          setState(() {
+                                                            _isCustomChecked =
+                                                                newValue ??
+                                                                    false;
+                                                          });
+
+                                                          if (newValue ==
+                                                              false) {
+                                                            _onSelectNicProfile(
+                                                              _selectedNicProfValue,
+                                                            );
+                                                          }
+                                                        }
+                                                      : null,
                                             ),
                                           ],
                                         ),
@@ -1097,28 +1065,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           ),
                                                         ),
                                                         const Gap(12.0),
-                                                        SizedBox(
-                                                          width: 24,
-                                                          child: Column(
-                                                            children: [
-                                                              const Text(
-                                                                'VG',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      12.0,
-                                                                ),
-                                                              ),
-                                                              const Gap(12.0),
-                                                              Checkbox(
-                                                                value: flavoring
-                                                                    .isVG,
-                                                                onChanged: null,
-                                                                side:
-                                                                    const BorderSide(),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                        ElCheckbox(
+                                                          labelText: 'VG',
+                                                          value: flavoring.isVG,
+                                                          onChanged: null,
                                                         ),
                                                       ],
                                                     ),
@@ -1164,12 +1114,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         width: 24,
                                                         child: Column(
                                                           children: [
-                                                            Checkbox(
+                                                            ElCheckbox(
                                                               value: flavoring
                                                                   .isVG,
                                                               onChanged: null,
-                                                              side:
-                                                                  const BorderSide(),
                                                             ),
                                                           ],
                                                         ),
