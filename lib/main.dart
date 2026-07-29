@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:elchemist_app/constants.dart';
-import 'package:elchemist_app/models/recipe.dart';
+import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
 import 'package:elchemist_app/views/search_mix_view.dart';
-import 'package:elchemist_app/views/recipe_list_view.dart';
+import 'package:elchemist_app/views/formula_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:window_manager/window_manager.dart';
@@ -74,8 +74,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Recipe> recipes =
-      recipesData.map((recipe) => Recipe.fromMap(recipe)).toList();
+  List<Formula> formulas =
+      formulasData.map((formula) => Formula.fromMap(formula)).toList();
 
   int _selectedIndex = 0;
 
@@ -87,8 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     _widgetOptions = <Widget>[
       const DiyMixView(),
-      SearchMixView(recipes: recipes),
-      RecipeListView(recipes: recipes),
+      SearchMixView(formulas: formulas),
+      FormulaListView(formulas: formulas),
     ];
 
     bottomNavigationBarItems = const <BottomNavigationBarItem>[
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.book),
-        label: 'Recipes',
+        label: 'Formulas',
       ),
     ];
 

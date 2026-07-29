@@ -719,7 +719,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Recipe",
+                                "RECIPE",
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

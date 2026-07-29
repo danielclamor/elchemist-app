@@ -1,18 +1,18 @@
-import 'package:elchemist_app/models/recipe.dart';
+import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/transitions.dart';
-import 'package:elchemist_app/views/recipe_details_view.dart';
+import 'package:elchemist_app/views/formula_details_view.dart';
 import 'package:flutter/material.dart';
 
-class RecipeCard extends StatefulWidget {
-  final Recipe recipe;
+class FormulaCard extends StatefulWidget {
+  final Formula recipe;
 
-  const RecipeCard({super.key, required this.recipe});
+  const FormulaCard({super.key, required this.recipe});
 
   @override
-  State<RecipeCard> createState() => _RecipeCardState();
+  State<FormulaCard> createState() => _FormulaCardState();
 }
 
-class _RecipeCardState extends State<RecipeCard> {
+class _FormulaCardState extends State<FormulaCard> {
   @override
   Widget build(BuildContext context) {
     final recipe = widget.recipe;

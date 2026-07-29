@@ -6,12 +6,12 @@ import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
-import 'package:elchemist_app/models/recipe.dart';
+import 'package:elchemist_app/models/formula.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class RecipeDetailsView extends StatefulWidget {
-  final Recipe recipe;
+  final Formula recipe;
 
   const RecipeDetailsView({
     super.key,
@@ -41,7 +41,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
     const sectionWidth = 500.0;
     const cardPadding = EdgeInsetsGeometry.all(24.0);
 
-    final Recipe recipe = widget.recipe;
+    final Formula recipe = widget.recipe;
 
     return Scaffold(
       appBar: AppBar(

@@ -38,14 +38,14 @@ enum NicType {
   }
 }
 
-class Recipe {
+class Formula {
   final String name;
   final String brand;
   final ChillType chilltype;
   final NicType nicType;
   final List<NicProfile> nicProfiles;
 
-  Recipe({
+  Formula({
     required this.name,
     required this.brand,
     required this.chilltype,
@@ -53,7 +53,7 @@ class Recipe {
     required this.nicProfiles,
   });
 
-  factory Recipe.fromMap(Map<String, dynamic> map) => Recipe(
+  factory Formula.fromMap(Map<String, dynamic> map) => Formula(
         name: map["name"] as String,
         brand: map["brand"] as String,
         chilltype: ChillType.fromString(map["chill_type"]),

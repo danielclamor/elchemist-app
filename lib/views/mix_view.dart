@@ -1,6 +1,6 @@
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/nic_base.dart';
-import 'package:elchemist_app/models/recipe.dart';
+import 'package:elchemist_app/models/formula.dart';
 import 'package:flutter/material.dart';
 
 class NicBaseEntry {
@@ -29,11 +29,11 @@ class NicBaseEntry {
 }
 
 class MixView extends StatefulWidget {
-  final Recipe recipe;
+  final Formula formula;
 
   const MixView({
     super.key,
-    required this.recipe,
+    required this.formula,
   });
 
   @override

@@ -8,7 +8,7 @@ import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
-import 'package:elchemist_app/models/recipe.dart';
+import 'package:elchemist_app/models/formula.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -50,11 +50,11 @@ class NicBaseEntry {
 }
 
 class SearchMixView extends StatefulWidget {
-  final List<Recipe> recipes;
+  final List<Formula> formulas;
 
   const SearchMixView({
     super.key,
-    required this.recipes,
+    required this.formulas,
   });
 
   @override
@@ -66,7 +66,7 @@ class _SearchMixViewState extends State<SearchMixView> {
       .map((option) => NicBaseOption.fromMap(option))
       .toList();
 
-  Recipe? _recipe;
+  Formula? _formula;
   String? _selectedNicProfValue;
   NicProfile? _nicProfile;
   bool _isCustomChecked = false;
@@ -309,9 +309,9 @@ class _SearchMixViewState extends State<SearchMixView> {
     return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
   }
 
-  void _changeRecipe() {
+  void _changeFormula() {
     setState(() {
-      _recipe = null;
+      _formula = null;
       _selectedNicProfValue = null;
       _nicProfile = null;
       _nicBaseEntries.clear();
@@ -629,7 +629,7 @@ class _SearchMixViewState extends State<SearchMixView> {
     var wrapperWidth = screenSize.width < 1920 ? 500.0 : null;
     var section2Width = screenSize.width < 1920 ? 500.0 : 400.0;
 
-    final List<Recipe> recipes = widget.recipes;
+    final List<Formula> formulas = widget.formulas;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -672,13 +672,13 @@ class _SearchMixViewState extends State<SearchMixView> {
                             margin: EdgeInsets.zero,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: _recipe == null
+                              child: _formula == null
                                   ? Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
                                         const Text(
-                                          "RECIPE",
+                                          "FORMULA",
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.bold,
@@ -723,10 +723,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             final String input = controller
                                                 .value.text
                                                 .toLowerCase();
-                                            final Iterable<Recipe>
+                                            final Iterable<Formula>
                                                 filteredSuggestions =
-                                                recipes.where((recipeItem) {
-                                              return recipeItem.name
+                                                formulas.where((formulaItem) {
+                                              return formulaItem.name
                                                   .toLowerCase()
                                                   .contains(input);
                                             });
@@ -768,7 +768,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                     _searchController.closeView(
                                                       suggestionItem.name,
                                                     );
-                                                    _recipe = suggestionItem;
+                                                    _formula = suggestionItem;
                                                   });
                                                 },
                                               );
@@ -794,20 +794,20 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  _recipe!.brand.toUpperCase(),
+                                                  _formula!.brand.toUpperCase(),
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
                                                 ),
                                                 Text(
-                                                  _recipe!.name,
+                                                  _formula!.name,
                                                   style: const TextStyle(
                                                     fontSize: 20,
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                                 Text(
-                                                  '${_recipe!.nicType.toString()} — ${_recipe!.chilltype.toString()}',
+                                                  '${_formula!.nicType.toString()} — ${_formula!.chilltype.toString()}',
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                   ),
@@ -818,7 +818,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                               icon: const Icon(
                                                 Icons.change_circle_sharp,
                                               ),
-                                              onPressed: () => _changeRecipe(),
+                                              onPressed: () => _changeFormula(),
                                             ),
                                           ],
                                         ),
@@ -837,7 +837,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                     UnmodifiableListView<
                                                         DropdownMenuEntry<
                                                             NicProfile>>(
-                                                  _recipe!.nicProfiles.map<
+                                                  _formula!.nicProfiles.map<
                                                       DropdownMenuEntry<
                                                           NicProfile>>(
                                                     (nicProfile) =>
@@ -1339,7 +1339,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Recipe",
+                                "RECIPE",
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

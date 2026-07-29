@@ -1,20 +1,20 @@
-import 'package:elchemist_app/components/molecules/recipe_card.dart';
-import 'package:elchemist_app/models/recipe.dart';
+import 'package:elchemist_app/components/molecules/formula_card.dart';
+import 'package:elchemist_app/models/formula.dart';
 import 'package:flutter/material.dart';
 
-class RecipeListView extends StatefulWidget {
-  final List<Recipe> recipes;
+class FormulaListView extends StatefulWidget {
+  final List<Formula> formulas;
 
-  const RecipeListView({
+  const FormulaListView({
     super.key,
-    required this.recipes,
+    required this.formulas,
   });
 
   @override
-  State<RecipeListView> createState() => _RecipeListViewState();
+  State<FormulaListView> createState() => _FormulaListViewState();
 }
 
-class _RecipeListViewState extends State<RecipeListView> {
+class _FormulaListViewState extends State<FormulaListView> {
   late TextEditingController _controller;
   String searchText = '';
 
@@ -26,7 +26,7 @@ class _RecipeListViewState extends State<RecipeListView> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Recipe> recipes = widget.recipes;
+    final List<Formula> recipes = widget.formulas;
 
     final filteredRecipes = recipes
         .where((recipe) =>
@@ -81,7 +81,7 @@ class _RecipeListViewState extends State<RecipeListView> {
                     child: ListView.builder(
                       itemCount: filteredRecipes.length,
                       itemBuilder: (context, index) {
-                        return RecipeCard(
+                        return FormulaCard(
                           recipe: filteredRecipes[index],
                         );
                       },
