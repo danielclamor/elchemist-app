@@ -340,38 +340,25 @@ class _DiyMixViewState extends State<DiyMixView> {
           ),
         ),
         const Gap(12.0),
-        SizedBox(
-          width: 24,
-          child: Column(
-            children: [
-              withHeaders
-                  ? const Text('VG',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ))
-                  : const SizedBox.shrink(),
-              withHeaders ? const Gap(10.0) : const Gap(2.0),
-              ElCheckbox(
-                value: entry.isVG,
-                onChanged: (value) {
-                  setState(() {
-                    entry.isVG = value ?? false;
-                  });
-                  final flavor = _ingredients.firstWhereOrNull(
-                    (ingredient) => ingredient.id == entry.id,
-                  );
-                  if (flavor != null) {
-                    setState(() {
-                      flavor.type = value == true
-                          ? IngredientType.vgFlavor
-                          : IngredientType.pgFlavor;
-                    });
-                    _updateValues();
-                  }
-                },
-              ),
-            ],
-          ),
+        ElCheckbox(
+          labelText: withHeaders ? 'VG' : null,
+          value: entry.isVG,
+          onChanged: (value) {
+            setState(() {
+              entry.isVG = value ?? false;
+            });
+            final flavor = _ingredients.firstWhereOrNull(
+              (ingredient) => ingredient.id == entry.id,
+            );
+            if (flavor != null) {
+              setState(() {
+                flavor.type = value == true
+                    ? IngredientType.vgFlavor
+                    : IngredientType.pgFlavor;
+              });
+              _updateValues();
+            }
+          },
         ),
       ],
     );
