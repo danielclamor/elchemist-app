@@ -103,38 +103,45 @@ class _MixViewState extends State<MixView> {
 
   @override
   void initState() {
+    debugPrint("MixView rebuild");
     super.initState();
     _nicProfile = widget.initialNicProfile;
 
     _nicLevelController = TextEditingController(
       text: (_nicProfile == null
-              ? 0.0
+              ? ''
               : (_nicProfile!.isNewMix
                   ? _nicProfile!.targetNicStr * 10
                   : _nicProfile!.targetNicStr * 2.5))
           .toString(),
     );
-    _volumeController = TextEditingController(text: "0");
+    _volumeController = TextEditingController(text: "");
     _nicBaseNicStrController = TextEditingController(
-      text: (_nicProfile == null ? 0.0 : _nicProfile!.nicBaseNicStr * 100)
+      text: (_nicProfile == null ? '' : _nicProfile!.nicBaseNicStr * 100)
           .toString(),
     );
-    _nicBaseVGController = TextEditingController(text: "0");
-    _nicBasePGController = TextEditingController(text: "0");
+    _nicBaseVGController = TextEditingController(text: "");
+    _nicBasePGController = TextEditingController(text: "");
     _targetNicStrController = TextEditingController(
-      text: (_nicProfile == null ? 0.0 : _nicProfile!.targetNicStr * 100)
+      text: (_nicProfile == null ? '' : _nicProfile!.targetNicStr * 100)
           .toString(),
     );
     _targetVGController = TextEditingController(
-      text:
-          (_nicProfile == null ? 0.0 : _nicProfile!.targetVG * 100).toString(),
+      text: (_nicProfile == null ? '' : _nicProfile!.targetVG * 100).toString(),
     );
     _targetPGController = TextEditingController(
-      text:
-          (_nicProfile == null ? 0.0 : _nicProfile!.targetPG * 100).toString(),
+      text: (_nicProfile == null ? '' : _nicProfile!.targetPG * 100).toString(),
     );
 
     _calculateTotalNicBaseRatio();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    for (final c in _allControllers) {
+      c.dispose();
+    }
   }
 
   void _calculateTotalNicBaseRatio() {
@@ -215,13 +222,15 @@ class _MixViewState extends State<MixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
+            controller: entry.percentageController,
+            contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
             readOnly: !_isCustom,
-            value: ((entry.nicBase?.percentage ?? 0.0) * 100).toString(),
-            contentType: ElTextFieldContentType.numeric,
             suffix: const Text("%"),
             onSubmitted: (value) {
               setState(() {
+                entry.nicBase?.percentage = double.parse(value);
+
                 _nicBaseVGController.text = (_nicBaseEntries
                             .where((nicBaseEntry) => nicBaseEntry.isVG)
                             .fold(
@@ -317,7 +326,7 @@ class _MixViewState extends State<MixView> {
                             elevation: 0,
                             margin: EdgeInsets.zero,
                             child: Padding(
-                              padding: EdgeInsets.all(16.0),
+                              padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -401,14 +410,15 @@ class _MixViewState extends State<MixView> {
                                             right: 12.0,
                                           ),
                                           child: ElTextField(
-                                            value: _nicLevelController.text,
+                                            controller: _nicLevelController,
                                             contentType:
                                                 ElTextFieldContentType.numeric,
-                                            readOnly: _nicProfile == null &&
+                                            readOnly: _nicProfile == null ||
                                                 !_isCustom,
                                             labelText: 'Nic Level',
                                             suffix: const Text('mg'),
-                                            onSubmitted: _nicProfile == null
+                                            onSubmitted: _nicProfile == null &&
+                                                    !_isCustom
                                                 ? null
                                                 : (value) {
                                                     // TODO add funtionality
@@ -440,7 +450,7 @@ class _MixViewState extends State<MixView> {
                                           children: [
                                             const Gap(8.0),
                                             ElTextField(
-                                              value: _volumeController.text,
+                                              controller: _volumeController,
                                               contentType:
                                                   ElTextFieldContentType
                                                       .numeric,
@@ -449,10 +459,7 @@ class _MixViewState extends State<MixView> {
                                                   ElTextFieldLabelPosition.left,
                                               suffix: const Text('mL'),
                                               onSubmitted: (value) {
-                                                setState(() {
-                                                  // _volumeController.text =
-                                                  //     value;
-                                                });
+                                                setState(() {});
                                               },
                                             ),
                                           ],
@@ -497,14 +504,17 @@ class _MixViewState extends State<MixView> {
                                                 children: [
                                                   Expanded(
                                                     child: ElTextField(
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: flavoring.name,
+                                                      ),
+                                                      contentType:
+                                                          ElTextFieldContentType
+                                                              .text,
                                                       readOnly: true,
                                                       labelText: index == 0
                                                           ? 'Name'
                                                           : null,
-                                                      value: flavoring.name,
-                                                      contentType:
-                                                          ElTextFieldContentType
-                                                              .text,
                                                     ),
                                                   ),
                                                   const Gap(8.0),
@@ -516,18 +526,21 @@ class _MixViewState extends State<MixView> {
                                                       SizedBox(
                                                         width: 140,
                                                         child: ElTextField(
+                                                          controller:
+                                                              TextEditingController(
+                                                            text: (flavoring
+                                                                        .percentage *
+                                                                    100)
+                                                                .toStringAsFixed(
+                                                                    4),
+                                                          ),
+                                                          contentType:
+                                                              ElTextFieldContentType
+                                                                  .numeric,
                                                           labelText: index == 0
                                                               ? 'Percentage'
                                                               : null,
                                                           readOnly: !_isCustom,
-                                                          value: (flavoring
-                                                                      .percentage *
-                                                                  100)
-                                                              .toStringAsFixed(
-                                                                  4),
-                                                          contentType:
-                                                              ElTextFieldContentType
-                                                                  .numeric,
                                                           suffix:
                                                               const Text("%"),
                                                         ),
@@ -575,7 +588,7 @@ class _MixViewState extends State<MixView> {
                               ),
                               const Gap(20),
                               ElTextField(
-                                value: _nicBaseNicStrController.text,
+                                controller: _nicBaseNicStrController,
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
@@ -588,24 +601,24 @@ class _MixViewState extends State<MixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _nicBaseVGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "VG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _nicBaseVGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: true,
                                       suffix: const Text('%'),
                                     ),
                                   ),
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _nicBasePGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "PG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _nicBasePGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: true,
                                       suffix: const Text('%'),
                                     ),
@@ -658,11 +671,11 @@ class _MixViewState extends State<MixView> {
                               ),
                               const Gap(20),
                               ElTextField(
+                                controller: _targetNicStrController,
+                                contentType: ElTextFieldContentType.numeric,
                                 labelText: "Nic Str",
                                 labelPosition: ElTextFieldLabelPosition.left,
-                                value: _targetNicStrController.text,
                                 readOnly: true,
-                                contentType: ElTextFieldContentType.numeric,
                                 suffix: const Text('%'),
                                 onSubmitted: (value) => _updateValues(),
                               ),
@@ -672,12 +685,12 @@ class _MixViewState extends State<MixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _targetVGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "VG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _targetVGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: !_isCustom,
                                       suffix: const Text('%'),
                                       onSubmitted: (value) {
@@ -693,12 +706,12 @@ class _MixViewState extends State<MixView> {
                                   ),
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _targetPGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "PG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _targetPGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: !_isCustom,
                                       suffix: const Text('%'),
                                       onSubmitted: (value) {
@@ -719,7 +732,7 @@ class _MixViewState extends State<MixView> {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       width: sectionWidth,
                       child: Card(
                         shape: RoundedRectangleBorder(

@@ -291,7 +291,9 @@ class _DiyMixViewState extends State<DiyMixView> {
         ),
         Expanded(
           child: ElTextField(
-            value: entry.flavorController.text,
+            controller: TextEditingController(
+              text: entry.flavorController.text,
+            ),
             contentType: ElTextFieldContentType.text,
             labelText: withHeaders ? 'Name' : null,
             onSubmitted: (value) {
@@ -313,7 +315,9 @@ class _DiyMixViewState extends State<DiyMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
-            value: entry.percentageController.text,
+            controller: TextEditingController(
+              text: entry.percentageController.text,
+            ),
             contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
             suffix: const Text('%'),
@@ -422,7 +426,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 ),
                                 const Gap(16.0),
                                 ElTextField(
-                                  value: _volume,
+                                  controller: TextEditingController(
+                                    text: _volume,
+                                  ),
                                   contentType: ElTextFieldContentType.numeric,
                                   labelText: 'Volume',
                                   labelPosition: ElTextFieldLabelPosition.left,
@@ -513,7 +519,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
-                                value: _nicBaseNicStr,
+                                controller: TextEditingController(
+                                  text: _nicBaseNicStr,
+                                ),
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
@@ -531,7 +539,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
-                                      value: _nicBaseVG,
+                                      controller: TextEditingController(
+                                        text: _nicBaseVG,
+                                      ),
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'VG',
@@ -555,7 +565,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                   Expanded(
                                     child: ElTextField(
-                                      value: _nicBasePG,
+                                      controller: TextEditingController(
+                                        text: _nicBasePG,
+                                      ),
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'PG',
@@ -607,7 +619,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
-                                value: _targetNicStr,
+                                controller: TextEditingController(
+                                  text: _targetNicStr,
+                                ),
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
@@ -650,7 +664,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
-                                      value: _targetVG,
+                                      controller: TextEditingController(
+                                        text: _targetVG,
+                                      ),
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'VG',
@@ -674,7 +690,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   ),
                                   Expanded(
                                     child: ElTextField(
-                                      value: _targetPG,
+                                      controller: TextEditingController(
+                                        text: _targetPG,
+                                      ),
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'PG',

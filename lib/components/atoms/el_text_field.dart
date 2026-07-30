@@ -10,7 +10,7 @@ class ElTextField extends StatelessWidget {
   final Widget? label;
   final String? labelText;
   final ElTextFieldLabelPosition? labelPosition;
-  final String value;
+  final TextEditingController controller;
   final bool readOnly;
   final ElTextFieldContentType contentType;
   final Widget? prefix;
@@ -21,11 +21,11 @@ class ElTextField extends StatelessWidget {
 
   const ElTextField({
     super.key,
+    required this.controller,
+    required this.contentType,
     this.label,
     this.labelText,
     this.labelPosition = ElTextFieldLabelPosition.top,
-    required this.value,
-    required this.contentType,
     this.prefix,
     this.suffix,
     this.readOnly = false,
@@ -39,10 +39,16 @@ class ElTextField extends StatelessWidget {
 
     List<String> parts = value.toString().split('.');
 
-    return parts.length > 1 ? parts[1].length : 0;
+    return parts.length > 10
+        ? 10
+        : parts.length > 1
+            ? parts[1].length
+            : 0;
   }
 
   String _formatNumericalText(String value) {
+    if (value == '') return value;
+
     final valueAsDouble = double.parse(value);
 
     final decimalPlaces = _getDecimalPlaces(valueAsDouble);
@@ -52,6 +58,10 @@ class ElTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (contentType == ElTextFieldContentType.numeric) {
+      controller.text = _formatNumericalText(controller.text);
+    }
+
     final alignment = contentType == ElTextFieldContentType.numeric
         ? TextAlign.end
         : TextAlign.start;
@@ -59,10 +69,6 @@ class ElTextField extends StatelessWidget {
     final keyboardType = contentType == ElTextFieldContentType.numeric
         ? TextInputType.number
         : TextInputType.text;
-
-    final controller = contentType == ElTextFieldContentType.numeric
-        ? TextEditingController(text: _formatNumericalText(value))
-        : TextEditingController(text: value);
 
     final rowLabelAlignment = contentType == ElTextFieldContentType.numeric
         ? MainAxisAlignment.end
@@ -78,13 +84,14 @@ class ElTextField extends StatelessWidget {
           );
 
     final textField = TextField(
-      style: GoogleFonts.robotoMonoTextTheme(
-        ThemeData(brightness: Brightness.dark).textTheme,
-      ).bodyMedium,
+      style: GoogleFonts.robotoMono(
+        fontSize: 16,
+      ),
       textAlign: alignment,
       readOnly: readOnly,
       controller: controller,
       keyboardType: keyboardType,
+      onChanged: onChanged,
       onSubmitted: onSubmitted,
       onTapOutside: onTapOutside,
       decoration: InputDecoration(
@@ -157,13 +164,13 @@ class ElTextField extends StatelessWidget {
                           ],
                         )),
               Tooltip(
-                message: value,
+                message: controller.text,
                 child: textField,
               ),
             ],
           )
         : Tooltip(
-            message: value,
+            message: controller.text,
             child: IntrinsicHeight(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

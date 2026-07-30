@@ -143,13 +143,16 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 child: _nicProfile == null
                                     ? const SizedBox()
                                     : ElTextField(
-                                        value: ((_nicProfile?.targetNicStr ??
-                                                    0.0) *
-                                                100)
-                                            .toStringAsFixed(2),
-                                        readOnly: true,
+                                        controller: TextEditingController(
+                                          text: ((_nicProfile?.targetNicStr ??
+                                                      0.0) *
+                                                  100)
+                                              .toStringAsFixed(2),
+                                        ),
                                         contentType:
                                             ElTextFieldContentType.numeric,
+                                        readOnly: true,
+
                                         labelText: 'Nic Str',
                                         // labelPosition:
                                         //     ElTextFieldLabelPosition.left,
@@ -201,10 +204,12 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                       children: [
                                         Expanded(
                                           child: ElTextField(
-                                            readOnly: true,
-                                            value: flavoring.name,
+                                            controller: TextEditingController(
+                                              text: flavoring.name,
+                                            ),
                                             contentType:
                                                 ElTextFieldContentType.text,
+                                            readOnly: true,
                                             labelText: nameLabelText,
                                           ),
                                         ),
@@ -218,13 +223,16 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                 maxWidth: 120,
                                               ),
                                               child: ElTextField(
-                                                readOnly: true,
-                                                value:
-                                                    (flavoring.percentage * 100)
-                                                        .toStringAsFixed(4),
+                                                controller:
+                                                    TextEditingController(
+                                                  text: (flavoring.percentage *
+                                                          100)
+                                                      .toStringAsFixed(4),
+                                                ),
                                                 contentType:
                                                     ElTextFieldContentType
                                                         .numeric,
+                                                readOnly: true,
                                                 labelText: percentageLabelText,
                                                 suffix: const Text('%'),
                                               ),
@@ -267,11 +275,13 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 ),
                                 const Gap(20),
                                 ElTextField(
-                                  readOnly: true,
-                                  value: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
-                                          100)
-                                      .toStringAsFixed(0),
+                                  controller: TextEditingController(
+                                    text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
+                                            100)
+                                        .toStringAsFixed(0),
+                                  ),
                                   contentType: ElTextFieldContentType.numeric,
+                                  readOnly: true,
                                   labelText: "Nic Str",
                                   labelPosition: ElTextFieldLabelPosition.left,
                                   suffix: const Text('%'),
@@ -282,20 +292,22 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   children: [
                                     Expanded(
                                       child: ElTextField(
-                                        readOnly: true,
-                                        value: (nicBases
-                                                    .where((nicBase) =>
-                                                        nicBase.isVG)
-                                                    .fold(
-                                                        0.0,
-                                                        (sum, nicBase) =>
-                                                            sum +
-                                                            nicBase
-                                                                .percentage) *
-                                                100)
-                                            .toStringAsFixed(0),
+                                        controller: TextEditingController(
+                                          text: (nicBases
+                                                      .where((nicBase) =>
+                                                          nicBase.isVG)
+                                                      .fold(
+                                                          0.0,
+                                                          (sum, nicBase) =>
+                                                              sum +
+                                                              nicBase
+                                                                  .percentage) *
+                                                  100)
+                                              .toStringAsFixed(0),
+                                        ),
                                         contentType:
                                             ElTextFieldContentType.numeric,
+                                        readOnly: true,
                                         labelText: 'VG',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
@@ -304,20 +316,22 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     ),
                                     Expanded(
                                       child: ElTextField(
-                                        readOnly: true,
-                                        value: (nicBases
-                                                    .where((nicBase) =>
-                                                        !nicBase.isVG)
-                                                    .fold(
-                                                        0.0,
-                                                        (sum, nicBase) =>
-                                                            sum +
-                                                            nicBase
-                                                                .percentage) *
-                                                100)
-                                            .toStringAsFixed(0),
+                                        controller: TextEditingController(
+                                          text: (nicBases
+                                                      .where((nicBase) =>
+                                                          !nicBase.isVG)
+                                                      .fold(
+                                                          0.0,
+                                                          (sum, nicBase) =>
+                                                              sum +
+                                                              nicBase
+                                                                  .percentage) *
+                                                  100)
+                                              .toStringAsFixed(0),
+                                        ),
                                         contentType:
                                             ElTextFieldContentType.numeric,
+                                        readOnly: true,
                                         labelText: 'PG',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
@@ -349,11 +363,14 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                 children: [
                                                   Expanded(
                                                     child: ElTextField(
-                                                      readOnly: true,
-                                                      value: nicBase.label,
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: nicBase.label,
+                                                      ),
                                                       contentType:
                                                           ElTextFieldContentType
                                                               .text,
+                                                      readOnly: true,
                                                       labelText: index == 0
                                                           ? 'Name'
                                                           : null,
@@ -366,14 +383,17 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                       maxWidth: 120,
                                                     ),
                                                     child: ElTextField(
-                                                      readOnly: true,
-                                                      value: (nicBase
-                                                                  .percentage *
-                                                              100)
-                                                          .toStringAsFixed(0),
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: (nicBase
+                                                                    .percentage *
+                                                                100)
+                                                            .toStringAsFixed(0),
+                                                      ),
                                                       contentType:
                                                           ElTextFieldContentType
                                                               .numeric,
+                                                      readOnly: true,
                                                       labelText: index == 0
                                                           ? 'Percentage'
                                                           : null,
@@ -419,11 +439,13 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 ),
                                 const Gap(20),
                                 ElTextField(
-                                  readOnly: true,
-                                  value:
-                                      ((_nicProfile?.targetNicStr ?? 0.0) * 100)
-                                          .toStringAsFixed(2),
+                                  controller: TextEditingController(
+                                    text: ((_nicProfile?.targetNicStr ?? 0.0) *
+                                            100)
+                                        .toStringAsFixed(2),
+                                  ),
                                   contentType: ElTextFieldContentType.numeric,
+                                  readOnly: true,
                                   labelText: "Nic Str",
                                   labelPosition: ElTextFieldLabelPosition.left,
                                   suffix: const Text("%"),
@@ -434,22 +456,26 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   children: [
                                     Expanded(
                                       child: ElTextField(
-                                        readOnly: true,
-                                        value: ((_nicProfile?.targetVG ?? 0.0) *
-                                                100)
-                                            .toStringAsFixed(_getDecimalPlaces(
-                                                            _nicProfile
-                                                                    ?.targetVG ??
-                                                                0.0) -
-                                                        2 >
-                                                    4
-                                                ? _getDecimalPlaces(
-                                                        _nicProfile?.targetVG ??
-                                                            0.0) -
-                                                    2
-                                                : 4),
+                                        controller: TextEditingController(
+                                          text: ((_nicProfile?.targetVG ??
+                                                      0.0) *
+                                                  100)
+                                              .toStringAsFixed(_getDecimalPlaces(
+                                                              _nicProfile
+                                                                      ?.targetVG ??
+                                                                  0.0) -
+                                                          2 >
+                                                      4
+                                                  ? _getDecimalPlaces(
+                                                          _nicProfile
+                                                                  ?.targetVG ??
+                                                              0.0) -
+                                                      2
+                                                  : 4),
+                                        ),
                                         contentType:
                                             ElTextFieldContentType.numeric,
+                                        readOnly: true,
                                         labelText: "VG",
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
@@ -458,22 +484,26 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     ),
                                     Expanded(
                                       child: ElTextField(
-                                        readOnly: true,
-                                        value: ((_nicProfile?.targetPG ?? 0.0) *
-                                                100)
-                                            .toStringAsFixed(_getDecimalPlaces(
-                                                            _nicProfile
-                                                                    ?.targetPG ??
-                                                                0.0) -
-                                                        2 >
-                                                    4
-                                                ? _getDecimalPlaces(
-                                                        _nicProfile?.targetPG ??
-                                                            0.0) -
-                                                    2
-                                                : 4),
+                                        controller: TextEditingController(
+                                          text: ((_nicProfile?.targetPG ??
+                                                      0.0) *
+                                                  100)
+                                              .toStringAsFixed(_getDecimalPlaces(
+                                                              _nicProfile
+                                                                      ?.targetPG ??
+                                                                  0.0) -
+                                                          2 >
+                                                      4
+                                                  ? _getDecimalPlaces(
+                                                          _nicProfile
+                                                                  ?.targetPG ??
+                                                              0.0) -
+                                                      2
+                                                  : 4),
+                                        ),
                                         contentType:
                                             ElTextFieldContentType.numeric,
+                                        readOnly: true,
                                         labelText: "PG",
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,

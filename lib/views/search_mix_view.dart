@@ -577,10 +577,12 @@ class _SearchMixViewState extends State<SearchMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
+            controller: TextEditingController(
+              text: ((entry.nicBase?.percentage ?? 0.0) * 100).toString(),
+            ),
+            contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
             readOnly: !_isCustomChecked,
-            value: ((entry.nicBase?.percentage ?? 0.0) * 100).toString(),
-            contentType: ElTextFieldContentType.numeric,
             suffix: const Text("%"),
             onSubmitted: (value) {
               setState(() {
@@ -876,25 +878,28 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   right: 12.0,
                                                 ),
                                                 child: ElTextField(
+                                                  controller:
+                                                      TextEditingController(
+                                                    text: _nicProfile != null
+                                                        ? (_nicProfile!.isNewMix
+                                                                ? double.parse(
+                                                                        _targetNicStrController
+                                                                            .text) *
+                                                                    10
+                                                                : double.parse(
+                                                                        _targetNicStrController
+                                                                            .text) *
+                                                                    2.5)
+                                                            .toString()
+                                                        : "",
+                                                  ),
+                                                  contentType:
+                                                      ElTextFieldContentType
+                                                          .numeric,
                                                   readOnly:
                                                       _selectedNicProfValue ==
                                                           null,
                                                   labelText: "Nic Level",
-                                                  value: _nicProfile != null
-                                                      ? (_nicProfile!.isNewMix
-                                                              ? double.parse(
-                                                                      _targetNicStrController
-                                                                          .text) *
-                                                                  10
-                                                              : double.parse(
-                                                                      _targetNicStrController
-                                                                          .text) *
-                                                                  2.5)
-                                                          .toString()
-                                                      : "",
-                                                  contentType:
-                                                      ElTextFieldContentType
-                                                          .numeric,
                                                   suffix: const Text("mg"),
                                                   onSubmitted:
                                                       _selectedNicProfValue !=
@@ -962,15 +967,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 children: [
                                                   const Gap(8.0),
                                                   ElTextField(
+                                                    controller:
+                                                        _volumeController,
+                                                    contentType:
+                                                        ElTextFieldContentType
+                                                            .numeric,
                                                     labelText: "Volume",
                                                     labelPosition:
                                                         ElTextFieldLabelPosition
                                                             .left,
-                                                    contentType:
-                                                        ElTextFieldContentType
-                                                            .numeric,
-                                                    value:
-                                                        _volumeController.text,
                                                     suffix: const Text("mL"),
                                                     onSubmitted: (value) {
                                                       if (value.isEmpty) {
@@ -1030,12 +1035,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   children: [
                                                     Expanded(
                                                       child: ElTextField(
-                                                        readOnly: true,
-                                                        labelText: 'Name',
-                                                        value: flavoring.name,
+                                                        controller:
+                                                            TextEditingController(
+                                                          text: flavoring.name,
+                                                        ),
                                                         contentType:
                                                             ElTextFieldContentType
                                                                 .text,
+                                                        readOnly: true,
+                                                        labelText: 'Name',
                                                       ),
                                                     ),
                                                     const Gap(8.0),
@@ -1047,18 +1055,21 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                         SizedBox(
                                                           width: 140,
                                                           child: ElTextField(
+                                                            controller:
+                                                                TextEditingController(
+                                                              text: (flavoring
+                                                                          .percentage *
+                                                                      100)
+                                                                  .toStringAsFixed(
+                                                                      4),
+                                                            ),
+                                                            contentType:
+                                                                ElTextFieldContentType
+                                                                    .numeric,
                                                             labelText:
                                                                 'Percentage',
                                                             readOnly:
                                                                 !_isCustomChecked,
-                                                            value: (flavoring
-                                                                        .percentage *
-                                                                    100)
-                                                                .toStringAsFixed(
-                                                                    4),
-                                                            contentType:
-                                                                ElTextFieldContentType
-                                                                    .numeric,
                                                             suffix:
                                                                 const Text("%"),
                                                           ),
@@ -1081,11 +1092,14 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 children: [
                                                   Expanded(
                                                     child: ElTextField(
-                                                      readOnly: true,
-                                                      value: flavoring.name,
+                                                      controller:
+                                                          TextEditingController(
+                                                        text: flavoring.name,
+                                                      ),
                                                       contentType:
                                                           ElTextFieldContentType
                                                               .text,
+                                                      readOnly: true,
                                                     ),
                                                   ),
                                                   const Gap(8.0),
@@ -1094,16 +1108,19 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                       SizedBox(
                                                         width: 140,
                                                         child: ElTextField(
-                                                          readOnly:
-                                                              !_isCustomChecked,
-                                                          value: (flavoring
-                                                                      .percentage *
-                                                                  100)
-                                                              .toStringAsFixed(
-                                                                  4),
+                                                          controller:
+                                                              TextEditingController(
+                                                            text: (flavoring
+                                                                        .percentage *
+                                                                    100)
+                                                                .toStringAsFixed(
+                                                                    4),
+                                                          ),
                                                           contentType:
                                                               ElTextFieldContentType
                                                                   .numeric,
+                                                          readOnly:
+                                                              !_isCustomChecked,
                                                           suffix:
                                                               const Text("%"),
                                                         ),
@@ -1150,12 +1167,14 @@ class _SearchMixViewState extends State<SearchMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
+                                controller: TextEditingController(
+                                  text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
+                                          100)
+                                      .toStringAsFixed(0),
+                                ),
+                                contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
-                                value:
-                                    ((_nicProfile?.nicBaseNicStr ?? 0.0) * 100)
-                                        .toStringAsFixed(0),
-                                contentType: ElTextFieldContentType.numeric,
                                 readOnly: true,
                                 suffix: const Text('%'),
                               ),
@@ -1165,24 +1184,24 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _nicBaseVGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "VG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _nicBaseVGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: true,
                                       suffix: const Text('%'),
                                     ),
                                   ),
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _nicBasePGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "PG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _nicBasePGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: true,
                                       suffix: const Text('%'),
                                     ),
@@ -1257,11 +1276,11 @@ class _SearchMixViewState extends State<SearchMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
+                                controller: _targetNicStrController,
+                                contentType: ElTextFieldContentType.numeric,
                                 labelText: "Nic Str",
                                 labelPosition: ElTextFieldLabelPosition.left,
-                                value: _targetNicStrController.text,
                                 readOnly: true,
-                                contentType: ElTextFieldContentType.numeric,
                                 suffix: const Text('%'),
                                 onSubmitted: (value) => _updateValues(),
                               ),
@@ -1271,12 +1290,12 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _targetVGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "VG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _targetVGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: !_isCustomChecked,
                                       suffix: const Text('%'),
                                       onSubmitted: (value) {
@@ -1293,12 +1312,12 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   ),
                                   Expanded(
                                     child: ElTextField(
+                                      controller: _targetPGController,
+                                      contentType:
+                                          ElTextFieldContentType.numeric,
                                       labelText: "PG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      value: _targetPGController.text,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
                                       readOnly: !_isCustomChecked,
                                       suffix: const Text('%'),
                                       onSubmitted: (value) {
