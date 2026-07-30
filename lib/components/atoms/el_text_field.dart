@@ -34,6 +34,22 @@ class ElTextField extends StatelessWidget {
     this.onTapOutside,
   });
 
+  int _getDecimalPlaces(double value) {
+    if (value == value.toInt()) return 0;
+
+    List<String> parts = value.toString().split('.');
+
+    return parts.length > 1 ? parts[1].length : 0;
+  }
+
+  String _formatNumericalText(String value) {
+    final valueAsDouble = double.parse(value);
+
+    final decimalPlaces = _getDecimalPlaces(valueAsDouble);
+
+    return valueAsDouble.toStringAsFixed(decimalPlaces);
+  }
+
   @override
   Widget build(BuildContext context) {
     final alignment = contentType == ElTextFieldContentType.numeric
@@ -43,6 +59,10 @@ class ElTextField extends StatelessWidget {
     final keyboardType = contentType == ElTextFieldContentType.numeric
         ? TextInputType.number
         : TextInputType.text;
+
+    final controller = contentType == ElTextFieldContentType.numeric
+        ? TextEditingController(text: _formatNumericalText(value))
+        : TextEditingController(text: value);
 
     final rowLabelAlignment = contentType == ElTextFieldContentType.numeric
         ? MainAxisAlignment.end
@@ -63,7 +83,7 @@ class ElTextField extends StatelessWidget {
       ).bodyMedium,
       textAlign: alignment,
       readOnly: readOnly,
-      controller: TextEditingController(text: value),
+      controller: controller,
       keyboardType: keyboardType,
       onSubmitted: onSubmitted,
       onTapOutside: onTapOutside,
