@@ -7,10 +7,11 @@ enum ElTextFieldContentType { text, numeric }
 enum ElTextFieldLabelPosition { left, top }
 
 class ElTextField extends StatelessWidget {
-  final Widget? label;
-  final String? labelText;
   final ElTextFieldLabelPosition? labelPosition;
   final TextEditingController controller;
+  final int? decimalPlaces;
+  final Widget? label;
+  final String? labelText;
   final bool readOnly;
   final ElTextFieldContentType contentType;
   final Widget? prefix;
@@ -23,6 +24,7 @@ class ElTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.contentType,
+    this.decimalPlaces,
     this.label,
     this.labelText,
     this.labelPosition = ElTextFieldLabelPosition.top,
@@ -39,11 +41,17 @@ class ElTextField extends StatelessWidget {
 
     List<String> parts = value.toString().split('.');
 
-    return parts.length > 10
-        ? 10
-        : parts.length > 1
-            ? parts[1].length
-            : 0;
+    if (parts.length == 1) return 0;
+
+    int decimalPlaces = parts[1].length;
+
+    if (decimalPlaces.isOdd) {
+      decimalPlaces += 1;
+    }
+
+    return decimalPlaces > 6
+        ? _getDecimalPlaces(double.parse(value.toStringAsFixed(6)))
+        : decimalPlaces;
   }
 
   String _formatNumericalText(String value) {
@@ -51,7 +59,8 @@ class ElTextField extends StatelessWidget {
 
     final valueAsDouble = double.parse(value);
 
-    final decimalPlaces = _getDecimalPlaces(valueAsDouble);
+    final decimalPlaces =
+        this.decimalPlaces ?? _getDecimalPlaces(valueAsDouble);
 
     return valueAsDouble.toStringAsFixed(decimalPlaces);
   }
