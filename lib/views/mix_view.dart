@@ -103,37 +103,20 @@ class _MixViewState extends State<MixView> {
 
   @override
   void initState() {
-    debugPrint("MixView rebuild");
     super.initState();
-    _nicProfile = widget.initialNicProfile;
 
-    _nicLevelController = TextEditingController(
-      text: (_nicProfile == null
-              ? ''
-              : (_nicProfile!.isNewMix
-                  ? _nicProfile!.targetNicStr * 10
-                  : _nicProfile!.targetNicStr * 2.5))
-          .toString(),
-    );
-    _volumeController = TextEditingController(text: "");
-    _nicBaseNicStrController = TextEditingController(
-      text: (_nicProfile == null ? '' : _nicProfile!.nicBaseNicStr * 100)
-          .toString(),
-    );
-    _nicBaseVGController = TextEditingController(text: "");
-    _nicBasePGController = TextEditingController(text: "");
-    _targetNicStrController = TextEditingController(
-      text: (_nicProfile == null ? '' : _nicProfile!.targetNicStr * 100)
-          .toString(),
-    );
-    _targetVGController = TextEditingController(
-      text: (_nicProfile == null ? '' : _nicProfile!.targetVG * 100).toString(),
-    );
-    _targetPGController = TextEditingController(
-      text: (_nicProfile == null ? '' : _nicProfile!.targetPG * 100).toString(),
-    );
+    _volumeController = TextEditingController();
+    _nicLevelController = TextEditingController();
 
-    _calculateTotalNicBaseRatio();
+    _targetNicStrController = TextEditingController();
+    _targetVGController = TextEditingController();
+    _targetPGController = TextEditingController();
+
+    _nicBaseNicStrController = TextEditingController();
+    _nicBaseVGController = TextEditingController();
+    _nicBasePGController = TextEditingController();
+
+    _setNicProfile(widget.initialNicProfile);
   }
 
   @override
@@ -144,24 +127,67 @@ class _MixViewState extends State<MixView> {
     }
   }
 
-  void _calculateTotalNicBaseRatio() {
-    if (_nicProfile != null) {
-      _nicBaseVGController.text = (_nicProfile!.nicBases
-                  .where((nicBase) => nicBase.isVG)
-                  .fold(0.0, (sum, nicbase) => sum + nicbase.percentage) *
-              100)
-          .toString();
-
-      _nicBasePGController.text = (_nicProfile!.nicBases
-                  .where((nicBase) => !nicBase.isVG)
-                  .fold(0.0, (sum, nicbase) => sum + nicbase.percentage) *
-              100)
-          .toString();
+  void _setNicProfile(NicProfile? nicProfile) {
+    if (_nicProfile != nicProfile) {
+      _nicProfile = nicProfile;
     }
+
+    if (_nicProfile == null) return;
+
+    setState(() {
+      _nicLevelController.text =
+          (_nicProfile!.targetNicStr * (_nicProfile!.isNewMix ? 1000.0 : 250))
+              .toString();
+      _nicBaseNicStrController.text =
+          (_nicProfile!.nicBaseNicStr * 100.0).toString();
+      _targetNicStrController.text =
+          (_nicProfile!.targetNicStr * 100.0).toString();
+      _targetVGController.text = (_nicProfile!.targetVG * 100.0).toString();
+      _targetPGController.text = (_nicProfile!.targetPG * 100.0).toString();
+
+      if (_nicBaseEntries.isNotEmpty) {
+        _nicBaseEntries.clear();
+      }
+    });
+
+    _populateNicBase();
   }
 
-  void _updateValues() {
-    // TODO add functionality
+  void _populateNicBase() {
+    if (_nicProfile == null) return;
+
+    for (NicBase nicBase in _nicProfile!.nicBases) {
+      debugPrint(nicBase.toString());
+      _addEntry(
+        NicBaseEntry(
+          nicBase: nicBase,
+          isVG: nicBase.isVG,
+        ),
+      );
+    }
+
+    _calculateTotalNicBaseRatio();
+  }
+
+  void _calculateTotalNicBaseRatio() {
+    _nicBaseVGController.text = (
+      _nicBaseEntries.where((entry) => entry.isVG).fold(0.0,
+          (sum, entry) => sum + double.parse(entry.percentageController.text)),
+    ).toString();
+
+    _nicBasePGController.text = (
+      _nicBaseEntries.where((entry) => !entry.isVG).fold(0.0,
+          (sum, entry) => sum + double.parse(entry.percentageController.text)),
+    ).toString();
+  }
+
+  void _updateRecipe() {}
+
+  void _addEntry(NicBaseEntry entry) {
+    setState(() {
+      _nicBaseEntries.add(entry);
+    });
+    _updateRecipe();
   }
 
   void _removeEntry(NicBaseEntry entry) {
@@ -169,7 +195,7 @@ class _MixViewState extends State<MixView> {
       entry.dispose();
       _nicBaseEntries.remove(entry);
     });
-    _updateValues();
+    _updateRecipe();
   }
 
   Widget _buildEntryRow(NicBaseEntry entry, bool withHeaders) {
@@ -210,10 +236,9 @@ class _MixViewState extends State<MixView> {
                 final nicBaseOption = value;
                 setState(() {
                   entry.isVG = nicBaseOption?.isVG ?? false;
-                  // _ingredients[0] = _nicBaseIngredient;
                   _calculateTotalNicBaseRatio();
                 });
-                _updateValues();
+                _updateRecipe();
               },
             ),
           ),
@@ -257,7 +282,7 @@ class _MixViewState extends State<MixView> {
                         100)
                     .toStringAsFixed(0);
               });
-              _updateValues();
+              _updateRecipe();
             },
           ),
         ),
@@ -396,8 +421,7 @@ class _MixViewState extends State<MixView> {
                                                   setState(() {
                                                     _nicProfile = value;
                                                   });
-
-                                                  // TODO add functionality on nicprofile select
+                                                  _setNicProfile(value);
                                                 },
                                         ),
                                       ),
@@ -421,7 +445,19 @@ class _MixViewState extends State<MixView> {
                                                     !_isCustom
                                                 ? null
                                                 : (value) {
-                                                    // TODO add funtionality
+                                                    if (_nicProfile != null) {
+                                                      double targetNicStr =
+                                                          double.parse(value) /
+                                                              (_nicProfile!
+                                                                      .isNewMix
+                                                                  ? 10
+                                                                  : 2.5);
+
+                                                      _targetNicStrController
+                                                              .text =
+                                                          targetNicStr
+                                                              .toString();
+                                                    }
                                                   },
                                           ),
                                         ),
@@ -438,7 +474,7 @@ class _MixViewState extends State<MixView> {
                                                 });
 
                                                 if (value == false) {
-                                                  // TODO reset nicprofile
+                                                  _setNicProfile(_nicProfile);
                                                 }
                                               },
                                       ),
@@ -636,11 +672,13 @@ class _MixViewState extends State<MixView> {
                                         ),
                                         const Gap(16.0),
                                         Column(
+                                          spacing: 8.0,
                                           children: List.generate(
                                               _nicBaseEntries.length, (index) {
                                             return _buildEntryRow(
-                                                _nicBaseEntries[index],
-                                                index == 0);
+                                              _nicBaseEntries[index],
+                                              index == 0,
+                                            );
                                           }),
                                         )
                                       ],
@@ -677,7 +715,6 @@ class _MixViewState extends State<MixView> {
                                 labelPosition: ElTextFieldLabelPosition.left,
                                 readOnly: true,
                                 suffix: const Text('%'),
-                                onSubmitted: (value) => _updateValues(),
                               ),
                               const Gap(8),
                               Row(
@@ -700,7 +737,7 @@ class _MixViewState extends State<MixView> {
                                               (100 - (double.parse(value)))
                                                   .toString();
                                         });
-                                        _updateValues();
+                                        _updateRecipe();
                                       },
                                     ),
                                   ),
@@ -721,7 +758,7 @@ class _MixViewState extends State<MixView> {
                                               (100 - (double.parse(value)))
                                                   .toString();
                                         });
-                                        _updateValues();
+                                        _updateRecipe();
                                       },
                                     ),
                                   ),
