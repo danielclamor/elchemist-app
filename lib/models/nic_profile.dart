@@ -51,4 +51,7 @@ class NicProfile {
   String get newMixLabel => isNewMix ? 'New Mix' : 'Old Mix';
 
   String get label => '$name ($newMixLabel)';
+
+  @override
+  String toString() => 'NicProfile: {name: $fullName}';
 }
