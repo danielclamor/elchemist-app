@@ -1,153 +1,175 @@
+import 'package:elchemist_app/components/atoms/el_recipe_table.dart';
+import 'package:elchemist_app/constants.dart';
+import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
+import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MixRecipeTable extends StatelessWidget {
-  final List<Ingredient> nicBases;
-  final List<Ingredient> flavorings;
-  final Ingredient vg;
-  final Ingredient pg;
+  final double batchVolume;
+  final double nicBaseNicStr;
+  final double targetNicStr;
+  final double targetVG;
+  final double targetPG;
+  final List<NicBaseEntry> nicBaseEntries;
+  final List<Flavoring> flavorings;
 
   const MixRecipeTable({
     super.key,
-    required this.nicBases,
+    required this.batchVolume,
+    required this.targetNicStr,
+    required this.targetVG,
+    required this.targetPG,
+    required this.nicBaseNicStr,
+    required this.nicBaseEntries,
     required this.flavorings,
-    required this.vg,
-    required this.pg,
   });
 
-  List<Ingredient> get _ingredients => [
-        ...nicBases,
-        ...flavorings,
-        vg,
-        pg,
-      ];
+  double get _totalNicBaseRatio => targetNicStr / nicBaseNicStr;
+
+  Ingredient _getVG({
+    required double totalNicBaseRatio,
+    required double totalFlavRatio,
+  }) {
+    final ratio = _getRatio(
+      totalNicBaseRatio,
+      totalFlavRatio,
+      true,
+    );
+
+    final volume = ratio * batchVolume;
+
+    final weight = volume * vgDensity;
+
+    return Ingredient(
+      name: 'VG',
+      percentage: ratio,
+      volume: volume.isNaN ? 0.0 : volume,
+      weight: weight.isNaN ? 0.0 : weight,
+      type: IngredientType.vg,
+    );
+  }
+
+  Ingredient _getPG({
+    required double totalNicBaseRatio,
+    required double totalFlavRatio,
+  }) {
+    final ratio = _getRatio(
+      totalNicBaseRatio,
+      totalFlavRatio,
+      false,
+    );
+
+    final volume = ratio * batchVolume;
+
+    final weight = volume * pgDensity;
+
+    return Ingredient(
+      name: 'PG',
+      percentage: ratio,
+      volume: volume.isNaN ? 0.0 : volume,
+      weight: weight.isNaN ? 0.0 : weight,
+      type: IngredientType.pg,
+    );
+  }
+
+  double _getRatio(
+    double totalNicBaseRatio,
+    double totalFlavRatio,
+    bool isVG,
+  ) {
+    return (isVG ? targetVG : targetPG) -
+        totalFlavRatio +
+        (targetNicStr *
+            (totalNicBaseRatio -
+                (isVG ? targetVG : targetPG) -
+                (totalNicBaseRatio / nicBaseNicStr)));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      border: TableBorder.all(
-        color: Theme.of(context).focusColor,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(4.0),
-        ),
-      ),
-      columnWidths: const {
-        0: FlexColumnWidth(2),
-        1: FlexColumnWidth(1),
-        2: FlexColumnWidth(1),
+    double totalNicBaseVGRatio = 0.0;
+    double totalNicBasePGRatio = 0.0;
+    double totalFlavVGRatio = 0.0;
+    double totalFlavPGRatio = 0.0;
+
+    final List<Ingredient> ingNicBases = nicBaseEntries.map(
+      (entry) {
+        final entryRatio =
+            (double.parse(entry.percentageController.text) / 100);
+
+        final entryMixRatio = _totalNicBaseRatio * entryRatio;
+
+        final entryNicMixRatio = targetNicStr * entryRatio;
+
+        final entryBaseVolume =
+            batchVolume * (entryMixRatio - entryNicMixRatio);
+
+        final entryNicVolume = batchVolume * entryNicMixRatio;
+
+        final entryNicWeight = entryNicVolume * nicDensity;
+
+        double entryWeight = 0.0;
+
+        final nicBase = entry.nicBase;
+
+        if (entry.isVG) {
+          totalNicBaseVGRatio += entryMixRatio;
+          entryWeight = entryNicWeight + (entryBaseVolume * vgDensity);
+        } else {
+          totalNicBasePGRatio += entryMixRatio;
+          entryWeight = entryNicWeight + (entryBaseVolume * pgDensity);
+        }
+
+        return Ingredient(
+          name:
+              'Nicotine Base${nicBase?.code != null ? ' (${nicBase?.code})' : ''}',
+          percentage: entryMixRatio * 100,
+          volume: entryBaseVolume + entryNicVolume,
+          weight: entryWeight,
+          type: entry.isVG ? IngredientType.vg : IngredientType.pg,
+        );
       },
-      children: [
-        TableRow(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-          ),
-          children: const [
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'Ingredient',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'Volume',
-                textAlign: TextAlign.right,
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'Weight',
-                textAlign: TextAlign.right,
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ],
-        ),
-        for (final ingredient in _ingredients)
-          TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  ingredient.name,
-                  style: GoogleFonts.robotoMono(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  '${ingredient.volume.toStringAsFixed(2)} mL',
-                  textAlign: TextAlign.right,
-                  style: GoogleFonts.robotoMono(
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  '${ingredient.weight.toStringAsFixed(2)} g',
-                  textAlign: TextAlign.right,
-                  style: GoogleFonts.robotoMono(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        TableRow(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                width: 2,
-                color: Theme.of(context).focusColor,
-              ),
-            ),
-          ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                'Sum',
-                style: GoogleFonts.robotoMono(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                '${_ingredients.fold(0.0, (sum, ingredient) => ingredient.volume).toStringAsFixed(2)} mL',
-                textAlign: TextAlign.right,
-                style: GoogleFonts.robotoMono(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                '${_ingredients.fold(0.0, (sum, ingredient) => ingredient.weight).toStringAsFixed(2)} g',
-                textAlign: TextAlign.right,
-                style: GoogleFonts.robotoMono(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+    ).toList();
+
+    final List<Ingredient> ingFlavorings = flavorings.map(
+      (flavor) {
+        final volume = flavor.percentage * batchVolume;
+        double weight = 0.0;
+
+        if (flavor.isVG) {
+          totalFlavVGRatio += flavor.percentage;
+          weight = volume * vgFlavDensity;
+        } else {
+          totalFlavPGRatio += flavor.percentage;
+          weight = volume * pgFlavDensity;
+        }
+
+        return Ingredient(
+          name: flavor.name,
+          percentage: flavor.percentage,
+          volume: volume,
+          weight: weight,
+          type: flavor.isVG ? IngredientType.vgFlavor : IngredientType.pgFlavor,
+        );
+      },
+    ).toList();
+
+    List<Ingredient> ingredients = [
+      ...ingNicBases,
+      ...ingFlavorings,
+      _getVG(
+        totalNicBaseRatio: totalNicBaseVGRatio,
+        totalFlavRatio: totalFlavVGRatio,
+      ),
+      _getPG(
+        totalNicBaseRatio: totalNicBasePGRatio,
+        totalFlavRatio: totalFlavPGRatio,
+      )
+    ];
+
+    return ElRecipeTable(
+      ingredients: ingredients,
     );
   }
 }
