@@ -14,13 +14,12 @@ import 'package:gap/gap.dart';
 class NicBaseEntry {
   NicBaseEntry({
     NicBase? nicBase,
-    bool? isVG,
   })  : id = UniqueKey(),
         nicBase = nicBase,
         percentageController = TextEditingController(
           text: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
         ),
-        isVG = isVG ?? false;
+        isVG = nicBase?.isVG ?? false;
 
   final Key id;
   final NicBase? nicBase;
@@ -141,7 +140,6 @@ class _MixViewState extends State<MixView> {
       _addEntry(
         NicBaseEntry(
           nicBase: nicBase,
-          isVG: nicBase.isVG,
         ),
       );
     }
