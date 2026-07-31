@@ -28,14 +28,19 @@ class MixRecipeTable extends StatelessWidget {
   double get _totalNicBaseRatio => targetNicStr / nicBaseNicStr;
 
   Ingredient _getVG({
-    required double totalNicBaseRatio,
-    required double totalFlavRatio,
+    required double totalNicBaseMixRatio,
+    required double totalFlavMixRatio,
   }) {
+    debugPrint('vg total nb $totalNicBaseMixRatio');
+    debugPrint('vg total flav $totalFlavMixRatio');
+
     final ratio = _getRatio(
-      totalNicBaseRatio,
-      totalFlavRatio,
+      totalNicBaseMixRatio,
+      totalFlavMixRatio,
       true,
     );
+
+    debugPrint('vg $ratio');
 
     final volume = ratio * batchVolume;
 
@@ -51,14 +56,19 @@ class MixRecipeTable extends StatelessWidget {
   }
 
   Ingredient _getPG({
-    required double totalNicBaseRatio,
-    required double totalFlavRatio,
+    required double totalNicBaseMixRatio,
+    required double totalFlavMixRatio,
   }) {
+    debugPrint('pg total nb $totalNicBaseMixRatio');
+    debugPrint('pg total flav $totalFlavMixRatio');
+
     final ratio = _getRatio(
-      totalNicBaseRatio,
-      totalFlavRatio,
+      totalNicBaseMixRatio,
+      totalFlavMixRatio,
       false,
     );
+
+    debugPrint('pg $ratio');
 
     final volume = ratio * batchVolume;
 
@@ -74,16 +84,18 @@ class MixRecipeTable extends StatelessWidget {
   }
 
   double _getRatio(
-    double totalNicBaseRatio,
-    double totalFlavRatio,
+    double totalNicBaseMixRatio,
+    double totalFlavMixRatio,
     bool isVG,
   ) {
-    return (isVG ? targetVG : targetPG) -
-        totalFlavRatio +
+    final baseComponent = isVG ? targetVG : targetPG;
+
+    return baseComponent -
+        totalFlavMixRatio +
         (targetNicStr *
-            (totalNicBaseRatio -
-                (isVG ? targetVG : targetPG) -
-                (totalNicBaseRatio / nicBaseNicStr)));
+            (totalNicBaseMixRatio -
+                baseComponent -
+                (totalNicBaseMixRatio / nicBaseNicStr)));
   }
 
   @override
@@ -114,10 +126,10 @@ class MixRecipeTable extends StatelessWidget {
         final nicBase = entry.nicBase;
 
         if (entry.isVG) {
-          totalNicBaseVGRatio += entryMixRatio;
+          totalNicBaseVGRatio += entryRatio;
           entryWeight = entryNicWeight + (entryBaseVolume * vgDensity);
         } else {
-          totalNicBasePGRatio += entryMixRatio;
+          totalNicBasePGRatio += entryRatio;
           entryWeight = entryNicWeight + (entryBaseVolume * pgDensity);
         }
 
@@ -159,12 +171,12 @@ class MixRecipeTable extends StatelessWidget {
       ...ingNicBases,
       ...ingFlavorings,
       _getVG(
-        totalNicBaseRatio: totalNicBaseVGRatio,
-        totalFlavRatio: totalFlavVGRatio,
+        totalNicBaseMixRatio: totalNicBaseVGRatio,
+        totalFlavMixRatio: totalFlavVGRatio,
       ),
       _getPG(
-        totalNicBaseRatio: totalNicBasePGRatio,
-        totalFlavRatio: totalFlavPGRatio,
+        totalNicBaseMixRatio: totalNicBasePGRatio,
+        totalFlavMixRatio: totalFlavPGRatio,
       )
     ];
 
