@@ -24,12 +24,10 @@ class NicBaseEntry {
   final Key id;
   NicBase? nicBase;
   final TextEditingController percentageController;
-  final FocusNode percentageFocusNode = FocusNode();
   bool isVG;
 
   void dispose() {
     percentageController.dispose();
-    percentageFocusNode.dispose();
   }
 
   String get code => nicBase?.code ?? '';
