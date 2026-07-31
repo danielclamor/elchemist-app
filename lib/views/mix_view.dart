@@ -166,9 +166,9 @@ class _MixViewState extends State<MixView> {
     });
   }
 
-  void _addEntry(NicBaseEntry entry) {
+  void _addEntry(NicBaseEntry? entry) {
     setState(() {
-      _nicBaseEntries.add(entry);
+      _nicBaseEntries.add(entry ?? NicBaseEntry());
     });
   }
 
@@ -406,11 +406,12 @@ class _MixViewState extends State<MixView> {
                                                                       .isNewMix
                                                                   ? 10
                                                                   : 2.5);
-
-                                                      _targetNicStrController
-                                                              .text =
-                                                          targetNicStr
-                                                              .toString();
+                                                      setState(() {
+                                                        _targetNicStrController
+                                                                .text =
+                                                            targetNicStr
+                                                                .toString();
+                                                      });
                                                     }
                                                   },
                                           ),
@@ -634,6 +635,24 @@ class _MixViewState extends State<MixView> {
                                         )
                                       ],
                                     ),
+                              _isCustom &&
+                                      double.parse(
+                                              _targetNicStrController.text) >
+                                          0.0
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () => _addEntry(null),
+                                            child: const Text("+ Add"),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
                             ],
                           ),
                         ),
