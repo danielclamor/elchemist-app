@@ -253,7 +253,7 @@ class _MixViewState extends State<MixView> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    var wrapperWidth = screenSize.width < 1920 ? 500.0 : null;
+    var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
     var sectionWidth = 500.0;
     var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 400.0;
 
@@ -268,27 +268,24 @@ class _MixViewState extends State<MixView> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    "Search and Mix",
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-              const Gap(24),
-              Container(
-                constraints: BoxConstraints(
-                  maxWidth: wrapperWidth ?? double.infinity,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            constraints: BoxConstraints(
+              maxWidth: wrapperWidth ?? double.infinity,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Mix",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Wrap(
+                const Gap(24),
+                Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 20.0,
                   runSpacing: 8.0,
@@ -767,8 +764,8 @@ class _MixViewState extends State<MixView> {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
