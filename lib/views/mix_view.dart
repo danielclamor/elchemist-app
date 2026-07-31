@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
@@ -7,7 +5,6 @@ import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/mix_recipe_table.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
-import 'package:elchemist_app/models/ingredient.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
@@ -85,36 +82,20 @@ class _MixViewState extends State<MixView> {
         _targetPGController,
       ];
 
-  final Ingredient _recipeVG = Ingredient(
-    name: 'VG',
-    percentage: 0.0,
-    volume: 0.0,
-    weight: 0.0,
-    type: IngredientType.vg,
-  );
-
-  final Ingredient _recipePG = Ingredient(
-    name: 'PG',
-    percentage: 0.0,
-    volume: 0.0,
-    weight: 0.0,
-    type: IngredientType.pg,
-  );
-
   @override
   void initState() {
     super.initState();
 
-    _volumeController = TextEditingController();
-    _nicLevelController = TextEditingController();
+    _volumeController = TextEditingController(text: "0");
+    _nicLevelController = TextEditingController(text: "0");
 
-    _targetNicStrController = TextEditingController();
-    _targetVGController = TextEditingController();
-    _targetPGController = TextEditingController();
+    _targetNicStrController = TextEditingController(text: "0");
+    _targetVGController = TextEditingController(text: "0");
+    _targetPGController = TextEditingController(text: "0");
 
-    _nicBaseNicStrController = TextEditingController();
-    _nicBaseVGController = TextEditingController();
-    _nicBasePGController = TextEditingController();
+    _nicBaseNicStrController = TextEditingController(text: "0");
+    _nicBaseVGController = TextEditingController(text: "0");
+    _nicBasePGController = TextEditingController(text: "0");
 
     _setNicProfile(widget.initialNicProfile);
   }
@@ -157,7 +138,6 @@ class _MixViewState extends State<MixView> {
     if (_nicProfile == null) return;
 
     for (NicBase nicBase in _nicProfile!.nicBases) {
-      debugPrint(nicBase.toString());
       _addEntry(
         NicBaseEntry(
           nicBase: nicBase,
@@ -170,24 +150,30 @@ class _MixViewState extends State<MixView> {
   }
 
   void _calculateTotalNicBaseRatio() {
-    _nicBaseVGController.text = (
-      _nicBaseEntries.where((entry) => entry.isVG).fold(0.0,
-          (sum, entry) => sum + double.parse(entry.percentageController.text)),
-    ).toString();
+    double totalNicBaseVGPerc = _nicBaseEntries
+        .where((entry) => entry.isVG)
+        .fold(
+            0.0,
+            (sum, entry) =>
+                sum + double.parse(entry.percentageController.text));
 
-    _nicBasePGController.text = (
-      _nicBaseEntries.where((entry) => !entry.isVG).fold(0.0,
-          (sum, entry) => sum + double.parse(entry.percentageController.text)),
-    ).toString();
+    double totalNicBasePGPerc = _nicBaseEntries
+        .where((entry) => !entry.isVG)
+        .fold(
+            0.0,
+            (sum, entry) =>
+                sum + double.parse(entry.percentageController.text));
+
+    setState(() {
+      _nicBaseVGController.text = totalNicBaseVGPerc.toString();
+      _nicBasePGController.text = totalNicBasePGPerc.toString();
+    });
   }
-
-  void _updateRecipe() {}
 
   void _addEntry(NicBaseEntry entry) {
     setState(() {
       _nicBaseEntries.add(entry);
     });
-    _updateRecipe();
   }
 
   void _removeEntry(NicBaseEntry entry) {
@@ -195,7 +181,6 @@ class _MixViewState extends State<MixView> {
       entry.dispose();
       _nicBaseEntries.remove(entry);
     });
-    _updateRecipe();
   }
 
   Widget _buildEntryRow(NicBaseEntry entry, bool withHeaders) {
@@ -236,9 +221,8 @@ class _MixViewState extends State<MixView> {
                 final nicBaseOption = value;
                 setState(() {
                   entry.isVG = nicBaseOption?.isVG ?? false;
-                  _calculateTotalNicBaseRatio();
                 });
-                _updateRecipe();
+                _calculateTotalNicBaseRatio();
               },
             ),
           ),
@@ -253,36 +237,7 @@ class _MixViewState extends State<MixView> {
             readOnly: !_isCustom,
             suffix: const Text("%"),
             onSubmitted: (value) {
-              setState(() {
-                entry.nicBase?.percentage = double.parse(value);
-
-                _nicBaseVGController.text = (_nicBaseEntries
-                            .where((nicBaseEntry) => nicBaseEntry.isVG)
-                            .fold(
-                              0.0,
-                              (sum, nicBaseEntry) =>
-                                  sum +
-                                  (double.parse(nicBaseEntry
-                                          .percentageController.text) /
-                                      100),
-                            ) *
-                        100)
-                    .toStringAsFixed(0);
-
-                _nicBasePGController.text = (_nicBaseEntries
-                            .where((nicBaseEntry) => !nicBaseEntry.isVG)
-                            .fold(
-                              0.0,
-                              (sum, nicBaseEntry) =>
-                                  sum +
-                                  (double.parse(nicBaseEntry
-                                          .percentageController.text) /
-                                      100),
-                            ) *
-                        100)
-                    .toStringAsFixed(0);
-              });
-              _updateRecipe();
+              _calculateTotalNicBaseRatio();
             },
           ),
         ),
@@ -480,26 +435,23 @@ class _MixViewState extends State<MixView> {
                                       ),
                                     ],
                                   ),
-                                  _nicProfile == null
-                                      ? const SizedBox.shrink()
-                                      : Column(
-                                          children: [
-                                            const Gap(8.0),
-                                            ElTextField(
-                                              controller: _volumeController,
-                                              contentType:
-                                                  ElTextFieldContentType
-                                                      .numeric,
-                                              labelText: 'Volume',
-                                              labelPosition:
-                                                  ElTextFieldLabelPosition.left,
-                                              suffix: const Text('mL'),
-                                              onSubmitted: (value) {
-                                                setState(() {});
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                                  Column(
+                                    children: [
+                                      const Gap(8.0),
+                                      ElTextField(
+                                        controller: _volumeController,
+                                        contentType:
+                                            ElTextFieldContentType.numeric,
+                                        labelText: 'Volume',
+                                        labelPosition:
+                                            ElTextFieldLabelPosition.left,
+                                        suffix: const Text('mL'),
+                                        onSubmitted: (value) {
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -737,7 +689,6 @@ class _MixViewState extends State<MixView> {
                                               (100 - (double.parse(value)))
                                                   .toString();
                                         });
-                                        _updateRecipe();
                                       },
                                     ),
                                   ),
@@ -758,7 +709,6 @@ class _MixViewState extends State<MixView> {
                                               (100 - (double.parse(value)))
                                                   .toString();
                                         });
-                                        _updateRecipe();
                                       },
                                     ),
                                   ),
@@ -793,60 +743,22 @@ class _MixViewState extends State<MixView> {
                               ),
                               const Gap(24),
                               MixRecipeTable(
-                                nicBases: _nicBaseEntries.map((entry) {
-                                  final percentage = (double.parse(
-                                              _targetNicStrController.text) *
-                                          double.parse(
-                                              _nicBaseNicStrController.text)) *
-                                      double.parse(
-                                          entry.percentageController.text);
-
-                                  final volume = _volumeController.text == ""
-                                      ? 0.0
-                                      : percentage *
-                                          double.parse(_volumeController.text);
-
-                                  final nicBase = entry.nicBase;
-                                  final weight = nicBase == null
-                                      ? 0.0
-                                      : volume *
-                                          (nicBase.isVG
-                                              ? vgDensity
-                                              : pgDensity);
-
-                                  return Ingredient(
-                                    name: entry.nicBase?.label ?? '',
-                                    percentage: percentage,
-                                    volume: volume,
-                                    weight: weight,
-                                    type: IngredientType.nicotine,
-                                  );
-                                }).toList(),
-                                flavorings: flavorings.map(
-                                  (flavor) {
-                                    final volume = _volumeController.text == ""
-                                        ? 0.0
-                                        : flavor.percentage *
-                                            double.parse(
-                                              _volumeController.text,
-                                            );
-
-                                    final weight = volume *
-                                        (flavor.isVG ? vgDensity : pgDensity);
-
-                                    return Ingredient(
-                                      name: flavor.name,
-                                      percentage: flavor.percentage,
-                                      volume: volume,
-                                      weight: weight,
-                                      type: flavor.isVG
-                                          ? IngredientType.vgFlavor
-                                          : IngredientType.pgFlavor,
-                                    );
-                                  },
-                                ).toList(),
-                                vg: _recipeVG,
-                                pg: _recipePG,
+                                batchVolume:
+                                    double.parse(_volumeController.text),
+                                nicBaseNicStr: double.parse(
+                                        _nicBaseNicStrController.text) /
+                                    100,
+                                targetNicStr:
+                                    double.parse(_targetNicStrController.text) /
+                                        100,
+                                targetVG:
+                                    double.parse(_targetVGController.text) /
+                                        100,
+                                targetPG:
+                                    double.parse(_targetPGController.text) /
+                                        100,
+                                nicBaseEntries: _nicBaseEntries,
+                                flavorings: flavorings,
                               ),
                             ],
                           ),
