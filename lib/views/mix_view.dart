@@ -22,7 +22,7 @@ class NicBaseEntry {
         isVG = nicBase?.isVG ?? false;
 
   final Key id;
-  final NicBase? nicBase;
+  NicBase? nicBase;
   final TextEditingController percentageController;
   final FocusNode percentageFocusNode = FocusNode();
   bool isVG;
@@ -33,6 +33,8 @@ class NicBaseEntry {
   }
 
   String get code => nicBase?.code ?? '';
+
+  double get ratio => double.parse(percentageController.text) / 100;
 }
 
 class MixView extends StatefulWidget {
@@ -148,19 +150,15 @@ class _MixViewState extends State<MixView> {
   }
 
   void _calculateTotalNicBaseRatio() {
-    double totalNicBaseVGPerc = _nicBaseEntries
-        .where((entry) => entry.isVG)
-        .fold(
-            0.0,
-            (sum, entry) =>
-                sum + double.parse(entry.percentageController.text));
+    double totalNicBaseVGPerc = (_nicBaseEntries
+            .where((entry) => entry.isVG)
+            .fold(0.0, (sum, entry) => sum + entry.ratio)) *
+        100;
 
-    double totalNicBasePGPerc = _nicBaseEntries
-        .where((entry) => !entry.isVG)
-        .fold(
-            0.0,
-            (sum, entry) =>
-                sum + double.parse(entry.percentageController.text));
+    double totalNicBasePGPerc = (_nicBaseEntries
+            .where((entry) => !entry.isVG)
+            .fold(0.0, (sum, entry) => sum + entry.ratio)) *
+        100;
 
     setState(() {
       _nicBaseVGController.text = totalNicBaseVGPerc.toString();
@@ -217,8 +215,14 @@ class _MixViewState extends State<MixView> {
               ),
               onSelected: (value) {
                 final nicBaseOption = value;
+                if (nicBaseOption == null) return;
+
                 setState(() {
-                  entry.isVG = nicBaseOption?.isVG ?? false;
+                  entry.nicBase = NicBase(
+                    nicBase: nicBaseOption,
+                    percentage: entry.ratio,
+                  );
+                  entry.isVG = nicBaseOption.isVG;
                 });
                 _calculateTotalNicBaseRatio();
               },
