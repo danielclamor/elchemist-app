@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
-import 'package:elchemist_app/components/organisms/recipe_table.dart';
+import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
@@ -844,7 +844,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ),
                       ),
                     ),
-                    RecipeTable(
+                    RecipeSection(
                       width: sectionWidth,
                       ingredients: MixRecipeCalculator(
                         batchVolume: double.parse(_volumeController.text),

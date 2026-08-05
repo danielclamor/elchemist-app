@@ -3,11 +3,11 @@ import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RecipeTable extends StatelessWidget {
+class RecipeSection extends StatelessWidget {
   final double? width;
   final List<Ingredient> ingredients;
 
-  const RecipeTable({
+  const RecipeSection({
     super.key,
     this.width,
     required this.ingredients,
