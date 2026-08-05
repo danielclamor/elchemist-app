@@ -2,52 +2,15 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/mix_recipe_table.dart';
 import 'package:elchemist_app/constants.dart';
-import 'package:elchemist_app/value_getters.dart';
 import 'package:elchemist_app/models/flavoring.dart';
-import 'package:elchemist_app/models/ingredient.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-class NicBaseEntry {
-  NicBaseEntry({
-    NicBase? nicBase,
-    bool? isVG,
-  })  : id = UniqueKey(),
-        nicBase = nicBase,
-        nicBaseController = TextEditingController(
-          text: nicBase?.label,
-        ),
-        percentageController = TextEditingController(
-          text: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
-        ),
-        isVG = isVG ?? false;
-
-  final Key id;
-  final NicBase? nicBase;
-  final TextEditingController nicBaseController;
-  final TextEditingController percentageController;
-  final FocusNode percentageFocusNode = FocusNode();
-  bool isVG;
-
-  void dispose() {
-    nicBaseController.dispose();
-    percentageController.dispose();
-    percentageFocusNode.dispose();
-  }
-
-  String get code {
-    final label = nicBaseController.text;
-    final RegExp labelPattern = RegExp(r'^(.*)\((.+)\)$');
-
-    final match = labelPattern.firstMatch(label.trim());
-    if (match == null) return "";
-    return match.group(2)!.trim();
-  }
-}
 
 class SearchMixView extends StatefulWidget {
   final List<Formula> formulas;
@@ -66,67 +29,37 @@ class _SearchMixViewState extends State<SearchMixView> {
       .map((option) => NicBaseOption.fromMap(option))
       .toList();
 
+  final List<NicBaseEntry> _nicBaseEntries = [];
+
   Formula? _formula;
-  String? _selectedNicProfValue;
   NicProfile? _nicProfile;
-  bool _isCustomChecked = false;
+  bool _isCustom = false;
 
   late SearchController _searchController;
+  late TextEditingController _nicLevelController;
   late TextEditingController _volumeController;
-  late TextEditingController _targetNicStrController;
-  late TextEditingController _targetVGController;
-  late TextEditingController _targetPGController;
   late TextEditingController _nicBaseNicStrController;
   late TextEditingController _nicBaseVGController;
   late TextEditingController _nicBasePGController;
+  late TextEditingController _targetNicStrController;
+  late TextEditingController _targetVGController;
+  late TextEditingController _targetPGController;
 
   List<TextEditingController> get _allControllers => [
-        _searchController,
+        _nicLevelController,
         _volumeController,
-        _targetNicStrController,
-        _targetVGController,
-        _targetPGController,
         _nicBaseNicStrController,
         _nicBaseVGController,
         _nicBasePGController,
+        _targetNicStrController,
+        _targetVGController,
+        _targetPGController
       ];
-
-  final List<NicBaseEntry> _nicBaseEntries = [];
-  final List<Flavoring> _flavorings = [];
-
-  final FocusNode _volumeFocusNode = FocusNode();
-  String _prevVolumeText = "";
-  bool _hasVolumeChanged = false;
-
-  List<Ingredient> _ingredients = <Ingredient>[
-    Ingredient(
-      name: "VG",
-      percentage: 0.0,
-      volume: 0.0,
-      weight: 0.0,
-      type: IngredientType.vg,
-    ),
-    Ingredient(
-      name: "PG",
-      percentage: 0.0,
-      volume: 0.0,
-      weight: 0.0,
-      type: IngredientType.pg,
-    ),
-  ];
 
   @override
   void initState() {
     _searchController = SearchController();
-    _volumeController = TextEditingController();
-    _targetNicStrController = TextEditingController(text: "0");
-    _targetVGController = TextEditingController(text: "0");
-    _targetPGController = TextEditingController(text: "0");
-    _nicBaseNicStrController = TextEditingController(text: "0");
-    _nicBaseVGController = TextEditingController(text: "0");
-    _nicBasePGController = TextEditingController(text: "0");
-
-    _volumeFocusNode.addListener(_handleVolumeFocusChange);
+    _setNicProfile(null);
 
     super.initState();
   }
@@ -140,359 +73,86 @@ class _SearchMixViewState extends State<SearchMixView> {
     super.dispose();
   }
 
-  void _handleVolumeFocusChange() {
-    if (_volumeFocusNode.hasFocus) {
-      _prevVolumeText = _volumeController.text;
-      _volumeController.clear();
-      _hasVolumeChanged = false;
-    } else {
-      if (!_hasVolumeChanged) {
-        setState(() {
-          _volumeController.text = _prevVolumeText;
-        });
-      }
-    }
-  }
-
-  int _getDecimalPlaces(String value) {
-    double doubleValue = double.parse(value);
-
-    if (doubleValue == doubleValue.toInt()) return 0;
-
-    List<String> parts = value.split('.');
-
-    return parts.length > 1 ? parts[1].length : 0;
-  }
-
-  (double, double, double) _getNicBaseValues() {
-    final double volume = _volumeController.text == ""
-        ? 0.0
-        : double.parse(_volumeController.text);
-
-    final double targetNicStr = _targetNicStrController.text != ""
-        ? double.parse(_targetNicStrController.text) / 100
-        : 0.0;
-
-    final double nicBaseNicStr = _nicBaseNicStrController.text != ""
-        ? double.parse(_nicBaseNicStrController.text) / 100
-        : 0.0;
-
-    double nicBaseVGVol = _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
-          0.0,
-          (sum, nicBase) =>
-              sum +
-              nicBaseCompVol(
-                volume,
-                targetNicStr,
-                nicBaseNicStr,
-                double.parse(nicBase.percentageController.text) / 100,
-              ),
-        );
-
-    double nicBasePGVol =
-        _nicBaseEntries.where((nicBase) => !nicBase.isVG).fold(
-              0.0,
-              (sum, nicBase) =>
-                  sum +
-                  nicBaseCompVol(
-                    volume,
-                    targetNicStr,
-                    nicBaseNicStr,
-                    double.parse(nicBase.percentageController.text) / 100,
-                  ),
-            );
-
-    double nicotineVol = nicVol(
-      volume,
-      targetNicStr,
-    );
-
-    final nicBaseMixPerc = targetNicStr / nicBaseNicStr;
-
-    return (
-      nicBaseMixPerc,
-      nicBaseMixPerc * volume,
-      nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
-    );
-  }
-
-  (double, double, double) _getFlavorValues(bool isVG, double percentage) {
-    final double volume = _volumeController.text == ""
-        ? 0.0
-        : double.parse(_volumeController.text);
-
-    var flavoringVol = flavVol(
-      volume,
-      percentage,
-    );
-
-    return (
-      percentage,
-      flavVol(volume, percentage),
-      isVG ? vgFlavGrams(flavoringVol) : pgFlavGrams(flavoringVol),
-    );
-  }
-
-  (double, double, double) _getVGValues() {
-    final double volume = _volumeController.text == ""
-        ? 0.0
-        : double.parse(_volumeController.text);
-
-    final double targetNicStr = _targetNicStrController.text != ""
-        ? double.parse(_targetNicStrController.text) / 100
-        : 0.0;
-
-    final double targetVG = _targetVGController.text != ""
-        ? double.parse(_targetVGController.text) / 100
-        : 0.0;
-
-    final double nicBaseNicStr = _nicBaseNicStrController.text != ""
-        ? double.parse(_nicBaseNicStrController.text) / 100
-        : 0.0;
-
-    double totalFlavVGPerc = _ingredients
-        .where((ingredient) => ingredient.type == IngredientType.vgFlavor)
-        .fold(0.0, (sum, flavor) => sum + flavor.percentage);
-
-    double nicBaseVGPerc =
-        _nicBaseEntries.where((nicBase) => nicBase.isVG).fold(
-              0.0,
-              (sum, nicBase) =>
-                  sum + (double.parse(nicBase.percentageController.text) / 100),
-            );
-
-    double vgMixPerc = targetVG -
-        totalFlavVGPerc +
-        (targetNicStr *
-            (nicBaseVGPerc - targetVG - (nicBaseVGPerc / nicBaseNicStr)));
-
-    double ingredientVGVol = volume * vgMixPerc;
-
-    return (vgMixPerc, ingredientVGVol, vgGrams(ingredientVGVol));
-  }
-
-  (double, double, double) _getPGValues() {
-    final double volume = _volumeController.text == ""
-        ? 0.0
-        : double.parse(_volumeController.text);
-
-    final double targetNicStr = _targetNicStrController.text != ""
-        ? double.parse(_targetNicStrController.text) / 100
-        : 0.0;
-
-    final double targetPG = _targetPGController.text != ""
-        ? double.parse(_targetPGController.text) / 100
-        : 0.0;
-
-    final double nicBaseNicStr = _nicBaseNicStrController.text != ""
-        ? double.parse(_nicBaseNicStrController.text) / 100
-        : 0.0;
-
-    final double totalFlavPGPerc = _ingredients
-        .where((ingredient) => ingredient.type == IngredientType.pgFlavor)
-        .fold(0.0, (sum, flavor) => sum + flavor.percentage);
-
-    final double nicBasePGPerc =
-        _nicBaseEntries.where((nicBase) => !nicBase.isVG).fold(
-              0.0,
-              (sum, nicBase) =>
-                  sum + (double.parse(nicBase.percentageController.text) / 100),
-            );
-
-    final double pgMixPerc = targetPG -
-        totalFlavPGPerc +
-        (targetNicStr *
-            (nicBasePGPerc - targetPG - (nicBasePGPerc / nicBaseNicStr)));
-
-    final double ingredientPGVol = volume * pgMixPerc;
-
-    return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
-  }
-
   void _changeFormula() {
+    _searchController.clear();
     setState(() {
       _formula = null;
-      _selectedNicProfValue = null;
-      _nicProfile = null;
-      _nicBaseEntries.clear();
-      _isCustomChecked = false;
-      _ingredients = <Ingredient>[
-        Ingredient(
-          name: "VG",
-          percentage: 0.0,
-          volume: 0.0,
-          weight: 0.0,
-          type: IngredientType.vg,
-        ),
-        Ingredient(
-          name: "PG",
-          percentage: 0.0,
-          volume: 0.0,
-          weight: 0.0,
-          type: IngredientType.pg,
-        ),
-      ];
-
-      for (final c in _allControllers) {
-        c.clear();
-      }
+      _setNicProfile(null);
     });
   }
 
-  void _onSelectNicProfile(String? value) {
-    var nicStr = _nicProfile!.targetNicStr * 100;
-    var targetVG = _nicProfile!.targetVG * 100;
-    var targetPG = _nicProfile!.targetPG * 100;
-    var nicBaseNicStr = _nicProfile!.nicBaseNicStr * 100;
-
+  void _setNicProfile(NicProfile? nicProfile) {
     setState(() {
-      _selectedNicProfValue = value;
-      _targetNicStrController.text = nicStr.toStringAsFixed(2);
-      _targetVGController.text = targetVG.toStringAsFixed(4);
-      _targetPGController.text = targetPG.toStringAsFixed(4);
-      _nicBaseNicStrController.text = nicBaseNicStr.toStringAsFixed(0);
-      _nicBaseEntries.clear();
-
-      for (var nicBase in _nicProfile!.nicBases) {
-        _addEntry(nicBase);
+      if (_nicProfile != nicProfile) {
+        _nicProfile = nicProfile;
       }
 
-      _nicBaseVGController
-          .text = (_nicBaseEntries.where((entry) => entry.isVG).fold(
-                    0.0,
-                    (sum, entry) =>
-                        sum +
-                        (double.parse(entry.percentageController.text) / 100),
-                  ) *
-              100)
-          .toStringAsFixed(0);
+      if (_nicProfile == null) {
+        _volumeController = TextEditingController(text: "0");
+        _nicLevelController = TextEditingController(text: "0");
 
-      _nicBasePGController
-          .text = (_nicBaseEntries.where((entry) => !entry.isVG).fold(
-                    0.0,
-                    (sum, entry) =>
-                        sum +
-                        (double.parse(entry.percentageController.text) / 100),
-                  ) *
-              100)
-          .toStringAsFixed(0);
+        _targetNicStrController = TextEditingController(text: "0");
+        _targetVGController = TextEditingController(text: "0");
+        _targetPGController = TextEditingController(text: "0");
 
-      _flavorings.clear();
+        _nicBaseNicStrController = TextEditingController(text: "0");
+        _nicBaseVGController = TextEditingController(text: "0");
+        _nicBasePGController = TextEditingController(text: "0");
+      } else {
+        _nicLevelController.text =
+            (_nicProfile!.targetNicStr * (_nicProfile!.isNewMix ? 1000.0 : 250))
+                .toString();
+        _nicBaseNicStrController.text =
+            (_nicProfile!.nicBaseNicStr * 100.0).toString();
+        _targetNicStrController.text =
+            (_nicProfile!.targetNicStr * 100.0).toString();
+        _targetVGController.text = (_nicProfile!.targetVG * 100.0).toString();
+        _targetPGController.text = (_nicProfile!.targetPG * 100.0).toString();
+      }
 
-      _flavorings.addAll(
-        _nicProfile!.flavorings,
-      );
-
-      _ingredients = _populateIngredients();
+      if (_nicBaseEntries.isNotEmpty) {
+        _nicBaseEntries.clear();
+      }
     });
+
+    _populateNicBase();
   }
 
-  Ingredient get _nicBaseIngredient {
-    var nicBaseTitle =
-        'Nicotine base${_nicBaseEntries.map((nicBase) => ' (${nicBase.code})').join(" / ")}';
+  void _populateNicBase() {
+    if (_nicProfile == null) return;
 
-    var (nicBasePercentage, nicBaseVolume, nicBaseweight) = _getNicBaseValues();
-
-    return Ingredient(
-      name: nicBaseTitle,
-      percentage: nicBasePercentage,
-      volume: nicBaseVolume,
-      weight: nicBaseweight,
-      type: IngredientType.nicotine,
-    );
-  }
-
-  List<Ingredient> _populateIngredients() {
-    _ingredients.removeRange(0, _ingredients.length - 2);
-
-    if (_nicBaseEntries.isNotEmpty) {
-      _ingredients.insert(
-        0,
-        _nicBaseIngredient,
+    for (NicBase nicBase in _nicProfile!.nicBases) {
+      _addEntry(
+        NicBaseEntry(
+          nicBase: nicBase,
+        ),
       );
     }
 
-    if (_flavorings.isNotEmpty) {
-      for (var flavoring in _flavorings) {
-        var (flavoringPerc, flavoringVol, flavoringWeight) = _getFlavorValues(
-          flavoring.isVG,
-          flavoring.percentage,
-        );
-
-        _ingredients.insert(
-          _ingredients.length - 2,
-          Ingredient(
-            name: flavoring.name,
-            percentage: flavoring.percentage,
-            volume: flavoringVol,
-            weight: flavoringWeight,
-            type: flavoring.isVG
-                ? IngredientType.vgFlavor
-                : IngredientType.pgFlavor,
-          ),
-        );
-      }
-    }
-
-    final ingredientVG = _ingredients[_ingredients.length - 2];
-    var (ingredientVGPerc, ingredientVGVol, ingredientVGWeight) =
-        _getVGValues();
-    ingredientVG.percentage = ingredientVGPerc;
-    ingredientVG.volume = ingredientVGVol;
-    ingredientVG.weight = ingredientVGWeight;
-
-    final ingredientPG = _ingredients[_ingredients.length - 1];
-    var (ingredientPGPerc, ingredientPGVol, ingredientPGWeight) =
-        _getPGValues();
-    ingredientPG.percentage = ingredientPGPerc;
-    ingredientPG.volume = ingredientPGVol;
-    ingredientPG.weight = ingredientPGWeight;
-
-    return _ingredients;
+    _calculateTotalNicBaseRatio();
   }
 
-  void _updateValues() {
-    for (Ingredient ingredient in _ingredients) {
-      var (percentage, volume, weight) = (0.0, 0.0, 0.0);
-      switch (ingredient.type) {
-        case IngredientType.nicotine:
-          (percentage, volume, weight) = _getNicBaseValues();
-        case IngredientType.vg:
-          (percentage, volume, weight) = _getVGValues();
-        case IngredientType.pg:
-          (percentage, volume, weight) = _getPGValues();
-        case IngredientType.vgFlavor:
-          (percentage, volume, weight) = _getFlavorValues(
-            true,
-            ingredient.percentage,
-          );
-        case IngredientType.pgFlavor:
-          (percentage, volume, weight) = _getFlavorValues(
-            false,
-            ingredient.percentage,
-          );
-      }
+  void _calculateTotalNicBaseRatio() {
+    double totalNicBaseVGPerc = (_nicBaseEntries
+            .where((entry) => entry.isVG)
+            .fold(0.0, (sum, entry) => sum + entry.ratio)) *
+        100;
 
-      setState(() {
-        ingredient.percentage = percentage;
-        ingredient.volume = volume;
-        ingredient.weight = weight;
-      });
-    }
-  }
+    double totalNicBasePGPerc = (_nicBaseEntries
+            .where((entry) => !entry.isVG)
+            .fold(0.0, (sum, entry) => sum + entry.ratio)) *
+        100;
 
-  void _addEntry(NicBase? nicBase) {
-    final entry = NicBaseEntry(
-      nicBase: nicBase,
-      isVG: nicBase?.isVG,
-    );
-    entry.percentageFocusNode.addListener(() {
-      if (mounted) setState(() {});
-    });
     setState(() {
-      _nicBaseEntries.add(entry);
+      _nicBaseVGController.text = totalNicBaseVGPerc.toString();
+      _nicBasePGController.text = totalNicBasePGPerc.toString();
     });
-    _updateValues();
+  }
+
+  void _addEntry(NicBaseEntry? entry) {
+    setState(() {
+      _nicBaseEntries.add(entry ?? NicBaseEntry());
+    });
   }
 
   void _removeEntry(NicBaseEntry entry) {
@@ -500,7 +160,6 @@ class _SearchMixViewState extends State<SearchMixView> {
       entry.dispose();
       _nicBaseEntries.remove(entry);
     });
-    _updateValues();
   }
 
   Widget _buildEntryRow(NicBaseEntry entry, bool withHeaders) {
@@ -508,7 +167,7 @@ class _SearchMixViewState extends State<SearchMixView> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _isCustomChecked && _nicBaseEntries.length > 1
+        _isCustom && _nicBaseEntries.length > 1
             ? Padding(
                 padding: EdgeInsets.only(top: withHeaders ? 28.0 : 4.0),
                 child: IconButton(
@@ -523,7 +182,7 @@ class _SearchMixViewState extends State<SearchMixView> {
           child: LayoutBuilder(
             builder: (context, constraints) => ElDropdownMenu<NicBaseOption>(
               width: constraints.maxWidth,
-              ignoring: !_isCustomChecked,
+              ignoring: !_isCustom,
               initialSelection: _nicBaseOptions.firstWhereOrNull(
                 (option) => option == entry.nicBase?.nicBase,
               ),
@@ -539,36 +198,15 @@ class _SearchMixViewState extends State<SearchMixView> {
               ),
               onSelected: (value) {
                 final nicBaseOption = value;
-                setState(() {
-                  entry.isVG = nicBaseOption?.isVG ?? false;
-                  _ingredients[0] = _nicBaseIngredient;
-                  _nicBaseVGController.text = (_nicBaseEntries
-                              .where((nicBaseEntry) => nicBaseEntry.isVG)
-                              .fold(
-                                0.0,
-                                (sum, nicBaseEntry) =>
-                                    sum +
-                                    (double.parse(nicBaseEntry
-                                            .percentageController.text) /
-                                        100),
-                              ) *
-                          100)
-                      .toStringAsFixed(0);
+                if (nicBaseOption == null) return;
 
-                  _nicBasePGController.text = (_nicBaseEntries
-                              .where((nicBaseEntry) => !nicBaseEntry.isVG)
-                              .fold(
-                                0.0,
-                                (sum, nicBaseEntry) =>
-                                    sum +
-                                    (double.parse(nicBaseEntry
-                                            .percentageController.text) /
-                                        100),
-                              ) *
-                          100)
-                      .toStringAsFixed(0);
+                setState(() {
+                  entry.nicBase = NicBase(
+                    nicBase: nicBaseOption,
+                    percentage: entry.ratio,
+                  );
                 });
-                _updateValues();
+                _calculateTotalNicBaseRatio();
               },
             ),
           ),
@@ -577,42 +215,13 @@ class _SearchMixViewState extends State<SearchMixView> {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
-            controller: TextEditingController(
-              text: ((entry.nicBase?.percentage ?? 0.0) * 100).toString(),
-            ),
+            controller: entry.percentageController,
             contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
-            readOnly: !_isCustomChecked,
+            readOnly: !_isCustom,
             suffix: const Text("%"),
             onSubmitted: (value) {
-              setState(() {
-                _nicBaseVGController.text = (_nicBaseEntries
-                            .where((nicBaseEntry) => nicBaseEntry.isVG)
-                            .fold(
-                              0.0,
-                              (sum, nicBaseEntry) =>
-                                  sum +
-                                  (double.parse(nicBaseEntry
-                                          .percentageController.text) /
-                                      100),
-                            ) *
-                        100)
-                    .toStringAsFixed(0);
-
-                _nicBasePGController.text = (_nicBaseEntries
-                            .where((nicBaseEntry) => !nicBaseEntry.isVG)
-                            .fold(
-                              0.0,
-                              (sum, nicBaseEntry) =>
-                                  sum +
-                                  (double.parse(nicBaseEntry
-                                          .percentageController.text) /
-                                      100),
-                            ) *
-                        100)
-                    .toStringAsFixed(0);
-              });
-              _updateValues();
+              _calculateTotalNicBaseRatio();
             },
           ),
         ),
@@ -628,41 +237,45 @@ class _SearchMixViewState extends State<SearchMixView> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    var wrapperWidth = screenSize.width < 1920 ? 500.0 : null;
-    var section2Width = screenSize.width < 1920 ? 500.0 : 400.0;
+    var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
+    var sectionWidth = 500.0;
+    var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 400.0;
 
     final List<Formula> formulas = widget.formulas;
 
+    List<Flavoring> flavorings = [];
+
+    if (_nicProfile != null) {
+      flavorings = _nicProfile!.flavorings;
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    "Search and Mix",
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-              const Gap(24),
-              Container(
-                constraints: BoxConstraints(
-                  maxWidth: wrapperWidth ?? double.infinity,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            constraints: BoxConstraints(
+              maxWidth: wrapperWidth ?? double.infinity,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Search and Mix",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Wrap(
+                const Gap(24),
+                Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 20.0,
                   runSpacing: 8.0,
                   children: [
                     Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 500,
+                      constraints: BoxConstraints(
+                        maxWidth: sectionWidth,
                       ),
                       child: Column(
                         children: [
@@ -799,6 +412,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   _formula!.brand.toUpperCase(),
                                                   style: const TextStyle(
                                                     fontSize: 16,
+                                                    color: Colors.grey,
                                                   ),
                                                 ),
                                                 Text(
@@ -812,6 +426,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   '${_formula!.nicType.toString()} — ${_formula!.chilltype.toString()}',
                                                   style: const TextStyle(
                                                     fontSize: 16,
+                                                    color: Colors.grey,
                                                   ),
                                                 ),
                                               ],
@@ -824,7 +439,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             ),
                                           ],
                                         ),
-                                        const Gap(25),
+                                        const Gap(20),
                                         Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -855,16 +470,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   setState(() {
                                                     _nicProfile = value;
                                                   });
-
-                                                  _onSelectNicProfile(
-                                                    value?.name,
-                                                  );
-
-                                                  if (_volumeController.text ==
-                                                      "") {
-                                                    _volumeFocusNode
-                                                        .requestFocus();
-                                                  }
+                                                  _setNicProfile(value);
                                                 },
                                               ),
                                             ),
@@ -879,127 +485,85 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 ),
                                                 child: ElTextField(
                                                   controller:
-                                                      TextEditingController(
-                                                    text: _nicProfile != null
-                                                        ? (_nicProfile!.isNewMix
-                                                                ? double.parse(
-                                                                        _targetNicStrController
-                                                                            .text) *
-                                                                    10
-                                                                : double.parse(
-                                                                        _targetNicStrController
-                                                                            .text) *
-                                                                    2.5)
-                                                            .toString()
-                                                        : "",
-                                                  ),
+                                                      _nicLevelController,
                                                   contentType:
                                                       ElTextFieldContentType
                                                           .numeric,
                                                   readOnly:
-                                                      _selectedNicProfValue ==
-                                                          null,
+                                                      _nicProfile == null ||
+                                                          !_isCustom,
                                                   labelText: "Nic Level",
                                                   suffix: const Text("mg"),
-                                                  onSubmitted:
-                                                      _selectedNicProfValue !=
-                                                              null
-                                                          ? (value) {
-                                                              if (value
-                                                                  .isEmpty) {
-                                                                return;
-                                                              }
-                                                              final bool
-                                                                  isNewMix =
-                                                                  _nicProfile!
-                                                                      .isNewMix;
-
-                                                              setState(() {
-                                                                if (isNewMix) {
-                                                                  _targetNicStrController
-                                                                      .text = (double.parse(
-                                                                              value) /
-                                                                          10)
-                                                                      .toStringAsFixed(
-                                                                          2);
-                                                                } else {
-                                                                  _targetNicStrController
-                                                                      .text = (double.parse(
-                                                                              value) /
-                                                                          2.5)
-                                                                      .toStringAsFixed(
-                                                                          2);
-                                                                }
-                                                              });
-                                                              _updateValues();
-                                                            }
-                                                          : null,
+                                                  onSubmitted: _nicProfile ==
+                                                              null &&
+                                                          !_isCustom
+                                                      ? null
+                                                      : (value) {
+                                                          if (_nicProfile !=
+                                                              null) {
+                                                            double
+                                                                targetNicStr =
+                                                                double.parse(
+                                                                        value) /
+                                                                    (_nicProfile!
+                                                                            .isNewMix
+                                                                        ? 10
+                                                                        : 2.5);
+                                                            setState(() {
+                                                              _targetNicStrController
+                                                                      .text =
+                                                                  targetNicStr
+                                                                      .toString();
+                                                            });
+                                                          }
+                                                        },
                                                 ),
                                               ),
                                             ),
                                             ElCheckbox(
                                               width: 50,
-                                              value: _isCustomChecked,
+                                              value: _isCustom,
                                               labelText: 'Custom',
-                                              onChanged:
-                                                  _selectedNicProfValue != null
-                                                      ? (bool? newValue) {
-                                                          setState(() {
-                                                            _isCustomChecked =
-                                                                newValue ??
-                                                                    false;
-                                                          });
+                                              onChanged: _nicProfile == null
+                                                  ? null
+                                                  : (bool? value) {
+                                                      setState(() {
+                                                        _isCustom =
+                                                            value ?? false;
+                                                      });
 
-                                                          if (newValue ==
-                                                              false) {
-                                                            _onSelectNicProfile(
-                                                              _selectedNicProfValue,
-                                                            );
-                                                          }
-                                                        }
-                                                      : null,
+                                                      if (value == false) {
+                                                        _setNicProfile(
+                                                            _nicProfile);
+                                                      }
+                                                    },
                                             ),
                                           ],
                                         ),
-                                        _selectedNicProfValue == null
-                                            ? const SizedBox.shrink()
-                                            : Column(
-                                                children: [
-                                                  const Gap(8.0),
-                                                  ElTextField(
-                                                    controller:
-                                                        _volumeController,
-                                                    contentType:
-                                                        ElTextFieldContentType
-                                                            .numeric,
-                                                    labelText: "Volume",
-                                                    labelPosition:
-                                                        ElTextFieldLabelPosition
-                                                            .left,
-                                                    suffix: const Text("mL"),
-                                                    onSubmitted: (value) {
-                                                      if (value.isEmpty) {
-                                                        _volumeController.text =
-                                                            _prevVolumeText;
-                                                        return;
-                                                      }
-                                                      setState(() {
-                                                        _volumeController.text =
-                                                            value;
-                                                      });
-                                                      _updateValues();
-                                                      _hasVolumeChanged =
-                                                          value.isNotEmpty;
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
+                                        Column(
+                                          children: [
+                                            const Gap(8.0),
+                                            ElTextField(
+                                              controller: _volumeController,
+                                              contentType:
+                                                  ElTextFieldContentType
+                                                      .numeric,
+                                              labelText: "Volume",
+                                              labelPosition:
+                                                  ElTextFieldLabelPosition.left,
+                                              suffix: const Text("mL"),
+                                              onSubmitted: (value) {
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                             ),
                           ),
                           const Gap(8.0),
-                          _selectedNicProfValue == null
+                          _nicProfile == null
                               ? const SizedBox.shrink()
                               : Card(
                                   shape: RoundedRectangleBorder(
@@ -1023,68 +587,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                         Column(
                                           spacing: 8.0,
                                           children: List.generate(
-                                            _flavorings.length,
+                                            flavorings.length,
                                             (index) {
                                               final flavoring =
-                                                  _flavorings[index];
-                                              if (index == 0) {
-                                                return Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Expanded(
-                                                      child: ElTextField(
-                                                        controller:
-                                                            TextEditingController(
-                                                          text: flavoring.name,
-                                                        ),
-                                                        contentType:
-                                                            ElTextFieldContentType
-                                                                .text,
-                                                        readOnly: true,
-                                                        labelText: 'Name',
-                                                      ),
-                                                    ),
-                                                    const Gap(8.0),
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 140,
-                                                          child: ElTextField(
-                                                            controller:
-                                                                TextEditingController(
-                                                              text: (flavoring
-                                                                          .percentage *
-                                                                      100)
-                                                                  .toStringAsFixed(
-                                                                      4),
-                                                            ),
-                                                            contentType:
-                                                                ElTextFieldContentType
-                                                                    .numeric,
-                                                            labelText:
-                                                                'Percentage',
-                                                            readOnly:
-                                                                !_isCustomChecked,
-                                                            suffix:
-                                                                const Text("%"),
-                                                          ),
-                                                        ),
-                                                        const Gap(12.0),
-                                                        ElCheckbox(
-                                                          labelText: 'VG',
-                                                          value: flavoring.isVG,
-                                                          onChanged: null,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                );
-                                              }
+                                                  flavorings[index];
                                               return Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -1100,10 +606,16 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           ElTextFieldContentType
                                                               .text,
                                                       readOnly: true,
+                                                      labelText: index == 0
+                                                          ? 'Name'
+                                                          : null,
                                                     ),
                                                   ),
                                                   const Gap(8.0),
                                                   Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       SizedBox(
                                                         width: 140,
@@ -1119,14 +631,19 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           contentType:
                                                               ElTextFieldContentType
                                                                   .numeric,
-                                                          readOnly:
-                                                              !_isCustomChecked,
+                                                          labelText: index == 0
+                                                              ? 'Percentage'
+                                                              : null,
+                                                          readOnly: !_isCustom,
                                                           suffix:
                                                               const Text("%"),
                                                         ),
                                                       ),
                                                       const Gap(12.0),
                                                       ElCheckbox(
+                                                        labelText: index == 0
+                                                            ? 'VG'
+                                                            : null,
                                                         value: flavoring.isVG,
                                                         onChanged: null,
                                                       ),
@@ -1144,10 +661,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ],
                       ),
                     ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: section2Width,
-                      ),
+                    SizedBox(
+                      width: midSectionWidth,
                       child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
@@ -1167,11 +682,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
-                                controller: TextEditingController(
-                                  text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
-                                          100)
-                                      .toStringAsFixed(0),
-                                ),
+                                controller: _nicBaseNicStrController,
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
@@ -1213,27 +724,27 @@ class _SearchMixViewState extends State<SearchMixView> {
                                   : Column(
                                       children: [
                                         const Gap(16.0),
-                                        const Divider(
+                                        Divider(
                                           thickness: 1,
+                                          color: Theme.of(context).focusColor,
                                         ),
                                         const Gap(16.0),
                                         Column(
                                           spacing: 8.0,
                                           children: List.generate(
-                                            _nicBaseEntries.length,
-                                            (index) {
-                                              final withHeaders =
-                                                  index == 0 ? true : false;
-                                              return _buildEntryRow(
-                                                _nicBaseEntries[index],
-                                                withHeaders,
-                                              );
-                                            },
-                                          ),
+                                              _nicBaseEntries.length, (index) {
+                                            return _buildEntryRow(
+                                              _nicBaseEntries[index],
+                                              index == 0,
+                                            );
+                                          }),
                                         ),
                                       ],
                                     ),
-                              _isCustomChecked
+                              _isCustom &&
+                                      double.parse(
+                                              _targetNicStrController.text) >
+                                          0.0
                                   ? Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Row(
@@ -1253,10 +764,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ),
                       ),
                     ),
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: section2Width,
-                      ),
+                    SizedBox(
+                      width: midSectionWidth,
                       child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
@@ -1282,7 +791,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 labelPosition: ElTextFieldLabelPosition.left,
                                 readOnly: true,
                                 suffix: const Text('%'),
-                                onSubmitted: (value) => _updateValues(),
                               ),
                               const Gap(8),
                               Row(
@@ -1296,17 +804,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                       labelText: "VG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      readOnly: !_isCustomChecked,
+                                      readOnly: !_isCustom,
                                       suffix: const Text('%'),
                                       onSubmitted: (value) {
                                         setState(() {
                                           _targetVGController.text = value;
                                           _targetPGController.text =
                                               (100 - (double.parse(value)))
-                                                  .toStringAsFixed(
-                                                      _getDecimalPlaces(value));
+                                                  .toString();
                                         });
-                                        _updateValues();
                                       },
                                     ),
                                   ),
@@ -1318,17 +824,15 @@ class _SearchMixViewState extends State<SearchMixView> {
                                       labelText: "PG",
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      readOnly: !_isCustomChecked,
+                                      readOnly: !_isCustom,
                                       suffix: const Text('%'),
                                       onSubmitted: (value) {
                                         setState(() {
                                           _targetPGController.text = value;
                                           _targetVGController.text =
                                               (100 - (double.parse(value)))
-                                                  .toStringAsFixed(
-                                                      _getDecimalPlaces(value));
+                                                  .toString();
                                         });
-                                        _updateValues();
                                       },
                                     ),
                                   ),
@@ -1339,10 +843,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ),
                       ),
                     ),
-                    Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 500,
-                      ),
+                    SizedBox(
+                      width: sectionWidth,
                       child: Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
@@ -1359,95 +861,28 @@ class _SearchMixViewState extends State<SearchMixView> {
                               const Text(
                                 "RECIPE",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const Gap(24),
-                              DataTable(
-                                horizontalMargin: 0.0,
-                                columns: const <DataColumn>[
-                                  DataColumn(
-                                    label: Text(
-                                      "Ingredient",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      "mL",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    numeric: true,
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      "g",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    numeric: true,
-                                  ),
-                                ],
-                                rows: [
-                                  ..._ingredients.map(
-                                    (ingredient) => DataRow(
-                                      cells: [
-                                        DataCell(
-                                          Text(
-                                            ingredient.name,
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            '${ingredient.volume.toStringAsFixed(2)} mL',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            '${ingredient.weight.toStringAsFixed(2)} g',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  DataRow(
-                                    cells: [
-                                      const DataCell(
-                                        Text(
-                                          "Sum",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                              MixRecipeTable(
+                                batchVolume:
+                                    double.parse(_volumeController.text),
+                                nicBaseNicStr: double.parse(
+                                        _nicBaseNicStrController.text) /
+                                    100,
+                                targetNicStr:
+                                    double.parse(_targetNicStrController.text) /
+                                        100,
+                                targetVG:
+                                    double.parse(_targetVGController.text) /
+                                        100,
+                                targetPG:
+                                    double.parse(_targetPGController.text) /
+                                        100,
+                                nicBaseEntries: _nicBaseEntries,
+                                flavorings: flavorings,
                               ),
                             ],
                           ),
@@ -1456,8 +891,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
