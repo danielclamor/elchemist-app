@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
-import 'package:elchemist_app/views/search_mix_view.dart';
+// import 'package:elchemist_app/views/mix_view.dart';
 import 'package:elchemist_app/views/formula_list_view.dart';
+import 'package:elchemist_app/views/search_mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:window_manager/window_manager.dart';
@@ -35,17 +36,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF0E76BD),
+      brightness: Brightness.dark,
+      contrastLevel: 1,
+      dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
+    );
     return MaterialApp(
       title: 'ELChemist',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0E76BD),
-          brightness: Brightness.dark,
-          contrastLevel: 1,
-          dynamicSchemeVariant: DynamicSchemeVariant.vibrant,
-        ),
+        colorScheme: colorScheme,
         textTheme: GoogleFonts.interTextTheme(
           ThemeData(brightness: Brightness.dark).textTheme,
+        ).apply(
+          bodyColor: const Color(0xFFE0E0E0),
         ),
         useMaterial3: true,
       ),
@@ -88,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _widgetOptions = <Widget>[
       const DiyMixView(),
       SearchMixView(formulas: formulas),
+      // MixView(formula: formulas[1]),
       FormulaListView(formulas: formulas),
     ];
 
