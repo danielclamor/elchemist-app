@@ -2,12 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
-import 'package:elchemist_app/components/organisms/mix_recipe_table_section.dart';
+import 'package:elchemist_app/components/organisms/recipe_table.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -843,17 +844,19 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ),
                       ),
                     ),
-                    MixRecipeTable(
+                    RecipeTable(
                       width: sectionWidth,
-                      batchVolume: double.parse(_volumeController.text),
-                      nicBaseNicStr:
-                          double.parse(_nicBaseNicStrController.text) / 100,
-                      targetNicStr:
-                          double.parse(_targetNicStrController.text) / 100,
-                      targetVG: double.parse(_targetVGController.text) / 100,
-                      targetPG: double.parse(_targetPGController.text) / 100,
-                      nicBaseEntries: _nicBaseEntries,
-                      flavorings: flavorings,
+                      ingredients: MixRecipeCalculator(
+                        batchVolume: double.parse(_volumeController.text),
+                        nicBaseNicStr:
+                            double.parse(_nicBaseNicStrController.text) / 100,
+                        targetNicStr:
+                            double.parse(_targetNicStrController.text) / 100,
+                        targetVG: double.parse(_targetVGController.text) / 100,
+                        targetPG: double.parse(_targetPGController.text) / 100,
+                        nicBaseEntries: _nicBaseEntries,
+                        flavorings: flavorings,
+                      ).ingredients,
                     ),
                   ],
                 ),
