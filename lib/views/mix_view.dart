@@ -18,17 +18,17 @@ class NicBaseEntry {
         nicBase = nicBase,
         percentageController = TextEditingController(
           text: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
-        ),
-        isVG = nicBase?.isVG ?? false;
+        );
 
   final Key id;
   NicBase? nicBase;
   final TextEditingController percentageController;
-  bool isVG;
 
   void dispose() {
     percentageController.dispose();
   }
+
+  bool get isVG => nicBase?.isVG ?? false;
 
   String get code => nicBase?.code ?? '';
 
@@ -83,20 +83,9 @@ class _MixViewState extends State<MixView> {
 
   @override
   void initState() {
-    super.initState();
-
-    _volumeController = TextEditingController(text: "0");
-    _nicLevelController = TextEditingController(text: "0");
-
-    _targetNicStrController = TextEditingController(text: "0");
-    _targetVGController = TextEditingController(text: "0");
-    _targetPGController = TextEditingController(text: "0");
-
-    _nicBaseNicStrController = TextEditingController(text: "0");
-    _nicBaseVGController = TextEditingController(text: "0");
-    _nicBasePGController = TextEditingController(text: "0");
-
     _setNicProfile(widget.initialNicProfile);
+
+    super.initState();
   }
 
   @override
@@ -108,22 +97,33 @@ class _MixViewState extends State<MixView> {
   }
 
   void _setNicProfile(NicProfile? nicProfile) {
-    if (_nicProfile != nicProfile) {
-      _nicProfile = nicProfile;
-    }
-
-    if (_nicProfile == null) return;
-
     setState(() {
-      _nicLevelController.text =
-          (_nicProfile!.targetNicStr * (_nicProfile!.isNewMix ? 1000.0 : 250))
-              .toString();
-      _nicBaseNicStrController.text =
-          (_nicProfile!.nicBaseNicStr * 100.0).toString();
-      _targetNicStrController.text =
-          (_nicProfile!.targetNicStr * 100.0).toString();
-      _targetVGController.text = (_nicProfile!.targetVG * 100.0).toString();
-      _targetPGController.text = (_nicProfile!.targetPG * 100.0).toString();
+      if (_nicProfile != nicProfile) {
+        _nicProfile = nicProfile;
+      }
+
+      if (_nicProfile == null) {
+        _volumeController = TextEditingController(text: "0");
+        _nicLevelController = TextEditingController(text: "0");
+
+        _targetNicStrController = TextEditingController(text: "0");
+        _targetVGController = TextEditingController(text: "0");
+        _targetPGController = TextEditingController(text: "0");
+
+        _nicBaseNicStrController = TextEditingController(text: "0");
+        _nicBaseVGController = TextEditingController(text: "0");
+        _nicBasePGController = TextEditingController(text: "0");
+      } else {
+        _nicLevelController.text =
+            (_nicProfile!.targetNicStr * (_nicProfile!.isNewMix ? 1000.0 : 250))
+                .toString();
+        _nicBaseNicStrController.text =
+            (_nicProfile!.nicBaseNicStr * 100.0).toString();
+        _targetNicStrController.text =
+            (_nicProfile!.targetNicStr * 100.0).toString();
+        _targetVGController.text = (_nicProfile!.targetVG * 100.0).toString();
+        _targetPGController.text = (_nicProfile!.targetPG * 100.0).toString();
+      }
 
       if (_nicBaseEntries.isNotEmpty) {
         _nicBaseEntries.clear();
@@ -220,7 +220,6 @@ class _MixViewState extends State<MixView> {
                     nicBase: nicBaseOption,
                     percentage: entry.ratio,
                   );
-                  entry.isVG = nicBaseOption.isVG;
                 });
                 _calculateTotalNicBaseRatio();
               },
