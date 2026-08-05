@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
@@ -9,7 +10,6 @@ import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
-import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -662,107 +662,92 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    NicBaseSection(
                       width: midSectionWidth,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "NIC BASE",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Gap(20),
+                          ElTextField(
+                            controller: _nicBaseNicStrController,
+                            contentType: ElTextFieldContentType.numeric,
+                            labelText: 'Nic Str',
+                            labelPosition: ElTextFieldLabelPosition.left,
+                            readOnly: true,
+                            suffix: const Text('%'),
+                          ),
+                          const Gap(8.0),
+                          Row(
+                            spacing: 8.0,
                             children: [
-                              const Text(
-                                "NIC BASE",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                              Expanded(
+                                child: ElTextField(
+                                  controller: _nicBaseVGController,
+                                  contentType: ElTextFieldContentType.numeric,
+                                  labelText: "VG",
+                                  labelPosition: ElTextFieldLabelPosition.left,
+                                  readOnly: true,
+                                  suffix: const Text('%'),
                                 ),
                               ),
-                              const Gap(20),
-                              ElTextField(
-                                controller: _nicBaseNicStrController,
-                                contentType: ElTextFieldContentType.numeric,
-                                labelText: 'Nic Str',
-                                labelPosition: ElTextFieldLabelPosition.left,
-                                readOnly: true,
-                                suffix: const Text('%'),
+                              Expanded(
+                                child: ElTextField(
+                                  controller: _nicBasePGController,
+                                  contentType: ElTextFieldContentType.numeric,
+                                  labelText: "PG",
+                                  labelPosition: ElTextFieldLabelPosition.left,
+                                  readOnly: true,
+                                  suffix: const Text('%'),
+                                ),
                               ),
-                              const Gap(8.0),
-                              Row(
-                                spacing: 8.0,
-                                children: [
-                                  Expanded(
-                                    child: ElTextField(
-                                      controller: _nicBaseVGController,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
-                                      labelText: "VG",
-                                      labelPosition:
-                                          ElTextFieldLabelPosition.left,
-                                      readOnly: true,
-                                      suffix: const Text('%'),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ElTextField(
-                                      controller: _nicBasePGController,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
-                                      labelText: "PG",
-                                      labelPosition:
-                                          ElTextFieldLabelPosition.left,
-                                      readOnly: true,
-                                      suffix: const Text('%'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              _nicBaseEntries.isEmpty
-                                  ? const SizedBox.shrink()
-                                  : Column(
-                                      children: [
-                                        const Gap(16.0),
-                                        Divider(
-                                          thickness: 1,
-                                          color: Theme.of(context).focusColor,
-                                        ),
-                                        const Gap(16.0),
-                                        Column(
-                                          spacing: 8.0,
-                                          children: List.generate(
-                                              _nicBaseEntries.length, (index) {
-                                            return _buildEntryRow(
-                                              _nicBaseEntries[index],
-                                              index == 0,
-                                            );
-                                          }),
-                                        ),
-                                      ],
-                                    ),
-                              _isCustom &&
-                                      double.parse(
-                                              _targetNicStrController.text) >
-                                          0.0
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () => _addEntry(null),
-                                            child: const Text("+ Add"),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
                             ],
                           ),
-                        ),
+                          _nicBaseEntries.isEmpty
+                              ? const SizedBox.shrink()
+                              : Column(
+                                  children: [
+                                    const Gap(16.0),
+                                    Divider(
+                                      thickness: 1,
+                                      color: Theme.of(context).focusColor,
+                                    ),
+                                    const Gap(16.0),
+                                    Column(
+                                      spacing: 8.0,
+                                      children: List.generate(
+                                          _nicBaseEntries.length, (index) {
+                                        return _buildEntryRow(
+                                          _nicBaseEntries[index],
+                                          index == 0,
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                          _isCustom &&
+                                  double.parse(_targetNicStrController.text) >
+                                      0.0
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () => _addEntry(null),
+                                        child: const Text("+ Add"),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ],
                       ),
                     ),
                     SizedBox(

@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
@@ -11,30 +12,6 @@ import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-class NicBaseEntry {
-  NicBaseEntry({
-    NicBase? nicBase,
-  })  : id = UniqueKey(),
-        nicBase = nicBase,
-        percentageController = TextEditingController(
-          text: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
-        );
-
-  final Key id;
-  NicBase? nicBase;
-  final TextEditingController percentageController;
-
-  void dispose() {
-    percentageController.dispose();
-  }
-
-  bool get isVG => nicBase?.isVG ?? false;
-
-  String get code => nicBase?.code ?? '';
-
-  double get ratio => double.parse(percentageController.text) / 100;
-}
 
 class MixView extends StatefulWidget {
   final Formula formula;

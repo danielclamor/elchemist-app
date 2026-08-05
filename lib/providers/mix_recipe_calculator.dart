@@ -1,7 +1,7 @@
+import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
-import 'package:elchemist_app/views/mix_view.dart';
 
 class MixRecipeCalculator {
   final double batchVolume;
