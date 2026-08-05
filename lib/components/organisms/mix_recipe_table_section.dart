@@ -1,11 +1,13 @@
-import 'package:elchemist_app/components/atoms/el_recipe_table.dart';
+import 'package:elchemist_app/components/molecules/el_recipe_table.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class MixRecipeTable extends StatelessWidget {
+  final double? width;
   final double batchVolume;
   final double nicBaseNicStr;
   final double targetNicStr;
@@ -16,6 +18,7 @@ class MixRecipeTable extends StatelessWidget {
 
   const MixRecipeTable({
     super.key,
+    this.width,
     required this.batchVolume,
     required this.targetNicStr,
     required this.targetVG,
@@ -170,8 +173,36 @@ class MixRecipeTable extends StatelessWidget {
       )
     ];
 
-    return ElRecipeTable(
-      ingredients: ingredients,
+    return SizedBox(
+      width: width,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            4.0,
+          ),
+        ),
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "RECIPE",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Gap(24),
+              ElRecipeTable(
+                ingredients: ingredients,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

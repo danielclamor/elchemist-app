@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
-import 'package:elchemist_app/components/atoms/el_dropdown_menu.dart';
+import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
-import 'package:elchemist_app/components/molecules/mix_recipe_table.dart';
+import 'package:elchemist_app/components/organisms/mix_recipe_table_section.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
@@ -734,51 +734,17 @@ class _MixViewState extends State<MixView> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    MixRecipeTable(
                       width: sectionWidth,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            4.0,
-                          ),
-                        ),
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "RECIPE",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Gap(24),
-                              MixRecipeTable(
-                                batchVolume:
-                                    double.parse(_volumeController.text),
-                                nicBaseNicStr: double.parse(
-                                        _nicBaseNicStrController.text) /
-                                    100,
-                                targetNicStr:
-                                    double.parse(_targetNicStrController.text) /
-                                        100,
-                                targetVG:
-                                    double.parse(_targetVGController.text) /
-                                        100,
-                                targetPG:
-                                    double.parse(_targetPGController.text) /
-                                        100,
-                                nicBaseEntries: _nicBaseEntries,
-                                flavorings: flavorings,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      batchVolume: double.parse(_volumeController.text),
+                      nicBaseNicStr:
+                          double.parse(_nicBaseNicStrController.text) / 100,
+                      targetNicStr:
+                          double.parse(_targetNicStrController.text) / 100,
+                      targetVG: double.parse(_targetVGController.text) / 100,
+                      targetPG: double.parse(_targetPGController.text) / 100,
+                      nicBaseEntries: _nicBaseEntries,
+                      flavorings: flavorings,
                     ),
                   ],
                 ),
