@@ -31,16 +31,11 @@ class MixRecipeTable extends StatelessWidget {
     required double totalNicBaseMixRatio,
     required double totalFlavMixRatio,
   }) {
-    debugPrint('vg total nb $totalNicBaseMixRatio');
-    debugPrint('vg total flav $totalFlavMixRatio');
-
     final ratio = _getRatio(
       totalNicBaseMixRatio,
       totalFlavMixRatio,
       true,
     );
-
-    debugPrint('vg $ratio');
 
     final volume = ratio * batchVolume;
 
@@ -59,16 +54,11 @@ class MixRecipeTable extends StatelessWidget {
     required double totalNicBaseMixRatio,
     required double totalFlavMixRatio,
   }) {
-    debugPrint('pg total nb $totalNicBaseMixRatio');
-    debugPrint('pg total flav $totalFlavMixRatio');
-
     final ratio = _getRatio(
       totalNicBaseMixRatio,
       totalFlavMixRatio,
       false,
     );
-
-    debugPrint('pg $ratio');
 
     final volume = ratio * batchVolume;
 
