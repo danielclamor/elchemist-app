@@ -1,33 +1,34 @@
 import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/value_getters.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class FlavorEntry {
-  FlavorEntry({
-    String? flavor,
-    String? percentage,
-  })  : id = UniqueKey(),
-        flavorController = TextEditingController(text: flavor),
-        percentageController = TextEditingController(text: percentage);
+// class FlavorEntry {
+//   FlavorEntry({
+//     String? flavor,
+//     String? percentage,
+//   })  : id = UniqueKey(),
+//         flavorController = TextEditingController(text: flavor),
+//         percentageController = TextEditingController(text: percentage);
 
-  final Key id;
-  final TextEditingController flavorController;
-  final TextEditingController percentageController;
-  final FocusNode flavorFocusNode = FocusNode();
-  final FocusNode percentageFocusNode = FocusNode();
-  bool isVG = false;
+//   final Key id;
+//   final TextEditingController flavorController;
+//   final TextEditingController percentageController;
+//   final FocusNode flavorFocusNode = FocusNode();
+//   final FocusNode percentageFocusNode = FocusNode();
+//   bool isVG = false;
 
-  void dispose() {
-    flavorController.dispose();
-    percentageController.dispose();
-    flavorFocusNode.dispose();
-    percentageFocusNode.dispose();
-  }
-}
+//   void dispose() {
+//     flavorController.dispose();
+//     percentageController.dispose();
+//     flavorFocusNode.dispose();
+//     percentageFocusNode.dispose();
+//   }
+// }
 
 class DiyMixView extends StatefulWidget {
   const DiyMixView({super.key});
@@ -233,25 +234,19 @@ class _DiyMixViewState extends State<DiyMixView> {
 
   void _addEntry() {
     final flavor = 'Flavor ${_flavorEntries.length + 1}';
-    const percentage = "0";
+    const ratio = 0.0;
 
     final entry = FlavorEntry(
-      flavor: flavor,
-      percentage: percentage,
+      name: flavor,
+      ratio: ratio,
     );
-    entry.flavorFocusNode.addListener(() {
-      if (mounted) setState(() {});
-    });
-    entry.percentageFocusNode.addListener(() {
-      if (mounted) setState(() {});
-    });
     setState(() {
       _flavorEntries.add(entry);
       _ingredients.insert(
         _ingredients.length - 2,
         Ingredient(
           name: flavor,
-          ratio: double.parse(percentage),
+          ratio: ratio,
           volume: 0.0,
           weight: 0.0,
           type: IngredientType.pgFlavor,
@@ -275,96 +270,60 @@ class _DiyMixViewState extends State<DiyMixView> {
   }
 
   Widget _buildEntryRow(FlavorEntry entry, bool withHeaders) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      key: entry.id,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: withHeaders ? 28.0 : 4.0),
-          child: IconButton(
-            onPressed: () {
-              _removeEntry(entry);
-            },
-            icon: const Icon(Icons.delete),
-          ),
-        ),
-        Expanded(
-          child: ElTextField(
-            controller: TextEditingController(
-              text: entry.flavorController.text,
-            ),
-            contentType: ElTextFieldContentType.text,
-            labelText: withHeaders ? 'Name' : null,
-            onSubmitted: (value) {
-              setState(() {
-                entry.flavorController.text = value;
-              });
-              final flavor = _ingredients.firstWhereOrNull(
-                (ingredient) => ingredient.id == entry.id,
-              );
-              if (flavor != null) {
-                setState(() {
-                  flavor.name = value;
-                });
-              }
-            },
-          ),
-        ),
-        const Gap(8.0),
-        Container(
-          constraints: const BoxConstraints(maxWidth: 120),
-          child: ElTextField(
-            controller: TextEditingController(
-              text: entry.percentageController.text,
-            ),
-            contentType: ElTextFieldContentType.numeric,
-            labelText: withHeaders ? 'Percentage' : null,
-            suffixText: '%',
-            onSubmitted: (value) {
-              setState(() {
-                entry.percentageController.text = value;
-              });
-              final flavor = _ingredients.firstWhereOrNull(
-                (ingredient) => ingredient.id == entry.id,
-              );
-              if (flavor != null) {
-                setState(() {
-                  final (percentage, volume, weight) = _getFlavorValues(
-                    entry.isVG,
-                    double.parse(value) / 100,
-                  );
-                  flavor.ratio = percentage;
-                  flavor.volume = volume;
-                  flavor.weight = weight;
-                });
-                _updateValues();
-              }
-            },
-          ),
-        ),
-        const Gap(12.0),
-        ElCheckbox(
-          labelText: withHeaders ? 'VG' : null,
-          value: entry.isVG,
-          onChanged: (value) {
-            setState(() {
-              entry.isVG = value ?? false;
-            });
-            final flavor = _ingredients.firstWhereOrNull(
-              (ingredient) => ingredient.id == entry.id,
+    return FlavoringEntryRow(
+      entry: entry,
+      withHeaders: withHeaders,
+      showDeleteIcon: true,
+      onEntryDeleted: () => _removeEntry(entry),
+      onNameSubmitted: (value) {
+        setState(() {
+          entry.nameController.text = value;
+        });
+        final flavor = _ingredients.firstWhereOrNull(
+          (ingredient) => ingredient.id == entry.id,
+        );
+        if (flavor != null) {
+          setState(() {
+            flavor.name = value;
+          });
+        }
+      },
+      onPercentSubmitted: (value) {
+        setState(() {
+          entry.percentageController.text = value;
+        });
+        final flavor = _ingredients.firstWhereOrNull(
+          (ingredient) => ingredient.id == entry.id,
+        );
+        if (flavor != null) {
+          setState(() {
+            final (percentage, volume, weight) = _getFlavorValues(
+              entry.isVG,
+              entry.ratio,
             );
-            if (flavor != null) {
-              setState(() {
-                flavor.type = value == true
-                    ? IngredientType.vgFlavor
-                    : IngredientType.pgFlavor;
-              });
-              _updateValues();
-            }
-          },
-        ),
-      ],
+            flavor.ratio = percentage;
+            flavor.volume = volume;
+            flavor.weight = weight;
+          });
+          _updateValues();
+        }
+      },
+      onIsVGChanged: (value) {
+        setState(() {
+          entry.isVG = value ?? false;
+        });
+        final flavor = _ingredients.firstWhereOrNull(
+          (ingredient) => ingredient.id == entry.id,
+        );
+        if (flavor != null) {
+          setState(() {
+            flavor.type = value == true
+                ? IngredientType.vgFlavor
+                : IngredientType.pgFlavor;
+          });
+          _updateValues();
+        }
+      },
     );
   }
 
