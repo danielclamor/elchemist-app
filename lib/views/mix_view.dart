@@ -5,6 +5,7 @@ import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
+import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/formula.dart';
@@ -526,84 +527,29 @@ class _MixViewState extends State<MixView> {
                               ),
                             ),
                     ),
-                    SizedBox(
+                    TargetSection(
                       width: midSectionWidth,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "TARGET",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Gap(20),
-                              ElTextField(
-                                controller: _targetNicStrController,
-                                contentType: ElTextFieldContentType.numeric,
-                                labelText: "Nic Str",
-                                labelPosition: ElTextFieldLabelPosition.left,
-                                readOnly: true,
-                                suffix: const Text('%'),
-                              ),
-                              const Gap(8),
-                              Row(
-                                spacing: 8.0,
-                                children: [
-                                  Expanded(
-                                    child: ElTextField(
-                                      controller: _targetVGController,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
-                                      labelText: "VG",
-                                      labelPosition:
-                                          ElTextFieldLabelPosition.left,
-                                      readOnly: !_isCustom,
-                                      suffix: const Text('%'),
-                                      onSubmitted: (value) {
-                                        setState(() {
-                                          _targetVGController.text = value;
-                                          _targetPGController.text =
-                                              (100 - (double.parse(value)))
-                                                  .toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ElTextField(
-                                      controller: _targetPGController,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
-                                      labelText: "PG",
-                                      labelPosition:
-                                          ElTextFieldLabelPosition.left,
-                                      readOnly: !_isCustom,
-                                      suffix: const Text('%'),
-                                      onSubmitted: (value) {
-                                        setState(() {
-                                          _targetPGController.text = value;
-                                          _targetVGController.text =
-                                              (100 - (double.parse(value)))
-                                                  .toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      nicStrController: _targetNicStrController,
+                      vgController: _targetVGController,
+                      onVGSubmitted: !_isCustom
+                          ? null
+                          : (value) {
+                              setState(() {
+                                _targetVGController.text = value;
+                                _targetPGController.text =
+                                    (100 - (double.parse(value))).toString();
+                              });
+                            },
+                      pgController: _targetPGController,
+                      onPGSubmitted: !_isCustom
+                          ? null
+                          : (value) {
+                              setState(() {
+                                _targetPGController.text = value;
+                                _targetVGController.text =
+                                    (100 - (double.parse(value))).toString();
+                              });
+                            },
                     ),
                     RecipeSection(
                       width: sectionWidth,
