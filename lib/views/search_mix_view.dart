@@ -589,43 +589,13 @@ class _SearchMixViewState extends State<SearchMixView> {
                     ),
                     NicBaseSection(
                       width: midSectionWidth,
-                      child: Column(
+                      targetNicStrController: _targetNicStrController,
+                      nicStrController: _nicBaseNicStrController,
+                      vgController: _nicBaseVGController,
+                      pgController: _nicBasePGController,
+                      nicBaseEntries: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ElTextField(
-                            controller: _nicBaseNicStrController,
-                            contentType: ElTextFieldContentType.numeric,
-                            labelText: 'Nic Str',
-                            labelPosition: ElTextFieldLabelPosition.left,
-                            readOnly: true,
-                            suffix: const Text('%'),
-                          ),
-                          const Gap(8.0),
-                          Row(
-                            spacing: 8.0,
-                            children: [
-                              Expanded(
-                                child: ElTextField(
-                                  controller: _nicBaseVGController,
-                                  contentType: ElTextFieldContentType.numeric,
-                                  labelText: "VG",
-                                  labelPosition: ElTextFieldLabelPosition.left,
-                                  readOnly: true,
-                                  suffix: const Text('%'),
-                                ),
-                              ),
-                              Expanded(
-                                child: ElTextField(
-                                  controller: _nicBasePGController,
-                                  contentType: ElTextFieldContentType.numeric,
-                                  labelText: "PG",
-                                  labelPosition: ElTextFieldLabelPosition.left,
-                                  readOnly: true,
-                                  suffix: const Text('%'),
-                                ),
-                              ),
-                            ],
-                          ),
                           _nicBaseEntries.isEmpty
                               ? const SizedBox.shrink()
                               : Column(
@@ -672,24 +642,23 @@ class _SearchMixViewState extends State<SearchMixView> {
                                     ),
                                   ],
                                 ),
-                          _isCustom &&
-                                  double.parse(_targetNicStrController.text) >
-                                      0.0
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () => _addEntry(null),
-                                        child: const Text("+ Add"),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
                         ],
                       ),
+                      addEntryButton: _isCustom &&
+                              double.parse(_targetNicStrController.text) <= 0.0
+                          ? null
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => _addEntry(null),
+                                    child: const Text("+ Add"),
+                                  ),
+                                ],
+                              ),
+                            ),
                     ),
                     SizedBox(
                       width: midSectionWidth,
