@@ -30,6 +30,7 @@ class RecipeSection extends StatelessWidget {
           1: FlexColumnWidth(1),
           2: FlexColumnWidth(1),
         },
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
           TableRow(
             decoration: BoxDecoration(
