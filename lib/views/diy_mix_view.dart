@@ -1,34 +1,10 @@
 import 'package:collection/collection.dart';
-import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/value_getters.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-
-// class FlavorEntry {
-//   FlavorEntry({
-//     String? flavor,
-//     String? percentage,
-//   })  : id = UniqueKey(),
-//         flavorController = TextEditingController(text: flavor),
-//         percentageController = TextEditingController(text: percentage);
-
-//   final Key id;
-//   final TextEditingController flavorController;
-//   final TextEditingController percentageController;
-//   final FocusNode flavorFocusNode = FocusNode();
-//   final FocusNode percentageFocusNode = FocusNode();
-//   bool isVG = false;
-
-//   void dispose() {
-//     flavorController.dispose();
-//     percentageController.dispose();
-//     flavorFocusNode.dispose();
-//     percentageFocusNode.dispose();
-//   }
-// }
 
 class DiyMixView extends StatefulWidget {
   const DiyMixView({super.key});
