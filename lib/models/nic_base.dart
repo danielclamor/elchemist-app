@@ -29,17 +29,17 @@ class NicBaseOption {
 
 class NicBase {
   final NicBaseOption nicBaseOption;
-  double percentage;
+  final double ratio;
 
   NicBase({
     required this.nicBaseOption,
-    required this.percentage,
+    required this.ratio,
   });
 
   factory NicBase.fromMap(Map<String, dynamic> map) => NicBase(
         nicBaseOption:
             NicBaseOption.fromMap(map["nic_base"] as Map<String, dynamic>),
-        percentage: map["percentage"] as double,
+        ratio: map["ratio"] as double,
       );
 
   String get code => nicBaseOption.code;
@@ -50,7 +50,9 @@ class NicBase {
 
   String get label => nicBaseOption.label;
 
+  double get percentage => ratio * 100;
+
   @override
   String toString() =>
-      'Nicbase {label: $label, percentage: $percentage, is_vg: $isVG}';
+      'Nicbase {label: $label, percentage: $percentage%, is_vg: $isVG}';
 }

@@ -13,7 +13,7 @@ class NicBaseEntry {
   })  : id = UniqueKey(),
         nicBase = nicBase,
         percentageController = TextEditingController(
-          text: ((nicBase?.percentage ?? 0.0) * 100).toStringAsFixed(0),
+          text: ((nicBase?.ratio ?? 0.0) * 100).toStringAsFixed(0),
         );
 
   final Key id;

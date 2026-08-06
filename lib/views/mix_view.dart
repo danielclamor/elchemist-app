@@ -546,7 +546,7 @@ class _MixViewState extends State<MixView> {
                                                   entry.nicBase = NicBase(
                                                     nicBaseOption:
                                                         nicBaseOption,
-                                                    percentage: entry.ratio,
+                                                    ratio: entry.ratio,
                                                   );
                                                 });
                                                 _calculateTotalNicBaseRatio();

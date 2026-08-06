@@ -667,7 +667,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                             setState(() {
                                               entry.nicBase = NicBase(
                                                 nicBaseOption: nicBaseOption,
-                                                percentage: entry.ratio,
+                                                ratio: entry.ratio,
                                               );
                                             });
 

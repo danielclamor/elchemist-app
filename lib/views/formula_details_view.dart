@@ -300,8 +300,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                           0.0,
                                                           (sum, nicBase) =>
                                                               sum +
-                                                              nicBase
-                                                                  .percentage) *
+                                                              nicBase.ratio) *
                                                   100)
                                               .toStringAsFixed(0),
                                         ),
@@ -324,8 +323,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                           0.0,
                                                           (sum, nicBase) =>
                                                               sum +
-                                                              nicBase
-                                                                  .percentage) *
+                                                              nicBase.ratio) *
                                                   100)
                                               .toStringAsFixed(0),
                                         ),
@@ -385,8 +383,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                     child: ElTextField(
                                                       controller:
                                                           TextEditingController(
-                                                        text: (nicBase
-                                                                    .percentage *
+                                                        text: (nicBase.ratio *
                                                                 100)
                                                             .toStringAsFixed(0),
                                                       ),
