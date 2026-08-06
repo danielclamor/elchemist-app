@@ -269,7 +269,7 @@ class _MixViewState extends State<MixView> {
                                               ),
                                             ),
                                           ),
-                                          ignoring: isFinal,
+                                          enabled: !isFinal,
                                           onSelected: isFinal
                                               ? null
                                               : (NicProfile? value) {

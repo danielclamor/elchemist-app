@@ -376,7 +376,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                 width: 360,
                                                 labelText: 'Profile',
                                                 initialSelection: _nicProfile,
-                                                ignoring: false,
+                                                enabled: true,
                                                 dropdownMenuEntries:
                                                     UnmodifiableListView<
                                                         DropdownMenuEntry<

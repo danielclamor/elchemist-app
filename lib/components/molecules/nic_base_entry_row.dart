@@ -82,7 +82,7 @@ class NicBaseEntryRow extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) => ElDropdownMenu<NicBaseOption>(
               width: constraints.maxWidth,
-              ignoring: !isCustom,
+              enabled: isCustom,
               initialSelection: entry.option,
               labelText: withHeaders ? 'Name' : null,
               dropdownMenuEntries:

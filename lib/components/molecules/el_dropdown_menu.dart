@@ -7,7 +7,7 @@ class ElDropdownMenu<T> extends StatelessWidget {
   final Widget? label;
   final String? labelText;
   final double? width;
-  final bool ignoring;
+  final bool enabled;
   final T? initialSelection;
   final UnmodifiableListView<DropdownMenuEntry<T>> dropdownMenuEntries;
   final ValueChanged<T?>? onSelected;
@@ -17,7 +17,7 @@ class ElDropdownMenu<T> extends StatelessWidget {
     this.label,
     this.labelText,
     this.width,
-    this.ignoring = true,
+    this.enabled = true,
     this.initialSelection,
     required this.dropdownMenuEntries,
     this.onSelected,
@@ -48,34 +48,33 @@ class ElDropdownMenu<T> extends StatelessWidget {
                       const Gap(8.0),
                     ],
                   )),
-        IgnorePointer(
-          ignoring: ignoring,
-          child: DropdownMenu<T>(
-            width: width,
-            selectOnly: true,
-            initialSelection: initialSelection,
-            textStyle: GoogleFonts.robotoMonoTextTheme(
-              ThemeData(brightness: Brightness.dark).textTheme,
-            ).bodyMedium,
-            inputDecorationTheme: InputDecorationTheme(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).focusColor),
-              ),
-              disabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(),
-              ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 1.5,
-                ),
-              ),
-              filled: !ignoring,
-              fillColor: Theme.of(context).colorScheme.surfaceContainer,
-            ),
-            dropdownMenuEntries: dropdownMenuEntries,
-            onSelected: onSelected,
+        DropdownMenu<T>(
+          enabled: enabled,
+          width: width,
+          selectOnly: true,
+          initialSelection: initialSelection,
+          textStyle: GoogleFonts.robotoMono(
+            fontSize: 16,
+            // color: ignoring ? Theme.of(context).disabledColor : Colors.white,
           ),
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).focusColor),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Theme.of(context).focusColor),
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(
+                color: Colors.white,
+                width: 1.5,
+              ),
+            ),
+            filled: enabled,
+            fillColor: Theme.of(context).colorScheme.surfaceContainer,
+          ),
+          dropdownMenuEntries: dropdownMenuEntries,
+          onSelected: onSelected,
         ),
       ],
     );

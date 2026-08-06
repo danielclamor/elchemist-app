@@ -115,7 +115,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                     width: constraints.maxWidth,
                                     labelText: 'Profile',
                                     initialSelection: _nicProfile,
-                                    ignoring: false,
+                                    enabled: false,
                                     dropdownMenuEntries: UnmodifiableListView<
                                         DropdownMenuEntry<NicProfile>>(
                                       recipe.nicProfiles
