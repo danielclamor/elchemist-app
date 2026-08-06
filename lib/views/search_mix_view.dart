@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/constants.dart';
@@ -161,77 +162,29 @@ class _SearchMixViewState extends State<SearchMixView> {
       entry.dispose();
       _nicBaseEntries.remove(entry);
     });
+    _calculateTotalNicBaseRatio();
   }
 
   Widget _buildEntryRow(NicBaseEntry entry, bool withHeaders) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _isCustom && _nicBaseEntries.length > 1
-            ? Padding(
-                padding: EdgeInsets.only(top: withHeaders ? 28.0 : 4.0),
-                child: IconButton(
-                  onPressed: () => _removeEntry(entry),
-                  icon: const Icon(
-                    Icons.delete,
-                  ),
-                ),
-              )
-            : const SizedBox.shrink(),
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) => ElDropdownMenu<NicBaseOption>(
-              width: constraints.maxWidth,
-              ignoring: !_isCustom,
-              initialSelection: _nicBaseOptions.firstWhereOrNull(
-                (option) => option == entry.nicBase?.nicBase,
-              ),
-              labelText: withHeaders ? 'Name' : null,
-              dropdownMenuEntries:
-                  UnmodifiableListView<DropdownMenuEntry<NicBaseOption>>(
-                _nicBaseOptions.map<DropdownMenuEntry<NicBaseOption>>(
-                  (option) => DropdownMenuEntry<NicBaseOption>(
-                    value: option,
-                    label: option.label,
-                  ),
-                ),
-              ),
-              onSelected: (value) {
-                final nicBaseOption = value;
-                if (nicBaseOption == null) return;
+    return NicBaseEntryRow(
+      entry: entry,
+      isCustom: _isCustom,
+      withHeaders: withHeaders,
+      showDeleteIcon: _isCustom && _nicBaseEntries.length > 1,
+      onEntryDeleted: () => _removeEntry(entry),
+      onOptionSelected: (value) {
+        final nicBaseOption = value;
+        if (nicBaseOption == null) return;
 
-                setState(() {
-                  entry.nicBase = NicBase(
-                    nicBase: nicBaseOption,
-                    percentage: entry.ratio,
-                  );
-                });
-                _calculateTotalNicBaseRatio();
-              },
-            ),
-          ),
-        ),
-        const Gap(8),
-        Container(
-          constraints: const BoxConstraints(maxWidth: 120),
-          child: ElTextField(
-            controller: entry.percentageController,
-            contentType: ElTextFieldContentType.numeric,
-            labelText: withHeaders ? 'Percentage' : null,
-            readOnly: !_isCustom,
-            suffix: const Text("%"),
-            onSubmitted: (value) {
-              _calculateTotalNicBaseRatio();
-            },
-          ),
-        ),
-        const Gap(12.0),
-        ElCheckbox(
-          labelText: withHeaders ? 'VG' : null,
-          value: entry.isVG,
-        ),
-      ],
+        setState(() {
+          entry.nicBase = NicBase(
+            nicBaseOption: nicBaseOption,
+            percentage: entry.ratio,
+          );
+        });
+        _calculateTotalNicBaseRatio();
+      },
+      onPercentSubmitted: (value) => _calculateTotalNicBaseRatio(),
     );
   }
 

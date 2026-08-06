@@ -1,4 +1,4 @@
-import 'package:elchemist_app/components/organisms/nic_base_section.dart';
+import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
