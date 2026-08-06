@@ -13,7 +13,7 @@ class NicBaseEntry {
   })  : id = UniqueKey(),
         nicBase = nicBase,
         percentageController = TextEditingController(
-          text: ((nicBase?.ratio ?? 0.0) * 100).toStringAsFixed(0),
+          text: _initialPercentage(nicBase),
         );
 
   final Key id;
@@ -23,6 +23,9 @@ class NicBaseEntry {
   void dispose() {
     percentageController.dispose();
   }
+
+  static String _initialPercentage(NicBase? nicBase) =>
+      ((nicBase?.ratio ?? 0.0) * 100).toStringAsFixed(0);
 
   NicBaseOption? get option => nicBase?.nicBaseOption;
 
