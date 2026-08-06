@@ -456,7 +456,6 @@ class _MixViewState extends State<MixView> {
                     ),
                     NicBaseSection(
                       width: midSectionWidth,
-                      targetNicStrController: _targetNicStrController,
                       nicStrController: _nicBaseNicStrController,
                       vgController: _nicBaseVGController,
                       pgController: _nicBasePGController,

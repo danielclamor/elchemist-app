@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 
 class NicBaseSection extends StatelessWidget {
   final double? width;
-  final TextEditingController targetNicStrController;
+  final bool textFieldReadOnly;
   final TextEditingController nicStrController;
   final TextEditingController vgController;
   final TextEditingController pgController;
@@ -15,7 +15,7 @@ class NicBaseSection extends StatelessWidget {
   const NicBaseSection({
     super.key,
     this.width,
-    required this.targetNicStrController,
+    this.textFieldReadOnly = true,
     required this.nicStrController,
     required this.vgController,
     required this.pgController,
@@ -35,7 +35,7 @@ class NicBaseSection extends StatelessWidget {
             contentType: ElTextFieldContentType.numeric,
             labelText: 'Nic Str',
             labelPosition: ElTextFieldLabelPosition.left,
-            readOnly: true,
+            readOnly: textFieldReadOnly,
             suffix: const Text('%'),
           ),
           const Gap(8.0),
@@ -48,7 +48,7 @@ class NicBaseSection extends StatelessWidget {
                   contentType: ElTextFieldContentType.numeric,
                   labelText: "VG",
                   labelPosition: ElTextFieldLabelPosition.left,
-                  readOnly: true,
+                  readOnly: textFieldReadOnly,
                   suffix: const Text('%'),
                 ),
               ),
@@ -58,7 +58,7 @@ class NicBaseSection extends StatelessWidget {
                   contentType: ElTextFieldContentType.numeric,
                   labelText: "PG",
                   labelPosition: ElTextFieldLabelPosition.left,
-                  readOnly: true,
+                  readOnly: textFieldReadOnly,
                   suffix: const Text('%'),
                 ),
               ),

@@ -589,7 +589,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                     ),
                     NicBaseSection(
                       width: midSectionWidth,
-                      targetNicStrController: _targetNicStrController,
                       nicStrController: _nicBaseNicStrController,
                       vgController: _nicBaseVGController,
                       pgController: _nicBasePGController,
