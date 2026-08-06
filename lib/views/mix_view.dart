@@ -3,9 +3,7 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
-import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
-import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/formula.dart';
@@ -31,10 +29,6 @@ class MixView extends StatefulWidget {
 }
 
 class _MixViewState extends State<MixView> {
-  final List<NicBaseOption> _nicBaseOptions = nicBaseOptionsData
-      .map((option) => NicBaseOption.fromMap(option))
-      .toList();
-
   final List<NicBaseEntry> _nicBaseEntries = [];
 
   NicProfile? _nicProfile;
