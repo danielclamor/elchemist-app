@@ -93,6 +93,7 @@ class ElTextField extends StatelessWidget {
     final textField = TextField(
       style: GoogleFonts.robotoMono(
         fontSize: 16,
+        fontWeight: FontWeight.w300,
         color: readOnly ? Theme.of(context).disabledColor : Colors.white,
       ),
       textAlign: alignment,
@@ -133,6 +134,7 @@ class ElTextField extends StatelessWidget {
                 child: Text(
                   suffixText ?? '',
                   style: TextStyle(
+                    fontWeight: FontWeight.w300,
                     color: readOnly
                         ? Theme.of(context).disabledColor
                         : Colors.white,

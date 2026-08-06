@@ -55,7 +55,7 @@ class ElDropdownMenu<T> extends StatelessWidget {
           initialSelection: initialSelection,
           textStyle: GoogleFonts.robotoMono(
             fontSize: 16,
-            // color: ignoring ? Theme.of(context).disabledColor : Colors.white,
+            fontWeight: FontWeight.w300,
           ),
           inputDecorationTheme: InputDecorationTheme(
             enabledBorder: OutlineInputBorder(

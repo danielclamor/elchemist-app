@@ -71,6 +71,7 @@ class RecipeSection extends StatelessWidget {
                     ingredient.name,
                     style: GoogleFonts.robotoMono(
                       fontSize: 16,
+                      fontWeight: FontWeight.w200,
                     ),
                   ),
                 ),
@@ -81,6 +82,7 @@ class RecipeSection extends StatelessWidget {
                     textAlign: TextAlign.right,
                     style: GoogleFonts.robotoMono(
                       fontSize: 16,
+                      fontWeight: FontWeight.w200,
                     ),
                   ),
                 ),
@@ -91,7 +93,6 @@ class RecipeSection extends StatelessWidget {
                     textAlign: TextAlign.right,
                     style: GoogleFonts.robotoMono(
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -101,7 +102,7 @@ class RecipeSection extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                 top: BorderSide(
-                  width: 2,
+                  width: 4,
                   color: Theme.of(context).focusColor,
                 ),
               ),
@@ -113,7 +114,6 @@ class RecipeSection extends StatelessWidget {
                   'Sum',
                   style: GoogleFonts.robotoMono(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -124,7 +124,6 @@ class RecipeSection extends StatelessWidget {
                   textAlign: TextAlign.right,
                   style: GoogleFonts.robotoMono(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
@@ -135,7 +134,6 @@ class RecipeSection extends StatelessWidget {
                   textAlign: TextAlign.right,
                   style: GoogleFonts.robotoMono(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
