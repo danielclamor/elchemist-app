@@ -3,10 +3,11 @@ import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class FlavorEntry {
-  FlavorEntry({
+class FlavoringEntry {
+  FlavoringEntry({
     String? name,
     double? ratio,
+    bool? isVG,
   })  : id = UniqueKey(),
         nameController = TextEditingController(text: name),
         percentageController =
@@ -28,7 +29,7 @@ class FlavorEntry {
 }
 
 class FlavoringEntryRow extends StatelessWidget {
-  final FlavorEntry entry;
+  final FlavoringEntry entry;
   final bool withHeaders;
   final bool showDeleteIcon;
   final VoidCallback? onEntryDeleted;
@@ -64,11 +65,10 @@ class FlavoringEntryRow extends StatelessWidget {
             : const SizedBox.shrink(),
         Expanded(
           child: ElTextField(
-            controller: TextEditingController(
-              text: entry.nameController.text,
-            ),
+            controller: entry.nameController,
             contentType: ElTextFieldContentType.text,
             labelText: withHeaders ? 'Name' : null,
+            readOnly: onNameSubmitted == null,
             onSubmitted: onNameSubmitted,
           ),
         ),
@@ -76,12 +76,11 @@ class FlavoringEntryRow extends StatelessWidget {
         Container(
           constraints: const BoxConstraints(maxWidth: 120),
           child: ElTextField(
-            controller: TextEditingController(
-              text: entry.percentageController.text,
-            ),
+            controller: entry.percentageController,
             contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
             suffixText: '%',
+            readOnly: onPercentSubmitted == null,
             onSubmitted: onPercentSubmitted,
           ),
         ),

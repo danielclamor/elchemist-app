@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
@@ -29,6 +30,8 @@ class SearchMixView extends StatefulWidget {
 
 class _SearchMixViewState extends State<SearchMixView> {
   final List<NicBaseEntry> _nicBaseEntries = [];
+
+  final List<FlavoringEntry> _flavoringEntries = [];
 
   Formula? _formula;
   NicProfile? _nicProfile;
@@ -111,17 +114,46 @@ class _SearchMixViewState extends State<SearchMixView> {
 
       if (_nicBaseEntries.isNotEmpty) {
         _nicBaseEntries.clear();
+        _flavoringEntries.clear();
       }
     });
 
-    _populateNicBase();
+    _populateFlavoringEntries();
+    _populateNicBaseEntries();
   }
 
-  void _populateNicBase() {
+  void _populateFlavoringEntries() {
+    if (_nicProfile == null) return;
+
+    for (Flavoring flavoring in _nicProfile!.flavorings) {
+      _addFlavoringEntry(
+        FlavoringEntry(
+          name: flavoring.name,
+          ratio: flavoring.ratio,
+          isVG: flavoring.isVG,
+        ),
+      );
+    }
+  }
+
+  void _addFlavoringEntry(FlavoringEntry? entry) {
+    setState(() {
+      _flavoringEntries.add(entry ?? FlavoringEntry());
+    });
+  }
+
+  // void _removeFlavoringEntry(FlavoringEntry entry) {
+  //   setState(() {
+  //     entry.dispose();
+  //     _flavoringEntries.remove(entry);
+  //   });
+  // }
+
+  void _populateNicBaseEntries() {
     if (_nicProfile == null) return;
 
     for (NicBase nicBase in _nicProfile!.nicBases) {
-      _addEntry(
+      _addNicBaseEntry(
         NicBaseEntry(
           nicBase: nicBase,
         ),
@@ -148,13 +180,13 @@ class _SearchMixViewState extends State<SearchMixView> {
     });
   }
 
-  void _addEntry(NicBaseEntry? entry) {
+  void _addNicBaseEntry(NicBaseEntry? entry) {
     setState(() {
       _nicBaseEntries.add(entry ?? NicBaseEntry());
     });
   }
 
-  void _removeEntry(NicBaseEntry entry) {
+  void _removeNicBaseEntry(NicBaseEntry entry) {
     setState(() {
       entry.dispose();
       _nicBaseEntries.remove(entry);
@@ -170,12 +202,6 @@ class _SearchMixViewState extends State<SearchMixView> {
     var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 400.0;
 
     final List<Formula> formulas = widget.formulas;
-
-    List<Flavoring> flavorings = [];
-
-    if (_nicProfile != null) {
-      flavorings = _nicProfile!.flavorings;
-    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -504,58 +530,16 @@ class _SearchMixViewState extends State<SearchMixView> {
                               : FlavoringSection(
                                   width: sectionWidth,
                                   flavoringEntries: List.generate(
-                                    flavorings.length,
+                                    _flavoringEntries.length,
                                     (index) {
-                                      final flavoring = flavorings[index];
-                                      return Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: ElTextField(
-                                              controller: TextEditingController(
-                                                text: flavoring.name,
-                                              ),
-                                              contentType:
-                                                  ElTextFieldContentType.text,
-                                              readOnly: true,
-                                              labelText:
-                                                  index == 0 ? 'Name' : null,
-                                            ),
-                                          ),
-                                          const Gap(8.0),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 140,
-                                                child: ElTextField(
-                                                  controller:
-                                                      TextEditingController(
-                                                    text: (flavoring.percentage)
-                                                        .toStringAsFixed(4),
-                                                  ),
-                                                  contentType:
-                                                      ElTextFieldContentType
-                                                          .numeric,
-                                                  labelText: index == 0
-                                                      ? 'Percentage'
-                                                      : null,
-                                                  readOnly: !_isCustom,
-                                                  suffixText: "%",
-                                                ),
-                                              ),
-                                              const Gap(12.0),
-                                              ElCheckbox(
-                                                labelText:
-                                                    index == 0 ? 'VG' : null,
-                                                value: flavoring.isVG,
-                                                onChanged: null,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                      final entry = _flavoringEntries[index];
+                                      return FlavoringEntryRow(
+                                        entry: entry,
+                                        withHeaders: index == 0,
+                                        showDeleteIcon: false,
+                                        onPercentSubmitted: _isCustom
+                                            ? (value) => setState(() {})
+                                            : null,
                                       );
                                     },
                                   ),
@@ -578,7 +562,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                             withHeaders: index == 0,
                             showDeleteIcon:
                                 _isCustom && _nicBaseEntries.length > 1,
-                            onEntryDeleted: () => _removeEntry(entry),
+                            onEntryDeleted: () => _removeNicBaseEntry(entry),
                             onOptionSelected: (value) {
                               final nicBaseOption = value;
 
@@ -609,7 +593,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   TextButton(
-                                    onPressed: () => _addEntry(null),
+                                    onPressed: () => _addNicBaseEntry(null),
                                     child: const Text("+ Add"),
                                   ),
                                 ],
@@ -651,7 +635,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                         targetVG: double.parse(_targetVGController.text) / 100,
                         targetPG: double.parse(_targetPGController.text) / 100,
                         nicBaseEntries: _nicBaseEntries,
-                        flavorings: flavorings,
+                        flavorings: _flavoringEntries,
                       ).ingredients,
                     ),
                   ],

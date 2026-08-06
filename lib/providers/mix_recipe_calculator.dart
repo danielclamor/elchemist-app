@@ -1,6 +1,6 @@
+import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/constants.dart';
-import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 
 class MixRecipeCalculator {
@@ -10,7 +10,7 @@ class MixRecipeCalculator {
   final double targetVG;
   final double targetPG;
   final List<NicBaseEntry> nicBaseEntries;
-  final List<Flavoring> flavorings;
+  final List<FlavoringEntry> flavorings;
 
   const MixRecipeCalculator({
     required this.batchVolume,
@@ -119,7 +119,7 @@ class MixRecipeCalculator {
       }
 
       return Ingredient(
-        name: flavor.name,
+        name: flavor.name ?? '',
         ratio: flavor.ratio,
         volume: volume,
         weight: weight,

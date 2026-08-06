@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
@@ -33,6 +34,8 @@ class MixView extends StatefulWidget {
 
 class _MixViewState extends State<MixView> {
   final List<NicBaseEntry> _nicBaseEntries = [];
+
+  final List<FlavoringEntry> _flavoringEntries = [];
 
   NicProfile? _nicProfile;
   bool _isCustom = false;
@@ -103,17 +106,39 @@ class _MixViewState extends State<MixView> {
 
       if (_nicBaseEntries.isNotEmpty) {
         _nicBaseEntries.clear();
+        _flavoringEntries.clear();
       }
     });
 
-    _populateNicBase();
+    _populateFlavoringEntries();
+    _populateNicBaseEntries();
   }
 
-  void _populateNicBase() {
+  void _populateFlavoringEntries() {
+    if (_nicProfile == null) return;
+
+    for (Flavoring flavoring in _nicProfile!.flavorings) {
+      _addFlavoringEntry(
+        FlavoringEntry(
+          name: flavoring.name,
+          ratio: flavoring.ratio,
+          isVG: flavoring.isVG,
+        ),
+      );
+    }
+  }
+
+  void _addFlavoringEntry(FlavoringEntry? entry) {
+    setState(() {
+      _flavoringEntries.add(entry ?? FlavoringEntry());
+    });
+  }
+
+  void _populateNicBaseEntries() {
     if (_nicProfile == null) return;
 
     for (NicBase nicBase in _nicProfile!.nicBases) {
-      _addEntry(
+      _addNicBaseEntry(
         NicBaseEntry(
           nicBase: nicBase,
         ),
@@ -140,13 +165,13 @@ class _MixViewState extends State<MixView> {
     });
   }
 
-  void _addEntry(NicBaseEntry? entry) {
+  void _addNicBaseEntry(NicBaseEntry? entry) {
     setState(() {
       _nicBaseEntries.add(entry ?? NicBaseEntry());
     });
   }
 
-  void _removeEntry(NicBaseEntry entry) {
+  void _removeNicBaseEntry(NicBaseEntry entry) {
     setState(() {
       entry.dispose();
       _nicBaseEntries.remove(entry);
@@ -438,7 +463,7 @@ class _MixViewState extends State<MixView> {
                             withHeaders: index == 0,
                             showDeleteIcon:
                                 _isCustom && _nicBaseEntries.length > 1,
-                            onEntryDeleted: () => _removeEntry(entry),
+                            onEntryDeleted: () => _removeNicBaseEntry(entry),
                             onOptionSelected: (value) {
                               final nicBaseOption = value;
 
@@ -469,7 +494,7 @@ class _MixViewState extends State<MixView> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   TextButton(
-                                    onPressed: () => _addEntry(null),
+                                    onPressed: () => _addNicBaseEntry(null),
                                     child: const Text("+ Add"),
                                   ),
                                 ],
@@ -511,7 +536,7 @@ class _MixViewState extends State<MixView> {
                         targetVG: double.parse(_targetVGController.text) / 100,
                         targetPG: double.parse(_targetPGController.text) / 100,
                         nicBaseEntries: _nicBaseEntries,
-                        flavorings: flavorings,
+                        flavorings: _flavoringEntries,
                       ).ingredients,
                     ),
                   ],

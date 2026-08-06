@@ -16,7 +16,7 @@ class DiyMixView extends StatefulWidget {
 class _DiyMixViewState extends State<DiyMixView> {
   List<Ingredient> _ingredients = [];
 
-  final List<FlavorEntry> _flavorEntries = [];
+  final List<FlavoringEntry> _flavorEntries = [];
 
   late String _volume;
   late String _targetNicStr;
@@ -212,7 +212,7 @@ class _DiyMixViewState extends State<DiyMixView> {
     final flavor = 'Flavor ${_flavorEntries.length + 1}';
     const ratio = 0.0;
 
-    final entry = FlavorEntry(
+    final entry = FlavoringEntry(
       name: flavor,
       ratio: ratio,
     );
@@ -233,7 +233,7 @@ class _DiyMixViewState extends State<DiyMixView> {
     _updateValues();
   }
 
-  void _removeEntry(FlavorEntry entry) {
+  void _removeEntry(FlavoringEntry entry) {
     setState(() {
       entry.dispose();
       _flavorEntries.remove(entry);
@@ -245,7 +245,7 @@ class _DiyMixViewState extends State<DiyMixView> {
     _updateValues();
   }
 
-  Widget _buildEntryRow(FlavorEntry entry, bool withHeaders) {
+  Widget _buildEntryRow(FlavoringEntry entry, bool withHeaders) {
     return FlavoringEntryRow(
       entry: entry,
       withHeaders: withHeaders,
