@@ -81,7 +81,7 @@ class MixRecipeCalculator {
     double totalFlavPGRatio = 0.0;
 
     final List<Ingredient> ingNicBases = nicBaseEntries.map((entry) {
-      final entryRatio = double.parse(entry.percentageController.text) / 100;
+      final entryRatio = entry.ratio;
       final entryMixRatio = _totalNicBaseRatio * entryRatio;
       final entryNicMixRatio = targetNicStr * entryRatio;
       final entryBaseVolume = batchVolume * (entryMixRatio - entryNicMixRatio);
@@ -89,7 +89,6 @@ class MixRecipeCalculator {
       final entryNicWeight = entryNicVolume * nicDensity;
 
       double entryWeight;
-      final nicBase = entry.nicBase;
 
       if (entry.isVG) {
         totalNicBaseVGRatio += entryRatio;
@@ -100,8 +99,7 @@ class MixRecipeCalculator {
       }
 
       return Ingredient(
-        name:
-            'Nicotine Base${nicBase?.code != null ? ' (${nicBase?.code})' : ''}',
+        name: 'Nicotine Base${entry.code != null ? ' (${entry.code})' : ''}',
         percentage: entryMixRatio * 100,
         volume: entryBaseVolume + entryNicVolume,
         weight: entryWeight,

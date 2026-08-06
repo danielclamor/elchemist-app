@@ -25,9 +25,11 @@ class NicBaseEntry {
   }
 
   static String _initialPercentage(NicBase? nicBase) =>
-      ((nicBase?.ratio ?? 0.0) * 100).toStringAsFixed(0);
+      (nicBase?.percentage ?? 0.0).toStringAsFixed(0);
 
   NicBaseOption? get option => nicBase?.nicBaseOption;
+
+  String? get code => nicBase?.code;
 
   String? get label => nicBase?.label;
 
