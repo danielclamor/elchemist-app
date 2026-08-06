@@ -3,6 +3,7 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
+import 'package:elchemist_app/components/organisms/flavoring_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
@@ -360,95 +361,63 @@ class _MixViewState extends State<MixView> {
                           const Gap(8.0),
                           _nicProfile == null
                               ? const SizedBox.shrink()
-                              : Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                  margin: EdgeInsets.zero,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "FLAVOURING",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
+                              : FlavoringSection(
+                                  width: sectionWidth,
+                                  flavoringEntries: List.generate(
+                                    flavorings.length,
+                                    (index) {
+                                      final flavoring = flavorings[index];
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: ElTextField(
+                                              controller: TextEditingController(
+                                                text: flavoring.name,
+                                              ),
+                                              contentType:
+                                                  ElTextFieldContentType.text,
+                                              readOnly: true,
+                                              labelText:
+                                                  index == 0 ? 'Name' : null,
+                                            ),
                                           ),
-                                        ),
-                                        const Gap(20),
-                                        Column(
-                                          spacing: 8.0,
-                                          children: List.generate(
-                                            flavorings.length,
-                                            (index) {
-                                              final flavoring =
-                                                  flavorings[index];
-                                              return Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: ElTextField(
-                                                      controller:
-                                                          TextEditingController(
-                                                        text: flavoring.name,
-                                                      ),
-                                                      contentType:
-                                                          ElTextFieldContentType
-                                                              .text,
-                                                      readOnly: true,
-                                                      labelText: index == 0
-                                                          ? 'Name'
-                                                          : null,
-                                                    ),
+                                          const Gap(8.0),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                width: 140,
+                                                child: ElTextField(
+                                                  controller:
+                                                      TextEditingController(
+                                                    text: (flavoring.percentage)
+                                                        .toStringAsFixed(4),
                                                   ),
-                                                  const Gap(8.0),
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 140,
-                                                        child: ElTextField(
-                                                          controller:
-                                                              TextEditingController(
-                                                            text: (flavoring
-                                                                    .percentage)
-                                                                .toStringAsFixed(
-                                                                    4),
-                                                          ),
-                                                          contentType:
-                                                              ElTextFieldContentType
-                                                                  .numeric,
-                                                          labelText: index == 0
-                                                              ? 'Percentage'
-                                                              : null,
-                                                          readOnly: !_isCustom,
-                                                          suffixText: '%',
-                                                        ),
-                                                      ),
-                                                      const Gap(12.0),
-                                                      ElCheckbox(
-                                                        labelText: index == 0
-                                                            ? 'VG'
-                                                            : null,
-                                                        value: flavoring.isVG,
-                                                        onChanged: null,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              );
-                                            },
+                                                  contentType:
+                                                      ElTextFieldContentType
+                                                          .numeric,
+                                                  labelText: index == 0
+                                                      ? 'Percentage'
+                                                      : null,
+                                                  readOnly: !_isCustom,
+                                                  suffixText: "%",
+                                                ),
+                                              ),
+                                              const Gap(12.0),
+                                              ElCheckbox(
+                                                labelText:
+                                                    index == 0 ? 'VG' : null,
+                                                value: flavoring.isVG,
+                                                onChanged: null,
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ],
-                                    ),
+                                        ],
+                                      );
+                                    },
                                   ),
                                 ),
                         ],
