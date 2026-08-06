@@ -320,7 +320,7 @@ class _DiyMixViewState extends State<DiyMixView> {
             ),
             contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
-            suffix: const Text('%'),
+            suffixText: '%',
             onSubmitted: (value) {
               setState(() {
                 entry.percentageController.text = value;
@@ -432,7 +432,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   contentType: ElTextFieldContentType.numeric,
                                   labelText: 'Volume',
                                   labelPosition: ElTextFieldLabelPosition.left,
-                                  suffix: const Text('mL'),
+                                  suffixText: 'mL',
                                   onSubmitted: (value) {
                                     setState(() {
                                       _volume = value;
@@ -531,7 +531,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   });
                                   _updateValues();
                                 },
-                                suffix: const Text("%"),
+                                suffixText: '%',
                               ),
                               const Gap(8),
                               Row(
@@ -547,7 +547,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       labelText: 'VG',
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      suffix: const Text('%'),
+                                      suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
                                           _nicBaseVG = value;
@@ -573,7 +573,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       labelText: 'PG',
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      suffix: const Text('%'),
+                                      suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
                                           _nicBasePG = value;
@@ -625,7 +625,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
-                                suffix: const Text('%'),
+                                suffixText: '%',
                                 onSubmitted: (value) {
                                   final percentage = double.parse(value);
 
@@ -672,7 +672,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       labelText: 'VG',
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      suffix: const Text('%'),
+                                      suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
                                           _targetVG = value;
@@ -698,7 +698,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       labelText: 'PG',
                                       labelPosition:
                                           ElTextFieldLabelPosition.left,
-                                      suffix: const Text('%'),
+                                      suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
                                           _targetPG = value;

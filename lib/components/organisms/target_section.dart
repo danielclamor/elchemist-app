@@ -33,10 +33,10 @@ class TargetSection extends StatelessWidget {
           ElTextField(
             controller: nicStrController,
             contentType: ElTextFieldContentType.numeric,
-            labelText: "Nic Str",
+            labelText: 'Nic Str',
             labelPosition: ElTextFieldLabelPosition.left,
             readOnly: onNicStrSubmitted == null,
-            suffix: const Text('%'),
+            suffixText: '%',
           ),
           const Gap(8),
           Row(
@@ -46,10 +46,10 @@ class TargetSection extends StatelessWidget {
                 child: ElTextField(
                   controller: vgController,
                   contentType: ElTextFieldContentType.numeric,
-                  labelText: "VG",
+                  labelText: 'VG',
                   labelPosition: ElTextFieldLabelPosition.left,
                   readOnly: onVGSubmitted == null,
-                  suffix: const Text('%'),
+                  suffixText: '%',
                   onSubmitted: onVGSubmitted,
                 ),
               ),
@@ -57,10 +57,10 @@ class TargetSection extends StatelessWidget {
                 child: ElTextField(
                   controller: pgController,
                   contentType: ElTextFieldContentType.numeric,
-                  labelText: "PG",
+                  labelText: 'PG',
                   labelPosition: ElTextFieldLabelPosition.left,
                   readOnly: onPGSubmitted == null,
-                  suffix: const Text('%'),
+                  suffixText: '%',
                   onSubmitted: onPGSubmitted,
                 ),
               ),

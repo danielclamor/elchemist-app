@@ -106,7 +106,7 @@ class NicBaseEntryRow extends StatelessWidget {
             contentType: ElTextFieldContentType.numeric,
             labelText: withHeaders ? 'Percentage' : null,
             readOnly: !isCustom,
-            suffix: const Text("%"),
+            suffixText: '%',
             onSubmitted: onPercentSubmitted,
           ),
         ),

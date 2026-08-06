@@ -156,7 +156,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         labelText: 'Nic Str',
                                         // labelPosition:
                                         //     ElTextFieldLabelPosition.left,
-                                        suffix: const Text('%'),
+                                        suffixText: '%',
                                       ),
                               ),
                             ],
@@ -233,7 +233,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                         .numeric,
                                                 readOnly: true,
                                                 labelText: percentageLabelText,
-                                                suffix: const Text('%'),
+                                                suffixText: '%',
                                               ),
                                             ),
                                             const Gap(12.0),
@@ -283,7 +283,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   readOnly: true,
                                   labelText: "Nic Str",
                                   labelPosition: ElTextFieldLabelPosition.left,
-                                  suffix: const Text('%'),
+                                  suffixText: '%',
                                 ),
                                 const Gap(8),
                                 Row(
@@ -309,7 +309,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         labelText: 'VG',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
-                                        suffix: const Text('%'),
+                                        suffixText: '%',
                                       ),
                                     ),
                                     Expanded(
@@ -332,7 +332,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         labelText: 'PG',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
-                                        suffix: const Text('%'),
+                                        suffixText: '%',
                                       ),
                                     ),
                                   ],
@@ -393,7 +393,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                                       labelText: index == 0
                                                           ? 'Percentage'
                                                           : null,
-                                                      suffix: const Text('%'),
+                                                      suffixText: '%',
                                                     ),
                                                   ),
                                                   const Gap(12.0),
@@ -444,7 +444,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                   readOnly: true,
                                   labelText: "Nic Str",
                                   labelPosition: ElTextFieldLabelPosition.left,
-                                  suffix: const Text("%"),
+                                  suffixText: '%',
                                 ),
                                 const Gap(8),
                                 Row(
@@ -472,10 +472,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         contentType:
                                             ElTextFieldContentType.numeric,
                                         readOnly: true,
-                                        labelText: "VG",
+                                        labelText: 'VG',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
-                                        suffix: const Text("%"),
+                                        suffixText: '%',
                                       ),
                                     ),
                                     Expanded(
@@ -500,10 +500,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                         contentType:
                                             ElTextFieldContentType.numeric,
                                         readOnly: true,
-                                        labelText: "PG",
+                                        labelText: 'PG',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
-                                        suffix: const Text("%"),
+                                        suffixText: '%',
                                       ),
                                     ),
                                   ],

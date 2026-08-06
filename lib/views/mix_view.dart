@@ -295,7 +295,7 @@ class _MixViewState extends State<MixView> {
                                             readOnly: _nicProfile == null ||
                                                 !_isCustom,
                                             labelText: 'Nic Level',
-                                            suffix: const Text('mg'),
+                                            suffixText: 'mg',
                                             onSubmitted: _nicProfile == null &&
                                                     !_isCustom
                                                 ? null
@@ -346,7 +346,7 @@ class _MixViewState extends State<MixView> {
                                         labelText: 'Volume',
                                         labelPosition:
                                             ElTextFieldLabelPosition.left,
-                                        suffix: const Text('mL'),
+                                        suffixText: 'mL',
                                         onSubmitted: (value) {
                                           setState(() {});
                                         },
@@ -429,8 +429,7 @@ class _MixViewState extends State<MixView> {
                                                               ? 'Percentage'
                                                               : null,
                                                           readOnly: !_isCustom,
-                                                          suffix:
-                                                              const Text("%"),
+                                                          suffixText: '%',
                                                         ),
                                                       ),
                                                       const Gap(12.0),

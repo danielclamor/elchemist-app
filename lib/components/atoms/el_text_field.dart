@@ -14,8 +14,7 @@ class ElTextField extends StatelessWidget {
   final String? labelText;
   final bool readOnly;
   final ElTextFieldContentType contentType;
-  final Widget? prefix;
-  final Widget? suffix;
+  final String? suffixText;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final TapRegionCallback? onTapOutside;
@@ -28,8 +27,7 @@ class ElTextField extends StatelessWidget {
     this.label,
     this.labelText,
     this.labelPosition = ElTextFieldLabelPosition.top,
-    this.prefix,
-    this.suffix,
+    this.suffixText,
     this.readOnly = false,
     this.onChanged,
     this.onSubmitted,
@@ -95,6 +93,7 @@ class ElTextField extends StatelessWidget {
     final textField = TextField(
       style: GoogleFonts.robotoMono(
         fontSize: 16,
+        color: readOnly ? Theme.of(context).disabledColor : Colors.white,
       ),
       textAlign: alignment,
       readOnly: readOnly,
@@ -123,18 +122,7 @@ class ElTextField extends StatelessWidget {
         ),
         filled: !readOnly,
         fillColor: Theme.of(context).colorScheme.surfaceContainer,
-        prefixIcon: prefix != null
-            ? Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  12.0,
-                  12.0,
-                  4.0,
-                  12.0,
-                ),
-                child: prefix,
-              )
-            : null,
-        suffixIcon: suffix != null
+        suffixIcon: suffixText != null
             ? Padding(
                 padding: const EdgeInsets.fromLTRB(
                   4.0,
@@ -142,7 +130,14 @@ class ElTextField extends StatelessWidget {
                   12.0,
                   12.0,
                 ),
-                child: suffix,
+                child: Text(
+                  suffixText ?? '',
+                  style: TextStyle(
+                    color: readOnly
+                        ? Theme.of(context).disabledColor
+                        : Colors.white,
+                  ),
+                ),
               )
             : null,
       ),

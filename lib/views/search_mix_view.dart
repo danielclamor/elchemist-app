@@ -419,8 +419,8 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                   readOnly:
                                                       _nicProfile == null ||
                                                           !_isCustom,
-                                                  labelText: "Nic Level",
-                                                  suffix: const Text("mg"),
+                                                  labelText: 'Nic Level',
+                                                  suffixText: 'mg',
                                                   onSubmitted: _nicProfile ==
                                                               null &&
                                                           !_isCustom
@@ -483,10 +483,10 @@ class _SearchMixViewState extends State<SearchMixView> {
                                               contentType:
                                                   ElTextFieldContentType
                                                       .numeric,
-                                              labelText: "Volume",
+                                              labelText: 'Volume',
                                               labelPosition:
                                                   ElTextFieldLabelPosition.left,
-                                              suffix: const Text("mL"),
+                                              suffixText: 'mL',
                                               onSubmitted: (value) {
                                                 setState(() {});
                                               },
@@ -569,8 +569,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                               ? 'Percentage'
                                                               : null,
                                                           readOnly: !_isCustom,
-                                                          suffix:
-                                                              const Text("%"),
+                                                          suffixText: "%",
                                                         ),
                                                       ),
                                                       const Gap(12.0),

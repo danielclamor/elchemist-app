@@ -36,7 +36,7 @@ class NicBaseSection extends StatelessWidget {
             labelText: 'Nic Str',
             labelPosition: ElTextFieldLabelPosition.left,
             readOnly: textFieldReadOnly,
-            suffix: const Text('%'),
+            suffixText: '%',
           ),
           const Gap(8.0),
           Row(
@@ -46,20 +46,20 @@ class NicBaseSection extends StatelessWidget {
                 child: ElTextField(
                   controller: vgController,
                   contentType: ElTextFieldContentType.numeric,
-                  labelText: "VG",
+                  labelText: 'VG',
                   labelPosition: ElTextFieldLabelPosition.left,
                   readOnly: textFieldReadOnly,
-                  suffix: const Text('%'),
+                  suffixText: '%',
                 ),
               ),
               Expanded(
                 child: ElTextField(
                   controller: pgController,
                   contentType: ElTextFieldContentType.numeric,
-                  labelText: "PG",
+                  labelText: 'PG',
                   labelPosition: ElTextFieldLabelPosition.left,
                   readOnly: textFieldReadOnly,
-                  suffix: const Text('%'),
+                  suffixText: '%',
                 ),
               ),
             ],
