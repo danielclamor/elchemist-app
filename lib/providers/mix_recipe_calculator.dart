@@ -49,7 +49,7 @@ class MixRecipeCalculator {
 
     return Ingredient(
       name: 'VG',
-      percentage: ratio,
+      ratio: ratio,
       volume: volume.isNaN ? 0.0 : volume,
       weight: weight.isNaN ? 0.0 : weight,
       type: IngredientType.vg,
@@ -66,7 +66,7 @@ class MixRecipeCalculator {
 
     return Ingredient(
       name: 'PG',
-      percentage: ratio,
+      ratio: ratio,
       volume: volume.isNaN ? 0.0 : volume,
       weight: weight.isNaN ? 0.0 : weight,
       type: IngredientType.pg,
@@ -99,7 +99,7 @@ class MixRecipeCalculator {
 
       return Ingredient(
         name: 'Nicotine Base${entry.code != null ? ' (${entry.code})' : ''}',
-        percentage: entryMixRatio * 100,
+        ratio: entryMixRatio * 100,
         volume: entryBaseVolume + entryNicVolume,
         weight: entryWeight,
         type: entry.isVG ? IngredientType.vg : IngredientType.pg,
@@ -120,7 +120,7 @@ class MixRecipeCalculator {
 
       return Ingredient(
         name: flavor.name,
-        percentage: flavor.ratio,
+        ratio: flavor.ratio,
         volume: volume,
         weight: weight,
         type: flavor.isVG ? IngredientType.vgFlavor : IngredientType.pgFlavor,

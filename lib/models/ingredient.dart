@@ -41,21 +41,23 @@ IngredientType getIngredientType(String ingredientType) {
 class Ingredient {
   final Key? id;
   String name;
-  double percentage;
+  double ratio;
   double volume;
   double weight;
   IngredientType type;
 
   Ingredient({
     required this.name,
-    required this.percentage,
+    required this.ratio,
     required this.volume,
     required this.weight,
     required this.type,
     this.id,
   });
 
+  double get percentage => ratio * 100;
+
   @override
   String toString() =>
-      'Ingredient: {name: $name, percentage: $percentage, volume: $volume, weight: $weight, type: $type}';
+      'Ingredient: {name: $name, percentage: $percentage%, volume: $volume, weight: $weight, type: $type}';
 }

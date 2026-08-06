@@ -62,21 +62,21 @@ class _DiyMixViewState extends State<DiyMixView> {
     _ingredients = <Ingredient>[
       Ingredient(
         name: "Nicotine Base",
-        percentage: _getNicBaseValues().$1,
+        ratio: _getNicBaseValues().$1,
         volume: _getNicBaseValues().$2,
         weight: _getNicBaseValues().$3,
         type: IngredientType.nicotine,
       ),
       Ingredient(
         name: "VG",
-        percentage: _getVGValues().$1,
+        ratio: _getVGValues().$1,
         volume: _getVGValues().$2,
         weight: _getVGValues().$3,
         type: IngredientType.vg,
       ),
       Ingredient(
         name: "PG",
-        percentage: _getPGValues().$1,
+        ratio: _getPGValues().$1,
         volume: _getPGValues().$2,
         weight: _getPGValues().$3,
         type: IngredientType.pg,
@@ -155,7 +155,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         .where((ingredient) => ingredient.type == IngredientType.vgFlavor);
 
     double totalFlavVGPerc = vgFlavors.isNotEmpty
-        ? vgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage)
+        ? vgFlavors.fold(0.0, (sum, flavor) => sum + flavor.ratio)
         : 0.0;
 
     double nicBaseVGPerc =
@@ -183,7 +183,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         .where((ingredient) => ingredient.type == IngredientType.pgFlavor);
 
     double totalFlavPGPerc = pgFlavors.isNotEmpty
-        ? pgFlavors.fold(0.0, (sum, flavor) => sum + flavor.percentage)
+        ? pgFlavors.fold(0.0, (sum, flavor) => sum + flavor.ratio)
         : 0.0;
 
     double nicBasePGPerc =
@@ -214,17 +214,17 @@ class _DiyMixViewState extends State<DiyMixView> {
         case IngredientType.vgFlavor:
           (percentage, volume, weight) = _getFlavorValues(
             true,
-            ingredient.percentage,
+            ingredient.ratio,
           );
         case IngredientType.pgFlavor:
           (percentage, volume, weight) = _getFlavorValues(
             false,
-            ingredient.percentage,
+            ingredient.ratio,
           );
       }
 
       setState(() {
-        ingredient.percentage = percentage;
+        ingredient.ratio = percentage;
         ingredient.volume = volume;
         ingredient.weight = weight;
       });
@@ -251,7 +251,7 @@ class _DiyMixViewState extends State<DiyMixView> {
         _ingredients.length - 2,
         Ingredient(
           name: flavor,
-          percentage: double.parse(percentage),
+          ratio: double.parse(percentage),
           volume: 0.0,
           weight: 0.0,
           type: IngredientType.pgFlavor,
@@ -334,7 +334,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                     entry.isVG,
                     double.parse(value) / 100,
                   );
-                  flavor.percentage = percentage;
+                  flavor.ratio = percentage;
                   flavor.volume = volume;
                   flavor.weight = weight;
                 });
@@ -642,7 +642,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                         0,
                                         Ingredient(
                                           name: "Nicotine Base",
-                                          percentage: percentage,
+                                          ratio: percentage,
                                           volume: volume,
                                           weight: weight,
                                           type: IngredientType.nicotine,
