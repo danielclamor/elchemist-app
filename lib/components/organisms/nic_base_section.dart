@@ -9,7 +9,7 @@ class NicBaseSection extends StatelessWidget {
   final TextEditingController nicStrController;
   final TextEditingController vgController;
   final TextEditingController pgController;
-  final Widget nicBaseEntries;
+  final List<Widget> nicBaseEntries;
   final Widget? addEntryButton;
 
   const NicBaseSection({
@@ -64,7 +64,18 @@ class NicBaseSection extends StatelessWidget {
               ),
             ],
           ),
-          nicBaseEntries,
+          nicBaseEntries.isEmpty
+              ? const SizedBox.shrink()
+              : Column(
+                  children: [
+                    Divider(
+                      thickness: 1,
+                      color: Theme.of(context).focusColor,
+                    ),
+                    const Gap(16.0),
+                    ...nicBaseEntries,
+                  ],
+                ),
           addEntryButton ?? const SizedBox.shrink(),
         ],
       ),

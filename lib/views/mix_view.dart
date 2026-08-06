@@ -428,56 +428,37 @@ class _MixViewState extends State<MixView> {
                       nicStrController: _nicBaseNicStrController,
                       vgController: _nicBaseVGController,
                       pgController: _nicBasePGController,
-                      nicBaseEntries: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _nicBaseEntries.isEmpty
-                              ? const SizedBox.shrink()
-                              : Column(
-                                  children: [
-                                    const Gap(16.0),
-                                    Divider(
-                                      thickness: 1,
-                                      color: Theme.of(context).focusColor,
-                                    ),
-                                    const Gap(16.0),
-                                    Column(
-                                      spacing: 8.0,
-                                      children: List.generate(
-                                          _nicBaseEntries.length, (index) {
-                                        final entry = _nicBaseEntries[index];
-                                        return NicBaseEntryRow(
-                                          entry: entry,
-                                          isCustom: _isCustom,
-                                          withHeaders: index == 0,
-                                          showDeleteIcon: _isCustom &&
-                                              _nicBaseEntries.length > 1,
-                                          onEntryDeleted: () =>
-                                              _removeEntry(entry),
-                                          onOptionSelected: (value) {
-                                            final nicBaseOption = value;
+                      nicBaseEntries: List.generate(
+                        _nicBaseEntries.length,
+                        (index) {
+                          final entry = _nicBaseEntries[index];
+                          return NicBaseEntryRow(
+                            entry: entry,
+                            isCustom: _isCustom,
+                            withHeaders: index == 0,
+                            showDeleteIcon:
+                                _isCustom && _nicBaseEntries.length > 1,
+                            onEntryDeleted: () => _removeEntry(entry),
+                            onOptionSelected: (value) {
+                              final nicBaseOption = value;
 
-                                            if (nicBaseOption == null) {
-                                              return;
-                                            }
+                              if (nicBaseOption == null) {
+                                return;
+                              }
 
-                                            setState(() {
-                                              entry.nicBase = NicBase(
-                                                nicBaseOption: nicBaseOption,
-                                                ratio: entry.ratio,
-                                              );
-                                            });
+                              setState(() {
+                                entry.nicBase = NicBase(
+                                  nicBaseOption: nicBaseOption,
+                                  ratio: entry.ratio,
+                                );
+                              });
 
-                                            _calculateTotalNicBaseRatio();
-                                          },
-                                          onPercentSubmitted: (value) =>
-                                              _calculateTotalNicBaseRatio(),
-                                        );
-                                      }),
-                                    ),
-                                  ],
-                                ),
-                        ],
+                              _calculateTotalNicBaseRatio();
+                            },
+                            onPercentSubmitted: (value) =>
+                                _calculateTotalNicBaseRatio(),
+                          );
+                        },
                       ),
                       addEntryButton: _isCustom &&
                               double.parse(_targetNicStrController.text) <= 0.0
