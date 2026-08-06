@@ -39,7 +39,7 @@ class SectionCard extends StatelessWidget {
                       ),
                     )
                   : const SizedBox.shrink(),
-              const Gap(24),
+              const Gap(20),
               child,
             ],
           ),
