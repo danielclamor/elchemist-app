@@ -592,14 +592,6 @@ class _SearchMixViewState extends State<SearchMixView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "NIC BASE",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Gap(20),
                           ElTextField(
                             controller: _nicBaseNicStrController,
                             contentType: ElTextFieldContentType.numeric,
