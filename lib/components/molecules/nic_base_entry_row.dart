@@ -24,9 +24,11 @@ class NicBaseEntry {
     percentageController.dispose();
   }
 
-  bool get isVG => nicBase?.isVG ?? false;
+  NicBaseOption? get option => nicBase?.nicBaseOption;
 
-  String get code => nicBase?.code ?? '';
+  String? get label => nicBase?.label;
+
+  bool get isVG => nicBase?.isVG ?? false;
 
   double get ratio => double.parse(percentageController.text) / 100;
 }
@@ -40,8 +42,7 @@ class NicBaseEntryRow extends StatelessWidget {
   final ValueChanged<NicBaseOption?>? onOptionSelected;
   final ValueChanged<String>? onPercentSubmitted;
 
-  const NicBaseEntryRow({
-    super.key,
+  NicBaseEntryRow({
     required this.entry,
     required this.isCustom,
     required this.withHeaders,
@@ -49,7 +50,7 @@ class NicBaseEntryRow extends StatelessWidget {
     this.onEntryDeleted,
     this.onOptionSelected,
     this.onPercentSubmitted,
-  });
+  }) : super(key: entry.id);
 
   List<NicBaseOption> get _nicBaseOptions => nicBaseOptionsData
       .map((option) => NicBaseOption.fromMap(option))
@@ -77,9 +78,7 @@ class NicBaseEntryRow extends StatelessWidget {
             builder: (context, constraints) => ElDropdownMenu<NicBaseOption>(
               width: constraints.maxWidth,
               ignoring: !isCustom,
-              initialSelection: _nicBaseOptions.firstWhereOrNull(
-                (option) => option == entry.nicBase?.nicBaseOption,
-              ),
+              initialSelection: entry.option,
               labelText: withHeaders ? 'Name' : null,
               dropdownMenuEntries:
                   UnmodifiableListView<DropdownMenuEntry<NicBaseOption>>(

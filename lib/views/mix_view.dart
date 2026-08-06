@@ -151,29 +151,6 @@ class _MixViewState extends State<MixView> {
     _calculateTotalNicBaseRatio();
   }
 
-  Widget _buildEntryRow(NicBaseEntry entry, bool withHeaders) {
-    return NicBaseEntryRow(
-      entry: entry,
-      isCustom: _isCustom,
-      withHeaders: withHeaders,
-      showDeleteIcon: _isCustom && _nicBaseEntries.length > 1,
-      onEntryDeleted: () => _removeEntry(entry),
-      onOptionSelected: (value) {
-        final nicBaseOption = value;
-        if (nicBaseOption == null) return;
-
-        setState(() {
-          entry.nicBase = NicBase(
-            nicBaseOption: nicBaseOption,
-            percentage: entry.ratio,
-          );
-        });
-        _calculateTotalNicBaseRatio();
-      },
-      onPercentSubmitted: (value) => _calculateTotalNicBaseRatio(),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -549,9 +526,33 @@ class _MixViewState extends State<MixView> {
                                           spacing: 8.0,
                                           children: List.generate(
                                               _nicBaseEntries.length, (index) {
-                                            return _buildEntryRow(
-                                              _nicBaseEntries[index],
-                                              index == 0,
+                                            final entry =
+                                                _nicBaseEntries[index];
+                                            return NicBaseEntryRow(
+                                              entry: entry,
+                                              isCustom: _isCustom,
+                                              withHeaders: index == 0,
+                                              showDeleteIcon: _isCustom &&
+                                                  _nicBaseEntries.length > 1,
+                                              onEntryDeleted: () =>
+                                                  _removeEntry(entry),
+                                              onOptionSelected: (value) {
+                                                final nicBaseOption = value;
+                                                if (nicBaseOption == null) {
+                                                  return;
+                                                }
+
+                                                setState(() {
+                                                  entry.nicBase = NicBase(
+                                                    nicBaseOption:
+                                                        nicBaseOption,
+                                                    percentage: entry.ratio,
+                                                  );
+                                                });
+                                                _calculateTotalNicBaseRatio();
+                                              },
+                                              onPercentSubmitted: (value) =>
+                                                  _calculateTotalNicBaseRatio(),
                                             );
                                           }),
                                         )
