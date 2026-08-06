@@ -460,7 +460,8 @@ class _SearchMixViewState extends State<SearchMixView> {
 
                                                       if (value == false) {
                                                         _setNicProfile(
-                                                            _nicProfile);
+                                                          _nicProfile,
+                                                        );
                                                       }
                                                     },
                                             ),
@@ -644,7 +645,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                 ),
                         ],
                       ),
-                      addEntryButton: _isCustom &&
+                      addEntryButton: !_isCustom ||
                               double.parse(_targetNicStrController.text) <= 0.0
                           ? null
                           : Padding(
