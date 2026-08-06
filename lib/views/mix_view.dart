@@ -3,6 +3,7 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
+import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
@@ -454,132 +455,78 @@ class _MixViewState extends State<MixView> {
                         ],
                       ),
                     ),
-                    SizedBox(
+                    NicBaseSection(
                       width: midSectionWidth,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "NIC BASE",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                      targetNicStrController: _targetNicStrController,
+                      nicStrController: _nicBaseNicStrController,
+                      vgController: _nicBaseVGController,
+                      pgController: _nicBasePGController,
+                      nicBaseEntries: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _nicBaseEntries.isEmpty
+                              ? const SizedBox.shrink()
+                              : Column(
+                                  children: [
+                                    const Gap(16.0),
+                                    Divider(
+                                      thickness: 1,
+                                      color: Theme.of(context).focusColor,
+                                    ),
+                                    const Gap(16.0),
+                                    Column(
+                                      spacing: 8.0,
+                                      children: List.generate(
+                                          _nicBaseEntries.length, (index) {
+                                        final entry = _nicBaseEntries[index];
+                                        return NicBaseEntryRow(
+                                          entry: entry,
+                                          isCustom: _isCustom,
+                                          withHeaders: index == 0,
+                                          showDeleteIcon: _isCustom &&
+                                              _nicBaseEntries.length > 1,
+                                          onEntryDeleted: () =>
+                                              _removeEntry(entry),
+                                          onOptionSelected: (value) {
+                                            final nicBaseOption = value;
+
+                                            if (nicBaseOption == null) {
+                                              return;
+                                            }
+
+                                            setState(() {
+                                              entry.nicBase = NicBase(
+                                                nicBaseOption: nicBaseOption,
+                                                ratio: entry.ratio,
+                                              );
+                                            });
+
+                                            _calculateTotalNicBaseRatio();
+                                          },
+                                          onPercentSubmitted: (value) =>
+                                              _calculateTotalNicBaseRatio(),
+                                        );
+                                      }),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const Gap(20),
-                              ElTextField(
-                                controller: _nicBaseNicStrController,
-                                contentType: ElTextFieldContentType.numeric,
-                                labelText: 'Nic Str',
-                                labelPosition: ElTextFieldLabelPosition.left,
-                                readOnly: true,
-                                suffix: const Text('%'),
-                              ),
-                              const Gap(8.0),
-                              Row(
-                                spacing: 8.0,
+                        ],
+                      ),
+                      addEntryButton: _isCustom &&
+                              double.parse(_targetNicStrController.text) <= 0.0
+                          ? null
+                          : Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Expanded(
-                                    child: ElTextField(
-                                      controller: _nicBaseVGController,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
-                                      labelText: "VG",
-                                      labelPosition:
-                                          ElTextFieldLabelPosition.left,
-                                      readOnly: true,
-                                      suffix: const Text('%'),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ElTextField(
-                                      controller: _nicBasePGController,
-                                      contentType:
-                                          ElTextFieldContentType.numeric,
-                                      labelText: "PG",
-                                      labelPosition:
-                                          ElTextFieldLabelPosition.left,
-                                      readOnly: true,
-                                      suffix: const Text('%'),
-                                    ),
+                                  TextButton(
+                                    onPressed: () => _addEntry(null),
+                                    child: const Text("+ Add"),
                                   ),
                                 ],
                               ),
-                              _nicBaseEntries.isEmpty
-                                  ? const SizedBox.shrink()
-                                  : Column(
-                                      children: [
-                                        const Gap(16.0),
-                                        Divider(
-                                          thickness: 1,
-                                          color: Theme.of(context).focusColor,
-                                        ),
-                                        const Gap(16.0),
-                                        Column(
-                                          spacing: 8.0,
-                                          children: List.generate(
-                                              _nicBaseEntries.length, (index) {
-                                            final entry =
-                                                _nicBaseEntries[index];
-                                            return NicBaseEntryRow(
-                                              entry: entry,
-                                              isCustom: _isCustom,
-                                              withHeaders: index == 0,
-                                              showDeleteIcon: _isCustom &&
-                                                  _nicBaseEntries.length > 1,
-                                              onEntryDeleted: () =>
-                                                  _removeEntry(entry),
-                                              onOptionSelected: (value) {
-                                                final nicBaseOption = value;
-                                                if (nicBaseOption == null) {
-                                                  return;
-                                                }
-
-                                                setState(() {
-                                                  entry.nicBase = NicBase(
-                                                    nicBaseOption:
-                                                        nicBaseOption,
-                                                    ratio: entry.ratio,
-                                                  );
-                                                });
-                                                _calculateTotalNicBaseRatio();
-                                              },
-                                              onPercentSubmitted: (value) =>
-                                                  _calculateTotalNicBaseRatio(),
-                                            );
-                                          }),
-                                        )
-                                      ],
-                                    ),
-                              _isCustom &&
-                                      double.parse(
-                                              _targetNicStrController.text) >
-                                          0.0
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          TextButton(
-                                            onPressed: () => _addEntry(null),
-                                            child: const Text("+ Add"),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ],
-                          ),
-                        ),
-                      ),
+                            ),
                     ),
                     SizedBox(
                       width: midSectionWidth,
