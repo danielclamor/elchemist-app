@@ -73,7 +73,6 @@ class MixRecipeCalculator {
     );
   }
 
-  /// The finalized list of ingredients: nic bases, flavorings, then VG/PG fill.
   List<Ingredient> get ingredients {
     double totalNicBaseVGRatio = 0.0;
     double totalNicBasePGRatio = 0.0;
@@ -108,20 +107,20 @@ class MixRecipeCalculator {
     }).toList();
 
     final List<Ingredient> ingFlavorings = flavorings.map((flavor) {
-      final volume = flavor.percentage * batchVolume;
+      final volume = flavor.ratio * batchVolume;
       double weight;
 
       if (flavor.isVG) {
-        totalFlavVGRatio += flavor.percentage;
+        totalFlavVGRatio += flavor.ratio;
         weight = volume * vgFlavDensity;
       } else {
-        totalFlavPGRatio += flavor.percentage;
+        totalFlavPGRatio += flavor.ratio;
         weight = volume * pgFlavDensity;
       }
 
       return Ingredient(
         name: flavor.name,
-        percentage: flavor.percentage,
+        percentage: flavor.ratio,
         volume: volume,
         weight: weight,
         type: flavor.isVG ? IngredientType.vgFlavor : IngredientType.pgFlavor,

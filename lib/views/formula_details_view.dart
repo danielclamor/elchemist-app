@@ -225,8 +225,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                               child: ElTextField(
                                                 controller:
                                                     TextEditingController(
-                                                  text: (flavoring.percentage *
-                                                          100)
+                                                  text: (flavoring.percentage)
                                                       .toStringAsFixed(4),
                                                 ),
                                                 contentType:

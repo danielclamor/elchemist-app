@@ -550,8 +550,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                           controller:
                                                               TextEditingController(
                                                             text: (flavoring
-                                                                        .percentage *
-                                                                    100)
+                                                                    .percentage)
                                                                 .toStringAsFixed(
                                                                     4),
                                                           ),
