@@ -441,6 +441,13 @@ class _SearchMixViewState extends State<SearchMixView> {
                                                                       .text =
                                                                   targetNicStr
                                                                       .toString();
+
+                                                              if (targetNicStr ==
+                                                                  0.0) {
+                                                                _nicBaseEntries
+                                                                    .clear();
+                                                                _calculateTotalNicBaseRatio();
+                                                              }
                                                             });
                                                           }
                                                         },
