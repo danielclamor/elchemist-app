@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
+import 'package:elchemist_app/components/organisms/recipe_section.dart';
+import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:elchemist_app/value_getters.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
@@ -14,202 +16,41 @@ class DiyMixView extends StatefulWidget {
 }
 
 class _DiyMixViewState extends State<DiyMixView> {
-  List<Ingredient> _ingredients = [];
+  final List<FlavoringEntry> _flavoringEntries = [];
 
-  final List<FlavoringEntry> _flavorEntries = [];
+  late TextEditingController _volumeController;
+  late TextEditingController _nicBaseNicStrController;
+  late TextEditingController _nicBaseVGController;
+  late TextEditingController _nicBasePGController;
+  late TextEditingController _targetNicStrController;
+  late TextEditingController _targetVGController;
+  late TextEditingController _targetPGController;
 
-  late String _volume;
-  late String _targetNicStr;
-  late String _targetVG;
-  late String _targetPG;
-  late String _nicBaseNicStr;
-  late String _nicBaseVG;
-  late String _nicBasePG;
+  List<TextEditingController> get _allControllers => [
+        _volumeController,
+        _nicBaseNicStrController,
+        _nicBaseVGController,
+        _nicBasePGController,
+        _targetNicStrController,
+        _targetVGController,
+        _targetPGController
+      ];
 
   @override
   void initState() {
-    _volume = "30";
-    _targetNicStr = "2";
-    _targetVG = "40";
-    _targetPG = "60";
-    _nicBaseNicStr = "10";
-    _nicBaseVG = "0";
-    _nicBasePG = "100";
-
-    _ingredients = <Ingredient>[
-      Ingredient(
-        name: "Nicotine Base",
-        ratio: _getNicBaseValues().$1,
-        volume: _getNicBaseValues().$2,
-        weight: _getNicBaseValues().$3,
-        type: IngredientType.nicotine,
-      ),
-      Ingredient(
-        name: "VG",
-        ratio: _getVGValues().$1,
-        volume: _getVGValues().$2,
-        weight: _getVGValues().$3,
-        type: IngredientType.vg,
-      ),
-      Ingredient(
-        name: "PG",
-        ratio: _getPGValues().$1,
-        volume: _getPGValues().$2,
-        weight: _getPGValues().$3,
-        type: IngredientType.pg,
-      ),
-    ];
+    _volumeController = TextEditingController(text: "30");
+    _targetNicStrController = TextEditingController(text: "2");
+    _targetVGController = TextEditingController(text: "40");
+    _targetPGController = TextEditingController(text: "60");
+    _nicBaseNicStrController = TextEditingController(text: "10");
+    _nicBaseVGController = TextEditingController(text: "0");
+    _nicBasePGController = TextEditingController(text: "100");
 
     super.initState();
   }
 
-  int _getDecimalPlaces(String value) {
-    double doubleValue = double.parse(value);
-
-    if (doubleValue == doubleValue.toInt()) return 0;
-
-    List<String> parts = value.split('.');
-
-    return parts.length > 1 ? parts[1].length : 0;
-  }
-
-  (double, double, double) _getNicBaseValues() {
-    final double volume = _volume == "" ? 0.0 : double.parse(_volume);
-
-    final double targetNicStr = double.parse(_targetNicStr) / 100;
-    final double nicBaseNicStr = double.parse(_nicBaseNicStr) / 100;
-
-    double nicBaseVGVol = nicBaseCompVol(
-      volume,
-      targetNicStr,
-      nicBaseNicStr,
-      double.parse(_nicBaseVG) / 100,
-    );
-
-    double nicBasePGVol = nicBaseCompVol(
-      volume,
-      targetNicStr,
-      nicBaseNicStr,
-      double.parse(_nicBasePG) / 100,
-    );
-
-    double nicotineVol = nicVol(
-      volume,
-      targetNicStr,
-    );
-
-    final nicBaseMixPerc = targetNicStr / nicBaseNicStr;
-
-    return (
-      nicBaseMixPerc,
-      nicBaseMixPerc * volume,
-      nicGrams(nicotineVol) + vgGrams(nicBaseVGVol) + pgGrams(nicBasePGVol),
-    );
-  }
-
-  (double, double, double) _getFlavorValues(bool isVG, double percentage) {
-    final double volume = _volume == "" ? 0.0 : double.parse(_volume);
-
-    var flavoringVol = flavVol(
-      volume,
-      percentage,
-    );
-
-    return (
-      percentage,
-      flavVol(volume, percentage),
-      isVG ? vgFlavGrams(flavoringVol) : pgFlavGrams(flavoringVol),
-    );
-  }
-
-  (double, double, double) _getVGValues() {
-    final double volume = _volume == "" ? 0.0 : double.parse(_volume);
-
-    final double targetNicStr = double.parse(_targetNicStr) / 100;
-    final double nicBaseNicStr = double.parse(_nicBaseNicStr) / 100;
-
-    final vgFlavors = _ingredients
-        .where((ingredient) => ingredient.type == IngredientType.vgFlavor);
-
-    double totalFlavVGPerc = vgFlavors.isNotEmpty
-        ? vgFlavors.fold(0.0, (sum, flavor) => sum + flavor.ratio)
-        : 0.0;
-
-    double nicBaseVGPerc =
-        _nicBaseVG != "" ? double.parse(_nicBaseVG) / 100 : 0.0;
-
-    double targetVG = _targetVG != "" ? double.parse(_targetVG) / 100 : 0.0;
-
-    double vgMixPerc = targetVG -
-        totalFlavVGPerc +
-        (targetNicStr *
-            (nicBaseVGPerc - targetVG - (nicBaseVGPerc / nicBaseNicStr)));
-
-    double ingredientVGVol = volume * vgMixPerc;
-
-    return (vgMixPerc, ingredientVGVol, vgGrams(ingredientVGVol));
-  }
-
-  (double, double, double) _getPGValues() {
-    final double volume = _volume == "" ? 0.0 : double.parse(_volume);
-
-    final double targetNicStr = double.parse(_targetNicStr) / 100;
-    final double nicBaseNicStr = double.parse(_nicBaseNicStr) / 100;
-
-    final pgFlavors = _ingredients
-        .where((ingredient) => ingredient.type == IngredientType.pgFlavor);
-
-    double totalFlavPGPerc = pgFlavors.isNotEmpty
-        ? pgFlavors.fold(0.0, (sum, flavor) => sum + flavor.ratio)
-        : 0.0;
-
-    double nicBasePGPerc =
-        _nicBasePG != "" ? double.parse(_nicBasePG) / 100 : 0.0;
-
-    double targetPG = _targetPG != "" ? double.parse(_targetPG) / 100 : 0.0;
-
-    double pgMixPerc = targetPG -
-        totalFlavPGPerc +
-        (targetNicStr *
-            (nicBasePGPerc - targetPG - (nicBasePGPerc / nicBaseNicStr)));
-
-    double ingredientPGVol = volume * pgMixPerc;
-
-    return (pgMixPerc, ingredientPGVol, pgGrams(ingredientPGVol));
-  }
-
-  void _updateValues() {
-    for (Ingredient ingredient in _ingredients) {
-      var (percentage, volume, weight) = (0.0, 0.0, 0.0);
-      switch (ingredient.type) {
-        case IngredientType.nicotine:
-          (percentage, volume, weight) = _getNicBaseValues();
-        case IngredientType.vg:
-          (percentage, volume, weight) = _getVGValues();
-        case IngredientType.pg:
-          (percentage, volume, weight) = _getPGValues();
-        case IngredientType.vgFlavor:
-          (percentage, volume, weight) = _getFlavorValues(
-            true,
-            ingredient.ratio,
-          );
-        case IngredientType.pgFlavor:
-          (percentage, volume, weight) = _getFlavorValues(
-            false,
-            ingredient.ratio,
-          );
-      }
-
-      setState(() {
-        ingredient.ratio = percentage;
-        ingredient.volume = volume;
-        ingredient.weight = weight;
-      });
-    }
-  }
-
-  void _addEntry() {
-    final flavor = 'Flavor ${_flavorEntries.length + 1}';
+  void _addFlavoringEntry() {
+    final flavor = 'Flavor ${_flavoringEntries.length + 1}';
     const ratio = 0.0;
 
     final entry = FlavoringEntry(
@@ -217,32 +58,15 @@ class _DiyMixViewState extends State<DiyMixView> {
       ratio: ratio,
     );
     setState(() {
-      _flavorEntries.add(entry);
-      _ingredients.insert(
-        _ingredients.length - 2,
-        Ingredient(
-          name: flavor,
-          ratio: ratio,
-          volume: 0.0,
-          weight: 0.0,
-          type: IngredientType.pgFlavor,
-          id: entry.id,
-        ),
-      );
+      _flavoringEntries.add(entry);
     });
-    _updateValues();
   }
 
-  void _removeEntry(FlavoringEntry entry) {
+  void _removeFlavoringEntry(FlavoringEntry entry) {
     setState(() {
       entry.dispose();
-      _flavorEntries.remove(entry);
-      _ingredients.remove(
-        _ingredients
-            .firstWhereOrNull((ingredient) => ingredient.id == entry.id),
-      );
+      _flavoringEntries.remove(entry);
     });
-    _updateValues();
   }
 
   Widget _buildEntryRow(FlavoringEntry entry, bool withHeaders) {
@@ -250,64 +74,19 @@ class _DiyMixViewState extends State<DiyMixView> {
       entry: entry,
       withHeaders: withHeaders,
       showDeleteIcon: true,
-      onEntryDeleted: () => _removeEntry(entry),
-      onNameSubmitted: (value) {
-        setState(() {
-          entry.nameController.text = value;
-        });
-        final flavor = _ingredients.firstWhereOrNull(
-          (ingredient) => ingredient.id == entry.id,
-        );
-        if (flavor != null) {
-          setState(() {
-            flavor.name = value;
-          });
-        }
-      },
-      onPercentSubmitted: (value) {
-        setState(() {
-          entry.percentageController.text = value;
-        });
-        final flavor = _ingredients.firstWhereOrNull(
-          (ingredient) => ingredient.id == entry.id,
-        );
-        if (flavor != null) {
-          setState(() {
-            final (percentage, volume, weight) = _getFlavorValues(
-              entry.isVG,
-              entry.ratio,
-            );
-            flavor.ratio = percentage;
-            flavor.volume = volume;
-            flavor.weight = weight;
-          });
-          _updateValues();
-        }
-      },
-      onIsVGChanged: (value) {
-        setState(() {
-          entry.isVG = value ?? false;
-        });
-        final flavor = _ingredients.firstWhereOrNull(
-          (ingredient) => ingredient.id == entry.id,
-        );
-        if (flavor != null) {
-          setState(() {
-            flavor.type = value == true
-                ? IngredientType.vgFlavor
-                : IngredientType.pgFlavor;
-          });
-          _updateValues();
-        }
-      },
+      onEntryDeleted: () => _removeFlavoringEntry(entry),
+      onNameSubmitted: (value) => setState(() {}),
+      onPercentSubmitted: (value) => setState(() {}),
+      onIsVGChanged: (value) => setState(() {}),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    var wrapperWidth = screenSize.width < 1920 ? 500.0 : null;
-    var section2Width = screenSize.width < 1920 ? 500.0 : 400.0;
+    var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
+    var sectionWidth = 500.0;
+    var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 400.0;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -361,19 +140,12 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 ),
                                 const Gap(16.0),
                                 ElTextField(
-                                  controller: TextEditingController(
-                                    text: _volume,
-                                  ),
+                                  controller: _volumeController,
                                   contentType: ElTextFieldContentType.numeric,
                                   labelText: 'Volume',
                                   labelPosition: ElTextFieldLabelPosition.left,
                                   suffixText: 'mL',
-                                  onSubmitted: (value) {
-                                    setState(() {
-                                      _volume = value;
-                                    });
-                                    _updateValues();
-                                  },
+                                  onSubmitted: (value) => setState(() {}),
                                 ),
                               ],
                             ),
@@ -402,13 +174,13 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 const Gap(20),
                                 Column(
                                   spacing: 8.0,
-                                  children: List.generate(_flavorEntries.length,
-                                      (index) {
+                                  children: List.generate(
+                                      _flavoringEntries.length, (index) {
                                     final withHeaders =
                                         index == 0 ? true : false;
 
                                     return _buildEntryRow(
-                                      _flavorEntries[index],
+                                      _flavoringEntries[index],
                                       withHeaders,
                                     );
                                   }),
@@ -419,7 +191,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       TextButton(
-                                        onPressed: () => _addEntry(),
+                                        onPressed: () => _addFlavoringEntry(),
                                         child: const Text("+ Add"),
                                       ),
                                     ],
@@ -433,7 +205,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                     ),
                     Container(
                       constraints: BoxConstraints(
-                        maxWidth: section2Width,
+                        maxWidth: midSectionWidth,
                       ),
                       child: Card(
                         shape: RoundedRectangleBorder(
@@ -454,18 +226,11 @@ class _DiyMixViewState extends State<DiyMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
-                                controller: TextEditingController(
-                                  text: _nicBaseNicStr,
-                                ),
+                                controller: _nicBaseNicStrController,
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
-                                onSubmitted: (value) {
-                                  setState(() {
-                                    _nicBaseNicStr = value;
-                                  });
-                                  _updateValues();
-                                },
+                                onSubmitted: (value) => setState(() {}),
                                 suffixText: '%',
                               ),
                               const Gap(8),
@@ -474,9 +239,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
-                                      controller: TextEditingController(
-                                        text: _nicBaseVG,
-                                      ),
+                                      controller: _nicBaseVGController,
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'VG',
@@ -485,24 +248,16 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
-                                          _nicBaseVG = value;
-                                          _nicBasePG =
+                                          _nicBasePGController.text =
                                               (100 - (double.parse(value)))
-                                                  .toStringAsFixed(
-                                            _getDecimalPlaces(
-                                              value,
-                                            ),
-                                          );
+                                                  .toString();
                                         });
-                                        _updateValues();
                                       },
                                     ),
                                   ),
                                   Expanded(
                                     child: ElTextField(
-                                      controller: TextEditingController(
-                                        text: _nicBasePG,
-                                      ),
+                                      controller: _nicBasePGController,
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'PG',
@@ -511,16 +266,10 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
-                                          _nicBasePG = value;
-                                          _nicBaseVG =
+                                          _nicBaseVGController.text =
                                               (100 - (double.parse(value)))
-                                                  .toStringAsFixed(
-                                            _getDecimalPlaces(
-                                              value,
-                                            ),
-                                          );
+                                                  .toString();
                                         });
-                                        _updateValues();
                                       },
                                     ),
                                   ),
@@ -533,7 +282,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                     ),
                     Container(
                       constraints: BoxConstraints(
-                        maxWidth: section2Width,
+                        maxWidth: midSectionWidth,
                       ),
                       child: Card(
                         shape: RoundedRectangleBorder(
@@ -554,44 +303,12 @@ class _DiyMixViewState extends State<DiyMixView> {
                               ),
                               const Gap(20),
                               ElTextField(
-                                controller: TextEditingController(
-                                  text: _targetNicStr,
-                                ),
+                                controller: _targetNicStrController,
                                 contentType: ElTextFieldContentType.numeric,
                                 labelText: 'Nic Str',
                                 labelPosition: ElTextFieldLabelPosition.left,
                                 suffixText: '%',
-                                onSubmitted: (value) {
-                                  final percentage = double.parse(value);
-
-                                  if (percentage == 0.0) {
-                                    _ingredients.removeAt(0);
-                                  } else {
-                                    if (!_ingredients
-                                        .map((ingredient) => ingredient.name)
-                                        .contains("Nicotine Base")) {
-                                      setState(() {});
-                                      final (percentage, volume, weight) =
-                                          _getNicBaseValues();
-                                      _ingredients.insert(
-                                        0,
-                                        Ingredient(
-                                          name: "Nicotine Base",
-                                          ratio: percentage,
-                                          volume: volume,
-                                          weight: weight,
-                                          type: IngredientType.nicotine,
-                                        ),
-                                      );
-                                    }
-                                  }
-
-                                  setState(() {
-                                    _targetNicStr = value;
-                                  });
-
-                                  _updateValues();
-                                },
+                                onSubmitted: (value) => setState(() {}),
                               ),
                               const Gap(8.0),
                               Row(
@@ -599,9 +316,7 @@ class _DiyMixViewState extends State<DiyMixView> {
                                 children: [
                                   Expanded(
                                     child: ElTextField(
-                                      controller: TextEditingController(
-                                        text: _targetVG,
-                                      ),
+                                      controller: _targetVGController,
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'VG',
@@ -610,24 +325,16 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
-                                          _targetVG = value;
-                                          _targetPG =
+                                          _targetPGController.text =
                                               (100 - (double.parse(value)))
-                                                  .toStringAsFixed(
-                                            _getDecimalPlaces(
-                                              value,
-                                            ),
-                                          );
+                                                  .toString();
                                         });
-                                        _updateValues();
                                       },
                                     ),
                                   ),
                                   Expanded(
                                     child: ElTextField(
-                                      controller: TextEditingController(
-                                        text: _targetPG,
-                                      ),
+                                      controller: _targetPGController,
                                       contentType:
                                           ElTextFieldContentType.numeric,
                                       labelText: 'PG',
@@ -636,16 +343,10 @@ class _DiyMixViewState extends State<DiyMixView> {
                                       suffixText: '%',
                                       onSubmitted: (value) {
                                         setState(() {
-                                          _targetPG = value;
-                                          _targetVG =
+                                          _targetVGController.text =
                                               (100 - (double.parse(value)))
-                                                  .toStringAsFixed(
-                                            _getDecimalPlaces(
-                                              value,
-                                            ),
-                                          );
+                                                  .toString();
                                         });
-                                        _updateValues();
                                       },
                                     ),
                                   ),
@@ -656,119 +357,23 @@ class _DiyMixViewState extends State<DiyMixView> {
                         ),
                       ),
                     ),
-                    Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: 500,
-                      ),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "RECIPE",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Gap(24),
-                              DataTable(
-                                horizontalMargin: 0.0,
-                                columns: const <DataColumn>[
-                                  DataColumn(
-                                    label: Text(
-                                      "Ingredient",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      "mL",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    numeric: true,
-                                  ),
-                                  DataColumn(
-                                    label: Text(
-                                      "g",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    numeric: true,
-                                  ),
-                                ],
-                                rows: [
-                                  ..._ingredients.map(
-                                    (ingredient) => DataRow(
-                                      cells: [
-                                        DataCell(
-                                          Text(
-                                            ingredient.name,
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            '${ingredient.volume.toStringAsFixed(2)} mL',
-                                          ),
-                                        ),
-                                        DataCell(
-                                          Text(
-                                            '${ingredient.weight.toStringAsFixed(2)} g',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  DataRow(
-                                    cells: [
-                                      const DataCell(
-                                        Text(
-                                          "Sum",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.volume).toStringAsFixed(2)} mL',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${_ingredients.fold(0.0, (sum, ingredient) => sum + ingredient.weight).toStringAsFixed(2)} g',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
+                    RecipeSection(
+                      width: sectionWidth,
+                      ingredients: MixRecipeCalculator(
+                        batchVolume: double.parse(_volumeController.text),
+                        nicBaseNicStr:
+                            double.parse(_nicBaseNicStrController.text) / 100,
+                        nicBaseVG:
+                            double.parse(_nicBaseVGController.text) / 100,
+                        nicBasePG:
+                            double.parse(_nicBasePGController.text) / 100,
+                        targetNicStr:
+                            double.parse(_targetNicStrController.text) / 100,
+                        targetVG: double.parse(_targetVGController.text) / 100,
+                        targetPG: double.parse(_targetPGController.text) / 100,
+                        flavorings: _flavoringEntries,
+                      ).ingredients,
+                    ),
                   ],
                 ),
               ),
