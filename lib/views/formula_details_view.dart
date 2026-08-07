@@ -1,5 +1,7 @@
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
+import 'package:elchemist_app/components/organisms/flavoring_section.dart';
 import 'package:elchemist_app/components/organisms/formula_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
@@ -26,6 +28,44 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
   NicProfile? _nicProfile;
   List<NicBase> nicBases = [];
   List<Flavoring> flavorings = [];
+
+  final List<FlavoringEntry> _flavoringEntries = [];
+
+  void _setNicProfile(NicProfile? nicProfile) {
+    if (_nicProfile == nicProfile) return;
+
+    setState(() {
+      _nicProfile = nicProfile;
+      // if (_nicBaseEntries.isNotEmpty) {
+      //   _nicBaseEntries.clear();
+      // }
+      if (_flavoringEntries.isNotEmpty) {
+        _flavoringEntries.clear();
+      }
+    });
+
+    _populateFlavoringEntries();
+  }
+
+  void _populateFlavoringEntries() {
+    if (_nicProfile == null) return;
+
+    for (Flavoring flavoring in _nicProfile!.flavorings) {
+      _addFlavoringEntry(
+        FlavoringEntry(
+          name: flavoring.name,
+          ratio: flavoring.ratio,
+          isVG: flavoring.isVG,
+        ),
+      );
+    }
+  }
+
+  void _addFlavoringEntry(FlavoringEntry? entry) {
+    setState(() {
+      _flavoringEntries.add(entry ?? FlavoringEntry());
+    });
+  }
 
   int _getDecimalPlaces(double value) {
     if (value == value.toInt()) return 0;
@@ -66,104 +106,29 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                     formula: formula,
                     nicProfile: _nicProfile,
                     nicLevelController: TextEditingController(
-                        text: _nicProfile == null
-                            ? ''
-                            : (_nicProfile!.targetNicStr *
-                                    (_nicProfile!.isNewMix ? 1000.0 : 250))
-                                .toString()),
+                      text: _nicProfile == null
+                          ? ''
+                          : (_nicProfile!.targetNicStr *
+                                  (_nicProfile!.isNewMix ? 1000.0 : 250))
+                              .toString(),
+                    ),
                     onNicProfileSelected: (value) {
-                      if (value == null) return;
-                      setState(() {
-                        _nicProfile = value;
-                      });
+                      _setNicProfile(value);
                     },
                   ),
                   _nicProfile == null
                       ? const SizedBox.shrink()
-                      : Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: cardPadding,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'FLAVOURING',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Gap(20),
-                                Column(
-                                  spacing: 8.0,
-                                  children:
-                                      List.generate(flavorings.length, (index) {
-                                    final flavoring = flavorings[index];
-                                    String? nameLabelText;
-                                    String? percentageLabelText;
-
-                                    if (index == 0) {
-                                      nameLabelText = 'Name';
-                                      percentageLabelText = 'Percentage';
-                                    }
-
-                                    return Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: ElTextField(
-                                            controller: TextEditingController(
-                                              text: flavoring.name,
-                                            ),
-                                            contentType:
-                                                ElTextFieldContentType.text,
-                                            readOnly: true,
-                                            labelText: nameLabelText,
-                                          ),
-                                        ),
-                                        const Gap(8),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              constraints: const BoxConstraints(
-                                                maxWidth: 120,
-                                              ),
-                                              child: ElTextField(
-                                                controller:
-                                                    TextEditingController(
-                                                  text: (flavoring.percentage)
-                                                      .toStringAsFixed(4),
-                                                ),
-                                                contentType:
-                                                    ElTextFieldContentType
-                                                        .numeric,
-                                                readOnly: true,
-                                                labelText: percentageLabelText,
-                                                suffixText: '%',
-                                              ),
-                                            ),
-                                            const Gap(12.0),
-                                            ElCheckbox(
-                                              labelText:
-                                                  index == 0 ? 'VG' : null,
-                                              value: flavoring.isVG,
-                                              onChanged: null,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    );
-                                  }),
-                                ),
-                              ],
-                            ),
+                      : FlavoringSection(
+                          flavoringEntries: List.generate(
+                            _flavoringEntries.length,
+                            (index) {
+                              final entry = _flavoringEntries[index];
+                              return FlavoringEntryRow(
+                                entry: entry,
+                                withHeaders: index == 0,
+                                showDeleteIcon: false,
+                              );
+                            },
                           ),
                         ),
                   _nicProfile == null
