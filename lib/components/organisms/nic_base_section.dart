@@ -6,23 +6,27 @@ import 'package:gap/gap.dart';
 
 class NicBaseSection extends StatelessWidget {
   final double? width;
-  final bool textFieldReadOnly;
   final TextEditingController nicStrController;
+  final ValueChanged<String>? onNicStrSubmitted;
   final TextEditingController vgController;
+  final ValueChanged<String>? onVGSubmitted;
   final TextEditingController pgController;
+  final ValueChanged<String>? onPGSubmitted;
   final List<NicBaseEntryRow> nicBaseEntries;
   final Widget? addEntryButton;
 
-  const NicBaseSection({
+  NicBaseSection({
     super.key,
     this.width,
-    this.textFieldReadOnly = true,
     required this.nicStrController,
+    this.onNicStrSubmitted,
     required this.vgController,
+    this.onVGSubmitted,
     required this.pgController,
-    required this.nicBaseEntries,
+    this.onPGSubmitted,
+    List<NicBaseEntryRow>? nicBaseEntries,
     this.addEntryButton,
-  });
+  }) : nicBaseEntries = nicBaseEntries ?? [];
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +40,9 @@ class NicBaseSection extends StatelessWidget {
             contentType: ElTextFieldContentType.numeric,
             labelText: 'Nic Str',
             labelPosition: ElTextFieldLabelPosition.left,
-            readOnly: textFieldReadOnly,
+            readOnly: onNicStrSubmitted == null,
             suffixText: '%',
+            onSubmitted: onNicStrSubmitted,
           ),
           const Gap(8.0),
           Row(
@@ -49,8 +54,9 @@ class NicBaseSection extends StatelessWidget {
                   contentType: ElTextFieldContentType.numeric,
                   labelText: 'VG',
                   labelPosition: ElTextFieldLabelPosition.left,
-                  readOnly: textFieldReadOnly,
+                  readOnly: onVGSubmitted == null,
                   suffixText: '%',
+                  onSubmitted: onVGSubmitted,
                 ),
               ),
               Expanded(
@@ -59,8 +65,9 @@ class NicBaseSection extends StatelessWidget {
                   contentType: ElTextFieldContentType.numeric,
                   labelText: 'PG',
                   labelPosition: ElTextFieldLabelPosition.left,
-                  readOnly: textFieldReadOnly,
+                  readOnly: onPGSubmitted == null,
                   suffixText: '%',
+                  onSubmitted: onPGSubmitted,
                 ),
               ),
             ],
