@@ -49,7 +49,7 @@ class NicBaseEntryRow extends StatelessWidget {
 
   NicBaseEntryRow({
     required this.entry,
-    required this.isCustom,
+    this.isCustom = false,
     required this.withHeaders,
     required this.showDeleteIcon,
     this.onEntryDeleted,
