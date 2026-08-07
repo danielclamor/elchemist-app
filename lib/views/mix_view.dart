@@ -189,12 +189,6 @@ class _MixViewState extends State<MixView> {
     final Formula formula = widget.formula;
     final bool isFinal = widget.isFinal;
 
-    List<Flavoring> flavorings = [];
-
-    if (_nicProfile != null) {
-      flavorings = _nicProfile!.flavorings;
-    }
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -389,58 +383,16 @@ class _MixViewState extends State<MixView> {
                               : FlavoringSection(
                                   width: sectionWidth,
                                   flavoringEntries: List.generate(
-                                    flavorings.length,
+                                    _flavoringEntries.length,
                                     (index) {
-                                      final flavoring = flavorings[index];
-                                      return Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: ElTextField(
-                                              controller: TextEditingController(
-                                                text: flavoring.name,
-                                              ),
-                                              contentType:
-                                                  ElTextFieldContentType.text,
-                                              readOnly: true,
-                                              labelText:
-                                                  index == 0 ? 'Name' : null,
-                                            ),
-                                          ),
-                                          const Gap(8.0),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SizedBox(
-                                                width: 140,
-                                                child: ElTextField(
-                                                  controller:
-                                                      TextEditingController(
-                                                    text: (flavoring.percentage)
-                                                        .toStringAsFixed(4),
-                                                  ),
-                                                  contentType:
-                                                      ElTextFieldContentType
-                                                          .numeric,
-                                                  labelText: index == 0
-                                                      ? 'Percentage'
-                                                      : null,
-                                                  readOnly: !_isCustom,
-                                                  suffixText: "%",
-                                                ),
-                                              ),
-                                              const Gap(12.0),
-                                              ElCheckbox(
-                                                labelText:
-                                                    index == 0 ? 'VG' : null,
-                                                value: flavoring.isVG,
-                                                onChanged: null,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                      final entry = _flavoringEntries[index];
+                                      return FlavoringEntryRow(
+                                        entry: entry,
+                                        withHeaders: index == 0,
+                                        showDeleteIcon: false,
+                                        onPercentSubmitted: _isCustom
+                                            ? (value) => setState(() {})
+                                            : null,
                                       );
                                     },
                                   ),
