@@ -4,7 +4,9 @@ import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
+import 'package:elchemist_app/components/organisms/batch_section.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
+import 'package:elchemist_app/components/organisms/formula_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
@@ -225,303 +227,114 @@ class _SearchMixViewState extends State<SearchMixView> {
                 Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 20.0,
-                  runSpacing: 8.0,
+                  runSpacing: 20.0,
                   children: [
                     Container(
                       constraints: BoxConstraints(
                         maxWidth: sectionWidth,
                       ),
                       child: Column(
+                        spacing: 20.0,
                         children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            elevation: 0,
-                            margin: EdgeInsets.zero,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: _formula == null
-                                  ? Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "FORMULA",
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const Gap(20.0),
-                                        SearchAnchor(
-                                          searchController: _searchController,
-                                          viewShape:
-                                              const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(4.0),
-                                            ),
-                                          ),
-                                          viewSide: const BorderSide(
-                                            color: Colors.white,
-                                          ),
-                                          builder: (context, controller) {
-                                            return SearchBar(
-                                              onTap: () {
-                                                _searchController.openView();
-                                              },
-                                              leading: const Icon(Icons.search),
-                                              elevation:
-                                                  const WidgetStatePropertyAll(
-                                                0.0,
-                                              ),
-                                              shape:
-                                                  const WidgetStatePropertyAll(
-                                                RoundedRectangleBorder(
-                                                  side: BorderSide(),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(4.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          suggestionsBuilder:
-                                              (context, controller) {
-                                            final String input = controller
-                                                .value.text
-                                                .toLowerCase();
-                                            final Iterable<Formula>
-                                                filteredSuggestions =
-                                                formulas.where((formulaItem) {
-                                              return formulaItem.name
-                                                  .toLowerCase()
-                                                  .contains(input);
-                                            });
+                          FormulaSection(
+                            formula: _formula,
+                            searchController: _searchController,
+                            suggestionsBuilder: (context, controller) {
+                              final String input =
+                                  controller.value.text.toLowerCase();
+                              final Iterable<Formula> filteredSuggestions =
+                                  formulas.where((formulaItem) {
+                                return formulaItem.name
+                                    .toLowerCase()
+                                    .contains(input);
+                              });
 
-                                            return filteredSuggestions
-                                                .map((suggestionItem) {
-                                              return ListTile(
-                                                title: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      suggestionItem.brand
-                                                          .toUpperCase(),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      suggestionItem.name,
-                                                      style: const TextStyle(
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _searchController.closeView(
-                                                      suggestionItem.name,
-                                                    );
-                                                    _formula = suggestionItem;
-                                                  });
-                                                },
-                                              );
-                                            });
-                                          },
+                              return filteredSuggestions.map((suggestionItem) {
+                                return ListTile(
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        suggestionItem.brand.toUpperCase(),
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w300,
                                         ),
-                                      ],
-                                    )
-                                  : Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  _formula!.brand.toUpperCase(),
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  _formula!.name,
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '${_formula!.nicType.toString()} — ${_formula!.chilltype.toString()}',
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.change_circle_sharp,
-                                              ),
-                                              onPressed: () => _changeFormula(),
-                                            ),
-                                          ],
+                                      ),
+                                      Text(
+                                        suggestionItem.name,
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        const Gap(20),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: ElDropdownMenu<NicProfile>(
-                                                width: 360,
-                                                labelText: 'Profile',
-                                                initialSelection: _nicProfile,
-                                                enabled: true,
-                                                dropdownMenuEntries:
-                                                    UnmodifiableListView<
-                                                        DropdownMenuEntry<
-                                                            NicProfile>>(
-                                                  _formula!.nicProfiles.map<
-                                                      DropdownMenuEntry<
-                                                          NicProfile>>(
-                                                    (nicProfile) =>
-                                                        DropdownMenuEntry<
-                                                            NicProfile>(
-                                                      value: nicProfile,
-                                                      label: nicProfile.label,
-                                                    ),
-                                                  ),
-                                                ),
-                                                onSelected:
-                                                    (NicProfile? value) {
-                                                  setState(() {
-                                                    _nicProfile = value;
-                                                  });
-                                                  _setNicProfile(value);
-                                                },
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 140,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsetsGeometry
-                                                        .only(
-                                                  left: 8.0,
-                                                  right: 12.0,
-                                                ),
-                                                child: ElTextField(
-                                                  controller:
-                                                      _nicLevelController,
-                                                  contentType:
-                                                      ElTextFieldContentType
-                                                          .numeric,
-                                                  readOnly:
-                                                      _nicProfile == null ||
-                                                          !_isCustom,
-                                                  labelText: 'Nic Level',
-                                                  suffixText: 'mg',
-                                                  onSubmitted: _nicProfile ==
-                                                              null &&
-                                                          !_isCustom
-                                                      ? null
-                                                      : (value) {
-                                                          if (_nicProfile !=
-                                                              null) {
-                                                            double
-                                                                targetNicStr =
-                                                                double.parse(
-                                                                        value) /
-                                                                    (_nicProfile!
-                                                                            .isNewMix
-                                                                        ? 10
-                                                                        : 2.5);
-                                                            setState(() {
-                                                              _targetNicStrController
-                                                                      .text =
-                                                                  targetNicStr
-                                                                      .toString();
-                                                            });
-                                                          }
-                                                        },
-                                                ),
-                                              ),
-                                            ),
-                                            ElCheckbox(
-                                              width: 50,
-                                              value: _isCustom,
-                                              labelText: 'Custom',
-                                              onChanged: _nicProfile == null
-                                                  ? null
-                                                  : (bool? value) {
-                                                      setState(() {
-                                                        _isCustom =
-                                                            value ?? false;
-                                                      });
+                                      ),
+                                      Text(
+                                        "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _searchController.closeView(
+                                        suggestionItem.name,
+                                      );
+                                      _formula = suggestionItem;
+                                    });
+                                  },
+                                );
+                              });
+                            },
+                            onChangeFormula: () => _changeFormula(),
+                            nicProfile: _nicProfile,
+                            onNicProfileSelected: (NicProfile? value) {
+                              setState(() {
+                                _nicProfile = value;
+                              });
+                              _setNicProfile(value);
+                            },
+                            nicLevelController: _nicLevelController,
+                            onNicLevelSubmitted:
+                                _nicProfile == null && !_isCustom
+                                    ? null
+                                    : (value) {
+                                        if (_nicProfile != null) {
+                                          double targetNicStr =
+                                              double.parse(value) /
+                                                  (_nicProfile!.isNewMix
+                                                      ? 10
+                                                      : 2.5);
+                                          setState(() {
+                                            _targetNicStrController.text =
+                                                targetNicStr.toString();
+                                          });
+                                        }
+                                      },
+                            isCustom: _isCustom,
+                            onIsCustomChanged: _nicProfile == null
+                                ? null
+                                : (bool? value) {
+                                    setState(() {
+                                      _isCustom = value ?? false;
+                                    });
 
-                                                      if (value == false) {
-                                                        _setNicProfile(
-                                                          _nicProfile,
-                                                        );
-                                                      }
-                                                    },
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            const Gap(8.0),
-                                            ElTextField(
-                                              controller: _volumeController,
-                                              contentType:
-                                                  ElTextFieldContentType
-                                                      .numeric,
-                                              labelText: 'Volume',
-                                              labelPosition:
-                                                  ElTextFieldLabelPosition.left,
-                                              suffixText: 'mL',
-                                              onSubmitted: (value) {
-                                                setState(() {});
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                            ),
+                                    if (value == false) {
+                                      _setNicProfile(
+                                        _nicProfile,
+                                      );
+                                    }
+                                  },
                           ),
-                          const Gap(8.0),
+                          _nicProfile == null
+                              ? const SizedBox.shrink()
+                              : BatchSection(
+                                  volumeController: _volumeController,
+                                ),
                           _nicProfile == null
                               ? const SizedBox.shrink()
                               : FlavoringSection(
-                                  width: sectionWidth,
                                   flavoringEntries: List.generate(
                                     _flavoringEntries.length,
                                     (index) {
