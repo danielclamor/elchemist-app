@@ -87,133 +87,138 @@ class _DiyMixViewState extends State<DiyMixView> {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    "DIY Mix",
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                ],
-              ),
-              const Gap(24),
-              Container(
-                constraints: BoxConstraints(
-                  maxWidth: wrapperWidth ?? double.infinity,
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(24.0),
+            constraints: BoxConstraints(
+              maxWidth: wrapperWidth ?? double.infinity,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "DIY Mix",
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 20.0,
-                  runSpacing: 8.0,
-                  children: [
-                    Column(
-                      spacing: 12.0,
-                      children: [
-                        BatchSection(
-                          width: sectionWidth,
-                          volumeController: _volumeController,
-                          onVolumeSubmitted: (value) => setState(() {}),
-                        ),
-                        FlavoringSection(
-                          width: sectionWidth,
-                          flavoringEntries: List.generate(
-                            _flavoringEntries.length,
-                            (index) {
-                              final entry = _flavoringEntries[index];
-                              final withHeaders = index == 0 ? true : false;
-
-                              return FlavoringEntryRow(
-                                entry: entry,
-                                withHeaders: withHeaders,
-                                showDeleteIcon: true,
-                                onEntryDeleted: () =>
-                                    _removeFlavoringEntry(entry),
-                                onNameSubmitted: (value) => setState(() {}),
-                                onPercentSubmitted: (value) => setState(() {}),
-                                onIsVGChanged: (value) => setState(() {}),
-                              );
-                            },
+                const Gap(24),
+                Container(
+                  constraints: BoxConstraints(
+                    maxWidth: wrapperWidth ?? double.infinity,
+                  ),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 20.0,
+                    runSpacing: 8.0,
+                    children: [
+                      Column(
+                        spacing: 12.0,
+                        children: [
+                          BatchSection(
+                            width: sectionWidth,
+                            volumeController: _volumeController,
+                            onVolumeSubmitted: (value) => setState(() {}),
                           ),
-                          addEntryButton: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () => _addFlavoringEntry(),
-                                  child: const Text("+ Add"),
-                                ),
-                              ],
+                          FlavoringSection(
+                            width: sectionWidth,
+                            flavoringEntries: List.generate(
+                              _flavoringEntries.length,
+                              (index) {
+                                final entry = _flavoringEntries[index];
+                                final withHeaders = index == 0 ? true : false;
+
+                                return FlavoringEntryRow(
+                                  entry: entry,
+                                  withHeaders: withHeaders,
+                                  showDeleteIcon: true,
+                                  onEntryDeleted: () =>
+                                      _removeFlavoringEntry(entry),
+                                  onNameSubmitted: (value) => setState(() {}),
+                                  onPercentSubmitted: (value) =>
+                                      setState(() {}),
+                                  onIsVGChanged: (value) => setState(() {}),
+                                );
+                              },
+                            ),
+                            addEntryButton: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () => _addFlavoringEntry(),
+                                    child: const Text("+ Add"),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    NicBaseSection(
-                      width: midSectionWidth,
-                      nicStrController: _nicBaseNicStrController,
-                      onNicStrSubmitted: (value) => setState(() {}),
-                      vgController: _nicBaseVGController,
-                      onVGSubmitted: (value) {
-                        setState(() {
-                          _nicBasePGController.text =
-                              (100 - (double.parse(value))).toString();
-                        });
-                      },
-                      pgController: _nicBasePGController,
-                      onPGSubmitted: (value) {
-                        setState(() {
-                          _nicBaseVGController.text =
-                              (100 - (double.parse(value))).toString();
-                        });
-                      },
-                    ),
-                    TargetSection(
-                      width: midSectionWidth,
-                      nicStrController: _targetNicStrController,
-                      onNicStrSubmitted: (value) => setState(() {}),
-                      vgController: _targetVGController,
-                      onVGSubmitted: (value) {
-                        setState(() {
-                          _targetPGController.text =
-                              (100 - (double.parse(value))).toString();
-                        });
-                      },
-                      pgController: _targetPGController,
-                      onPGSubmitted: (value) {
-                        setState(() {
-                          _targetVGController.text =
-                              (100 - (double.parse(value))).toString();
-                        });
-                      },
-                    ),
-                    RecipeSection(
-                      width: sectionWidth,
-                      ingredients: MixRecipeCalculator(
-                        batchVolume: double.parse(_volumeController.text),
-                        nicBaseNicStr:
-                            double.parse(_nicBaseNicStrController.text) / 100,
-                        nicBaseVG:
-                            double.parse(_nicBaseVGController.text) / 100,
-                        nicBasePG:
-                            double.parse(_nicBasePGController.text) / 100,
-                        targetNicStr:
-                            double.parse(_targetNicStrController.text) / 100,
-                        targetVG: double.parse(_targetVGController.text) / 100,
-                        targetPG: double.parse(_targetPGController.text) / 100,
-                        flavoringEntries: _flavoringEntries,
-                      ).ingredients,
-                    ),
-                  ],
+                        ],
+                      ),
+                      NicBaseSection(
+                        width: midSectionWidth,
+                        nicStrController: _nicBaseNicStrController,
+                        onNicStrSubmitted: (value) => setState(() {}),
+                        vgController: _nicBaseVGController,
+                        onVGSubmitted: (value) {
+                          setState(() {
+                            _nicBasePGController.text =
+                                (100 - (double.parse(value))).toString();
+                          });
+                        },
+                        pgController: _nicBasePGController,
+                        onPGSubmitted: (value) {
+                          setState(() {
+                            _nicBaseVGController.text =
+                                (100 - (double.parse(value))).toString();
+                          });
+                        },
+                      ),
+                      TargetSection(
+                        width: midSectionWidth,
+                        nicStrController: _targetNicStrController,
+                        onNicStrSubmitted: (value) => setState(() {}),
+                        vgController: _targetVGController,
+                        onVGSubmitted: (value) {
+                          setState(() {
+                            _targetPGController.text =
+                                (100 - (double.parse(value))).toString();
+                          });
+                        },
+                        pgController: _targetPGController,
+                        onPGSubmitted: (value) {
+                          setState(() {
+                            _targetVGController.text =
+                                (100 - (double.parse(value))).toString();
+                          });
+                        },
+                      ),
+                      RecipeSection(
+                        width: sectionWidth,
+                        ingredients: MixRecipeCalculator(
+                          batchVolume: double.parse(_volumeController.text),
+                          nicBaseNicStr:
+                              double.parse(_nicBaseNicStrController.text) / 100,
+                          nicBaseVG:
+                              double.parse(_nicBaseVGController.text) / 100,
+                          nicBasePG:
+                              double.parse(_nicBasePGController.text) / 100,
+                          targetNicStr:
+                              double.parse(_targetNicStrController.text) / 100,
+                          targetVG:
+                              double.parse(_targetVGController.text) / 100,
+                          targetPG:
+                              double.parse(_targetPGController.text) / 100,
+                          flavoringEntries: _flavoringEntries,
+                        ).ingredients,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
