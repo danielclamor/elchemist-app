@@ -488,7 +488,7 @@ class _MixViewState extends State<MixView> {
                         targetVG: double.parse(_targetVGController.text) / 100,
                         targetPG: double.parse(_targetPGController.text) / 100,
                         nicBaseEntries: _nicBaseEntries,
-                        flavorings: _flavoringEntries,
+                        flavoringEntries: _flavoringEntries,
                       ).ingredients,
                     ),
                   ],
