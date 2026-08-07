@@ -9,7 +9,7 @@ class FlavoringSection extends StatelessWidget {
 
   const FlavoringSection({
     super.key,
-    required this.width,
+    this.width,
     required this.flavoringEntries,
     this.addEntryButton,
   });
