@@ -116,7 +116,7 @@ class MixRecipeCalculator {
     );
   }
 
-  List<Ingredient> get _allNicBase {
+  List<Ingredient> get _allNicBases {
     if (targetNicStr <= 0.0) return [];
 
     if (nicBaseEntries.isNotEmpty) {
@@ -134,8 +134,8 @@ class MixRecipeCalculator {
     ].whereType<Ingredient>().toList();
   }
 
-  List<Ingredient> get ingredients {
-    final List<Ingredient> ingFlavorings = flavoringEntries.map((flavor) {
+  List<Ingredient> get _allFlavorings {
+    return flavoringEntries.map((flavor) {
       final volume = flavor.ratio * batchVolume;
       double weight;
 
@@ -156,10 +156,12 @@ class MixRecipeCalculator {
         type: flavor.isVG ? IngredientType.vgFlavor : IngredientType.pgFlavor,
       );
     }).toList();
+  }
 
+  List<Ingredient> get ingredients {
     return [
-      ..._allNicBase,
-      ...ingFlavorings,
+      ..._allNicBases,
+      ..._allFlavorings,
       _getVG(
         totalNicBaseMixRatio: nicBaseVG,
         totalFlavMixRatio: totalFlavVGRatio,
