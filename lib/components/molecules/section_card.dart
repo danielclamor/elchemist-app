@@ -33,9 +33,13 @@ class SectionCard extends StatelessWidget {
               title != null
                   ? Text(
                       title!.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primaryFixedDim
+                            .withAlpha(150),
                       ),
                     )
                   : const SizedBox.shrink(),
