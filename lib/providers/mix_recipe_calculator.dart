@@ -148,7 +148,8 @@ class MixRecipeCalculator {
       }
 
       return Ingredient(
-        name: flavor.name ?? '',
+        name:
+            '${flavor.name == '' ? 'Flavour' : flavor.name} (${flavor.isVG ? 'VG' : 'PG'})',
         ratio: flavor.ratio,
         volume: volume,
         weight: weight,
