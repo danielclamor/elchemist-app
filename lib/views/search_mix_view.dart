@@ -2,6 +2,7 @@ import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/batch_section.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
+import 'package:elchemist_app/components/organisms/formula_search_section.dart';
 import 'package:elchemist_app/components/organisms/formula_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
@@ -246,94 +247,105 @@ class _SearchMixViewState extends State<SearchMixView> {
                       child: Column(
                         spacing: 20.0,
                         children: [
-                          FormulaSection(
-                            formula: _formula,
-                            searchController: _searchController,
-                            suggestionsBuilder: (context, controller) {
-                              final String input =
-                                  controller.value.text.toLowerCase();
-                              final Iterable<Formula> filteredSuggestions =
-                                  formulas.where((formulaItem) {
-                                return formulaItem.name
-                                    .toLowerCase()
-                                    .contains(input);
-                              });
-
-                              return filteredSuggestions.map((suggestionItem) {
-                                return ListTile(
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        suggestionItem.brand.toUpperCase(),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                      Text(
-                                        suggestionItem.name,
-                                        style: const TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _searchController.closeView(
-                                        suggestionItem.name,
-                                      );
-                                      _formula = suggestionItem;
+                          _formula == null
+                              ? FormulaSearchSection(
+                                  searchController: _searchController,
+                                  suggestionsBuilder: (context, controller) {
+                                    final String input =
+                                        controller.value.text.toLowerCase();
+                                    final Iterable<Formula>
+                                        filteredSuggestions =
+                                        formulas.where((formulaItem) {
+                                      return formulaItem.name
+                                          .toLowerCase()
+                                          .contains(input);
                                     });
-                                  },
-                                );
-                              });
-                            },
-                            onChangeFormula: () => _changeFormula(),
-                            nicProfile: _nicProfile,
-                            onNicProfileSelected: (NicProfile? value) =>
-                                _setNicProfile(value),
-                            nicLevelController: _nicLevelController,
-                            onNicLevelSubmitted:
-                                _nicProfile == null || !_isCustom
-                                    ? null
-                                    : (value) {
-                                        if (_nicProfile != null) {
-                                          double targetNicStr =
-                                              double.parse(value) /
-                                                  (_nicProfile!.isNewMix
-                                                      ? 10
-                                                      : 2.5);
+
+                                    return filteredSuggestions
+                                        .map((suggestionItem) {
+                                      return ListTile(
+                                        title: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              suggestionItem.brand
+                                                  .toUpperCase(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                            Text(
+                                              suggestionItem.name,
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w300,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        onTap: () {
                                           setState(() {
-                                            _targetNicStrController.text =
-                                                targetNicStr.toString();
+                                            _searchController.closeView(
+                                              suggestionItem.name,
+                                            );
+                                            _formula = suggestionItem;
                                           });
-                                        }
-                                      },
-                            showCustomCheckBox: true,
-                            isCustom: _isCustom,
-                            onIsCustomChanged: _nicProfile == null
-                                ? null
-                                : (bool? value) {
-                                    setState(() {
-                                      _isCustom = value ?? false;
-                                    });
-
-                                    if (value == false) {
-                                      _setNicProfile(
-                                        _nicProfile,
+                                        },
                                       );
-                                    }
+                                    });
                                   },
-                          ),
+                                )
+                              : FormulaSection(
+                                  formula: _formula,
+                                  auxiliaryTool: IconButton(
+                                    icon: const Icon(
+                                      Icons.change_circle_sharp,
+                                    ),
+                                    onPressed: () => _changeFormula(),
+                                  ),
+                                  nicProfile: _nicProfile,
+                                  onNicProfileSelected: (NicProfile? value) =>
+                                      _setNicProfile(value),
+                                  nicLevelController: _nicLevelController,
+                                  onNicLevelSubmitted:
+                                      _nicProfile == null || !_isCustom
+                                          ? null
+                                          : (value) {
+                                              if (_nicProfile != null) {
+                                                double targetNicStr =
+                                                    double.parse(value) /
+                                                        (_nicProfile!.isNewMix
+                                                            ? 10
+                                                            : 2.5);
+                                                setState(() {
+                                                  _targetNicStrController.text =
+                                                      targetNicStr.toString();
+                                                });
+                                              }
+                                            },
+                                  showCustomCheckBox: true,
+                                  isCustom: _isCustom,
+                                  onIsCustomChanged: _nicProfile == null
+                                      ? null
+                                      : (bool? value) {
+                                          setState(() {
+                                            _isCustom = value ?? false;
+                                          });
+
+                                          if (value == false) {
+                                            _setNicProfile(
+                                              _nicProfile,
+                                            );
+                                          }
+                                        },
+                                ),
                           _nicProfile == null
                               ? const SizedBox.shrink()
                               : BatchSection(
