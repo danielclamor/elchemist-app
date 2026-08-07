@@ -1,8 +1,9 @@
-import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
+import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
 import 'package:elchemist_app/components/organisms/formula_section.dart';
+import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
@@ -30,21 +31,23 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
   List<Flavoring> flavorings = [];
 
   final List<FlavoringEntry> _flavoringEntries = [];
+  final List<NicBaseEntry> _nicBaseEntries = [];
 
   void _setNicProfile(NicProfile? nicProfile) {
     if (_nicProfile == nicProfile) return;
 
     setState(() {
       _nicProfile = nicProfile;
-      // if (_nicBaseEntries.isNotEmpty) {
-      //   _nicBaseEntries.clear();
-      // }
+      if (_nicBaseEntries.isNotEmpty) {
+        _nicBaseEntries.clear();
+      }
       if (_flavoringEntries.isNotEmpty) {
         _flavoringEntries.clear();
       }
     });
 
     _populateFlavoringEntries();
+    _populateNicBaseEntries();
   }
 
   void _populateFlavoringEntries() {
@@ -64,6 +67,24 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
   void _addFlavoringEntry(FlavoringEntry? entry) {
     setState(() {
       _flavoringEntries.add(entry ?? FlavoringEntry());
+    });
+  }
+
+  void _populateNicBaseEntries() {
+    if (_nicProfile == null) return;
+
+    for (NicBase nicBase in _nicProfile!.nicBases) {
+      _addNicBaseEntry(
+        NicBaseEntry(
+          nicBase: nicBase,
+        ),
+      );
+    }
+  }
+
+  void _addNicBaseEntry(NicBaseEntry? entry) {
+    setState(() {
+      _nicBaseEntries.add(entry ?? NicBaseEntry());
     });
   }
 
@@ -133,163 +154,26 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                         ),
                   _nicProfile == null
                       ? const SizedBox.shrink()
-                      : Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                      : NicBaseSection(
+                          nicStrController: TextEditingController(
+                            text: (_nicProfile!.nicBaseNicStr * 100).toString(),
                           ),
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: cardPadding,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'NIC BASE',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Gap(20),
-                                ElTextField(
-                                  controller: TextEditingController(
-                                    text: ((_nicProfile?.nicBaseNicStr ?? 0.0) *
-                                            100)
-                                        .toStringAsFixed(0),
-                                  ),
-                                  contentType: ElTextFieldContentType.numeric,
-                                  readOnly: true,
-                                  labelText: "Nic Str",
-                                  labelPosition: ElTextFieldLabelPosition.left,
-                                  suffixText: '%',
-                                ),
-                                const Gap(8),
-                                Row(
-                                  spacing: 8.0,
-                                  children: [
-                                    Expanded(
-                                      child: ElTextField(
-                                        controller: TextEditingController(
-                                          text: (nicBases
-                                                      .where((nicBase) =>
-                                                          nicBase.isVG)
-                                                      .fold(
-                                                          0.0,
-                                                          (sum, nicBase) =>
-                                                              sum +
-                                                              nicBase.ratio) *
-                                                  100)
-                                              .toStringAsFixed(0),
-                                        ),
-                                        contentType:
-                                            ElTextFieldContentType.numeric,
-                                        readOnly: true,
-                                        labelText: 'VG',
-                                        labelPosition:
-                                            ElTextFieldLabelPosition.left,
-                                        suffixText: '%',
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ElTextField(
-                                        controller: TextEditingController(
-                                          text: (nicBases
-                                                      .where((nicBase) =>
-                                                          !nicBase.isVG)
-                                                      .fold(
-                                                          0.0,
-                                                          (sum, nicBase) =>
-                                                              sum +
-                                                              nicBase.ratio) *
-                                                  100)
-                                              .toStringAsFixed(0),
-                                        ),
-                                        contentType:
-                                            ElTextFieldContentType.numeric,
-                                        readOnly: true,
-                                        labelText: 'PG',
-                                        labelPosition:
-                                            ElTextFieldLabelPosition.left,
-                                        suffixText: '%',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                nicBases.isEmpty
-                                    ? const SizedBox.shrink()
-                                    : Column(
-                                        children: [
-                                          const Gap(16.0),
-                                          const Divider(
-                                            thickness: 1,
-                                          ),
-                                          const Gap(16.0),
-                                          Column(
-                                            spacing: 8.0,
-                                            children: List.generate(
-                                                nicBases.length, (index) {
-                                              final nicBase = nicBases[index];
-                                              return Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    child: ElTextField(
-                                                      controller:
-                                                          TextEditingController(
-                                                        text: nicBase.label,
-                                                      ),
-                                                      contentType:
-                                                          ElTextFieldContentType
-                                                              .text,
-                                                      readOnly: true,
-                                                      labelText: index == 0
-                                                          ? 'Name'
-                                                          : null,
-                                                    ),
-                                                  ),
-                                                  const Gap(8),
-                                                  Container(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                      maxWidth: 120,
-                                                    ),
-                                                    child: ElTextField(
-                                                      controller:
-                                                          TextEditingController(
-                                                        text: (nicBase.ratio *
-                                                                100)
-                                                            .toStringAsFixed(0),
-                                                      ),
-                                                      contentType:
-                                                          ElTextFieldContentType
-                                                              .numeric,
-                                                      readOnly: true,
-                                                      labelText: index == 0
-                                                          ? 'Percentage'
-                                                          : null,
-                                                      suffixText: '%',
-                                                    ),
-                                                  ),
-                                                  const Gap(12.0),
-                                                  ElCheckbox(
-                                                    labelText: index == 0
-                                                        ? 'VG'
-                                                        : null,
-                                                    value: nicBase.isVG,
-                                                    onChanged: null,
-                                                  ),
-                                                ],
-                                              );
-                                            }),
-                                          ),
-                                        ],
-                                      ),
-                              ],
-                            ),
+                          vgController: TextEditingController(
+                            text: (_nicProfile!.nicBaseVG * 100).toString(),
+                          ),
+                          pgController: TextEditingController(
+                            text: (_nicProfile!.nicBasePG * 100).toString(),
+                          ),
+                          nicBaseEntries: List.generate(
+                            _nicBaseEntries.length,
+                            (index) {
+                              final entry = _nicBaseEntries[index];
+                              return NicBaseEntryRow(
+                                entry: entry,
+                                withHeaders: index == 0,
+                                showDeleteIcon: false,
+                              );
+                            },
                           ),
                         ),
                   _nicProfile == null
