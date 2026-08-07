@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class FlavoringSection extends StatelessWidget {
   final double width;
   final List<Widget> flavoringEntries;
+  final Widget? addEntryButton;
 
   const FlavoringSection({
     super.key,
     required this.width,
     required this.flavoringEntries,
+    this.addEntryButton,
   });
 
   @override
@@ -19,6 +21,7 @@ class FlavoringSection extends StatelessWidget {
       child: Column(
         children: [
           ...flavoringEntries,
+          addEntryButton ?? const SizedBox.shrink(),
         ],
       ),
     );
