@@ -1,10 +1,8 @@
-import 'package:collection/collection.dart';
-import 'package:elchemist_app/components/atoms/el_checkbox.dart';
-import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
+import 'package:elchemist_app/components/organisms/batch_section.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
+import 'package:elchemist_app/components/organisms/formula_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
@@ -19,14 +17,15 @@ import 'package:gap/gap.dart';
 class MixView extends StatefulWidget {
   final Formula formula;
   final NicProfile? initialNicProfile;
-  final bool isFinal;
+  final bool isNicProfileFinal;
 
   const MixView({
     super.key,
     required this.formula,
     this.initialNicProfile,
-    this.isFinal = false,
-  });
+    bool isNicProfileFinal = false,
+  }) : isNicProfileFinal =
+            initialNicProfile == null ? false : isNicProfileFinal;
 
   @override
   State<MixView> createState() => _MixViewState();
@@ -187,7 +186,7 @@ class _MixViewState extends State<MixView> {
     var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 400.0;
 
     final Formula formula = widget.formula;
-    final bool isFinal = widget.isFinal;
+    final bool isNicProfileFinal = widget.isNicProfileFinal;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -218,170 +217,58 @@ class _MixViewState extends State<MixView> {
                         maxWidth: sectionWidth,
                       ),
                       child: Column(
+                        spacing: 20.0,
                         children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            elevation: 0,
-                            margin: EdgeInsets.zero,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            formula.brand.toUpperCase(),
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          Text(
-                                            formula.name,
-                                            style: const TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${formula.nicType.toString()} — ${formula.chilltype.toString()}',
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  const Gap(20),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: ElDropdownMenu<NicProfile>(
-                                          width: 360,
-                                          labelText: 'Profile',
-                                          initialSelection: _nicProfile,
-                                          dropdownMenuEntries:
-                                              UnmodifiableListView<
-                                                  DropdownMenuEntry<
-                                                      NicProfile>>(
-                                            formula.nicProfiles.map<
-                                                DropdownMenuEntry<NicProfile>>(
-                                              (nicProfile) =>
-                                                  DropdownMenuEntry<NicProfile>(
-                                                value: nicProfile,
-                                                label: nicProfile.label,
-                                              ),
-                                            ),
-                                          ),
-                                          enabled: !isFinal,
-                                          onSelected: isFinal
-                                              ? null
-                                              : (NicProfile? value) {
-                                                  setState(() {
-                                                    _nicProfile = value;
-                                                  });
-                                                  _setNicProfile(value);
-                                                },
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 140,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsetsGeometry.only(
-                                            left: 8.0,
-                                            right: 12.0,
-                                          ),
-                                          child: ElTextField(
-                                            controller: _nicLevelController,
-                                            contentType:
-                                                ElTextFieldContentType.numeric,
-                                            readOnly: _nicProfile == null ||
-                                                !_isCustom,
-                                            labelText: 'Nic Level',
-                                            suffixText: 'mg',
-                                            onSubmitted: _nicProfile == null &&
-                                                    !_isCustom
-                                                ? null
-                                                : (value) {
-                                                    if (_nicProfile != null) {
-                                                      double targetNicStr =
-                                                          double.parse(value) /
-                                                              (_nicProfile!
-                                                                      .isNewMix
-                                                                  ? 10
-                                                                  : 2.5);
-                                                      setState(() {
-                                                        _targetNicStrController
-                                                                .text =
-                                                            targetNicStr
-                                                                .toString();
-                                                      });
-                                                    }
-                                                  },
-                                          ),
-                                        ),
-                                      ),
-                                      ElCheckbox(
-                                        width: 50,
-                                        value: _isCustom,
-                                        labelText: 'Custom',
-                                        onChanged: _nicProfile == null
-                                            ? null
-                                            : (bool? value) {
-                                                setState(() {
-                                                  _isCustom = value ?? false;
-                                                });
+                          FormulaSection(
+                            formula: formula,
+                            nicProfile: _nicProfile,
+                            onNicProfileSelected: (NicProfile? value) {
+                              setState(() {
+                                _nicProfile = value;
+                              });
+                              _setNicProfile(value);
+                            },
+                            nicLevelController: _nicLevelController,
+                            onNicLevelSubmitted:
+                                _nicProfile == null && !_isCustom
+                                    ? null
+                                    : (value) {
+                                        if (_nicProfile != null) {
+                                          double targetNicStr =
+                                              double.parse(value) /
+                                                  (_nicProfile!.isNewMix
+                                                      ? 10
+                                                      : 2.5);
+                                          setState(() {
+                                            _targetNicStrController.text =
+                                                targetNicStr.toString();
+                                          });
+                                        }
+                                      },
+                            showCustomCheckBox: true,
+                            isCustom: _isCustom,
+                            onIsCustomChanged: _nicProfile == null
+                                ? null
+                                : (bool? value) {
+                                    setState(() {
+                                      _isCustom = value ?? false;
+                                    });
 
-                                                if (value == false) {
-                                                  _setNicProfile(_nicProfile);
-                                                }
-                                              },
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Gap(8.0),
-                                      ElTextField(
-                                        controller: _volumeController,
-                                        contentType:
-                                            ElTextFieldContentType.numeric,
-                                        labelText: 'Volume',
-                                        labelPosition:
-                                            ElTextFieldLabelPosition.left,
-                                        suffixText: 'mL',
-                                        onSubmitted: (value) {
-                                          setState(() {});
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                                    if (value == false) {
+                                      _setNicProfile(
+                                        _nicProfile,
+                                      );
+                                    }
+                                  },
                           ),
-                          const Gap(8.0),
+                          _nicProfile == null
+                              ? const SizedBox.shrink()
+                              : BatchSection(
+                                  volumeController: _volumeController,
+                                ),
                           _nicProfile == null
                               ? const SizedBox.shrink()
                               : FlavoringSection(
-                                  width: sectionWidth,
                                   flavoringEntries: List.generate(
                                     _flavoringEntries.length,
                                     (index) {

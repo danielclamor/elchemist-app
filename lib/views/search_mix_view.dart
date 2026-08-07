@@ -308,6 +308,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                           });
                                         }
                                       },
+                            showCustomCheckBox: true,
                             isCustom: _isCustom,
                             onIsCustomChanged: _nicProfile == null
                                 ? null

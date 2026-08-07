@@ -12,13 +12,15 @@ import 'package:gap/gap.dart';
 class FormulaSection extends StatelessWidget {
   final double? width;
   final Formula? formula;
-  final SearchController searchController;
-  final SuggestionsBuilder suggestionsBuilder;
+  final SearchController? searchController;
+  final SuggestionsBuilder? suggestionsBuilder;
   final VoidCallback? onChangeFormula;
   final NicProfile? nicProfile;
+  final bool isNicProfileFinal;
   final ValueChanged<NicProfile?>? onNicProfileSelected;
   final TextEditingController nicLevelController;
   final ValueChanged<String>? onNicLevelSubmitted;
+  final bool showCustomCheckBox;
   final bool isCustom;
   final ValueChanged<bool?>? onIsCustomChanged;
 
@@ -26,23 +28,25 @@ class FormulaSection extends StatelessWidget {
     super.key,
     this.width,
     required this.formula,
-    required this.searchController,
-    required this.suggestionsBuilder,
+    this.searchController,
+    this.suggestionsBuilder,
     this.onChangeFormula,
     required this.nicProfile,
+    bool isNicProfileFinal = false,
     this.onNicProfileSelected,
     required this.nicLevelController,
     this.onNicLevelSubmitted,
+    this.showCustomCheckBox = false,
     this.isCustom = false,
     this.onIsCustomChanged,
-  });
+  }) : isNicProfileFinal = nicProfile == null ? false : isNicProfileFinal;
 
   @override
   Widget build(BuildContext context) {
     return SectionCard(
       width: width,
       title: "FORMULA",
-      child: formula == null
+      child: formula == null && suggestionsBuilder != null
           ? SearchAnchor(
               searchController: searchController,
               viewShape: const RoundedRectangleBorder(
@@ -56,7 +60,7 @@ class FormulaSection extends StatelessWidget {
               builder: (context, controller) {
                 return SearchBar(
                   onTap: () {
-                    searchController.openView();
+                    searchController?.openView();
                   },
                   leading: const Icon(Icons.search),
                   elevation: const WidgetStatePropertyAll(
@@ -72,7 +76,7 @@ class FormulaSection extends StatelessWidget {
                   ),
                 );
               },
-              suggestionsBuilder: suggestionsBuilder,
+              suggestionsBuilder: suggestionsBuilder!,
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,12 +162,14 @@ class FormulaSection extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ElCheckbox(
-                      width: 50,
-                      value: isCustom,
-                      labelText: 'Custom',
-                      onChanged: onIsCustomChanged,
-                    ),
+                    showCustomCheckBox
+                        ? ElCheckbox(
+                            width: 50,
+                            value: isCustom,
+                            labelText: 'Custom',
+                            onChanged: onIsCustomChanged,
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
               ],
