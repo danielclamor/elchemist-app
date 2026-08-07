@@ -1,8 +1,6 @@
-import 'dart:collection';
-
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
-import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/organisms/formula_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
@@ -11,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class RecipeDetailsView extends StatefulWidget {
-  final Formula recipe;
+  final Formula formula;
 
   const RecipeDetailsView({
     super.key,
-    required this.recipe,
+    required this.formula,
   });
 
   @override
@@ -41,7 +39,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
     const sectionWidth = 500.0;
     const cardPadding = EdgeInsetsGeometry.all(24.0);
 
-    final Formula recipe = widget.recipe;
+    final Formula formula = widget.formula;
 
     return Scaffold(
       appBar: AppBar(
@@ -64,106 +62,21 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
               child: Column(
                 spacing: 8.0,
                 children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        4.0,
-                      ),
-                    ),
-                    elevation: 0.0,
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: cardPadding,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                recipe.brand.toUpperCase(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Text(
-                                recipe.name,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                '${recipe.nicType.toString()} — ${recipe.chilltype.toString()}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Gap(24),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            spacing: 8,
-                            children: [
-                              Expanded(
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) =>
-                                      ElDropdownMenu<NicProfile>(
-                                    width: constraints.maxWidth,
-                                    labelText: 'Profile',
-                                    initialSelection: _nicProfile,
-                                    enabled: false,
-                                    dropdownMenuEntries: UnmodifiableListView<
-                                        DropdownMenuEntry<NicProfile>>(
-                                      recipe.nicProfiles
-                                          .map<DropdownMenuEntry<NicProfile>>(
-                                        (nicProfile) =>
-                                            DropdownMenuEntry<NicProfile>(
-                                          value: nicProfile,
-                                          label: nicProfile.label,
-                                        ),
-                                      ),
-                                    ),
-                                    onSelected: (NicProfile? value) {
-                                      setState(() {
-                                        _nicProfile = value;
-
-                                        nicBases = _nicProfile!.nicBases;
-                                        flavorings = _nicProfile!.flavorings;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 155,
-                                child: _nicProfile == null
-                                    ? const SizedBox()
-                                    : ElTextField(
-                                        controller: TextEditingController(
-                                          text: ((_nicProfile?.targetNicStr ??
-                                                      0.0) *
-                                                  100)
-                                              .toStringAsFixed(2),
-                                        ),
-                                        contentType:
-                                            ElTextFieldContentType.numeric,
-                                        readOnly: true,
-
-                                        labelText: 'Nic Str',
-                                        // labelPosition:
-                                        //     ElTextFieldLabelPosition.left,
-                                        suffixText: '%',
-                                      ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  FormulaSection(
+                    formula: formula,
+                    nicProfile: _nicProfile,
+                    nicLevelController: TextEditingController(
+                        text: _nicProfile == null
+                            ? ''
+                            : (_nicProfile!.targetNicStr *
+                                    (_nicProfile!.isNewMix ? 1000.0 : 250))
+                                .toString()),
+                    onNicProfileSelected: (value) {
+                      if (value == null) return;
+                      setState(() {
+                        _nicProfile = value;
+                      });
+                    },
                   ),
                   _nicProfile == null
                       ? const SizedBox.shrink()
