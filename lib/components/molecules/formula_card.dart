@@ -34,7 +34,9 @@ class _FormulaCardState extends State<FormulaCard> {
                 animation,
                 secondaryAnimation,
               ) =>
-                  RecipeDetailsView(recipe: recipe),
+                  RecipeDetailsView(
+                formula: recipe,
+              ),
               transitionsBuilder: (
                 context,
                 animation,
