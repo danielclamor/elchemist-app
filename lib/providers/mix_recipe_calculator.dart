@@ -12,7 +12,7 @@ class MixRecipeCalculator {
   final double targetNicStr;
   final double targetVG;
   final double targetPG;
-  final List<FlavoringEntry> flavorings;
+  final List<FlavoringEntry> flavoringEntries;
 
   double totalNicBaseVGRatio;
   double totalNicBasePGRatio;
@@ -28,7 +28,7 @@ class MixRecipeCalculator {
     required this.targetNicStr,
     required this.targetVG,
     required this.targetPG,
-    required this.flavorings,
+    required this.flavoringEntries,
   })  : nicBaseEntries = nicBaseEntries ?? [],
         totalNicBaseVGRatio = 0.0,
         totalNicBasePGRatio = 0.0,
@@ -135,7 +135,7 @@ class MixRecipeCalculator {
   }
 
   List<Ingredient> get ingredients {
-    final List<Ingredient> ingFlavorings = flavorings.map((flavor) {
+    final List<Ingredient> ingFlavorings = flavoringEntries.map((flavor) {
       final volume = flavor.ratio * batchVolume;
       double weight;
 
