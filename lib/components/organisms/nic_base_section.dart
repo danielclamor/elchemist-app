@@ -1,4 +1,5 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +10,7 @@ class NicBaseSection extends StatelessWidget {
   final TextEditingController nicStrController;
   final TextEditingController vgController;
   final TextEditingController pgController;
-  final List<Widget> nicBaseEntries;
+  final List<NicBaseEntryRow> nicBaseEntries;
   final Widget? addEntryButton;
 
   const NicBaseSection({
@@ -68,12 +69,16 @@ class NicBaseSection extends StatelessWidget {
               ? const SizedBox.shrink()
               : Column(
                   children: [
+                    const Gap(16.0),
                     Divider(
                       thickness: 1,
                       color: Theme.of(context).focusColor,
                     ),
                     const Gap(16.0),
-                    ...nicBaseEntries,
+                    Column(
+                      spacing: 8.0,
+                      children: nicBaseEntries,
+                    ),
                   ],
                 ),
           addEntryButton ?? const SizedBox.shrink(),
