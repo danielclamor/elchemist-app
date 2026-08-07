@@ -6,21 +6,34 @@ import 'package:elchemist_app/models/ingredient.dart';
 class MixRecipeCalculator {
   final double batchVolume;
   final double nicBaseNicStr;
+  final double nicBaseVG;
+  final double nicBasePG;
+  final List<NicBaseEntry> nicBaseEntries;
   final double targetNicStr;
   final double targetVG;
   final double targetPG;
-  final List<NicBaseEntry> nicBaseEntries;
   final List<FlavoringEntry> flavorings;
 
-  const MixRecipeCalculator({
+  double totalNicBaseVGRatio;
+  double totalNicBasePGRatio;
+  double totalFlavVGRatio;
+  double totalFlavPGRatio;
+
+  MixRecipeCalculator({
     required this.batchVolume,
     required this.nicBaseNicStr,
+    this.nicBaseVG = 0.0,
+    this.nicBasePG = 0.0,
+    List<NicBaseEntry>? nicBaseEntries,
     required this.targetNicStr,
     required this.targetVG,
     required this.targetPG,
-    required this.nicBaseEntries,
     required this.flavorings,
-  });
+  })  : nicBaseEntries = nicBaseEntries ?? [],
+        totalNicBaseVGRatio = 0.0,
+        totalNicBasePGRatio = 0.0,
+        totalFlavVGRatio = 0.0,
+        totalFlavPGRatio = 0.0;
 
   double get _totalNicBaseRatio => targetNicStr / nicBaseNicStr;
 
@@ -73,39 +86,55 @@ class MixRecipeCalculator {
     );
   }
 
+  Ingredient? _getNicBase(double ratio, bool isVG, String? code) {
+    if (ratio <= 0.0) return null;
+
+    final nicBaseRatio = ratio;
+    final nicBaseMixRatio = _totalNicBaseRatio * nicBaseRatio;
+    final nicBaseNicMixRatio = targetNicStr * nicBaseRatio;
+    final nicBaseBaseVolume =
+        batchVolume * (nicBaseMixRatio - nicBaseNicMixRatio);
+    final nicBaseNicVolume = batchVolume * nicBaseNicMixRatio;
+    final nicBaseNicWeight = nicBaseNicVolume * nicDensity;
+
+    double nicBaseWeight;
+
+    if (isVG) {
+      totalNicBaseVGRatio += nicBaseRatio;
+      nicBaseWeight = nicBaseNicWeight + (nicBaseBaseVolume * vgDensity);
+    } else {
+      totalNicBasePGRatio += nicBaseRatio;
+      nicBaseWeight = nicBaseNicWeight + (nicBaseBaseVolume * pgDensity);
+    }
+
+    return Ingredient(
+      name: 'Nicotine Base (${code ?? (isVG ? 'VG' : 'PG')})',
+      ratio: nicBaseMixRatio * 100,
+      volume: nicBaseBaseVolume + nicBaseNicVolume,
+      weight: nicBaseWeight,
+      type: isVG ? IngredientType.vg : IngredientType.pg,
+    );
+  }
+
+  List<Ingredient> get _allNicBase {
+    if (targetNicStr <= 0.0) return [];
+
+    if (nicBaseEntries.isNotEmpty) {
+      return nicBaseEntries
+          .map((entry) {
+            return _getNicBase(entry.ratio, entry.isVG, entry.code);
+          })
+          .whereType<Ingredient>()
+          .toList();
+    }
+
+    return [
+      _getNicBase(nicBaseVG, true, "VG"),
+      _getNicBase(nicBasePG, false, "PG"),
+    ].whereType<Ingredient>().toList();
+  }
+
   List<Ingredient> get ingredients {
-    double totalNicBaseVGRatio = 0.0;
-    double totalNicBasePGRatio = 0.0;
-    double totalFlavVGRatio = 0.0;
-    double totalFlavPGRatio = 0.0;
-
-    final List<Ingredient> ingNicBases = nicBaseEntries.map((entry) {
-      final entryRatio = entry.ratio;
-      final entryMixRatio = _totalNicBaseRatio * entryRatio;
-      final entryNicMixRatio = targetNicStr * entryRatio;
-      final entryBaseVolume = batchVolume * (entryMixRatio - entryNicMixRatio);
-      final entryNicVolume = batchVolume * entryNicMixRatio;
-      final entryNicWeight = entryNicVolume * nicDensity;
-
-      double entryWeight;
-
-      if (entry.isVG) {
-        totalNicBaseVGRatio += entryRatio;
-        entryWeight = entryNicWeight + (entryBaseVolume * vgDensity);
-      } else {
-        totalNicBasePGRatio += entryRatio;
-        entryWeight = entryNicWeight + (entryBaseVolume * pgDensity);
-      }
-
-      return Ingredient(
-        name: 'Nicotine Base${entry.code != null ? ' (${entry.code})' : ''}',
-        ratio: entryMixRatio * 100,
-        volume: entryBaseVolume + entryNicVolume,
-        weight: entryWeight,
-        type: entry.isVG ? IngredientType.vg : IngredientType.pg,
-      );
-    }).toList();
-
     final List<Ingredient> ingFlavorings = flavorings.map((flavor) {
       final volume = flavor.ratio * batchVolume;
       double weight;
@@ -128,14 +157,14 @@ class MixRecipeCalculator {
     }).toList();
 
     return [
-      ...ingNicBases,
+      ..._allNicBase,
       ...ingFlavorings,
       _getVG(
-        totalNicBaseMixRatio: totalNicBaseVGRatio,
+        totalNicBaseMixRatio: nicBaseVG,
         totalFlavMixRatio: totalFlavVGRatio,
       ),
       _getPG(
-        totalNicBaseMixRatio: totalNicBasePGRatio,
+        totalNicBaseMixRatio: nicBasePG,
         totalFlavMixRatio: totalFlavPGRatio,
       ),
     ];
