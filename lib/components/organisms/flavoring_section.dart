@@ -1,9 +1,10 @@
+import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:flutter/material.dart';
 
 class FlavoringSection extends StatelessWidget {
   final double width;
-  final List<Widget> flavoringEntries;
+  final List<FlavoringEntryRow> flavoringEntries;
   final Widget? addEntryButton;
 
   const FlavoringSection({
@@ -20,7 +21,10 @@ class FlavoringSection extends StatelessWidget {
       title: 'FLAVOURING',
       child: Column(
         children: [
-          ...flavoringEntries,
+          Column(
+            spacing: 8.0,
+            children: flavoringEntries,
+          ),
           addEntryButton ?? const SizedBox.shrink(),
         ],
       ),
