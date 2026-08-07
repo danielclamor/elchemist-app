@@ -228,6 +228,7 @@ class _MixViewState extends State<MixView> {
                               });
                               _setNicProfile(value);
                             },
+                            isNicProfileFinal: isNicProfileFinal,
                             nicLevelController: _nicLevelController,
                             onNicLevelSubmitted:
                                 _nicProfile == null && !_isCustom
