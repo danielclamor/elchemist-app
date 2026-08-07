@@ -1,15 +1,14 @@
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/flavoring_section.dart';
 import 'package:elchemist_app/components/organisms/formula_section.dart';
 import 'package:elchemist_app/components/organisms/nic_base_section.dart';
+import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class RecipeDetailsView extends StatefulWidget {
   final Formula formula;
@@ -88,17 +87,9 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
     });
   }
 
-  int _getDecimalPlaces(double value) {
-    if (value == value.toInt()) return 0;
-    List<String> parts = value.toString().split('.');
-
-    return parts.length > 1 ? parts[1].length : 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     const sectionWidth = 500.0;
-    const cardPadding = EdgeInsetsGeometry.all(24.0);
 
     final Formula formula = widget.formula;
 
@@ -178,100 +169,15 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                         ),
                   _nicProfile == null
                       ? const SizedBox.shrink()
-                      : Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
+                      : TargetSection(
+                          nicStrController: TextEditingController(
+                            text: (_nicProfile!.targetNicStr * 100).toString(),
                           ),
-                          margin: EdgeInsets.zero,
-                          child: Padding(
-                            padding: cardPadding,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'TARGET',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Gap(20),
-                                ElTextField(
-                                  controller: TextEditingController(
-                                    text: ((_nicProfile?.targetNicStr ?? 0.0) *
-                                            100)
-                                        .toStringAsFixed(2),
-                                  ),
-                                  contentType: ElTextFieldContentType.numeric,
-                                  readOnly: true,
-                                  labelText: "Nic Str",
-                                  labelPosition: ElTextFieldLabelPosition.left,
-                                  suffixText: '%',
-                                ),
-                                const Gap(8),
-                                Row(
-                                  spacing: 8.0,
-                                  children: [
-                                    Expanded(
-                                      child: ElTextField(
-                                        controller: TextEditingController(
-                                          text: ((_nicProfile?.targetVG ??
-                                                      0.0) *
-                                                  100)
-                                              .toStringAsFixed(_getDecimalPlaces(
-                                                              _nicProfile
-                                                                      ?.targetVG ??
-                                                                  0.0) -
-                                                          2 >
-                                                      4
-                                                  ? _getDecimalPlaces(
-                                                          _nicProfile
-                                                                  ?.targetVG ??
-                                                              0.0) -
-                                                      2
-                                                  : 4),
-                                        ),
-                                        contentType:
-                                            ElTextFieldContentType.numeric,
-                                        readOnly: true,
-                                        labelText: 'VG',
-                                        labelPosition:
-                                            ElTextFieldLabelPosition.left,
-                                        suffixText: '%',
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ElTextField(
-                                        controller: TextEditingController(
-                                          text: ((_nicProfile?.targetPG ??
-                                                      0.0) *
-                                                  100)
-                                              .toStringAsFixed(_getDecimalPlaces(
-                                                              _nicProfile
-                                                                      ?.targetPG ??
-                                                                  0.0) -
-                                                          2 >
-                                                      4
-                                                  ? _getDecimalPlaces(
-                                                          _nicProfile
-                                                                  ?.targetPG ??
-                                                              0.0) -
-                                                      2
-                                                  : 4),
-                                        ),
-                                        contentType:
-                                            ElTextFieldContentType.numeric,
-                                        readOnly: true,
-                                        labelText: 'PG',
-                                        labelPosition:
-                                            ElTextFieldLabelPosition.left,
-                                        suffixText: '%',
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          vgController: TextEditingController(
+                            text: (_nicProfile!.targetVG * 100).toString(),
+                          ),
+                          pgController: TextEditingController(
+                            text: (_nicProfile!.targetPG * 100).toString(),
                           ),
                         ),
                 ],
