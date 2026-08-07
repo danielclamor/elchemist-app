@@ -1,10 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
-import 'package:elchemist_app/value_getters.dart';
-import 'package:elchemist_app/models/ingredient.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -47,6 +44,15 @@ class _DiyMixViewState extends State<DiyMixView> {
     _nicBasePGController = TextEditingController(text: "100");
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    for (final c in _allControllers) {
+      c.dispose();
+    }
+
+    super.dispose();
   }
 
   void _addFlavoringEntry() {
