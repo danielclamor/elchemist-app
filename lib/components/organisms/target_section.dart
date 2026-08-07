@@ -37,6 +37,7 @@ class TargetSection extends StatelessWidget {
             labelPosition: ElTextFieldLabelPosition.left,
             readOnly: onNicStrSubmitted == null,
             suffixText: '%',
+            onSubmitted: onNicStrSubmitted,
           ),
           const Gap(8),
           Row(
