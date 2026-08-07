@@ -46,6 +46,7 @@ class _SearchMixViewState extends State<SearchMixView> {
   late TextEditingController _targetPGController;
 
   List<TextEditingController> get _allControllers => [
+        _searchController,
         _nicLevelController,
         _volumeController,
         _nicBaseNicStrController,
@@ -59,7 +60,16 @@ class _SearchMixViewState extends State<SearchMixView> {
   @override
   void initState() {
     _searchController = SearchController();
-    _setNicProfile(null);
+    _volumeController = TextEditingController(text: "0");
+    _nicLevelController = TextEditingController(text: "0");
+
+    _targetNicStrController = TextEditingController(text: "0");
+    _targetVGController = TextEditingController(text: "0");
+    _targetPGController = TextEditingController(text: "0");
+
+    _nicBaseNicStrController = TextEditingController(text: "0");
+    _nicBaseVGController = TextEditingController(text: "0");
+    _nicBasePGController = TextEditingController(text: "0");
 
     super.initState();
   }
@@ -77,15 +87,16 @@ class _SearchMixViewState extends State<SearchMixView> {
     _searchController.clear();
     setState(() {
       _formula = null;
+      _isCustom = false;
       _setNicProfile(null);
     });
   }
 
   void _setNicProfile(NicProfile? nicProfile) {
+    if (_nicProfile == nicProfile) return;
+
     setState(() {
-      if (_nicProfile != nicProfile) {
-        _nicProfile = nicProfile;
-      }
+      _nicProfile = nicProfile;
 
       if (_nicProfile == null) {
         _volumeController = TextEditingController(text: "0");
@@ -112,6 +123,9 @@ class _SearchMixViewState extends State<SearchMixView> {
 
       if (_nicBaseEntries.isNotEmpty) {
         _nicBaseEntries.clear();
+      }
+
+      if (_flavoringEntries.isNotEmpty) {
         _flavoringEntries.clear();
       }
     });
@@ -285,15 +299,11 @@ class _SearchMixViewState extends State<SearchMixView> {
                             },
                             onChangeFormula: () => _changeFormula(),
                             nicProfile: _nicProfile,
-                            onNicProfileSelected: (NicProfile? value) {
-                              setState(() {
-                                _nicProfile = value;
-                              });
-                              _setNicProfile(value);
-                            },
+                            onNicProfileSelected: (NicProfile? value) =>
+                                _setNicProfile(value),
                             nicLevelController: _nicLevelController,
                             onNicLevelSubmitted:
-                                _nicProfile == null && !_isCustom
+                                _nicProfile == null || !_isCustom
                                     ? null
                                     : (value) {
                                         if (_nicProfile != null) {
