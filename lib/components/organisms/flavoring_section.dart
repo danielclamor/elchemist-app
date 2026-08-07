@@ -3,7 +3,7 @@ import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:flutter/material.dart';
 
 class FlavoringSection extends StatelessWidget {
-  final double width;
+  final double? width;
   final List<FlavoringEntryRow> flavoringEntries;
   final Widget? addEntryButton;
 
