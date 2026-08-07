@@ -23,7 +23,7 @@ class FlavoringEntry {
     percentageController.dispose();
   }
 
-  String? get name => nameController.text;
+  String get name => nameController.text;
 
   double get ratio => double.parse(percentageController.text) / 100;
 }
