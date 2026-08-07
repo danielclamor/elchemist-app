@@ -138,7 +138,9 @@ class _DiyMixViewState extends State<DiyMixView> {
                                   onNameSubmitted: (value) => setState(() {}),
                                   onPercentSubmitted: (value) =>
                                       setState(() {}),
-                                  onIsVGChanged: (value) => setState(() {}),
+                                  onIsVGChanged: (value) => setState(() {
+                                    entry.isVG = value ?? false;
+                                  }),
                                 );
                               },
                             ),

@@ -11,12 +11,13 @@ class FlavoringEntry {
   })  : id = UniqueKey(),
         nameController = TextEditingController(text: name),
         percentageController =
-            TextEditingController(text: ((ratio ?? 0) * 100).toString());
+            TextEditingController(text: ((ratio ?? 0) * 100).toString()),
+        isVG = isVG ?? false;
 
   final Key id;
   final TextEditingController nameController;
   final TextEditingController percentageController;
-  bool isVG = false;
+  bool isVG;
 
   void dispose() {
     nameController.dispose();
