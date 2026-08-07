@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(
           ThemeData(brightness: Brightness.dark).textTheme,
         ).apply(
-          bodyColor: const Color(0xFFE0E0E0),
+          bodyColor: const Color(0xFFDCDCDC),
         ),
         useMaterial3: true,
       ),

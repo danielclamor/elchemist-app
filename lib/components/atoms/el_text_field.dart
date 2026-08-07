@@ -94,7 +94,7 @@ class ElTextField extends StatelessWidget {
       style: GoogleFonts.robotoMono(
         fontSize: 16,
         fontWeight: FontWeight.w300,
-        color: readOnly ? Theme.of(context).disabledColor : Colors.white,
+        color: readOnly ? Theme.of(context).disabledColor : null,
       ),
       textAlign: alignment,
       readOnly: readOnly,
@@ -135,9 +135,7 @@ class ElTextField extends StatelessWidget {
                   suffixText ?? '',
                   style: TextStyle(
                     fontWeight: FontWeight.w300,
-                    color: readOnly
-                        ? Theme.of(context).disabledColor
-                        : Colors.white,
+                    color: readOnly ? Theme.of(context).disabledColor : null,
                   ),
                 ),
               )

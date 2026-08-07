@@ -93,6 +93,7 @@ class RecipeSection extends StatelessWidget {
                     textAlign: TextAlign.right,
                     style: GoogleFonts.robotoMono(
                       fontSize: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -114,6 +115,7 @@ class RecipeSection extends StatelessWidget {
                   'Sum',
                   style: GoogleFonts.robotoMono(
                     fontSize: 16,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -124,6 +126,7 @@ class RecipeSection extends StatelessWidget {
                   textAlign: TextAlign.right,
                   style: GoogleFonts.robotoMono(
                     fontSize: 16,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -134,6 +137,7 @@ class RecipeSection extends StatelessWidget {
                   textAlign: TextAlign.right,
                   style: GoogleFonts.robotoMono(
                     fontSize: 16,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
