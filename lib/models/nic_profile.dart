@@ -52,6 +52,14 @@ class NicProfile {
 
   String get label => '$name ($newMixLabel)';
 
+  double get nicBaseVG => nicBases
+      .where((nicBase) => nicBase.isVG)
+      .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
+
+  double get nicBasePG => nicBases
+      .where((nicBase) => !nicBase.isVG)
+      .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
+
   @override
   String toString() => 'NicProfile: {name: $fullName}';
 }
