@@ -98,11 +98,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     bottomNavigationBarItems = const <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: Icon(Icons.science),
+        icon: Icon(Icons.build),
         label: 'DIY',
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.manage_search),
+        icon: Icon(Icons.science),
         label: 'Search and Mix',
       ),
       BottomNavigationBarItem(
