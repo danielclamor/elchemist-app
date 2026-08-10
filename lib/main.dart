@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
-// import 'package:elchemist_app/views/mix_view.dart';
 import 'package:elchemist_app/views/formula_list_view.dart';
 import 'package:elchemist_app/views/search_mix_view.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _widgetOptions = <Widget>[
       const DiyMixView(),
       SearchMixView(formulas: formulas),
-      // MixView(formula: formulas[1]),
       FormulaListView(formulas: formulas),
     ];
 
