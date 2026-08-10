@@ -8,6 +8,8 @@ import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/transitions.dart';
+import 'package:elchemist_app/views/mix_view.dart';
 import 'package:flutter/material.dart';
 
 class RecipeDetailsView extends StatefulWidget {
@@ -25,12 +27,20 @@ class RecipeDetailsView extends StatefulWidget {
 typedef MenuEntry = DropdownMenuEntry<String>;
 
 class _RecipeDetailsViewState extends State<RecipeDetailsView> {
+  late Formula _formula;
   NicProfile? _nicProfile;
   List<NicBase> nicBases = [];
   List<Flavoring> flavorings = [];
 
   final List<FlavoringEntry> _flavoringEntries = [];
   final List<NicBaseEntry> _nicBaseEntries = [];
+
+  @override
+  void initState() {
+    _formula = widget.formula;
+
+    super.initState();
+  }
 
   void _setNicProfile(NicProfile? nicProfile) {
     if (_nicProfile == nicProfile) return;
@@ -87,17 +97,57 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
     });
   }
 
+  void _navigateToMix() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (
+          context,
+          animation,
+          secondaryAnimation,
+        ) =>
+            Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: const Text(
+              "Formula",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            elevation: 2.0,
+          ),
+          body: MixView(
+            formula: _formula,
+            initialNicProfile: _nicProfile,
+          ),
+        ),
+        transitionsBuilder: (
+          context,
+          animation,
+          secondaryAnimation,
+          child,
+        ) =>
+            slideTransitionBuilder(
+          context,
+          animation,
+          secondaryAnimation,
+          child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const sectionWidth = 500.0;
-
-    final Formula formula = widget.formula;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
-          "Recipe",
+          "Formula",
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -115,7 +165,11 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                 spacing: 8.0,
                 children: [
                   FormulaSection(
-                    formula: formula,
+                    formula: _formula,
+                    auxiliaryTool: IconButton(
+                      onPressed: () => _navigateToMix(),
+                      icon: const Icon(Icons.science),
+                    ),
                     nicProfile: _nicProfile,
                     nicLevelController: TextEditingController(
                       text: _nicProfile == null

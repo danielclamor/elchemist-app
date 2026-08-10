@@ -61,6 +61,17 @@ class _MixViewState extends State<MixView> {
 
   @override
   void initState() {
+    _volumeController = TextEditingController(text: "0");
+    _nicLevelController = TextEditingController(text: "0");
+
+    _targetNicStrController = TextEditingController(text: "0");
+    _targetVGController = TextEditingController(text: "0");
+    _targetPGController = TextEditingController(text: "0");
+
+    _nicBaseNicStrController = TextEditingController(text: "0");
+    _nicBaseVGController = TextEditingController(text: "0");
+    _nicBasePGController = TextEditingController(text: "0");
+
     _setNicProfile(widget.initialNicProfile);
 
     super.initState();
@@ -75,10 +86,10 @@ class _MixViewState extends State<MixView> {
   }
 
   void _setNicProfile(NicProfile? nicProfile) {
+    if (_nicProfile == nicProfile) return;
+
     setState(() {
-      if (_nicProfile != nicProfile) {
-        _nicProfile = nicProfile;
-      }
+      _nicProfile = nicProfile;
 
       if (_nicProfile == null) {
         _volumeController = TextEditingController(text: "0");
@@ -105,6 +116,9 @@ class _MixViewState extends State<MixView> {
 
       if (_nicBaseEntries.isNotEmpty) {
         _nicBaseEntries.clear();
+      }
+
+      if (_flavoringEntries.isNotEmpty) {
         _flavoringEntries.clear();
       }
     });
@@ -222,16 +236,12 @@ class _MixViewState extends State<MixView> {
                           FormulaSection(
                             formula: formula,
                             nicProfile: _nicProfile,
-                            onNicProfileSelected: (NicProfile? value) {
-                              setState(() {
-                                _nicProfile = value;
-                              });
-                              _setNicProfile(value);
-                            },
+                            onNicProfileSelected: (NicProfile? value) =>
+                                _setNicProfile(value),
                             isNicProfileFinal: isNicProfileFinal,
                             nicLevelController: _nicLevelController,
                             onNicLevelSubmitted:
-                                _nicProfile == null && !_isCustom
+                                _nicProfile == null || !_isCustom
                                     ? null
                                     : (value) {
                                         if (_nicProfile != null) {
@@ -266,6 +276,7 @@ class _MixViewState extends State<MixView> {
                               ? const SizedBox.shrink()
                               : BatchSection(
                                   volumeController: _volumeController,
+                                  onVolumeSubmitted: (value) => setState(() {}),
                                 ),
                           _nicProfile == null
                               ? const SizedBox.shrink()
@@ -325,7 +336,7 @@ class _MixViewState extends State<MixView> {
                           );
                         },
                       ),
-                      addEntryButton: _isCustom &&
+                      addEntryButton: !_isCustom ||
                               double.parse(_targetNicStrController.text) <= 0.0
                           ? null
                           : Padding(
