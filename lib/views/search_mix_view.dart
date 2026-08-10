@@ -350,6 +350,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                               ? const SizedBox.shrink()
                               : BatchSection(
                                   volumeController: _volumeController,
+                                  onVolumeSubmitted: (value) => setState(() {}),
                                 ),
                           _nicProfile == null
                               ? const SizedBox.shrink()
