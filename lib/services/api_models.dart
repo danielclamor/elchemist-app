@@ -23,7 +23,7 @@ class FormulaDto {
         'brand': String brand,
         'chillType': String chillType,
         'nicType': String nicType,
-        'nicProfiles': List<Map<String, dynamic>> nicProfiles
+        'nicProfiles': List<dynamic> nicProfiles
       } =>
         FormulaDto(
           slug: slug,
@@ -32,7 +32,8 @@ class FormulaDto {
           chillType: chillType,
           nicType: nicType,
           nicProfiles: nicProfiles
-              .map((nicProfile) => NicProfileDto.fromJson(nicProfile))
+              .map((p) =>
+                  NicProfileDto.fromJson(Map<String, dynamic>.from(p as Map)))
               .toList(),
         ),
       _ => throw const FormatException('Failed to load')
@@ -72,31 +73,35 @@ class NicProfileDto {
         'name': String name,
         'fullName': String fullName,
         'isNewMix': bool isNewMix,
-        'targetNicStr': double targetNicStr,
-        'targetVg': double targetVg,
-        'targetPg': double targetPg,
-        'nicBaseNicStr': double nicBaseNicStr,
-        'nicBases': List<Map<String, dynamic>> nicBases,
-        'flavorings': List<Map<String, dynamic>> flavorings,
+        'targetNicStr': num targetNicStr,
+        'targetVg': num targetVg,
+        'targetPg': num targetPg,
+        'nicBaseNicStr': num nicBaseNicStr,
+        'nicBases': List<dynamic> nicBases,
+        'flavorings': List<dynamic> flavorings,
       } =>
         NicProfileDto(
           slug: slug,
           name: name,
           fullName: fullName,
           isNewMix: isNewMix,
-          targetNicStr: targetNicStr,
-          targetVg: targetVg,
-          targetPg: targetPg,
-          nicBaseNicStr: nicBaseNicStr,
-          nicBases:
-              nicBases.map((nicBase) => NicBaseDto.fromJson(nicBase)).toList(),
+          targetNicStr: _toDouble(targetNicStr),
+          targetVg: _toDouble(targetVg),
+          targetPg: _toDouble(targetPg),
+          nicBaseNicStr: _toDouble(nicBaseNicStr),
+          nicBases: nicBases
+              .map((b) =>
+                  NicBaseDto.fromJson(Map<String, dynamic>.from(b as Map)))
+              .toList(),
           flavorings: flavorings
-              .map((flavoring) => FlavoringDto.fromJson(flavoring))
+              .map((f) => FlavoringDto.fromJson(Map<String, dynamic>.from(f)))
               .toList(),
         ),
       _ => throw const FormatException('Failed to load Formula')
     };
   }
+
+  static double _toDouble(Object? v) => (v as num).toDouble();
 }
 
 class NicBaseDto {
@@ -111,16 +116,19 @@ class NicBaseDto {
   factory NicBaseDto.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'ratio': double ratio,
-        'nicBaseOption': Map<String, dynamic> nicBaseOption,
+        'ratio': num ratio,
+        'nicBaseOption': dynamic nicBaseOption,
       } =>
         NicBaseDto(
-          ratio: ratio,
-          nicBaseOption: NicBaseOptionDto.fromJson(nicBaseOption),
+          ratio: _toDouble(ratio),
+          nicBaseOption: NicBaseOptionDto.fromJson(
+              Map<String, dynamic>.from(nicBaseOption)),
         ),
       _ => throw const FormatException('Failed to load NicBase')
     };
   }
+
+  static double _toDouble(Object? v) => (v as num).toDouble();
 }
 
 class FlavoringDto {
@@ -138,17 +146,19 @@ class FlavoringDto {
     return switch (json) {
       {
         'name': String name,
-        'ratio': double ratio,
+        'ratio': num ratio,
         'isVg': bool isVg,
       } =>
         FlavoringDto(
           name: name,
-          ratio: ratio,
+          ratio: _toDouble(ratio),
           isVg: isVg,
         ),
       _ => throw const FormatException('Failed to load Flavoring')
     };
   }
+
+  static double _toDouble(Object? v) => (v as num).toDouble();
 }
 
 class NicBaseOptionDto {
