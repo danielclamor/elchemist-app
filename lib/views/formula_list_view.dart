@@ -1,13 +1,16 @@
 import 'package:elchemist_app/components/molecules/formula_card.dart';
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:flutter/material.dart';
 
 class FormulaListView extends StatefulWidget {
   final List<Formula> formulas;
+  final List<NicBaseOption> nicBaseOptions;
 
   const FormulaListView({
     super.key,
     required this.formulas,
+    required this.nicBaseOptions,
   });
 
   @override
@@ -82,7 +85,8 @@ class _FormulaListViewState extends State<FormulaListView> {
                       itemCount: filteredRecipes.length,
                       itemBuilder: (context, index) {
                         return FormulaCard(
-                          recipe: filteredRecipes[index],
+                          formula: filteredRecipes[index],
+                          nicBaseOptions: widget.nicBaseOptions,
                         );
                       },
                     ),

@@ -1,18 +1,23 @@
 import 'dart:io';
 
-import 'package:elchemist_app/constants.dart';
+// import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
+import 'package:elchemist_app/services/api_service.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
 import 'package:elchemist_app/views/formula_list_view.dart';
 import 'package:elchemist_app/views/search_mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await windowManager.ensureInitialized();
+
+  await initHiveForFlutter();
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     WindowOptions windowOptions = const WindowOptions(
@@ -27,11 +32,26 @@ void main() async {
     });
   }
 
-  runApp(const MyApp());
+  List<Formula> formulas = (await ApiService().getFormulas())
+      .map((formulaDto) => Formula.fromDto(formulaDto))
+      .toList();
+
+  List<NicBaseOption> nicBaseOptions = (await ApiService().getNicBaseOptions())
+      .map((o) => NicBaseOption.fromDto(o))
+      .toList();
+
+  runApp(MyApp(
+    formulas: formulas,
+    nicBaseOptions: nicBaseOptions,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final List<Formula> formulas;
+  final List<NicBaseOption> nicBaseOptions;
+
+  const MyApp(
+      {super.key, required this.formulas, required this.nicBaseOptions});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +72,11 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'ELChemist'),
+      home: MyHomePage(
+        title: 'ELChemist',
+        formulas: formulas,
+        nicBaseOptions: nicBaseOptions,
+      ),
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
@@ -69,7 +93,15 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({
+    super.key,
+    required this.title,
+    required this.formulas,
+    required this.nicBaseOptions,
+  });
+
+  final List<Formula> formulas;
+  final List<NicBaseOption> nicBaseOptions;
   final String title;
 
   @override
@@ -77,9 +109,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<Formula> formulas =
-      formulasData.map((formula) => Formula.fromMap(formula)).toList();
-
   int _selectedIndex = 0;
 
   static late List<Widget> _widgetOptions;
@@ -90,8 +119,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     _widgetOptions = <Widget>[
       const DiyMixView(),
-      SearchMixView(formulas: formulas),
-      FormulaListView(formulas: formulas),
+      SearchMixView(
+        formulas: widget.formulas,
+        nicBaseOptions: widget.nicBaseOptions,
+      ),
+      FormulaListView(
+        formulas: widget.formulas,
+        nicBaseOptions: widget.nicBaseOptions,
+      ),
     ];
 
     bottomNavigationBarItems = const <BottomNavigationBarItem>[

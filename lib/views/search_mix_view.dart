@@ -9,6 +9,7 @@ import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
@@ -17,10 +18,12 @@ import 'package:gap/gap.dart';
 
 class SearchMixView extends StatefulWidget {
   final List<Formula> formulas;
+  final List<NicBaseOption> nicBaseOptions;
 
   const SearchMixView({
     super.key,
     required this.formulas,
+    required this.nicBaseOptions,
   });
 
   @override
@@ -383,6 +386,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                         (index) {
                           final entry = _nicBaseEntries[index];
                           return NicBaseEntryRow(
+                            nicBaseOptions: widget.nicBaseOptions,
                             entry: entry,
                             isCustom: _isCustom,
                             withHeaders: index == 0,

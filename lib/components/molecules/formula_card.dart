@@ -1,12 +1,18 @@
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:elchemist_app/transitions.dart';
 import 'package:elchemist_app/views/formula_details_view.dart';
 import 'package:flutter/material.dart';
 
 class FormulaCard extends StatefulWidget {
-  final Formula recipe;
+  final Formula formula;
+  final List<NicBaseOption> nicBaseOptions;
 
-  const FormulaCard({super.key, required this.recipe});
+  const FormulaCard({
+    super.key,
+    required this.formula,
+    required this.nicBaseOptions,
+  });
 
   @override
   State<FormulaCard> createState() => _FormulaCardState();
@@ -15,7 +21,7 @@ class FormulaCard extends StatefulWidget {
 class _FormulaCardState extends State<FormulaCard> {
   @override
   Widget build(BuildContext context) {
-    final recipe = widget.recipe;
+    final recipe = widget.formula;
     return Card(
       margin: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(
@@ -36,6 +42,7 @@ class _FormulaCardState extends State<FormulaCard> {
               ) =>
                   RecipeDetailsView(
                 formula: recipe,
+                nicBaseOptions: widget.nicBaseOptions,
               ),
               transitionsBuilder: (
                 context,

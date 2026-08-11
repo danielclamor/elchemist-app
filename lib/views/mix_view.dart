@@ -9,6 +9,7 @@ import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
 import 'package:elchemist_app/models/formula.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,14 @@ class MixView extends StatefulWidget {
   final Formula formula;
   final NicProfile? initialNicProfile;
   final bool isNicProfileFinal;
+  final List<NicBaseOption> nicBaseOptions;
 
   const MixView({
     super.key,
     required this.formula,
     this.initialNicProfile,
     bool isNicProfileFinal = false,
+    required this.nicBaseOptions,
   }) : isNicProfileFinal =
             initialNicProfile == null ? false : isNicProfileFinal;
 
@@ -309,6 +312,7 @@ class _MixViewState extends State<MixView> {
                         (index) {
                           final entry = _nicBaseEntries[index];
                           return NicBaseEntryRow(
+                            nicBaseOptions: widget.nicBaseOptions,
                             entry: entry,
                             isCustom: _isCustom,
                             withHeaders: index == 0,

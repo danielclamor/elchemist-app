@@ -6,6 +6,7 @@ import 'package:elchemist_app/components/organisms/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/models/flavoring.dart';
 import 'package:elchemist_app/models/nic_base.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:elchemist_app/models/nic_profile.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/transitions.dart';
@@ -14,10 +15,12 @@ import 'package:flutter/material.dart';
 
 class RecipeDetailsView extends StatefulWidget {
   final Formula formula;
+  final List<NicBaseOption> nicBaseOptions; // temporary
 
   const RecipeDetailsView({
     super.key,
     required this.formula,
+    required this.nicBaseOptions,
   });
 
   @override
@@ -121,6 +124,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
           body: MixView(
             formula: _formula,
             initialNicProfile: _nicProfile,
+            nicBaseOptions: widget.nicBaseOptions,
           ),
         ),
         transitionsBuilder: (
@@ -217,6 +221,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                                 entry: entry,
                                 withHeaders: index == 0,
                                 showDeleteIcon: false,
+                                nicBaseOptions: widget.nicBaseOptions,
                               );
                             },
                           ),

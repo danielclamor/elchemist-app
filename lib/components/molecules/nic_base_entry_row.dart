@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
-import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/nic_base.dart';
+import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -46,6 +46,7 @@ class NicBaseEntryRow extends StatelessWidget {
   final VoidCallback? onEntryDeleted;
   final ValueChanged<NicBaseOption?>? onOptionSelected;
   final ValueChanged<String>? onPercentSubmitted;
+  final List<NicBaseOption> nicBaseOptions;
 
   NicBaseEntryRow({
     required this.entry,
@@ -55,11 +56,8 @@ class NicBaseEntryRow extends StatelessWidget {
     this.onEntryDeleted,
     this.onOptionSelected,
     this.onPercentSubmitted,
+    required this.nicBaseOptions,
   }) : super(key: entry.id);
-
-  List<NicBaseOption> get _nicBaseOptions => nicBaseOptionsData
-      .map((option) => NicBaseOption.fromMap(option))
-      .toList();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +85,7 @@ class NicBaseEntryRow extends StatelessWidget {
               labelText: withHeaders ? 'Name' : null,
               dropdownMenuEntries:
                   UnmodifiableListView<DropdownMenuEntry<NicBaseOption>>(
-                _nicBaseOptions.map<DropdownMenuEntry<NicBaseOption>>(
+                nicBaseOptions.map<DropdownMenuEntry<NicBaseOption>>(
                   (option) => DropdownMenuEntry<NicBaseOption>(
                     value: option,
                     label: option.label,
