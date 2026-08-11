@@ -68,7 +68,7 @@ class FormulaSection extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${formula!.nicType.toString()} — ${formula!.chilltype.toString()}',
+                    '${formula!.nicType.toString()} — ${formula!.chillType.toString()}',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,

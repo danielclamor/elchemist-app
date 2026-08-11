@@ -74,7 +74,7 @@ class _FormulaCardState extends State<FormulaCard> {
                 ),
               ),
               Text(
-                "${recipe.nicType.toString()} — ${recipe.chilltype.toString()}",
+                "${recipe.nicType.toString()} — ${recipe.chillType.toString()}",
                 style: const TextStyle(
                   fontWeight: FontWeight.w300,
                 ),

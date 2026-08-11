@@ -42,7 +42,7 @@ class Formula {
   final String slug;
   final String name;
   final String brand;
-  final ChillType chilltype;
+  final ChillType chillType;
   final NicType nicType;
   final List<NicProfile> nicProfiles;
 
@@ -50,7 +50,7 @@ class Formula {
     required this.slug,
     required this.name,
     required this.brand,
-    required this.chilltype,
+    required this.chillType,
     required this.nicType,
     required this.nicProfiles,
   });
@@ -59,7 +59,7 @@ class Formula {
         slug: map["slug"] as String,
         name: map["name"] as String,
         brand: map["brand"] as String,
-        chilltype: ChillType.fromString(map["chill_type"]),
+        chillType: ChillType.fromString(map["chill_type"]),
         nicType: NicType.fromString(map["nic_type"]),
         nicProfiles: (map["nic_profiles"] as List<Map<String, dynamic>>)
             .map((nicProfile) => NicProfile.fromMap(nicProfile))

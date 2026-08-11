@@ -283,7 +283,7 @@ class _SearchMixViewState extends State<SearchMixView> {
                                               ),
                                             ),
                                             Text(
-                                              "${suggestionItem.nicType.toString()} — ${suggestionItem.chilltype.toString()}",
+                                              "${suggestionItem.nicType.toString()} — ${suggestionItem.chillType.toString()}",
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w300,
                                               ),
