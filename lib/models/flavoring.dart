@@ -1,3 +1,5 @@
+import 'package:elchemist_app/services/api_models.dart';
+
 class Flavoring {
   final String name;
   double ratio;
@@ -9,10 +11,10 @@ class Flavoring {
     required this.isVG,
   });
 
-  factory Flavoring.fromMap(Map<String, dynamic> map) => Flavoring(
-        name: map["name"] as String,
-        ratio: map["ratio"] as double,
-        isVG: map["is_vg"] as bool,
+  factory Flavoring.fromDto(FlavoringDto d) => Flavoring(
+        name: d.name,
+        ratio: d.ratio,
+        isVG: d.isVg,
       );
 
   double get percentage => ratio * 100;

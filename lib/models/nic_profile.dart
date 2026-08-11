@@ -1,4 +1,5 @@
 import 'package:elchemist_app/models/nic_base.dart';
+import 'package:elchemist_app/services/api_models.dart';
 
 import 'flavoring.dart';
 
@@ -27,25 +28,20 @@ class NicProfile {
     required this.flavorings,
   });
 
-  factory NicProfile.fromMap(Map<String, dynamic> map) => NicProfile(
-        slug: map["slug"] as String,
-        fullName: map["full_name"] as String,
-        name: map["name"] as String,
-        isNewMix: map["is_new_mix"] as bool,
-        targetNicStr: map["target_nic_str"] as double,
-        targetVG: map["target_vg"] as double,
-        targetPG: map["target_pg"] as double,
-        nicBaseNicStr: map["nic_base_nic_str"] as double,
-        nicBases: (map["nic_bases"] as List).isEmpty
-            ? []
-            : (map["nic_bases"] as List<Map<String, dynamic>>)
-                .map((nicBase) => NicBase.fromMap(nicBase))
-                .toList(),
-        flavorings: (map["flavorings"] as List).isEmpty
-            ? []
-            : (map["flavorings"] as List<Map<String, dynamic>>)
-                .map((flavouring) => Flavoring.fromMap(flavouring))
-                .toList(),
+  factory NicProfile.fromDto(NicProfileDto d) => NicProfile(
+        slug: d.slug,
+        fullName: d.fullName,
+        name: d.name,
+        isNewMix: d.isNewMix,
+        targetNicStr: d.targetNicStr,
+        targetVG: d.targetVg,
+        targetPG: d.targetPg,
+        nicBaseNicStr: d.nicBaseNicStr,
+        nicBases:
+            d.nicBases.map((nicBase) => NicBase.fromDto(nicBase)).toList(),
+        flavorings: d.flavorings
+            .map((flavoring) => Flavoring.fromDto(flavoring))
+            .toList(),
       );
 
   String get newMixLabel => isNewMix ? 'New Mix' : 'Old Mix';

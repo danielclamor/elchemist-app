@@ -1,4 +1,5 @@
 import 'package:elchemist_app/models/nic_profile.dart';
+import 'package:elchemist_app/services/api_models.dart';
 
 enum ChillType {
   chilled,
@@ -9,9 +10,9 @@ enum ChillType {
 
   static ChillType fromString(String value) {
     switch (value) {
-      case 'non-chilled':
+      case 'NON_CHILLED':
         return ChillType.nonChilled;
-      case 'chilled':
+      case 'CHILLED':
         return ChillType.chilled;
       default:
         throw ArgumentError('Unknown ChillType: $value');
@@ -28,9 +29,9 @@ enum NicType {
 
   static NicType fromString(String value) {
     switch (value) {
-      case 'salt':
+      case 'SALT':
         return NicType.salt;
-      case 'freebase':
+      case 'FREEBASE':
         return NicType.freebase;
       default:
         throw ArgumentError('Unknown NicType: $value');
@@ -55,14 +56,17 @@ class Formula {
     required this.nicProfiles,
   });
 
-  factory Formula.fromMap(Map<String, dynamic> map) => Formula(
-        slug: map["slug"] as String,
-        name: map["name"] as String,
-        brand: map["brand"] as String,
-        chillType: ChillType.fromString(map["chill_type"]),
-        nicType: NicType.fromString(map["nic_type"]),
-        nicProfiles: (map["nic_profiles"] as List<Map<String, dynamic>>)
-            .map((nicProfile) => NicProfile.fromMap(nicProfile))
+  factory Formula.fromDto(FormulaDto d) => Formula(
+        slug: d.slug,
+        name: d.name,
+        brand: d.brand,
+        chillType: ChillType.fromString(d.chillType),
+        nicType: NicType.fromString(d.nicType),
+        nicProfiles: d.nicProfiles
+            .map((nicProfile) => NicProfile.fromDto(nicProfile))
             .toList(),
       );
+
+  @override
+  String toString() => 'Formula: {name: $name, chillType: $chillType}';
 }
