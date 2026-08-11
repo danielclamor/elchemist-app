@@ -13,39 +13,39 @@ class ApiService {
     final QueryResult result = await graphQLClient.query(QueryOptions(
       document: gql(
         r'''
-query ReadFormulas {
-formulas {
-    slug
-    name
-    brand
-    chillType
-    nicType
-    nicProfiles {
-      slug
-      name
-      targetVg
-      targetPg
-      nicBases {
-        nicBaseOption {
-          code
-          name
-          isVg
+        query ReadFormulas {
+          formulas {
+            slug
+            name
+            brand
+            chillType
+            nicType
+            nicProfiles {
+              slug
+              name
+              targetVg
+              targetPg
+              nicBases {
+                nicBaseOption {
+                  code
+                  name
+                  isVg
+                }
+                ratio
+              }
+              fullName
+              isNewMix
+              nicBaseNicStr
+              targetNicStr
+              flavorings {
+                isVg
+                name
+                ratio
+              }
+            }
+          }
         }
-        ratio
-      }
-      fullName
-      isNewMix
-      nicBaseNicStr
-      targetNicStr
-      flavorings {
-        isVg
-        name
-        ratio
-      }
-    }
-  }
-}
-''',
+        ''',
       ),
       fetchPolicy: FetchPolicy.networkOnly,
     ));
@@ -57,6 +57,33 @@ formulas {
     return (result.data?['formulas'] as List<dynamic>?)
             ?.map((formula) =>
                 FormulaDto.fromJson(Map<String, dynamic>.from(formula as Map)))
+            .toList() ??
+        [];
+  }
+
+  Future<List<NicBaseOptionDto>> getNicBaseOptions() async {
+    final QueryResult result = await graphQLClient.query(QueryOptions(
+      document: gql(
+        r'''
+        query ReadNicBaseOptions {
+          nicBaseOptions {
+            code
+            isVg
+            name
+          }
+        }
+        ''',
+      ),
+      fetchPolicy: FetchPolicy.networkOnly,
+    ));
+
+    if (result.hasException) {
+      throw result.exception!;
+    }
+
+    return (result.data?['nicBaseOptions'] as List<dynamic>?)
+            ?.map((formula) => NicBaseOptionDto.fromJson(
+                Map<String, dynamic>.from(formula as Map)))
             .toList() ??
         [];
   }
