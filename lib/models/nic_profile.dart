@@ -57,5 +57,5 @@ class NicProfile {
       .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
 
   @override
-  String toString() => 'NicProfile: {name: $fullName}';
+  String toString() => 'NicProfile: {fullName: $fullName}';
 }

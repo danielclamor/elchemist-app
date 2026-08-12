@@ -27,5 +27,5 @@ class NicBase {
 
   @override
   String toString() =>
-      'Nicbase {label: $label, percentage: $percentage%, is_vg: $isVg}';
+      'Nicbase {label: $label, percentage: $percentage%, isVg: $isVg}';
 }

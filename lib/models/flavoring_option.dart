@@ -16,4 +16,7 @@ class FlavoringOption {
         name: o.name,
         isVg: o.isVg,
       );
+
+  @override
+  String toString() => 'FlavoringOption: {name: $name, isVg: $isVg"}';
 }

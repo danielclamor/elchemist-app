@@ -26,5 +26,5 @@ class NicBaseOption {
   String get label => '$name ($code)';
 
   @override
-  String toString() => 'NicBaseOption: {label: $label, is_vg: $isVg"}';
+  String toString() => 'NicBaseOption: {label: $label, isVg: $isVg"}';
 }
