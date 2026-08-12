@@ -19,7 +19,7 @@ class NicBase {
 
   String get name => nicBaseOption.name;
 
-  bool get isVG => nicBaseOption.isVG;
+  bool get isVg => nicBaseOption.isVg;
 
   String get label => nicBaseOption.label;
 
@@ -27,5 +27,5 @@ class NicBase {
 
   @override
   String toString() =>
-      'Nicbase {label: $label, percentage: $percentage%, is_vg: $isVG}';
+      'Nicbase {label: $label, percentage: $percentage%, is_vg: $isVg}';
 }

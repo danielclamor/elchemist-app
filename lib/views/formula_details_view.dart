@@ -208,10 +208,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             text: (_nicProfile!.nicBaseNicStr * 100).toString(),
                           ),
                           vgController: TextEditingController(
-                            text: (_nicProfile!.nicBaseVG * 100).toString(),
+                            text: (_nicProfile!.nicBaseVg * 100).toString(),
                           ),
                           pgController: TextEditingController(
-                            text: (_nicProfile!.nicBasePG * 100).toString(),
+                            text: (_nicProfile!.nicBasePg * 100).toString(),
                           ),
                           nicBaseEntries: List.generate(
                             _nicBaseEntries.length,
@@ -233,10 +233,10 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                             text: (_nicProfile!.targetNicStr * 100).toString(),
                           ),
                           vgController: TextEditingController(
-                            text: (_nicProfile!.targetVG * 100).toString(),
+                            text: (_nicProfile!.targetVg * 100).toString(),
                           ),
                           pgController: TextEditingController(
-                            text: (_nicProfile!.targetPG * 100).toString(),
+                            text: (_nicProfile!.targetPg * 100).toString(),
                           ),
                         ),
                 ],

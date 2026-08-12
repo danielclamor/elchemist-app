@@ -9,8 +9,8 @@ class NicProfile {
   final String name;
   final bool isNewMix;
   final double targetNicStr;
-  final double targetVG;
-  final double targetPG;
+  final double targetVg;
+  final double targetPg;
   final double nicBaseNicStr;
   final List<NicBase> nicBases;
   final List<Flavoring> flavorings;
@@ -21,8 +21,8 @@ class NicProfile {
     required this.name,
     required this.isNewMix,
     required this.targetNicStr,
-    required this.targetVG,
-    required this.targetPG,
+    required this.targetVg,
+    required this.targetPg,
     required this.nicBaseNicStr,
     required this.nicBases,
     required this.flavorings,
@@ -34,8 +34,8 @@ class NicProfile {
         name: d.name,
         isNewMix: d.isNewMix,
         targetNicStr: d.targetNicStr,
-        targetVG: d.targetVg,
-        targetPG: d.targetPg,
+        targetVg: d.targetVg,
+        targetPg: d.targetPg,
         nicBaseNicStr: d.nicBaseNicStr,
         nicBases:
             d.nicBases.map((nicBase) => NicBase.fromDto(nicBase)).toList(),
@@ -48,12 +48,12 @@ class NicProfile {
 
   String get label => '$name ($newMixLabel)';
 
-  double get nicBaseVG => nicBases
-      .where((nicBase) => nicBase.isVG)
+  double get nicBaseVg => nicBases
+      .where((nicBase) => nicBase.isVg)
       .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
 
-  double get nicBasePG => nicBases
-      .where((nicBase) => !nicBase.isVG)
+  double get nicBasePg => nicBases
+      .where((nicBase) => !nicBase.isVg)
       .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
 
   @override

@@ -121,8 +121,8 @@ class _SearchMixViewState extends State<SearchMixView> {
             (_nicProfile!.nicBaseNicStr * 100.0).toString();
         _targetNicStrController.text =
             (_nicProfile!.targetNicStr * 100.0).toString();
-        _targetVGController.text = (_nicProfile!.targetVG * 100.0).toString();
-        _targetPGController.text = (_nicProfile!.targetPG * 100.0).toString();
+        _targetVGController.text = (_nicProfile!.targetVg * 100.0).toString();
+        _targetPGController.text = (_nicProfile!.targetPg * 100.0).toString();
       }
 
       if (_nicBaseEntries.isNotEmpty) {

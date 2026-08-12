@@ -3,18 +3,18 @@ import 'package:elchemist_app/services/api_models.dart';
 class NicBaseOption {
   final String code;
   final String name;
-  final bool isVG;
+  final bool isVg;
 
   NicBaseOption({
     required this.code,
     required this.name,
-    required this.isVG,
+    required this.isVg,
   });
 
   factory NicBaseOption.fromDto(NicBaseOptionDto d) => NicBaseOption(
         code: d.code,
         name: d.name,
-        isVG: d.isVg,
+        isVg: d.isVg,
       );
 
   @override
@@ -26,5 +26,5 @@ class NicBaseOption {
   String get label => '$name ($code)';
 
   @override
-  String toString() => 'NicBaseOption: {label: $label, is_vg: $isVG"}';
+  String toString() => 'NicBaseOption: {label: $label, is_vg: $isVg"}';
 }

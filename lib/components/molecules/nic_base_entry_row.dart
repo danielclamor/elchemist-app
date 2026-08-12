@@ -33,7 +33,7 @@ class NicBaseEntry {
 
   String? get label => nicBase?.label;
 
-  bool get isVG => nicBase?.isVG ?? false;
+  bool get isVG => nicBase?.isVg ?? false;
 
   double get ratio => double.parse(percentageController.text) / 100;
 }
