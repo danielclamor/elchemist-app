@@ -34,11 +34,15 @@ void main() async {
     });
   }
 
-  List<Formula> formulas = (await ApiService().getFormulas())
+  List<Formula> formulas = (kDebugMode
+          ? LocalService().getFormulas()
+          : await ApiService().getFormulas())
       .map((formulaDto) => Formula.fromDto(formulaDto))
       .toList();
 
-  List<NicBaseOption> nicBaseOptions = (await ApiService().getNicBaseOptions())
+  List<NicBaseOption> nicBaseOptions = (kDebugMode
+          ? LocalService().getNicBaseOptions()
+          : await ApiService().getNicBaseOptions())
       .map((o) => NicBaseOption.fromDto(o))
       .toList();
 
