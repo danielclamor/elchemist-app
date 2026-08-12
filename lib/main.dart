@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:elchemist_app/services/api_service.dart';
+import 'package:elchemist_app/services/local_service.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
 import 'package:elchemist_app/views/formula_list_view.dart';
 import 'package:elchemist_app/views/search_mix_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -32,11 +34,15 @@ void main() async {
     });
   }
 
-  List<Formula> formulas = (await ApiService().getFormulas())
+  List<Formula> formulas = (kDebugMode
+          ? LocalService().getFormulas()
+          : await ApiService().getFormulas())
       .map((formulaDto) => Formula.fromDto(formulaDto))
       .toList();
 
-  List<NicBaseOption> nicBaseOptions = (await ApiService().getNicBaseOptions())
+  List<NicBaseOption> nicBaseOptions = (kDebugMode
+          ? LocalService().getNicBaseOptions()
+          : await ApiService().getNicBaseOptions())
       .map((o) => NicBaseOption.fromDto(o))
       .toList();
 
