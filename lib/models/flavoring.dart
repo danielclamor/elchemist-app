@@ -1,20 +1,18 @@
+import 'package:elchemist_app/models/flavoring_option.dart';
 import 'package:elchemist_app/services/api_models.dart';
 
 class Flavoring {
-  final String name;
+  final FlavoringOption flavoringOption;
   double ratio;
-  bool isVG;
 
   Flavoring({
-    required this.name,
+    required this.flavoringOption,
     required this.ratio,
-    required this.isVG,
   });
 
   factory Flavoring.fromDto(FlavoringDto d) => Flavoring(
-        name: d.name,
+        flavoringOption: FlavoringOption.fromDto(d.flavoringOption),
         ratio: d.ratio,
-        isVG: d.isVg,
       );
 
   double get percentage => ratio * 100;

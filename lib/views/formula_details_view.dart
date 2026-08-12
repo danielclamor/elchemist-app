@@ -68,9 +68,9 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
     for (Flavoring flavoring in _nicProfile!.flavorings) {
       _addFlavoringEntry(
         FlavoringEntry(
-          name: flavoring.name,
+          name: flavoring.flavoringOption.name,
           ratio: flavoring.ratio,
-          isVG: flavoring.isVG,
+          isVG: flavoring.flavoringOption.isVg,
         ),
       );
     }

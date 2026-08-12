@@ -38,8 +38,11 @@ class ApiService {
               nicBaseNicStr
               targetNicStr
               flavorings {
-                isVg
-                name
+                flavoringOption {
+                  slug
+                  name
+                  isVg
+                }
                 ratio
               }
             }

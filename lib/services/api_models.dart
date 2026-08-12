@@ -132,27 +132,25 @@ class NicBaseDto {
 }
 
 class FlavoringDto {
-  final String name;
+  final FlavoringOptionDto flavoringOption;
   final double ratio;
-  final bool isVg;
 
   const FlavoringDto({
-    required this.name,
+    required this.flavoringOption,
     required this.ratio,
-    required this.isVg,
   });
 
   factory FlavoringDto.fromJson(Map<String, dynamic> json) {
     return switch (json) {
       {
-        'name': String name,
+        'flavoringOption': dynamic flavoringOption,
         'ratio': num ratio,
-        'isVg': bool isVg,
       } =>
         FlavoringDto(
-          name: name,
+          flavoringOption: FlavoringOptionDto.fromJson(
+            Map<String, dynamic>.from(flavoringOption),
+          ),
           ratio: _toDouble(ratio),
-          isVg: isVg,
         ),
       _ => throw const FormatException('Failed to load Flavoring')
     };
@@ -185,6 +183,34 @@ class NicBaseOptionDto {
           isVg: isVg,
         ),
       _ => throw const FormatException('Failed to load NicBaseOption')
+    };
+  }
+}
+
+class FlavoringOptionDto {
+  final String slug;
+  final String name;
+  final bool isVg;
+
+  const FlavoringOptionDto({
+    required this.slug,
+    required this.name,
+    required this.isVg,
+  });
+
+  factory FlavoringOptionDto.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'slug': String slug,
+        'name': String name,
+        'isVg': bool isVg,
+      } =>
+        FlavoringOptionDto(
+          slug: slug,
+          name: name,
+          isVg: isVg,
+        ),
+      _ => throw const FormatException('Failed to load FlavoringOption')
     };
   }
 }

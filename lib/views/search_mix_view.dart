@@ -144,9 +144,9 @@ class _SearchMixViewState extends State<SearchMixView> {
     for (Flavoring flavoring in _nicProfile!.flavorings) {
       _addFlavoringEntry(
         FlavoringEntry(
-          name: flavoring.name,
+          name: flavoring.flavoringOption.name,
           ratio: flavoring.ratio,
-          isVG: flavoring.isVG,
+          isVG: flavoring.flavoringOption.isVg,
         ),
       );
     }
