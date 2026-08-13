@@ -45,7 +45,7 @@ class NicProfileDto {
   final String slug;
   final String name;
   final String fullName;
-  final bool isNewMix;
+  final bool isOldMix;
   final double targetNicStr;
   final double targetVg;
   final double targetPg;
@@ -57,7 +57,7 @@ class NicProfileDto {
     required this.slug,
     required this.name,
     required this.fullName,
-    required this.isNewMix,
+    required this.isOldMix,
     required this.targetNicStr,
     required this.targetVg,
     required this.targetPg,
@@ -72,7 +72,7 @@ class NicProfileDto {
         'slug': String slug,
         'name': String name,
         'fullName': String fullName,
-        'isNewMix': bool isNewMix,
+        'isOldMix': bool isOldMix,
         'targetNicStr': num targetNicStr,
         'targetVg': num targetVg,
         'targetPg': num targetPg,
@@ -84,7 +84,7 @@ class NicProfileDto {
           slug: slug,
           name: name,
           fullName: fullName,
-          isNewMix: isNewMix,
+          isOldMix: isOldMix,
           targetNicStr: _toDouble(targetNicStr),
           targetVg: _toDouble(targetVg),
           targetPg: _toDouble(targetPg),

@@ -107,7 +107,7 @@ class _MixViewState extends State<MixView> {
         _nicBasePGController = TextEditingController(text: "0");
       } else {
         _nicLevelController.text =
-            (_nicProfile!.targetNicStr * (_nicProfile!.isNewMix ? 1000.0 : 250))
+            (_nicProfile!.targetNicStr * _nicProfile!.nicLevelMultiplier)
                 .toString();
         _nicBaseNicStrController.text =
             (_nicProfile!.nicBaseNicStr * 100.0).toString();
@@ -250,7 +250,7 @@ class _MixViewState extends State<MixView> {
                                         if (_nicProfile != null) {
                                           double targetNicStr =
                                               double.parse(value) /
-                                                  (_nicProfile!.isNewMix
+                                                  (_nicProfile!.isOldMix
                                                       ? 10
                                                       : 2.5);
                                           setState(() {

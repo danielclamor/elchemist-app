@@ -7,7 +7,7 @@ class NicProfile {
   final String slug;
   final String fullName;
   final String name;
-  final bool isNewMix;
+  final bool isOldMix;
   final double targetNicStr;
   final double targetVg;
   final double targetPg;
@@ -19,7 +19,7 @@ class NicProfile {
     required this.slug,
     required this.fullName,
     required this.name,
-    required this.isNewMix,
+    required this.isOldMix,
     required this.targetNicStr,
     required this.targetVg,
     required this.targetPg,
@@ -32,7 +32,7 @@ class NicProfile {
         slug: d.slug,
         fullName: d.fullName,
         name: d.name,
-        isNewMix: d.isNewMix,
+        isOldMix: d.isOldMix,
         targetNicStr: d.targetNicStr,
         targetVg: d.targetVg,
         targetPg: d.targetPg,
@@ -44,9 +44,9 @@ class NicProfile {
             .toList(),
       );
 
-  String get newMixLabel => isNewMix ? 'New Mix' : 'Old Mix';
+  double get nicLevelMultiplier => isOldMix ? 250 : 1000;
 
-  String get label => '$name ($newMixLabel)';
+  String get label => '$name${isOldMix ? ' (Old Mix)' : ''}';
 
   double get nicBaseVg => nicBases
       .where((nicBase) => nicBase.isVg)

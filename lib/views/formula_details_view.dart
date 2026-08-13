@@ -179,7 +179,7 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                       text: _nicProfile == null
                           ? ''
                           : (_nicProfile!.targetNicStr *
-                                  (_nicProfile!.isNewMix ? 1000.0 : 250))
+                                  _nicProfile!.nicLevelMultiplier)
                               .toString(),
                     ),
                     onNicProfileSelected: (value) {
