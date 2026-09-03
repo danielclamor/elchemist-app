@@ -34,17 +34,23 @@ void main() async {
     });
   }
 
-  List<Formula> formulas = (kDebugMode
-          ? LocalService().getFormulas()
-          : await ApiService().getFormulas())
+  List<Formula> formulas = (LocalService().getFormulas())
       .map((formulaDto) => Formula.fromDto(formulaDto))
       .toList();
+  // List<Formula> formulas = (kDebugMode
+  //         ? LocalService().getFormulas()
+  //         : await ApiService().getFormulas())
+  //     .map((formulaDto) => Formula.fromDto(formulaDto))
+  //     .toList();
 
-  List<NicBaseOption> nicBaseOptions = (kDebugMode
-          ? LocalService().getNicBaseOptions()
-          : await ApiService().getNicBaseOptions())
+  List<NicBaseOption> nicBaseOptions = (LocalService().getNicBaseOptions())
       .map((o) => NicBaseOption.fromDto(o))
       .toList();
+  // List<NicBaseOption> nicBaseOptions = (kDebugMode
+  //         ? LocalService().getNicBaseOptions()
+  //         : await ApiService().getNicBaseOptions())
+  //     .map((o) => NicBaseOption.fromDto(o))
+  //     .toList();
 
   runApp(MyApp(
     formulas: formulas,

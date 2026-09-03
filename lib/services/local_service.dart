@@ -1,4 +1,4 @@
-import 'package:elchemist_app/constants.dart';
+import 'package:elchemist_app/local_data.dart';
 import 'package:elchemist_app/services/api_models.dart';
 
 class LocalService {

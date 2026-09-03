@@ -46,3 +46,5 @@ app.*.map.json
 # InnoScript installer
 *.iss
 /installer_output
+
+local_data.dart
