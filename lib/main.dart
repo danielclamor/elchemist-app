@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:window_manager/window_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,10 +53,14 @@ void main() async {
   //     .map((o) => NicBaseOption.fromDto(o))
   //     .toList();
 
-  runApp(MyApp(
-    formulas: formulas,
-    nicBaseOptions: nicBaseOptions,
-  ));
+  runApp(
+    ProviderScope(
+      child: MyApp(
+        formulas: formulas,
+        nicBaseOptions: nicBaseOptions,
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
