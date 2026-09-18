@@ -104,9 +104,9 @@ class FormulaSection extends StatelessWidget {
               SizedBox(
                 width: 140,
                 child: Padding(
-                  padding: const EdgeInsetsGeometry.only(
+                  padding: EdgeInsetsGeometry.only(
                     left: 8.0,
-                    right: 12.0,
+                    right: showCustomCheckBox ? 12.0 : 0.0,
                   ),
                   child: ElTextField(
                     controller: nicLevelController,
