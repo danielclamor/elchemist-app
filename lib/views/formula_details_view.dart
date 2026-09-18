@@ -170,9 +170,28 @@ class _RecipeDetailsViewState extends State<RecipeDetailsView> {
                 children: [
                   FormulaSection(
                     formula: _formula,
-                    auxiliaryTool: IconButton(
+                    auxiliaryTool: ElevatedButton.icon(
                       onPressed: () => _navigateToMix(),
+                      label: Text("Mix"),
                       icon: const Icon(Icons.science),
+                      style: ButtonStyle(
+                        padding: WidgetStatePropertyAll(
+                          EdgeInsets.symmetric(
+                            vertical: 20.0,
+                            horizontal: 16.0,
+                          ),
+                        ),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.all(
+                              Radius.circular(4.0),
+                            ),
+                          ),
+                        ),
+                        backgroundColor: WidgetStatePropertyAll(
+                          Theme.of(context).colorScheme.inversePrimary,
+                        ),
+                      ),
                     ),
                     nicProfile: _nicProfile,
                     nicLevelController: TextEditingController(
