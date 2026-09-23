@@ -39,8 +39,8 @@ class ProductionOrderListFooter extends StatelessWidget {
                   minimumSize: Size.zero,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4.0),
-                      bottomLeft: Radius.circular(4.0),
+                      topLeft: Radius.circular(8.0),
+                      bottomLeft: Radius.circular(8.0),
                     ),
                   ),
                 ),
@@ -60,8 +60,8 @@ class ProductionOrderListFooter extends StatelessWidget {
                   minimumSize: Size.zero,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(4.0),
-                      bottomRight: Radius.circular(4.0),
+                      topRight: Radius.circular(8.0),
+                      bottomRight: Radius.circular(8.0),
                     ),
                   ),
                 ),
