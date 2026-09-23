@@ -19,7 +19,7 @@ class ProductionOrderJobChip extends StatelessWidget {
     String label = 'Unassigned',
   }) =>
       ProductionOrderJobChip(
-        labelIcon: null,
+        labelIcon: Icons.radio_button_unchecked_rounded,
         labelText: label,
         fgColor: Colors.grey.shade800,
         bgColor: Colors.yellow.shade400,
@@ -43,7 +43,7 @@ class ProductionOrderJobChip extends StatelessWidget {
     Color bgColor = Colors.grey,
   }) =>
       ProductionOrderJobChip(
-        labelIcon: Icons.swap_horiz_rounded,
+        labelIcon: Icons.swap_calls_rounded,
         labelText: label,
         fgColor: fgColor,
         bgColor: bgColor,
