@@ -1,5 +1,6 @@
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -113,49 +114,57 @@ class ProductionOrderRowTile extends StatelessWidget {
     final ProductionOrderStatusChip statusChip = _getStatusChip(status);
     final ProductionOrderJobChip jobChip = _getJobChip(job, statusChip);
     final String formattedDate = _getFormattedDate(createdAt);
+    final renderPriority =
+        isPriority && status != ProductionOrderStatus.delivered;
 
     return ListTile(
       onTap: () {}, // TODO: implement onTap
-      contentPadding: EdgeInsets.symmetric(
-        vertical: 0.0,
-        horizontal: 16.0,
-      ),
+      contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
-      title: Row(
-        spacing: 4.0,
-        children: [
-          Expanded(flex: 2, child: Text(orderNumber)),
-          Expanded(flex: 3, child: Text(eliquidDescription)),
-          Expanded(flex: 1, child: Text(orderedQuantity)),
-          Expanded(flex: 1, child: Text(fulfilledQuantity)),
-          Expanded(flex: 2, child: Text(formattedDate)),
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: AlignmentGeometry.centerLeft,
-              child: Checkbox(
-                value: isPriority,
-                onChanged: null,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                visualDensity: VisualDensity.compact,
+      leading: renderPriority
+          ? Container(
+              width: 4.0,
+              color: Colors.red.shade300,
+            )
+          : null,
+      minLeadingWidth: 0,
+      title: Padding(
+        padding: renderPriority
+            ? const EdgeInsets.fromLTRB(0, 0, 16, 0)
+            : const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Row(
+          spacing: 4.0,
+          children: [
+            Expanded(flex: 2, child: Text(orderNumber)),
+            Expanded(flex: 3, child: Text(eliquidDescription)),
+            Expanded(flex: 1, child: Text(orderedQuantity)),
+            Expanded(flex: 1, child: Text(fulfilledQuantity)),
+            Expanded(flex: 2, child: Text(formattedDate)),
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: AlignmentGeometry.centerLeft,
+                child: jobChip,
               ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: AlignmentGeometry.centerLeft,
-              child: jobChip,
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: AlignmentGeometry.centerLeft,
+                child: statusChip,
+              ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: AlignmentGeometry.centerLeft,
-              child: statusChip,
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: AlignmentGeometry.center,
+                child: renderPriority
+                    ? ProductionOrderPriorityChip()
+                    : SizedBox.shrink(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
