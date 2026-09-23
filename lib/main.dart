@@ -1,6 +1,7 @@
 import 'dart:io';
 
 // import 'package:elchemist_app/constants.dart';
+import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
 import 'package:elchemist_app/models/formula.dart';
 import 'package:elchemist_app/models/nic_base_option.dart';
 import 'package:elchemist_app/services/api_service.dart';
@@ -129,12 +130,12 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   static late List<Widget> _widgetOptions;
-
-  static late List<BottomNavigationBarItem> bottomNavigationBarItems;
+  static late List<String> _drawerItems;
 
   @override
   void initState() {
     _widgetOptions = <Widget>[
+      ProductionOrderListScreen(),
       const DiyMixView(),
       SearchMixView(
         formulas: widget.formulas,
@@ -146,19 +147,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ];
 
-    bottomNavigationBarItems = const <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: Icon(Icons.build),
-        label: 'DIY',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.science),
-        label: 'Search and Mix',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.book),
-        label: 'Formulas',
-      ),
+    _drawerItems = [
+      "Orders",
+      "DIY",
+      "Search & Mix",
+      "Formulas",
     ];
 
     super.initState();
@@ -170,27 +163,129 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  static const double _breakpoint = 800;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          widget.title,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth >= _breakpoint;
+
+        if (isWide) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: Text(
+                widget.title,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              elevation: 2.0,
+            ),
+            body: Row(
+              children: [
+                SizedBox(
+                  width: 280,
+                  child: Material(
+                    color: Theme.of(context)
+                        .scaffoldBackgroundColor
+                        .withAlpha(175),
+                    elevation: 1,
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 24.0,
+                        horizontal: 16.0,
+                      ),
+                      children: _drawerItems
+                          .map(
+                            (item) => ListTile(
+                              title: Text(
+                                item,
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onTap: () => _onItemTapped(
+                                _drawerItems.indexOf(item),
+                              ),
+                              selected:
+                                  _selectedIndex == _drawerItems.indexOf(item),
+                              selectedTileColor: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainer,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadiusGeometry.circular(8.0),
+                              ),
+                              visualDensity: VisualDensity.compact,
+                              minTileHeight: 0.0,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: _widgetOptions.elementAt(_selectedIndex),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            elevation: 2.0,
           ),
-        ),
-        elevation: 2.0,
-      ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: bottomNavigationBarItems,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        onTap: _onItemTapped,
-      ),
+          drawer: Drawer(
+            shape: RoundedRectangleBorder(),
+            child: ListView(
+              padding: EdgeInsets.symmetric(
+                vertical: 24.0,
+                horizontal: 16.0,
+              ),
+              children: _drawerItems
+                  .map(
+                    (item) => ListTile(
+                      title: Text(
+                        item,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () {
+                        _onItemTapped(
+                          _drawerItems.indexOf(item),
+                        );
+                        Navigator.pop(context);
+                      },
+                      selected: _selectedIndex == _drawerItems.indexOf(item),
+                      selectedTileColor: Colors.blueGrey.shade200,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(8.0),
+                      ),
+                      visualDensity: VisualDensity.compact,
+                      minTileHeight: 0.0,
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          body: _widgetOptions.elementAt(_selectedIndex),
+        );
+      },
     );
   }
 }
