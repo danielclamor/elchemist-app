@@ -111,35 +111,83 @@ class ProductionOrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isClosed = status == ProductionOrderStatus.cancelled ||
+        status == ProductionOrderStatus.delivered;
+
     final ProductionOrderStatusChip statusChip = _getStatusChip(status);
     final ProductionOrderJobChip jobChip = _getJobChip(job, statusChip);
     final String formattedDate = _getFormattedDate(createdAt);
     final renderPriority =
         isPriority && status != ProductionOrderStatus.delivered;
 
+    final textStyle = TextStyle(
+      fontSize: 14,
+      color: isClosed ? Colors.grey : null,
+      decoration: status == ProductionOrderStatus.cancelled
+          ? TextDecoration.lineThrough
+          : null,
+      decorationColor: Colors.grey,
+      decorationThickness: 1.0,
+    );
+
     return ListTile(
+      tileColor: isClosed
+          ? Theme.of(context).scaffoldBackgroundColor
+          : isPriority
+              ? Colors.red.withAlpha(50)
+              : null,
       onTap: () {}, // TODO: implement onTap
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
       leading: renderPriority
           ? Container(
-              width: 4.0,
-              color: Colors.red.shade300,
+              width: 2.0,
+              color: Colors.red.shade700,
             )
           : null,
       minLeadingWidth: 0,
       title: Padding(
         padding: renderPriority
-            ? const EdgeInsets.fromLTRB(0, 0, 16, 0)
+            ? const EdgeInsets.fromLTRB(2, 0, 16, 0)
             : const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(
           spacing: 4.0,
           children: [
-            Expanded(flex: 2, child: Text(orderNumber)),
-            Expanded(flex: 3, child: Text(eliquidDescription)),
-            Expanded(flex: 1, child: Text(orderedQuantity)),
-            Expanded(flex: 1, child: Text(fulfilledQuantity)),
-            Expanded(flex: 2, child: Text(formattedDate)),
+            Expanded(
+              flex: 2,
+              child: Text(
+                orderNumber,
+                style: textStyle,
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Text(
+                eliquidDescription,
+                style: textStyle,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                orderedQuantity,
+                style: textStyle,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Text(
+                fulfilledQuantity,
+                style: textStyle,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                formattedDate,
+                style: textStyle,
+              ),
+            ),
             Expanded(
               flex: 1,
               child: Container(
