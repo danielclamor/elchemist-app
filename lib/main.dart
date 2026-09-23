@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
 
     _drawerItems = [
-      "Orders",
+      "Production Orders",
       "DIY",
       "Search & Mix",
       "Formulas",
