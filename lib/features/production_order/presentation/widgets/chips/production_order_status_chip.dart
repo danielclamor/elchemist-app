@@ -19,7 +19,7 @@ class ProductionOrderStatusChip extends StatelessWidget {
     String label = 'Cancelled',
   }) =>
       ProductionOrderStatusChip(
-        labelIcon: Icons.radio_button_unchecked_rounded,
+        labelIcon: Icons.remove_circle_outline_rounded,
         labelText: label,
         fgColor: Colors.grey.shade800,
         bgColor: Colors.grey,
