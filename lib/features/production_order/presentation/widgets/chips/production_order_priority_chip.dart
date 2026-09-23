@@ -11,8 +11,8 @@ class ProductionOrderPriorityChip extends StatelessWidget {
     return ElChip(
       labelIcon: Icons.priority_high_rounded,
       labelText: "Priority",
-      fgColor: Colors.grey.shade900,
-      bgColor: Colors.red.shade300,
+      fgColor: Colors.white70,
+      bgColor: Colors.red.shade700,
     );
   }
 }
