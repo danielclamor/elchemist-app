@@ -5,7 +5,7 @@ import 'package:elchemist_app/features/production_order/presentation/widgets/chi
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ProductionOrderRowTile extends StatelessWidget {
+class ProductionOrderListTile extends StatelessWidget {
   final String orderNumber,
       eliquidDescription,
       orderedQuantity,
@@ -16,7 +16,7 @@ class ProductionOrderRowTile extends StatelessWidget {
   final bool isPriority;
   final bool isCancelled;
 
-  const ProductionOrderRowTile({
+  const ProductionOrderListTile({
     super.key,
     required this.orderNumber,
     required this.eliquidDescription,

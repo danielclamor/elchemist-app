@@ -245,7 +245,7 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
                             ),
                             itemBuilder: (context, index) {
                               final order = orders[index];
-                              return ProductionOrderRowTile(
+                              return ProductionOrderListTile(
                                 orderNumber: order.orderNumber,
                                 eliquidDescription: order.eliquidDescription,
                                 orderedQuantity: order.orderedQuantity != null
