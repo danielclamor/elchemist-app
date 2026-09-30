@@ -1,4 +1,5 @@
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
@@ -136,7 +137,24 @@ class ProductionOrderListTile extends StatelessWidget {
           : isPriority
               ? Colors.red.withAlpha(50)
               : null,
-      onTap: () {}, // TODO: implement onTap
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ProductionOrderDetailScreen(
+              productionOrder: ProductionOrder(
+                id: "1",
+                orderNumber: orderNumber,
+                status: status,
+                createdAt: createdAt,
+                orderedQuantity: 10,
+                fulfilledQuantity: null,
+                isPriority: isPriority,
+                job: job,
+              ),
+            ),
+          ),
+        );
+      },
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
       leading: renderPriority
