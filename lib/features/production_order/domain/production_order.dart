@@ -1,69 +1,39 @@
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
 
-enum ProductionOrderStatus {
-  cancelled,
-  delivered,
-  fulfilled,
-  inProgress,
-  pending;
+class ProductionOrder {
+  final String id;
+  final String orderNumber;
+  final ProductionOrderStatus status;
+  final DateTime createdAt;
+  final int? orderedQuantity;
+  final int? fulfilledQuantity;
+  final bool isPriority;
+  final ProductionOrderJob? job;
 
-  @override
-  String toString() {
-    switch (this) {
-      case ProductionOrderStatus.cancelled:
-        return 'Cancelled';
-      case ProductionOrderStatus.delivered:
-        return 'Delivered';
-      case ProductionOrderStatus.fulfilled:
-        return 'Fulfilled';
-      case ProductionOrderStatus.inProgress:
-        return 'In progress';
-      case ProductionOrderStatus.pending:
-        return 'Pending';
-    }
-  }
+  ProductionOrder({
+    required this.id,
+    required this.orderNumber,
+    required this.status,
+    required this.createdAt,
+    required this.orderedQuantity,
+    required this.fulfilledQuantity,
+    required this.isPriority,
+    required this.job,
+  });
 
-  static ProductionOrderStatus fromString(String value) {
-    switch (value) {
-      case 'CANCELLED':
-        return ProductionOrderStatus.cancelled;
-      case 'DELIVERED':
-        return ProductionOrderStatus.delivered;
-      case 'FULFILLED':
-        return ProductionOrderStatus.fulfilled;
-      case 'IN_PROGRESS':
-        return ProductionOrderStatus.inProgress;
-      case 'PENDING':
-        return ProductionOrderStatus.pending;
-      default:
-        throw ArgumentError('Unknown ProductionOrderStatus: $value');
-    }
-  }
-}
+  factory ProductionOrder.fromDto(ProductionOrderDto o) {
+    final job = o.job;
 
-enum ProductionOrderJob {
-  mix,
-  repat;
-
-  @override
-  String toString() {
-    switch (this) {
-      case ProductionOrderJob.mix:
-        return 'Mix';
-      case ProductionOrderJob.repat:
-        return 'Repat';
-    }
-  }
-
-  static ProductionOrderJob fromString(String value) {
-    switch (value) {
-      case 'MIX':
-        return ProductionOrderJob.mix;
-      case 'REPAT':
-        return ProductionOrderJob.repat;
-      default:
-        throw ArgumentError('Unknown ProductionOrderJob: $value');
-    }
+    return ProductionOrder(
+      id: o.id,
+      orderNumber: o.orderNumber,
+      createdAt: o.createdAt,
+      status: ProductionOrderStatus.fromDto(o.status),
+      orderedQuantity: o.orderedQuantity,
+      fulfilledQuantity: o.fulfilledQuantity,
+      isPriority: o.isPriority,
+      job: ProductionOrderJob.fromDto(job),
+    );
   }
 }
 
@@ -96,12 +66,12 @@ class ProductionOrderSummary {
     return ProductionOrderSummary(
       id: o.id,
       orderNumber: o.orderNumber,
-      createdAt: DateTime.parse(o.createdAt),
-      status: ProductionOrderStatus.fromString(o.status),
+      createdAt: o.createdAt,
+      status: ProductionOrderStatus.fromDto(o.status),
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
-      job: job != null ? ProductionOrderJob.fromString(job) : null,
+      job: ProductionOrderJob.fromDto(job),
       eliquidDescription: o.eliquidDescription,
     );
   }
@@ -110,5 +80,55 @@ class ProductionOrderSummary {
   String toString() {
     // TODO: implement toString
     return super.toString();
+  }
+}
+
+enum ProductionOrderStatus {
+  cancelled,
+  delivered,
+  fulfilled,
+  inProgress,
+  pending;
+
+  @override
+  String toString() {
+    return switch (this) {
+      ProductionOrderStatus.cancelled => 'Cancelled',
+      ProductionOrderStatus.delivered => 'Delivered',
+      ProductionOrderStatus.fulfilled => 'Fulfilled',
+      ProductionOrderStatus.inProgress => 'In progress',
+      ProductionOrderStatus.pending => 'Pending',
+    };
+  }
+
+  static ProductionOrderStatus fromDto(ProductionOrderStatusDto s) {
+    return switch (s) {
+      ProductionOrderStatusDto.cancelled => ProductionOrderStatus.cancelled,
+      ProductionOrderStatusDto.delivered => ProductionOrderStatus.delivered,
+      ProductionOrderStatusDto.fulfilled => ProductionOrderStatus.fulfilled,
+      ProductionOrderStatusDto.inProgress => ProductionOrderStatus.inProgress,
+      ProductionOrderStatusDto.pending => ProductionOrderStatus.pending,
+    };
+  }
+}
+
+enum ProductionOrderJob {
+  mix,
+  repat;
+
+  @override
+  String toString() {
+    return switch (this) {
+      ProductionOrderJob.mix => 'Mix',
+      ProductionOrderJob.repat => 'Repat',
+    };
+  }
+
+  static ProductionOrderJob? fromDto(ProductionOrderJobDto? j) {
+    return switch (j) {
+      ProductionOrderJobDto.mix => ProductionOrderJob.mix,
+      ProductionOrderJobDto.repat => ProductionOrderJob.repat,
+      null => null,
+    };
   }
 }
