@@ -1,4 +1,5 @@
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/presentation/screens/production_order_create_order_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_footer.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_header.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_tile.dart';
@@ -206,7 +207,13 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ProductionOrderCreateOrderScreen(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF0E76BD),
                     side: BorderSide(
