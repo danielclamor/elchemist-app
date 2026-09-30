@@ -118,7 +118,9 @@ class _ProductionOrderAddEliquidToOrderDialogState
                             vertical: 16.0,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
                         child: Text("Cancel"),
                       ),
                       ElevatedButton(
