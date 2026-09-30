@@ -242,15 +242,41 @@ class _ProductionOrderDetailScreenState
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    po.orderedQuantity != null
-                                        ? 'x ${po.orderedQuantity}'
-                                        : '',
-                                    style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
+                                  po.orderedQuantity != null
+                                      ? Row(
+                                          children: [
+                                            Text(
+                                              'x',
+                                              style: TextStyle(
+                                                fontSize: 16.0,
+                                              ),
+                                            ),
+                                            Gap(8.0),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                shape: BoxShape.rectangle,
+                                                borderRadius:
+                                                    BorderRadius.circular(16.0),
+                                              ),
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '${po.orderedQuantity}',
+                                                style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Text(
+                                          '--',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
                                 ],
                               ),
                               Gap(20.0),
