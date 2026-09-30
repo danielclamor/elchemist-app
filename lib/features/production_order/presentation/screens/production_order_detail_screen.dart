@@ -86,6 +86,7 @@ class _ProductionOrderDetailScreenState
       bottleSize: BottleSize.ml60,
       nicLevel: NicLevel.mg0,
       bottleColor: BottleColor.clear,
+      nicProfileFullName: "Black Jet Do More Freebase - 0MG - Old Mix",
     );
 
     return Scaffold(
@@ -217,34 +218,56 @@ class _ProductionOrderDetailScreenState
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           padding: EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        eliquid.description,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        eliquid.upc,
+                                        style: TextStyle(fontSize: 14.0),
+                                      ),
+                                    ],
+                                  ),
                                   Text(
-                                    eliquid.description,
+                                    po.orderedQuantity != null
+                                        ? 'x ${po.orderedQuantity}'
+                                        : '',
                                     style: TextStyle(
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                  ),
-                                  Text(
-                                    eliquid.upc,
-                                    style: TextStyle(fontSize: 14.0),
-                                  ),
+                                  )
                                 ],
                               ),
+                              Gap(20.0),
                               Text(
-                                po.orderedQuantity != null
-                                    ? 'x ${po.orderedQuantity}'
-                                    : '',
+                                "NIC PROFILE",
                                 style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey,
                                 ),
-                              )
+                              ),
+                              eliquid.nicProfileFullName != null
+                                  ? Text("${eliquid.nicProfileFullName}")
+                                  : Text(
+                                      "Not provided",
+                                      style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
                             ],
                           ),
                         ),
@@ -293,6 +316,14 @@ class _ProductionOrderDetailScreenState
                         ),
                       ],
                     ),
+                  ),
+                ),
+                Gap(40.0),
+                Text(
+                  "Timeline",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
