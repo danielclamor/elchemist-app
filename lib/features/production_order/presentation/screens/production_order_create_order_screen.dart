@@ -1,5 +1,6 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_add_eliquid_to_order_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -214,7 +215,15 @@ class _ProductionOrderCreateOrderScreenState
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    final result = await showDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          const ProductionOrderAddEliquidToOrderDialog(),
+                                    );
+
+                                    if (result == null) return;
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Theme.of(context)
                                         .colorScheme
@@ -235,7 +244,7 @@ class _ProductionOrderCreateOrderScreenState
                                     ),
                                   ),
                                   child: Text(
-                                    "+ Add e-liquid",
+                                    "+ E-liquid",
                                     style: const TextStyle(
                                       color: Color(0xFFDAF0FF),
                                       fontSize: 14.0,
