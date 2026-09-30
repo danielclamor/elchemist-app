@@ -183,185 +183,189 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width >= 800
-            ? MediaQuery.of(context).size.width - 280
-            : MediaQuery.of(context).size.width,
-      ),
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        spacing: 16.0,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Production Orders",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0E76BD),
-                  side: BorderSide(
-                    color: const Color(0xFF0B5E97),
-                    width: 1.0,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 16.0,
+    return Scaffold(
+      body: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width >= 800
+              ? MediaQuery.of(context).size.width - 280
+              : MediaQuery.of(context).size.width,
+        ),
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          spacing: 16.0,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Production Orders",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
-                child: Text(
-                  "Create Order",
-                  style: const TextStyle(
-                    color: Color(0xFFDAF0FF),
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0E76BD),
+                    side: BorderSide(
+                      color: const Color(0xFF0B5E97),
+                      width: 1.0,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 16.0,
+                    ),
+                  ),
+                  child: Text(
+                    "Create Order",
+                    style: const TextStyle(
+                      color: Color(0xFFDAF0FF),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Card(
-              elevation: 2.0,
-              clipBehavior: Clip.hardEdge,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(width: 0.5),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              margin: EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(
-                    margin: EdgeInsets.zero,
-                    elevation: 0.0,
-                    shape: RoundedRectangleBorder(),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      child: TextField(
-                        style: TextStyle(fontSize: 14.0),
-                        cursorWidth: 1.0,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 12.0,
-                            horizontal: 12.0,
-                          ),
-                          hintText: "Search",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4.0),
+              ],
+            ),
+            Expanded(
+              child: Card(
+                elevation: 2.0,
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(width: 0.5),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                margin: EdgeInsets.zero,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Card(
+                      margin: EdgeInsets.zero,
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        child: TextField(
+                          style: TextStyle(fontSize: 14.0),
+                          cursorWidth: 1.0,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 12.0,
+                              horizontal: 12.0,
                             ),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4.0),
+                            hintText: "Search",
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
                             ),
-                            borderSide: const BorderSide(),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4.0),
+                            disabledBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              borderSide: const BorderSide(),
                             ),
-                            borderSide: const BorderSide(
-                              color: Colors.white,
-                              width: 1.5,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(4.0),
+                              ),
+                              borderSide: const BorderSide(
+                                color: Colors.white,
+                                width: 1.5,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final tableWidth = 1592.0;
-                        final needsScroll = constraints.maxWidth < tableWidth;
+                    Expanded(
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final tableWidth = 1592.0;
+                          final needsScroll = constraints.maxWidth < tableWidth;
 
-                        final tableContent = SizedBox(
-                          width: tableWidth,
-                          child: Column(
-                            children: [
-                              ProductionOrderListHeader(),
-                              Divider(
-                                height: 0.0,
-                                thickness: 0.25,
-                                color: Colors.grey.shade500,
-                              ),
-                              Expanded(
-                                child: ListView.separated(
-                                  itemCount: orders.length,
-                                  separatorBuilder: (context, index) => Divider(
-                                    height: 0.0,
-                                    thickness: 0.25,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    final order = orders[index];
-                                    return ProductionOrderListTile(
-                                      orderNumber: order.orderNumber,
-                                      eliquidDescription:
-                                          order.eliquidDescription,
-                                      orderedQuantity:
-                                          order.orderedQuantity != null
-                                              ? order.orderedQuantity.toString()
-                                              : "--",
-                                      fulfilledQuantity:
-                                          order.fulfilledQuantity != null
-                                              ? order.fulfilledQuantity
-                                                  .toString()
-                                              : "--",
-                                      createdAt: order.createdAt,
-                                      isPriority: order.isPriority,
-                                      job: order.job,
-                                      status: order.status,
-                                    );
-                                  },
+                          final tableContent = SizedBox(
+                            width: tableWidth,
+                            child: Column(
+                              children: [
+                                ProductionOrderListHeader(),
+                                Divider(
+                                  height: 0.0,
+                                  thickness: 0.25,
+                                  color: Colors.grey.shade500,
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-
-                        if (needsScroll) {
-                          return SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: tableContent,
+                                Expanded(
+                                  child: ListView.separated(
+                                    itemCount: orders.length,
+                                    separatorBuilder: (context, index) =>
+                                        Divider(
+                                      height: 0.0,
+                                      thickness: 0.25,
+                                      color: Colors.grey.shade500,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final order = orders[index];
+                                      return ProductionOrderListTile(
+                                        orderNumber: order.orderNumber,
+                                        eliquidDescription:
+                                            order.eliquidDescription,
+                                        orderedQuantity:
+                                            order.orderedQuantity != null
+                                                ? order.orderedQuantity
+                                                    .toString()
+                                                : "--",
+                                        fulfilledQuantity:
+                                            order.fulfilledQuantity != null
+                                                ? order.fulfilledQuantity
+                                                    .toString()
+                                                : "--",
+                                        createdAt: order.createdAt,
+                                        isPriority: order.isPriority,
+                                        job: order.job,
+                                        status: order.status,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                           );
-                        }
 
-                        return tableContent;
-                      },
+                          if (needsScroll) {
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: tableContent,
+                            );
+                          }
+
+                          return tableContent;
+                        },
+                      ),
                     ),
-                  ),
-                  Divider(
-                    height: 0.0,
-                    thickness: 0.25,
-                    color: Colors.grey.shade500,
-                  ),
-                  ProductionOrderListFooter(
-                    firstIndex: 1,
-                    lastIndex: orders.length,
-                    hasPreviousPage: false,
-                    hasNextPage: true,
-                  ),
-                ],
+                    Divider(
+                      height: 0.0,
+                      thickness: 0.25,
+                      color: Colors.grey.shade500,
+                    ),
+                    ProductionOrderListFooter(
+                      firstIndex: 1,
+                      lastIndex: orders.length,
+                      hasPreviousPage: false,
+                      hasNextPage: true,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
