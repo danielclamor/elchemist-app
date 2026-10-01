@@ -4,6 +4,7 @@ import 'package:elchemist_app/features/production_order/presentation/widgets/pro
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_header.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class ProductionOrderListScreen extends StatefulWidget {
   const ProductionOrderListScreen({super.key});
@@ -239,6 +240,230 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
                   ),
                 ),
               ],
+            ),
+            Card(
+              elevation: 2.0,
+              clipBehavior: Clip.hardEdge,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(width: 0.5),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              margin: EdgeInsets.zero,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          right: BorderSide(
+                            width: 1.0,
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 48.0,
+                          vertical: 16.0,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              size: 16.0,
+                            ),
+                            Gap(12.0),
+                            Text(
+                              'Today',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1.0,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48.0,
+                            vertical: 16.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Pending',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                orders
+                                    .where((o) =>
+                                        o.status ==
+                                        ProductionOrderStatus.pending)
+                                    .length
+                                    .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1.0,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48.0,
+                            vertical: 16.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'In progress',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                orders
+                                    .where((o) =>
+                                        o.status ==
+                                        ProductionOrderStatus.inProgress)
+                                    .length
+                                    .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1.0,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48.0,
+                            vertical: 16.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Fulfilled',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                orders
+                                    .where((o) =>
+                                        o.status ==
+                                        ProductionOrderStatus.fulfilled)
+                                    .length
+                                    .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              width: 1.0,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48.0,
+                            vertical: 16.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Delivered',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                orders
+                                    .where((o) =>
+                                        o.status ==
+                                        ProductionOrderStatus.delivered)
+                                    .length
+                                    .toString(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16.0,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: Card(
