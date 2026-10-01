@@ -7,7 +7,55 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-enum MoreAction { cancel, delete, archive }
+enum MoreActions {
+  cancel,
+  delete,
+  archive;
+
+  @override
+  String toString() {
+    return switch (this) {
+      MoreActions.cancel => 'Cancel',
+      MoreActions.delete => 'Delete',
+      MoreActions.archive => 'Archive',
+    };
+  }
+
+  Widget toMenuButton() {
+    return switch (this) {
+      MoreActions.cancel => Row(
+          children: [
+            Icon(
+              Icons.close,
+              size: 16,
+            ),
+            Gap(8.0),
+            Text('Cancel'),
+          ],
+        ),
+      MoreActions.delete => Row(
+          children: [
+            Icon(
+              Icons.delete,
+              size: 16,
+            ),
+            Gap(8.0),
+            Text('Delete'),
+          ],
+        ),
+      MoreActions.archive => Row(
+          children: [
+            Icon(
+              Icons.archive,
+              size: 16,
+            ),
+            Gap(8.0),
+            Text('Archive'),
+          ],
+        ),
+    };
+  }
+}
 
 class ProductionOrderDetailScreen extends StatefulWidget {
   final ProductionOrder productionOrder;
@@ -71,7 +119,7 @@ class _ProductionOrderDetailScreenState
     return '$monthDayYear at $timeStr';
   }
 
-  MoreAction? selectedMenu;
+  MoreActions? selectedMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -191,8 +239,11 @@ class _ProductionOrderDetailScreenState
                         3,
                         (int index) => MenuItemButton(
                           onPressed: () => setState(
-                              () => selectedMenu = MoreAction.values[index]),
-                          child: Text('${MoreAction.values[index]}'),
+                              () => selectedMenu = MoreActions.values[index]),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: MoreActions.values[index].toMenuButton(),
+                          ),
                         ),
                       ),
                       alignmentOffset: Offset(0, 4),
