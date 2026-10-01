@@ -45,6 +45,7 @@ class _ProductionOrderAddEliquidToOrderDialogState
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       clipBehavior: Clip.hardEdge,
       child: Container(
         constraints: const BoxConstraints(
@@ -157,7 +158,6 @@ class _ProductionOrderAddEliquidToOrderDialogState
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  // color: Theme.of(context).colorScheme.surface,
                   shape: BoxShape.rectangle,
                 ),
                 child: ListView.separated(
