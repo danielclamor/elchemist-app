@@ -97,7 +97,6 @@ class _ProductionOrderCreateOrderScreenState
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
                                   border: BoxBorder.all(width: 1.0),
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
@@ -133,7 +132,8 @@ class _ProductionOrderCreateOrderScreenState
                                                       Text(
                                                         _selectedEliquid!.upc,
                                                         style: TextStyle(
-                                                            fontSize: 14.0),
+                                                          fontSize: 14.0,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
