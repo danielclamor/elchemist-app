@@ -136,6 +136,10 @@ class _ProductionOrderDetailScreenState
       bottleColor: BottleColor.clear,
       nicProfileFullName: "Black Jet Do More Freebase - 0MG - Old Mix",
     );
+    final List locations = [
+      "32 St.",
+      "Macleod",
+    ];
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -305,7 +309,9 @@ class _ProductionOrderDetailScreenState
                                             Gap(8.0),
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: Colors.black,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .surface,
                                                 shape: BoxShape.rectangle,
                                                 borderRadius:
                                                     BorderRadius.circular(16.0),
@@ -331,20 +337,96 @@ class _ProductionOrderDetailScreenState
                                 ],
                               ),
                               Gap(20.0),
-                              Text(
-                                "NIC PROFILE",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                              eliquid.nicProfileFullName != null
-                                  ? Text("${eliquid.nicProfileFullName}")
-                                  : Text(
-                                      "Not provided",
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
+                              locations.isNotEmpty
+                                  ? Column(
+                                      spacing: 8.0,
+                                      children: [
+                                        Divider(
+                                          thickness: 0.25,
+                                        ),
+                                        ...locations.map(
+                                          (location) {
+                                            return Row(
+                                              children: [
+                                                Expanded(
+                                                  child: SizedBox(),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      location,
+                                                      style: TextStyle(
+                                                        fontSize: 16.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Gap(16.0),
+                                                    po.orderedQuantity != null
+                                                        ? Row(
+                                                            children: [
+                                                              Text(
+                                                                'x',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      16.0,
+                                                                ),
+                                                              ),
+                                                              Gap(8.0),
+                                                              Container(
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .surface,
+                                                                  shape: BoxShape
+                                                                      .rectangle,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16.0),
+                                                                ),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                                child: Text(
+                                                                  '5',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          )
+                                                        : Text(
+                                                            '--',
+                                                            style: TextStyle(
+                                                              fontSize: 16.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          )
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
                             ],
                           ),
                         ),
