@@ -1,6 +1,7 @@
 import 'package:elchemist_app/features/production_order/data/production_order_activity_log_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_mix_job.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_repat_job.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 
 class ProductionOrderSummaryDto {
   final String id;
@@ -137,6 +138,16 @@ enum ProductionOrderStatusDto {
       _ => throw FormatException('Unknown ProductionOrderStatus: $value'),
     };
   }
+}
+
+extension ProductionOrderStatusGraphQl on ProductionOrderStatus {
+  String get gql => switch (this) {
+        ProductionOrderStatus.pending => 'PENDING',
+        ProductionOrderStatus.inProgress => 'IN_PROGRESS',
+        ProductionOrderStatus.fulfilled => 'FULFILLED',
+        ProductionOrderStatus.delivered => 'DELIVERED',
+        ProductionOrderStatus.cancelled => 'CANCELLED',
+      };
 }
 
 enum ProductionOrderJobDto {

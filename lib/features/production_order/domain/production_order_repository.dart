@@ -6,12 +6,16 @@ abstract class ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,
+    ProductionOrderStatus? status,
   });
 
   Stream<ProductionOrderListPage> watchListPage({
     required int first,
     String? after,
+    ProductionOrderStatus? status,
   });
+
+  Stream<Map<ProductionOrderStatus, int>> watchStatusCounts();
 
   Future<ProductionOrder?> getDetails({required String id});
 }

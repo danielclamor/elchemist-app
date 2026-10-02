@@ -15,11 +15,12 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,
+    ProductionOrderStatus? status,
   }) async {
     final result = await _client.query(
       QueryOptions(
         document: gql(productionOrderListPageQuery),
-        variables: {'first': first, 'after': after},
+        variables: {'first': first, 'after': after, 'status': status},
         fetchPolicy: FetchPolicy.networkOnly,
       ),
     );
@@ -44,11 +45,12 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   Stream<ProductionOrderListPage> watchListPage({
     required int first,
     String? after,
+    ProductionOrderStatus? status,
   }) async* {
     final observable = _client.watchQuery(
       WatchQueryOptions(
         document: gql(productionOrderListPageQuery),
-        variables: {'first': first, 'after': after},
+        variables: {'first': first, 'after': after, 'status': status},
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         fetchResults: true,
         pollInterval: const Duration(seconds: 10),
@@ -74,6 +76,37 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
           endCursor: pageInfo['endCursor'] as String?,
           hasNextPage: pageInfo['hasNextPage'] as bool,
         );
+      }
+    } finally {
+      observable.close();
+    }
+  }
+
+  @override
+  Stream<Map<ProductionOrderStatus, int>> watchStatusCounts() async* {
+    final observable = _client.watchQuery(
+      WatchQueryOptions(
+        document: gql(productionOrderStatusCountsQuery),
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
+        fetchResults: true,
+        pollInterval: const Duration(seconds: 10),
+      ),
+    );
+
+    try {
+      await for (final result in observable.stream) {
+        if (result.data == null) {
+          if (result.hasException) throw result.exception!;
+          continue;
+        }
+        final rows =
+            result.data!['productionOrderStatusCounts'] as List<dynamic>;
+        yield {
+          for (final r in rows)
+            ProductionOrderStatus.values
+                    .firstWhere((s) => s.gql == (r as Map)['status']):
+                r['count'] as int,
+        };
       }
     } finally {
       observable.close();

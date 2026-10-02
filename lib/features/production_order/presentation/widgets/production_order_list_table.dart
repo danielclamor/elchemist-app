@@ -12,12 +12,11 @@ class ProductionOrderListTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pager = ref.watch(productionOrderListPagerProvider);
-    final pageAsync = ref.watch(
-      productionOrderListPageProvider(pager.currentCursor),
-    );
-
+    final status = ref.watch(productionOrderStatusFilterProvider);
+    final pageKey = (after: pager.currentCursor, status: status);
+    final pageAsync = ref.watch(productionOrderListPageProvider(pageKey));
     ref.listen(
-      productionOrderListPageProvider(pager.currentCursor),
+      productionOrderListPageProvider(pageKey),
       (prev, next) {
         final prevItems = prev?.value?.items;
         final nextItems = next.value?.items;
@@ -37,8 +36,9 @@ class ProductionOrderListTable extends ConsumerWidget {
       ),
       error: (e, _) => Center(
         child: TextButton(
-          onPressed: () => ref
-              .invalidate(productionOrderListPageProvider(pager.currentCursor)),
+          onPressed: () => ref.invalidate(
+            productionOrderListPageProvider(pageKey),
+          ),
           child: Text('Failed to load. Retry\n$e'),
         ),
       ),

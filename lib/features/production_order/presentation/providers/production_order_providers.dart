@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_repository.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_list_page.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,13 +21,36 @@ const productionOrderPageSize = 50;
 //   retry: (retryCount, error) => null,
 // );
 
-final productionOrderListPageProvider =
-    StreamProvider.autoDispose.family<ProductionOrderListPage, String?>(
-  (ref, after) {
-    return ref
-        .watch(productionOrderRepositoryProvider)
-        .watchListPage(first: productionOrderPageSize, after: after);
-  },
+class ProductionOrderStatusFilter extends Notifier<ProductionOrderStatus?> {
+  @override
+  ProductionOrderStatus? build() => null;
+
+  void toggle(ProductionOrderStatus status) =>
+      state = state == status ? null : status;
+}
+
+final productionOrderStatusFilterProvider =
+    NotifierProvider<ProductionOrderStatusFilter, ProductionOrderStatus?>(
+  ProductionOrderStatusFilter.new,
+);
+
+final productionOrderStatusCountsProvider =
+    StreamProvider.autoDispose<Map<ProductionOrderStatus, int>>(
+  (ref) => ref.watch(productionOrderRepositoryProvider).watchStatusCounts(),
+);
+
+typedef ProductionOrderPageKey = ({
+  String? after,
+  ProductionOrderStatus? status
+});
+
+final productionOrderListPageProvider = StreamProvider.autoDispose
+    .family<ProductionOrderListPage, ProductionOrderPageKey>(
+  (ref, key) => ref.watch(productionOrderRepositoryProvider).watchListPage(
+        first: productionOrderPageSize,
+        after: key.after,
+        status: key.status,
+      ),
   retry: (retryCount, error) => null,
 );
 
@@ -55,8 +79,10 @@ class ProductionOrderListPagerState {
 
 class ProductionOrderListPager extends Notifier<ProductionOrderListPagerState> {
   @override
-  ProductionOrderListPagerState build() =>
-      const ProductionOrderListPagerState();
+  ProductionOrderListPagerState build() {
+    ref.watch(productionOrderStatusFilterProvider);
+    return const ProductionOrderListPagerState();
+  }
 
   void next(String? endCursor) {
     if (endCursor == null) return;

@@ -1,6 +1,6 @@
 const String productionOrderListPageQuery = r'''
-  query ProductionOrders($first: Int!, $after: String) {
-    productionOrders(first: $first, after: $after) {
+  query ProductionOrders($first: Int!, $after: String, $status: ProductionOrderStatusEnum) {
+    productionOrders(first: $first, after: $after, status: $status) {
       pageInfo { hasNextPage endCursor }
       edges {  
         node {
@@ -16,6 +16,12 @@ const String productionOrderListPageQuery = r'''
         }
       }
     }
+  }
+''';
+
+const productionOrderStatusCountsQuery = r'''
+  query ProductionOrderStatusCounts {
+    productionOrderStatusCounts { status count }
   }
 ''';
 
