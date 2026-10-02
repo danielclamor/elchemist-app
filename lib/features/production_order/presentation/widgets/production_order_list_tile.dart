@@ -107,7 +107,11 @@ class ProductionOrderListTile extends StatelessWidget {
 
     final textStyle = TextStyle(
       fontSize: 14,
-      color: isClosed ? Colors.grey : null,
+      color: isClosed
+          ? Colors.grey
+          : renderPriority
+              ? Colors.red.shade200
+              : null,
       decoration: order.status == ProductionOrderStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
@@ -116,11 +120,7 @@ class ProductionOrderListTile extends StatelessWidget {
     );
 
     return ListTile(
-      tileColor: isClosed
-          ? Theme.of(context).scaffoldBackgroundColor
-          : order.isPriority
-              ? Colors.red.withAlpha(50)
-              : null,
+      tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -141,17 +141,9 @@ class ProductionOrderListTile extends StatelessWidget {
       },
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
-      leading: renderPriority
-          ? Container(
-              width: 2.0,
-              color: Colors.red.shade700,
-            )
-          : null,
       minLeadingWidth: 0,
       title: Padding(
-        padding: renderPriority
-            ? const EdgeInsets.fromLTRB(2, 0, 16, 0)
-            : const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(
           spacing: 4.0,
           children: [
