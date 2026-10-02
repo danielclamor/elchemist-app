@@ -83,11 +83,6 @@ class ProductionOrderListTable extends ConsumerWidget {
                   child: Column(
                     children: [
                       ProductionOrderListHeader(),
-                      Divider(
-                        height: 0.0,
-                        thickness: 0.25,
-                        color: Colors.grey.shade500,
-                      ),
                       Expanded(
                         child: ListView.separated(
                           itemCount: page.items.length,
