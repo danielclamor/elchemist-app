@@ -7,27 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ProductionOrderListTile extends StatelessWidget {
-  final String orderNumber,
-      eliquidDescription,
-      orderedQuantity,
-      fulfilledQuantity;
-  final DateTime createdAt;
-  final ProductionOrderStatus status;
-  final ProductionOrderJob? job;
-  final bool isPriority;
-  final bool isCancelled;
+  final ProductionOrderSummary order;
 
   const ProductionOrderListTile({
     super.key,
-    required this.orderNumber,
-    required this.eliquidDescription,
-    required this.orderedQuantity,
-    required this.fulfilledQuantity,
-    required this.createdAt,
-    required this.status,
-    required this.job,
-    required this.isPriority,
-    this.isCancelled = false,
+    required this.order,
   });
 
   ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus status) {
@@ -112,19 +96,19 @@ class ProductionOrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isClosed = status == ProductionOrderStatus.cancelled ||
-        status == ProductionOrderStatus.delivered;
+    final isClosed = order.status == ProductionOrderStatus.cancelled ||
+        order.status == ProductionOrderStatus.delivered;
 
-    final ProductionOrderStatusChip statusChip = _getStatusChip(status);
-    final ProductionOrderJobChip jobChip = _getJobChip(job, statusChip);
-    final String formattedDate = _getFormattedDate(createdAt);
+    final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
+    final ProductionOrderJobChip jobChip = _getJobChip(order.job, statusChip);
+    final String formattedDate = _getFormattedDate(order.createdAt);
     final renderPriority =
-        isPriority && status != ProductionOrderStatus.delivered;
+        order.isPriority && order.status != ProductionOrderStatus.delivered;
 
     final textStyle = TextStyle(
       fontSize: 14,
       color: isClosed ? Colors.grey : null,
-      decoration: status == ProductionOrderStatus.cancelled
+      decoration: order.status == ProductionOrderStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
       decorationColor: Colors.grey,
@@ -134,7 +118,7 @@ class ProductionOrderListTile extends StatelessWidget {
     return ListTile(
       tileColor: isClosed
           ? Theme.of(context).scaffoldBackgroundColor
-          : isPriority
+          : order.isPriority
               ? Colors.red.withAlpha(50)
               : null,
       onTap: () {
@@ -143,13 +127,13 @@ class ProductionOrderListTile extends StatelessWidget {
             builder: (_) => ProductionOrderDetailScreen(
               productionOrder: ProductionOrder(
                 id: "1",
-                orderNumber: orderNumber,
-                status: status,
-                createdAt: createdAt,
+                orderNumber: order.orderNumber,
+                status: order.status,
+                createdAt: order.createdAt,
                 orderedQuantity: 10,
                 fulfilledQuantity: null,
-                isPriority: isPriority,
-                job: job,
+                isPriority: order.isPriority,
+                job: order.job,
               ),
             ),
           ),
@@ -174,28 +158,32 @@ class ProductionOrderListTile extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                orderNumber,
+                order.orderNumber,
                 style: textStyle,
               ),
             ),
             Expanded(
               flex: 3,
               child: Text(
-                eliquidDescription,
+                order.eliquidDescription,
                 style: textStyle,
               ),
             ),
             Expanded(
               flex: 1,
               child: Text(
-                orderedQuantity,
+                order.orderedQuantity != null
+                    ? order.orderedQuantity.toString()
+                    : '--',
                 style: textStyle,
               ),
             ),
             Expanded(
               flex: 1,
               child: Text(
-                fulfilledQuantity,
+                order.fulfilledQuantity != null
+                    ? order.fulfilledQuantity.toString()
+                    : '--',
                 style: textStyle,
               ),
             ),
