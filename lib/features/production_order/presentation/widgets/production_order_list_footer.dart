@@ -6,6 +6,8 @@ class ProductionOrderListFooter extends StatelessWidget {
   final int lastIndex;
   final bool hasPreviousPage;
   final bool hasNextPage;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
 
   const ProductionOrderListFooter({
     super.key,
@@ -13,6 +15,8 @@ class ProductionOrderListFooter extends StatelessWidget {
     required this.lastIndex,
     required this.hasPreviousPage,
     required this.hasNextPage,
+    required this.onPrevious,
+    required this.onNext,
   });
 
   @override
@@ -29,7 +33,7 @@ class ProductionOrderListFooter extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: 30, // Match width and height for a perfect square
+              width: 30,
               height: 30,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -44,13 +48,13 @@ class ProductionOrderListFooter extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: hasPreviousPage ? () {} : null,
+                onPressed: hasPreviousPage ? onPrevious : null,
                 child: const Icon(Icons.arrow_back_ios_new_rounded, size: 14),
               ),
             ),
             Gap(4.0),
             SizedBox(
-              width: 30, // Match width and height for a perfect square
+              width: 30,
               height: 30,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -65,7 +69,7 @@ class ProductionOrderListFooter extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: hasNextPage ? () {} : null,
+                onPressed: hasNextPage ? onNext : null,
                 child: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
               ),
             ),
