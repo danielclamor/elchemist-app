@@ -20,7 +20,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     final result = await _client.query(
       QueryOptions(
         document: gql(productionOrderListPageQuery),
-        variables: {'first': first, 'after': after, 'status': status},
+        variables: {'first': first, 'after': after, 'status': status?.gql},
         fetchPolicy: FetchPolicy.networkOnly,
       ),
     );
@@ -50,7 +50,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     final observable = _client.watchQuery(
       WatchQueryOptions(
         document: gql(productionOrderListPageQuery),
-        variables: {'first': first, 'after': after, 'status': status},
+        variables: {'first': first, 'after': after, 'status': status?.gql},
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         fetchResults: true,
         pollInterval: const Duration(seconds: 10),
