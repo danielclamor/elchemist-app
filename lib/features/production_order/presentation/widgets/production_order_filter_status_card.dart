@@ -3,17 +3,19 @@ import 'package:elchemist_app/features/production_order/presentation/providers/p
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductionOrderStatusCard extends ConsumerWidget {
+class ProductionOrderFilterStatusCard extends ConsumerWidget {
   final String label;
   final ProductionOrderStatus status;
 
-  const ProductionOrderStatusCard(
+  const ProductionOrderFilterStatusCard(
       {super.key, required this.label, required this.status});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final range = ref.watch(productionOrderDateRangeProvider);
     final selected = ref.watch(productionOrderStatusFilterProvider) == status;
-    final count = ref.watch(productionOrderStatusCountsProvider).value?[status];
+    final count =
+        ref.watch(productionOrderStatusCountsProvider(range)).value?[status];
     final scheme = Theme.of(context).colorScheme;
 
     return InkWell(
