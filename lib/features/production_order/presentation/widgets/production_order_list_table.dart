@@ -27,7 +27,7 @@ class ProductionOrderListTable extends ConsumerWidget {
         final added =
             nextItems.map((o) => o.id).where((id) => !known.contains(id));
 
-        ref.read(newProductionOrderIdsProvider.notifier).markNew(added);
+        ref.read(productionOrderNewIdsProvider.notifier).markNew(added);
       },
     );
 

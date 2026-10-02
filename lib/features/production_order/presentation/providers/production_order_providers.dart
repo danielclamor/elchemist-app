@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_repository.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_list_page.dart';
@@ -73,4 +75,36 @@ class ProductionOrderListPager extends Notifier<ProductionOrderListPagerState> {
 final productionOrderListPagerProvider = NotifierProvider.autoDispose<
     ProductionOrderListPager, ProductionOrderListPagerState>(
   ProductionOrderListPager.new,
+);
+
+class ProductionOrderNewIds extends Notifier<Set<String>> {
+  final _timers = <String, Timer>{};
+
+  @override
+  Set<String> build() {
+    ref.onDispose(() {
+      for (final t in _timers.values) {
+        t.cancel();
+      }
+    });
+    return {};
+  }
+
+  void markNew(Iterable<String> ids) {
+    if (ids.isEmpty) return;
+    state = {...state, ...ids};
+
+    for (final id in ids) {
+      _timers[id]?.cancel();
+      _timers[id] = Timer(const Duration(seconds: 2), () {
+        _timers.remove(id);
+        state = state.where((e) => e != id).toSet();
+      });
+    }
+  }
+}
+
+final productionOrderNewIdsProvider =
+    NotifierProvider<ProductionOrderNewIds, Set<String>>(
+  ProductionOrderNewIds.new,
 );
