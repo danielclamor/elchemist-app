@@ -10,11 +10,21 @@ final productionOrderRepositoryProvider = Provider<ProductionOrderRepository>(
 
 const productionOrderPageSize = 50;
 
+// final productionOrderListPageProvider =
+//     FutureProvider.autoDispose.family<ProductionOrderListPage, String?>(
+//   (ref, after) => ref
+//       .watch(productionOrderRepositoryProvider)
+//       .getListPage(first: productionOrderPageSize, after: after),
+//   retry: (retryCount, error) => null,
+// );
+
 final productionOrderListPageProvider =
-    FutureProvider.autoDispose.family<ProductionOrderListPage, String?>(
-  (ref, after) => ref
-      .watch(productionOrderRepositoryProvider)
-      .getListPage(first: productionOrderPageSize, after: after),
+    StreamProvider.autoDispose.family<ProductionOrderListPage, String?>(
+  (ref, after) {
+    return ref
+        .watch(productionOrderRepositoryProvider)
+        .watchListPage(first: productionOrderPageSize, after: after);
+  },
   retry: (retryCount, error) => null,
 );
 
