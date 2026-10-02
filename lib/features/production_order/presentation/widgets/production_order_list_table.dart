@@ -12,8 +12,9 @@ class ProductionOrderListTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pager = ref.watch(productionOrderListPagerProvider);
+    final range = ref.watch(productionOrderDateRangeProvider);
     final status = ref.watch(productionOrderStatusFilterProvider);
-    final pageKey = (after: pager.currentCursor, status: status);
+    final pageKey = (after: pager.currentCursor, status: status, range: range);
     final pageAsync = ref.watch(productionOrderListPageProvider(pageKey));
     ref.listen(
       productionOrderListPageProvider(pageKey),

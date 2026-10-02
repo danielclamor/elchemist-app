@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_repository.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order_date_range.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_list_page.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +22,29 @@ const productionOrderPageSize = 50;
 //   retry: (retryCount, error) => null,
 // );
 
+class ProductionOrderDatePresetFilter extends Notifier<DatePreset?> {
+  @override
+  DatePreset? build() => DatePreset.today; // null = all time
+
+  void select(DatePreset? preset) => state = preset;
+}
+
+final productionOrderDatePresetProvider =
+    NotifierProvider<ProductionOrderDatePresetFilter, DatePreset?>(
+  ProductionOrderDatePresetFilter.new,
+);
+
+final productionOrderDateRangeProvider = Provider<DateRange?>(
+  (ref) =>
+      ref.watch(productionOrderDatePresetProvider)?.toRange(DateTime.now()),
+);
+
+typedef ProductionOrderPageKey = ({
+  String? after,
+  ProductionOrderStatus? status,
+  DateRange? range
+});
+
 class ProductionOrderStatusFilter extends Notifier<ProductionOrderStatus?> {
   @override
   ProductionOrderStatus? build() => null;
@@ -34,15 +58,12 @@ final productionOrderStatusFilterProvider =
   ProductionOrderStatusFilter.new,
 );
 
-final productionOrderStatusCountsProvider =
-    StreamProvider.autoDispose<Map<ProductionOrderStatus, int>>(
-  (ref) => ref.watch(productionOrderRepositoryProvider).watchStatusCounts(),
+final productionOrderStatusCountsProvider = StreamProvider.autoDispose
+    .family<Map<ProductionOrderStatus, int>, DateRange?>(
+  (ref, range) => ref
+      .watch(productionOrderRepositoryProvider)
+      .watchStatusCounts(range: range),
 );
-
-typedef ProductionOrderPageKey = ({
-  String? after,
-  ProductionOrderStatus? status
-});
 
 final productionOrderListPageProvider = StreamProvider.autoDispose
     .family<ProductionOrderListPage, ProductionOrderPageKey>(

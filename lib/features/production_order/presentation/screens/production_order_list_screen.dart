@@ -1,5 +1,6 @@
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_create_order_screen.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_filter_date_range_card.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_filter_status_card.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_table.dart';
 import 'package:flutter/material.dart';
@@ -83,60 +84,27 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                            width: 1.0,
-                            color: Theme.of(context).colorScheme.surface,
-                          ),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 48.0,
-                          vertical: 16.0,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 16.0,
-                            ),
-                            Gap(12.0),
-                            Text(
-                              'Today',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  const ProductionOrderFilterDateRangeCard(),
                   const Expanded(
-                    child: ProductionOrderStatusCard(
+                    child: ProductionOrderFilterStatusCard(
                       label: 'Pending',
                       status: ProductionOrderStatus.pending,
                     ),
                   ),
                   const Expanded(
-                    child: ProductionOrderStatusCard(
+                    child: ProductionOrderFilterStatusCard(
                       label: 'In progress',
                       status: ProductionOrderStatus.inProgress,
                     ),
                   ),
                   const Expanded(
-                    child: ProductionOrderStatusCard(
+                    child: ProductionOrderFilterStatusCard(
                       label: 'Fulfilled',
                       status: ProductionOrderStatus.fulfilled,
                     ),
                   ),
                   const Expanded(
-                    child: ProductionOrderStatusCard(
+                    child: ProductionOrderFilterStatusCard(
                       label: 'Delivered',
                       status: ProductionOrderStatus.delivered,
                     ),

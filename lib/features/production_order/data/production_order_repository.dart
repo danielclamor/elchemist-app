@@ -1,3 +1,4 @@
+import 'package:elchemist_app/features/production_order/domain/production_order_date_range.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_list_page.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
@@ -16,11 +17,18 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     required int first,
     String? after,
     ProductionOrderStatus? status,
+    DateRange? range,
   }) async {
     final result = await _client.query(
       QueryOptions(
         document: gql(productionOrderListPageQuery),
-        variables: {'first': first, 'after': after, 'status': status?.gql},
+        variables: {
+          'first': first,
+          'after': after,
+          'status': status?.gql,
+          'createdFrom': range?.from?.toUtc().toIso8601String(),
+          'createdTo': range?.from?.toUtc().toIso8601String(),
+        },
         fetchPolicy: FetchPolicy.networkOnly,
       ),
     );
@@ -46,11 +54,18 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     required int first,
     String? after,
     ProductionOrderStatus? status,
+    DateRange? range,
   }) async* {
     final observable = _client.watchQuery(
       WatchQueryOptions(
         document: gql(productionOrderListPageQuery),
-        variables: {'first': first, 'after': after, 'status': status?.gql},
+        variables: {
+          'first': first,
+          'after': after,
+          'status': status?.gql,
+          'createdFrom': range?.from?.toUtc().toIso8601String(),
+          'createdTo': range?.from?.toUtc().toIso8601String(),
+        },
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         fetchResults: true,
         pollInterval: const Duration(seconds: 10),
@@ -83,10 +98,16 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   }
 
   @override
-  Stream<Map<ProductionOrderStatus, int>> watchStatusCounts() async* {
+  Stream<Map<ProductionOrderStatus, int>> watchStatusCounts({
+    DateRange? range,
+  }) async* {
     final observable = _client.watchQuery(
       WatchQueryOptions(
         document: gql(productionOrderStatusCountsQuery),
+        variables: {
+          'createdFrom': range?.from?.toUtc().toIso8601String(),
+          'createdTo': range?.to?.toUtc().toIso8601String(),
+        },
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         fetchResults: true,
         pollInterval: const Duration(seconds: 10),
