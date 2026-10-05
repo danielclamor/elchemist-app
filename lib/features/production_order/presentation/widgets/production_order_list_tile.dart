@@ -166,7 +166,7 @@ class ProductionOrderListTile extends StatelessWidget {
               child: Text(
                 order.orderedQuantity != null
                     ? order.orderedQuantity.toString()
-                    : '--',
+                    : '—',
                 style: textStyle,
               ),
             ),
@@ -175,7 +175,7 @@ class ProductionOrderListTile extends StatelessWidget {
               child: Text(
                 order.fulfilledQuantity != null
                     ? order.fulfilledQuantity.toString()
-                    : '--',
+                    : '—',
                 style: textStyle,
               ),
             ),
