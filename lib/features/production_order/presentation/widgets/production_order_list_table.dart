@@ -6,11 +6,33 @@ import 'package:elchemist_app/features/production_order/presentation/widgets/pro
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductionOrderListTable extends ConsumerWidget {
+class ProductionOrderListTable extends ConsumerStatefulWidget {
   const ProductionOrderListTable({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ProductionOrderListTable();
+}
+
+class _ProductionOrderListTable
+    extends ConsumerState<ProductionOrderListTable> {
+  final ScrollController _verticalScrollController = ScrollController();
+  final ScrollController _horizontalScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _verticalScrollController.dispose();
+    _horizontalScrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final pager = ref.watch(productionOrderListPagerProvider);
     final range = ref.watch(productionOrderDateRangeProvider);
     final status = ref.watch(productionOrderStatusFilterProvider);
@@ -98,32 +120,40 @@ class ProductionOrderListTable extends ConsumerWidget {
                     children: [
                       ProductionOrderListHeader(),
                       Expanded(
-                        child: ListView.separated(
-                            itemCount: page.items.length,
-                            separatorBuilder: (context, index) => Divider(
-                                  height: 0.0,
-                                  thickness: 0.25,
-                                  color: Colors.grey.shade500,
-                                ),
-                            itemBuilder: (context, index) {
-                              final order = page.items[index];
-                              return ProductionOrderNewBlink(
-                                key: ValueKey(order.id),
-                                orderId: order.id,
-                                child: ProductionOrderListTile(
-                                  order: order,
-                                ),
-                              );
-                            }),
+                        child: Scrollbar(
+                          controller: _verticalScrollController,
+                          child: ListView.separated(
+                              controller: _verticalScrollController,
+                              itemCount: page.items.length,
+                              separatorBuilder: (context, index) => Divider(
+                                    height: 0.0,
+                                    thickness: 0.25,
+                                    color: Colors.grey.shade500,
+                                  ),
+                              itemBuilder: (context, index) {
+                                final order = page.items[index];
+                                return ProductionOrderNewBlink(
+                                  key: ValueKey(order.id),
+                                  orderId: order.id,
+                                  child: ProductionOrderListTile(
+                                    order: order,
+                                  ),
+                                );
+                              }),
+                        ),
                       ),
                     ],
                   ),
                 );
 
                 if (needsScroll) {
-                  return SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: tableContent,
+                  return Scrollbar(
+                    controller: _horizontalScrollController,
+                    child: SingleChildScrollView(
+                      controller: _horizontalScrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: tableContent,
+                    ),
                   );
                 }
 
