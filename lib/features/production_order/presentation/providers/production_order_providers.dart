@@ -86,7 +86,6 @@ class ProductionOrderListPagerState {
   });
 
   String? get currentCursor => cursors[index];
-  bool get hasPreviousPage => index > 0;
   int get firstIndex => index * productionOrderPageSize + 1;
 
   ProductionOrderListPagerState copyWith({
@@ -113,7 +112,7 @@ class ProductionOrderListPager extends Notifier<ProductionOrderListPagerState> {
   }
 
   void previous() {
-    if (!state.hasPreviousPage) return;
+    if (state.index < 0) return;
     state = state.copyWith(index: state.index - 1);
   }
 
