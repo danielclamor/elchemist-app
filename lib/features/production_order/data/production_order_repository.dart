@@ -45,7 +45,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
           .map((dto) => ProductionOrderSummary.fromDto(dto))
           .toList(),
       endCursor: pageInfo['endCursor'] as String?,
-      startCursor: pageInfo['startCursor'] as String?,
       hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
       hasNextPage: pageInfo['hasNextPage'] as bool,
     );
@@ -91,7 +90,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
               .map((dto) => ProductionOrderSummary.fromDto(dto))
               .toList(),
           endCursor: pageInfo['endCursor'] as String?,
-          startCursor: pageInfo['startCursor'] as String?,
           hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
           hasNextPage: pageInfo['hasNextPage'] as bool,
         );
