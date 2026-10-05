@@ -71,6 +71,7 @@ final productionOrderListPageProvider = StreamProvider.autoDispose
         first: productionOrderPageSize,
         after: key.after,
         status: key.status,
+        range: key.range,
       ),
   retry: (retryCount, error) => null,
 );
