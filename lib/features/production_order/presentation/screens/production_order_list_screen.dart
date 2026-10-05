@@ -95,7 +95,7 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        final tableWidth = 1392.0;
+                        final tableWidth = 1352.0;
                         final needsScroll = constraints.maxWidth < tableWidth;
 
                         final metricsContent = SizedBox(
