@@ -21,21 +21,38 @@ class ProductionOrderFilterDateRangeCard extends ConsumerWidget {
         const PopupMenuItem(value: null, child: Text('All time')),
       ],
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 48.0, vertical: 16.0),
+        width: 200,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 48.0,
+          vertical: 16.0,
+        ),
         decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           border: Border(
             right: BorderSide(
-                width: 1.0, color: Theme.of(context).colorScheme.surface),
+              width: 1.0,
+              color: Theme.of(context).colorScheme.surface,
+            ),
           ),
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today, size: 16.0),
+            const Icon(
+              Icons.calendar_today,
+              size: 16.0,
+            ),
             const Gap(12.0),
-            Text(preset?.label ?? 'All time',
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(
+              preset?.label ?? 'All time',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const Gap(8.0),
-            const Icon(Icons.arrow_drop_down, size: 18.0),
+            const Icon(
+              Icons.arrow_drop_down,
+              size: 18.0,
+            ),
           ],
         ),
       ),
