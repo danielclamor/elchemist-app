@@ -1,3 +1,4 @@
+import 'package:elchemist_app/core/widgets/fading_horizontal_scroll.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_create_order_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_filter_date_range_card.dart';
@@ -14,6 +15,14 @@ class ProductionOrderListScreen extends StatefulWidget {
 }
 
 class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
+  final ScrollController _verticalScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _verticalScrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,31 +90,56 @@ class _ProductionOrderListScreenState extends State<ProductionOrderListScreen> {
               ),
               margin: EdgeInsets.zero,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const ProductionOrderFilterDateRangeCard(),
-                  const Expanded(
-                    child: ProductionOrderFilterStatusCard(
-                      label: 'Pending',
-                      status: ProductionOrderStatus.pending,
-                    ),
-                  ),
-                  const Expanded(
-                    child: ProductionOrderFilterStatusCard(
-                      label: 'In progress',
-                      status: ProductionOrderStatus.inProgress,
-                    ),
-                  ),
-                  const Expanded(
-                    child: ProductionOrderFilterStatusCard(
-                      label: 'Fulfilled',
-                      status: ProductionOrderStatus.fulfilled,
-                    ),
-                  ),
-                  const Expanded(
-                    child: ProductionOrderFilterStatusCard(
-                      label: 'Delivered',
-                      status: ProductionOrderStatus.delivered,
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final tableWidth = 1392.0;
+                        final needsScroll = constraints.maxWidth < tableWidth;
+
+                        final metricsContent = SizedBox(
+                          width: tableWidth,
+                          child: Row(
+                            children: [
+                              const Expanded(
+                                child: ProductionOrderFilterStatusCard(
+                                  label: 'Pending',
+                                  status: ProductionOrderStatus.pending,
+                                ),
+                              ),
+                              const Expanded(
+                                child: ProductionOrderFilterStatusCard(
+                                  label: 'In progress',
+                                  status: ProductionOrderStatus.inProgress,
+                                ),
+                              ),
+                              const Expanded(
+                                child: ProductionOrderFilterStatusCard(
+                                  label: 'Fulfilled',
+                                  status: ProductionOrderStatus.fulfilled,
+                                ),
+                              ),
+                              const Expanded(
+                                child: ProductionOrderFilterStatusCard(
+                                  label: 'Delivered',
+                                  status: ProductionOrderStatus.delivered,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (needsScroll) {
+                          return FadingHorizontalScroll(
+                            fadeWidth: 100,
+                            controller: _verticalScrollController,
+                            child: metricsContent,
+                          );
+                        }
+
+                        return metricsContent;
+                      },
                     ),
                   ),
                 ],
