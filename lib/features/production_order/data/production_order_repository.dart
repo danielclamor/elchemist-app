@@ -64,7 +64,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
           'after': after,
           'status': status?.gql,
           'createdFrom': range?.from?.toUtc().toIso8601String(),
-          'createdTo': range?.from?.toUtc().toIso8601String(),
+          'createdTo': range?.to?.toUtc().toIso8601String(),
         },
         fetchPolicy: FetchPolicy.cacheAndNetwork,
         fetchResults: true,
