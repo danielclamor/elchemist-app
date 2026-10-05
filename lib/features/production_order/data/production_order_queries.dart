@@ -13,7 +13,12 @@ const String productionOrderListPageQuery = r'''
       createdFrom: $createdFrom,
       createdTo: $createdTo
     ) {
-      pageInfo { hasNextPage endCursor }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage 
+        endCursor
+        startCursor
+      }
       edges {  
         node {
           id
