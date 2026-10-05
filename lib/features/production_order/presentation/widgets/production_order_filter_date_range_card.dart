@@ -15,10 +15,14 @@ class ProductionOrderFilterDateRangeCard extends ConsumerWidget {
     return PopupMenuButton<DatePreset?>(
       tooltip: '',
       onSelected: notifier.select,
+      offset: Offset(0, 4),
+      position: PopupMenuPosition.under,
       itemBuilder: (_) => [
         for (final p in DatePreset.values)
-          PopupMenuItem(value: p, child: Text(p.label)),
-        const PopupMenuItem(value: null, child: Text('All time')),
+          PopupMenuItem(
+            value: p,
+            child: Text(p.label),
+          ),
       ],
       child: Container(
         width: 200,
