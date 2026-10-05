@@ -24,40 +24,46 @@ class ProductionOrderFilterDateRangeCard extends ConsumerWidget {
             child: Text(p.label),
           ),
       ],
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 48.0,
-          vertical: 16.0,
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          border: Border(
-            right: BorderSide(
-              width: 1.0,
-              color: Theme.of(context).colorScheme.surface,
-            ),
+      child: InkWell(
+        child: Container(
+          width: 240,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 48.0,
+            vertical: 16.0,
           ),
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.calendar_today,
-              size: 16.0,
-            ),
-            const Gap(12.0),
-            Text(
-              preset?.label ?? 'All time',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            border: Border(
+              right: BorderSide(
+                width: 1.0,
+                color: Theme.of(context).colorScheme.surface,
               ),
             ),
-            const Gap(8.0),
-            const Icon(
-              Icons.arrow_drop_down,
-              size: 18.0,
-            ),
-          ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 16.0,
+                  ),
+                  Gap(12.0),
+                  Text(
+                    preset?.label ?? 'All time',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              const Icon(
+                Icons.arrow_drop_down,
+                size: 18.0,
+              ),
+            ],
+          ),
         ),
       ),
     );
