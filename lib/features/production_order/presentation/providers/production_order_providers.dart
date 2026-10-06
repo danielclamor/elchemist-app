@@ -14,17 +14,9 @@ final productionOrderRepositoryProvider = Provider<ProductionOrderRepository>(
 
 const productionOrderPageSize = 50;
 
-// final productionOrderListPageProvider =
-//     FutureProvider.autoDispose.family<ProductionOrderListPage, String?>(
-//   (ref, after) => ref
-//       .watch(productionOrderRepositoryProvider)
-//       .getListPage(first: productionOrderPageSize, after: after),
-//   retry: (retryCount, error) => null,
-// );
-
 class ProductionOrderDatePresetFilter extends Notifier<DatePreset?> {
   @override
-  DatePreset? build() => DatePreset.today; // null = all time
+  DatePreset? build() => DatePreset.allTime;
 
   void select(DatePreset? preset) => state = preset;
 }
