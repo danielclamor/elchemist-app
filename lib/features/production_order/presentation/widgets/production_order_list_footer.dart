@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class ProductionOrderListFooter extends StatelessWidget {
+class PageIndexRange {
   final int firstIndex;
   final int lastIndex;
+
+  const PageIndexRange({
+    required this.firstIndex,
+    required this.lastIndex,
+  });
+
+  @override
+  String toString() => '$firstIndex-$lastIndex';
+}
+
+class ProductionOrderListFooter extends StatelessWidget {
+  final PageIndexRange? range;
   final bool hasPreviousPage;
   final bool hasNextPage;
-  final VoidCallback onPrevious;
-  final VoidCallback onNext;
+  final VoidCallback? onPrevious;
+  final VoidCallback? onNext;
 
   const ProductionOrderListFooter({
     super.key,
-    required this.firstIndex,
-    required this.lastIndex,
+    required this.range,
     required this.hasPreviousPage,
     required this.hasNextPage,
     required this.onPrevious,
@@ -90,7 +101,7 @@ class ProductionOrderListFooter extends StatelessWidget {
                 ),
               ),
               Gap(8.0),
-              Text("$firstIndex-$lastIndex"),
+              Text(range != null ? range.toString() : ""),
             ],
           ),
         ),
