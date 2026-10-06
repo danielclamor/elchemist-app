@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
+import 'package:elchemist_app/features/eliquid/presentation/widgets/eliquid_picker_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -12,32 +12,8 @@ class ProductionOrderAddEliquidToOrderDialog extends StatefulWidget {
 
 class _ProductionOrderAddEliquidToOrderDialogState
     extends State<ProductionOrderAddEliquidToOrderDialog> {
-  final List<Eliquid> eliquids = [
-    Eliquid(
-      id: "1",
-      upc: "696177436003",
-      description: "Black Jet Do More 60ml 0mg",
-      brand: "Black Jet",
-      chillType: ChillType.nonChilled,
-      nicType: NicType.freebase,
-      bottleSize: BottleSize.ml60,
-      nicLevel: NicLevel.mg0,
-      bottleColor: BottleColor.clear,
-      nicProfileFullName: "Black Jet Do More Freebase - 0MG - Old Mix",
-    ),
-    Eliquid(
-      id: "1",
-      upc: "696177436003",
-      description: "Black Jet Do More 60ml 0mg",
-      brand: "Black Jet",
-      chillType: ChillType.nonChilled,
-      nicType: NicType.freebase,
-      bottleSize: BottleSize.ml60,
-      nicLevel: NicLevel.mg0,
-      bottleColor: BottleColor.clear,
-      nicProfileFullName: "Black Jet Do More Freebase - 0MG - Old Mix",
-    ),
-  ];
+  int? _selectedIndex;
+  bool get _selectionFilled => _selectedIndex != null;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +21,7 @@ class _ProductionOrderAddEliquidToOrderDialogState
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
       ),
-      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLow,
       clipBehavior: Clip.hardEdge,
       child: Container(
         constraints: const BoxConstraints(
@@ -163,39 +139,10 @@ class _ProductionOrderAddEliquidToOrderDialogState
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                 ),
-                child: ListView.separated(
-                  itemCount: eliquids.length,
-                  separatorBuilder: (context, index) => Divider(
-                    height: 0.0,
-                    thickness: 0.25,
-                  ),
-                  itemBuilder: (context, index) {
-                    final eliquid = eliquids[index];
-
-                    return ListTile(
-                      onTap: () {},
-                      selected: true,
-                      title: Text(eliquid.description),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 4.0,
-                      ),
-                      subtitle: Text(
-                        eliquid.upc,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      trailing: Icon(
-                        Icons.check_box_outline_blank_rounded,
-                      ),
-                    );
-                  },
-                ),
+                child: EliquidPickerList(),
               ),
             ),
-            Gap(16.0),
+            // Gap(16.0),
             Container(
               decoration: BoxDecoration(
                 boxShadow: [
@@ -230,7 +177,7 @@ class _ProductionOrderAddEliquidToOrderDialogState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("0/1 selected"),
+                      Text('${_selectionFilled ? '1' : '0'}/1 selected'),
                       Row(
                         spacing: 8.0,
                         children: [
@@ -257,10 +204,12 @@ class _ProductionOrderAddEliquidToOrderDialogState
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
+                              side: _selectionFilled
+                                  ? BorderSide(
+                                      color: const Color(0xFF0B5E97),
+                                      width: 1.0,
+                                    )
+                                  : null,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -269,7 +218,7 @@ class _ProductionOrderAddEliquidToOrderDialogState
                                 vertical: 16.0,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: _selectionFilled ? () {} : null,
                             child: Text("Add"),
                           ),
                         ],
