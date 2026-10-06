@@ -53,165 +53,175 @@ class _ProductionOrderListTable
       },
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Card(
-          margin: EdgeInsets.zero,
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-            child: TextField(
-              style: TextStyle(fontSize: 14.0),
-              cursorWidth: 1.0,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 12.0,
-                  horizontal: 12.0,
-                ),
-                hintText: "Search",
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(4.0),
+    return Card(
+      elevation: 2.0,
+      clipBehavior: Clip.hardEdge,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(width: 0.5),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      margin: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            margin: EdgeInsets.zero,
+            elevation: 0.0,
+            shape: RoundedRectangleBorder(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: TextField(
+                style: TextStyle(fontSize: 14.0),
+                cursorWidth: 1.0,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 12.0,
                   ),
-                ),
-                disabledBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(4.0),
+                  hintText: "Search",
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
                   ),
-                  borderSide: const BorderSide(),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(4.0),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    borderSide: const BorderSide(),
                   ),
-                  borderSide: const BorderSide(
-                    color: Colors.white,
-                    width: 1.5,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    borderSide: const BorderSide(
+                      color: Colors.white,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        Expanded(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final tableWidth = 1592.0;
-              final needsScroll = constraints.maxWidth < tableWidth;
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final tableWidth = 1592.0;
+                final needsScroll = constraints.maxWidth < tableWidth;
 
-              final tableContent = SizedBox(
-                width: tableWidth,
-                child: Column(
-                  children: [
-                    ProductionOrderListHeader(),
-                    pageAsync.when(
-                      loading: () => Expanded(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      error: (e, _) => Expanded(
-                        child: Center(
-                          child: TextButton(
-                            onPressed: () => ref.invalidate(
-                              productionOrderListPageProvider(pageKey),
-                            ),
-                            child: Text('Failed to load. Retry\n$e'),
+                final tableContent = SizedBox(
+                  width: tableWidth,
+                  child: Column(
+                    children: [
+                      ProductionOrderListHeader(),
+                      pageAsync.when(
+                        loading: () => Expanded(
+                          child: Center(
+                            child: CircularProgressIndicator(),
                           ),
                         ),
-                      ),
-                      data: (page) {
-                        if (page.items.isEmpty) {
-                          return Expanded(
-                            child: Center(
-                              child: Text(
-                                'No orders',
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
+                        error: (e, _) => Expanded(
+                          child: Center(
+                            child: TextButton(
+                              onPressed: () => ref.invalidate(
+                                productionOrderListPageProvider(pageKey),
+                              ),
+                              child: Text('Failed to load. Retry\n$e'),
+                            ),
+                          ),
+                        ),
+                        data: (page) {
+                          if (page.items.isEmpty) {
+                            return Expanded(
+                              child: Center(
+                                child: Text(
+                                  'No orders',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
                               ),
+                            );
+                          }
+                          return Expanded(
+                            child: Scrollbar(
+                              controller: _verticalScrollController,
+                              child: ListView.separated(
+                                  controller: _verticalScrollController,
+                                  itemCount: page.items.length,
+                                  separatorBuilder: (context, index) => Divider(
+                                        height: 0.0,
+                                        thickness: 0.25,
+                                        color: Colors.grey.shade500,
+                                      ),
+                                  itemBuilder: (context, index) {
+                                    final order = page.items[index];
+                                    return ProductionOrderNewBlink(
+                                      key: ValueKey(order.id),
+                                      orderId: order.id,
+                                      child: ProductionOrderListTile(
+                                        order: order,
+                                      ),
+                                    );
+                                  }),
                             ),
                           );
-                        }
-                        return Expanded(
-                          child: Scrollbar(
-                            controller: _verticalScrollController,
-                            child: ListView.separated(
-                                controller: _verticalScrollController,
-                                itemCount: page.items.length,
-                                separatorBuilder: (context, index) => Divider(
-                                      height: 0.0,
-                                      thickness: 0.25,
-                                      color: Colors.grey.shade500,
-                                    ),
-                                itemBuilder: (context, index) {
-                                  final order = page.items[index];
-                                  return ProductionOrderNewBlink(
-                                    key: ValueKey(order.id),
-                                    orderId: order.id,
-                                    child: ProductionOrderListTile(
-                                      order: order,
-                                    ),
-                                  );
-                                }),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-
-              if (needsScroll) {
-                return Scrollbar(
-                  controller: _horizontalScrollController,
-                  child: SingleChildScrollView(
-                    controller: _horizontalScrollController,
-                    scrollDirection: Axis.horizontal,
-                    child: tableContent,
+                        },
+                      ),
+                    ],
                   ),
                 );
-              }
 
-              return tableContent;
-            },
+                if (needsScroll) {
+                  return Scrollbar(
+                    controller: _horizontalScrollController,
+                    child: SingleChildScrollView(
+                      controller: _horizontalScrollController,
+                      scrollDirection: Axis.horizontal,
+                      child: tableContent,
+                    ),
+                  );
+                }
+
+                return tableContent;
+              },
+            ),
           ),
-        ),
-        pageAsync.when(
-          loading: () => ProductionOrderListFooter(
-            firstIndex: 0,
-            lastIndex: 0,
-            hasPreviousPage: false,
-            hasNextPage: false,
-            onPrevious: null,
-            onNext: null,
+          pageAsync.when(
+            loading: () => ProductionOrderListFooter(
+              range: null,
+              hasPreviousPage: false,
+              hasNextPage: false,
+              onPrevious: null,
+              onNext: null,
+            ),
+            error: (e, _) => ProductionOrderListFooter(
+              range: null,
+              hasPreviousPage: false,
+              hasNextPage: false,
+              onPrevious: null,
+              onNext: null,
+            ),
+            data: (page) => ProductionOrderListFooter(
+              range: page.items.isEmpty
+                  ? null
+                  : (
+                      first: pager.firstIndex,
+                      last: pager.firstIndex + page.items.length - 1,
+                    ),
+              hasPreviousPage: page.hasPreviousPage,
+              hasNextPage: page.hasNextPage,
+              onPrevious: () => ref
+                  .read(productionOrderListPagerProvider.notifier)
+                  .previous(),
+              onNext: () => ref
+                  .read(productionOrderListPagerProvider.notifier)
+                  .next(page.endCursor),
+            ),
           ),
-          error: (e, _) => ProductionOrderListFooter(
-            firstIndex: 0,
-            lastIndex: 0,
-            hasPreviousPage: false,
-            hasNextPage: false,
-            onPrevious: null,
-            onNext: null,
-          ),
-          data: (page) => ProductionOrderListFooter(
-            firstIndex: page.items.isEmpty ? 0 : pager.firstIndex,
-            lastIndex: page.items.isEmpty
-                ? 0
-                : pager.firstIndex + page.items.length - 1,
-            hasPreviousPage: page.hasPreviousPage,
-            hasNextPage: page.hasNextPage,
-            onPrevious: () =>
-                ref.read(productionOrderListPagerProvider.notifier).previous(),
-            onNext: () => ref
-                .read(productionOrderListPagerProvider.notifier)
-                .next(page.endCursor),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
