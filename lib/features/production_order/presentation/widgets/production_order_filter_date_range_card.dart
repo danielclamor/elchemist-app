@@ -26,9 +26,9 @@ class ProductionOrderFilterDateRangeCard extends ConsumerWidget {
       ],
       child: InkWell(
         child: Container(
-          width: 240,
+          width: 160,
           padding: const EdgeInsets.symmetric(
-            horizontal: 48.0,
+            horizontal: 20.0,
             vertical: 16.0,
           ),
           decoration: BoxDecoration(
@@ -41,26 +41,18 @@ class ProductionOrderFilterDateRangeCard extends ConsumerWidget {
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    size: 16.0,
-                  ),
-                  Gap(12.0),
-                  Text(
-                    preset?.label ?? 'All time',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
               const Icon(
-                Icons.arrow_drop_down,
-                size: 18.0,
+                Icons.calendar_today,
+                size: 16.0,
+              ),
+              Gap(12.0),
+              Text(
+                preset?.label ?? 'All time',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
