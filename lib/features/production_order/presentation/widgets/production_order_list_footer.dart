@@ -1,18 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class PageIndexRange {
-  final int firstIndex;
-  final int lastIndex;
-
-  const PageIndexRange({
-    required this.firstIndex,
-    required this.lastIndex,
-  });
-
-  @override
-  String toString() => '$firstIndex-$lastIndex';
-}
+typedef PageIndexRange = ({int first, int last});
 
 class ProductionOrderListFooter extends StatelessWidget {
   final PageIndexRange? range;
@@ -101,7 +90,7 @@ class ProductionOrderListFooter extends StatelessWidget {
                 ),
               ),
               Gap(8.0),
-              Text(range != null ? range.toString() : ""),
+              Text(range != null ? '${range?.first}-${range?.last}' : ''),
             ],
           ),
         ),
