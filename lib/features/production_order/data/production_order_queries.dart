@@ -17,7 +17,6 @@ const String productionOrderListPageQuery = r'''
         hasPreviousPage
         hasNextPage 
         endCursor
-        startCursor
       }
       edges {  
         node {
