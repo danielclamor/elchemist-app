@@ -23,4 +23,10 @@ abstract class ProductionOrderRepository {
   });
 
   Future<ProductionOrder?> getDetails({required String id});
+
+  Future<ProductionOrderListPage> getEliquidPastOrdersPage({
+    required String eliquidId,
+    required int first,
+    String? after,
+  });
 }
