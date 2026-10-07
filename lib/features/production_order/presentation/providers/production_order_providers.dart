@@ -148,3 +148,56 @@ final productionOrderNewIdsProvider =
     NotifierProvider<ProductionOrderNewIds, Set<String>>(
   ProductionOrderNewIds.new,
 );
+
+const eliquidPastOrdersPreviewSize = 5;
+
+final eliquidPastOrdersPreviewProvider =
+    FutureProvider.autoDispose.family<ProductionOrderListPage, String>(
+  (ref, eliquidId) =>
+      ref.watch(productionOrderRepositoryProvider).getEliquidPastOrdersPage(
+            eliquidId: eliquidId,
+            first: eliquidPastOrdersPreviewSize,
+          ),
+  retry: (retryCount, error) => null,
+);
+
+typedef EliquidPastOrdersPageKey = ({
+  String eliquidId,
+  String? after,
+});
+
+final eliquidPastOrdersPageProvider = FutureProvider.autoDispose
+    .family<ProductionOrderListPage, EliquidPastOrdersPageKey>(
+  (ref, key) =>
+      ref.watch(productionOrderRepositoryProvider).getEliquidPastOrdersPage(
+            eliquidId: key.eliquidId,
+            first: productionOrderPageSize,
+            after: key.after,
+          ),
+  retry: (retryCount, error) => null,
+);
+
+class EliquidPastOrdersPager extends Notifier<ProductionOrderListPagerState> {
+  EliquidPastOrdersPager(this.eliquidId);
+  final String eliquidId;
+
+  @override
+  ProductionOrderListPagerState build() =>
+      const ProductionOrderListPagerState();
+
+  void next(String? endCursor) {
+    if (endCursor == null) return;
+    final cursors = [...state.cursors.sublist(0, state.index + 1), endCursor];
+    state = state.copyWith(cursors: cursors, index: state.index + 1);
+  }
+
+  void previous() {
+    if (!state.hasPreviousPage) return;
+    state = state.copyWith(index: state.index - 1);
+  }
+}
+
+final eliquidPastOrdersPagerProvider = NotifierProvider.autoDispose
+    .family<EliquidPastOrdersPager, ProductionOrderListPagerState, String>(
+  EliquidPastOrdersPager.new,
+);
