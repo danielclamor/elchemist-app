@@ -1,3 +1,4 @@
+import 'package:elchemist_app/core/widgets/fading_vertical_scroll.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_footer.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_header.dart';
@@ -115,6 +116,11 @@ class _ProductionOrderListTable
                   child: Column(
                     children: [
                       ProductionOrderListHeader(),
+                      Divider(
+                        height: 1.0,
+                        thickness: 0.25,
+                        color: Colors.black,
+                      ),
                       pageAsync.when(
                         loading: () => Expanded(
                           child: Center(
@@ -147,24 +153,30 @@ class _ProductionOrderListTable
                           return Expanded(
                             child: Scrollbar(
                               controller: _verticalScrollController,
-                              child: ListView.separated(
-                                  controller: _verticalScrollController,
-                                  itemCount: page.items.length,
-                                  separatorBuilder: (context, index) => Divider(
-                                        height: 0.0,
-                                        thickness: 0.25,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                  itemBuilder: (context, index) {
-                                    final order = page.items[index];
-                                    return ProductionOrderNewBlink(
-                                      key: ValueKey(order.id),
-                                      orderId: order.id,
-                                      child: ProductionOrderListTile(
-                                        order: order,
-                                      ),
-                                    );
-                                  }),
+                              child: FadingVerticalScroll(
+                                controller: _verticalScrollController,
+                                fadeHeight: 16,
+                                child: ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: page.items.length,
+                                    separatorBuilder: (context, index) =>
+                                        Divider(
+                                          height: 0.0,
+                                          thickness: 0.25,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      final order = page.items[index];
+                                      return ProductionOrderNewBlink(
+                                        key: ValueKey(order.id),
+                                        orderId: order.id,
+                                        child: ProductionOrderListTile(
+                                          order: order,
+                                        ),
+                                      );
+                                    }),
+                              ),
                             ),
                           );
                         },
@@ -187,6 +199,11 @@ class _ProductionOrderListTable
                 return tableContent;
               },
             ),
+          ),
+          Divider(
+            height: 1.0,
+            thickness: 0.25,
+            color: Colors.black,
           ),
           pageAsync.when(
             loading: () => ProductionOrderListFooter(
