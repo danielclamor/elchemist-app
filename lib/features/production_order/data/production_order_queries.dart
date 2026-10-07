@@ -13,6 +13,7 @@ const String productionOrderListPageQuery = r'''
       createdFrom: $createdFrom,
       createdTo: $createdTo
     ) {
+      totalCount
       pageInfo {
         hasPreviousPage
         hasNextPage 
@@ -35,7 +36,7 @@ const String productionOrderListPageQuery = r'''
   }
 ''';
 
-const productionOrderStatusCountsQuery = r'''
+const String productionOrderStatusCountsQuery = r'''
   query ProductionOrderStatusCounts(
     $createdFrom: DateTime, 
     $createdTo: DateTime
@@ -59,6 +60,41 @@ const String productionOrderDetailsQuery = r'''
       isPriority
       createdAt
       updatedAt
+    }
+  }
+''';
+
+const String eliquidPastOrdersQuery = r'''
+  query EliquidPastOrders(
+    $id: ID!,
+    $first: Int!, 
+    $after: String
+  ) {
+    eliquid(identifier: {id: $id}) {
+      productionOrders(
+        first: $first, 
+        after: $after
+      ) {
+        totalCount
+        pageInfo {
+          hasPreviousPage
+          hasNextPage
+          endCursor
+        }
+        edges {  
+          node {
+            id
+            orderNumber
+            orderedQuantity
+            fulfilledQuantity
+            status
+            job
+            isPriority
+            createdAt
+            eliquid { description }
+          }
+        }
+      }
     }
   }
 ''';

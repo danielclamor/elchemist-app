@@ -47,6 +47,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
       endCursor: pageInfo['endCursor'] as String?,
       hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
       hasNextPage: pageInfo['hasNextPage'] as bool,
+      totalCount: conn['totalCount'] as int,
     );
   }
 
@@ -92,6 +93,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
           endCursor: pageInfo['endCursor'] as String?,
           hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
           hasNextPage: pageInfo['hasNextPage'] as bool,
+          totalCount: conn['totalCount'] as int,
         );
       }
     } finally {
@@ -154,5 +156,42 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     if (data == null) return null;
 
     return ProductionOrder.fromDto(ProductionOrderDto.fromJson(data));
+  }
+
+  @override
+  Future<ProductionOrderListPage> getEliquidPastOrdersPage({
+    required String eliquidId,
+    required int first,
+    String? after,
+  }) async {
+    final result = await _client.query(QueryOptions(
+      document: gql(eliquidPastOrdersQuery),
+      variables: {
+        'id': eliquidId,
+        'first': first,
+        'after': after,
+      },
+      fetchPolicy: FetchPolicy.networkOnly,
+    ));
+
+    if (result.hasException) throw result.exception!;
+
+    final eliquid = result.data?['eliquid'] as Map<String, dynamic>?;
+    if (eliquid == null) throw Exception('Eliquid not found');
+
+    final conn = eliquid['productionOrders'] as Map<String, dynamic>;
+    final pageInfo = conn['pageInfo'] as Map<String, dynamic>;
+
+    return ProductionOrderListPage(
+      items: (conn['edges'] as List<dynamic>)
+          .map((e) => ProductionOrderSummaryDto.fromJson(
+              Map<String, dynamic>.from((e as Map)['node'] as Map)))
+          .map((dto) => ProductionOrderSummary.fromDto(dto))
+          .toList(),
+      endCursor: pageInfo['endCursor'] as String?,
+      hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
+      hasNextPage: pageInfo['hasNextPage'] as bool,
+      totalCount: conn['totalCount'] as int,
+    );
   }
 }
