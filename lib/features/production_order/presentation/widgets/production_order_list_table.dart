@@ -1,3 +1,4 @@
+import 'package:elchemist_app/core/widgets/fading_horizontal_scroll.dart';
 import 'package:elchemist_app/core/widgets/fading_vertical_scroll.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_footer.dart';
@@ -188,9 +189,8 @@ class _ProductionOrderListTable
                 if (needsScroll) {
                   return Scrollbar(
                     controller: _horizontalScrollController,
-                    child: SingleChildScrollView(
+                    child: FadingHorizontalScroll(
                       controller: _horizontalScrollController,
-                      scrollDirection: Axis.horizontal,
                       child: tableContent,
                     ),
                   );
