@@ -67,10 +67,10 @@ class _FadingVerticalScrollState extends State<FadingVerticalScroll> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              _showTop ? Colors.transparent : Colors.white,
-              Colors.white,
-              Colors.white,
-              _showBottom ? Colors.transparent : Colors.white,
+              _showTop ? Colors.transparent : Colors.black,
+              Colors.black,
+              Colors.black,
+              _showBottom ? Colors.transparent : Colors.black,
             ],
             stops: [0.0, f, 1.0 - f, 1.0],
           ).createShader(bounds);

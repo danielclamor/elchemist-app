@@ -65,10 +65,10 @@ class _FadingHorizontalScrollState extends State<FadingHorizontalScroll> {
           final f = (widget.fadeWidth / bounds.width).clamp(0.0, 0.5);
           return LinearGradient(
             colors: [
-              _showLeft ? Colors.transparent : Colors.white,
-              Colors.white,
-              Colors.white,
-              _showRight ? Colors.transparent : Colors.white,
+              _showLeft ? Colors.transparent : Colors.black,
+              Colors.black,
+              Colors.black,
+              _showRight ? Colors.transparent : Colors.black,
             ],
             stops: [0.0, f, 1.0 - f, 1.0],
           ).createShader(bounds);
