@@ -203,7 +203,7 @@ class ProductionOrderListTile extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Container(
-                alignment: AlignmentGeometry.center,
+                alignment: AlignmentGeometry.centerLeft,
                 child: renderPriority
                     ? ProductionOrderPriorityChip()
                     : SizedBox.shrink(),
