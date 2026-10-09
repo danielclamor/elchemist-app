@@ -94,20 +94,10 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ProductionOrderDetailScreen(
-              productionOrder: ProductionOrder(
-                id: "1",
-                orderNumber: order.orderNumber,
-                status: order.status,
-                createdAt: order.createdAt,
-                orderedQuantity: 10,
-                fulfilledQuantity: null,
-                isPriority: order.isPriority,
-                job: order.job,
-              ),
+              id: order.id,
             ),
           ),
         );
-        // TODO implement DetailsScreen
       },
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
