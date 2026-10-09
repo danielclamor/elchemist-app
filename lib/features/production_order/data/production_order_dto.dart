@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/eliquid/data/eliquid_dto.dart';
-import 'package:elchemist_app/features/location/data/location_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_activity_log_dto.dart';
+import 'package:elchemist_app/features/production_order/data/production_order_allocation_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_mix_job.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_repat_job.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
@@ -167,27 +167,5 @@ enum ProductionOrderJobDto {
       null => null,
       _ => throw FormatException('Unknown ProductionOrderJob: $value'),
     };
-  }
-}
-
-class ProductionOrderAllocationDto {
-  final String id;
-  final LocationSummaryDto location;
-  final int quantity;
-
-  const ProductionOrderAllocationDto({
-    required this.id,
-    required this.location,
-    required this.quantity,
-  });
-
-  factory ProductionOrderAllocationDto.fromJson(Map<String, dynamic> json) {
-    return ProductionOrderAllocationDto(
-      id: json['id'],
-      location: LocationSummaryDto.fromJson(
-        json['location'] as Map<String, dynamic>,
-      ),
-      quantity: json['quantity'],
-    );
   }
 }

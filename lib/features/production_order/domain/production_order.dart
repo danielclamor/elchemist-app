@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
-import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order_allocation.dart';
 
 class ProductionOrder {
   final String id;
@@ -140,25 +140,5 @@ enum ProductionOrderJob {
       ProductionOrderJobDto.repat => ProductionOrderJob.repat,
       null => null,
     };
-  }
-}
-
-class ProductionOrderAllocation {
-  final String id;
-  final LocationSummary location;
-  final int quantity;
-
-  const ProductionOrderAllocation({
-    required this.id,
-    required this.location,
-    required this.quantity,
-  });
-
-  factory ProductionOrderAllocation.fromDto(ProductionOrderAllocationDto a) {
-    return ProductionOrderAllocation(
-      id: a.id,
-      location: LocationSummary.fromDto(a.location),
-      quantity: a.quantity,
-    );
   }
 }
