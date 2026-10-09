@@ -1,9 +1,11 @@
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
@@ -57,21 +59,21 @@ enum MoreActions {
   }
 }
 
-class ProductionOrderDetailScreen extends StatefulWidget {
-  final ProductionOrder productionOrder;
+class ProductionOrderDetailScreen extends ConsumerStatefulWidget {
+  final String id;
 
   const ProductionOrderDetailScreen({
     super.key,
-    required this.productionOrder,
+    required this.id,
   });
 
   @override
-  State<ProductionOrderDetailScreen> createState() =>
+  ConsumerState<ConsumerStatefulWidget> createState() =>
       _ProductionOrderDetailScreenState();
 }
 
 class _ProductionOrderDetailScreenState
-    extends State<ProductionOrderDetailScreen> {
+    extends ConsumerState<ProductionOrderDetailScreen> {
   ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus status) {
     switch (status) {
       case ProductionOrderStatus.cancelled:
@@ -123,373 +125,404 @@ class _ProductionOrderDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    final po = widget.productionOrder;
-    final eliquid = Eliquid(
-      id: "1",
-      upc: "696177436003",
-      description: "Black Jet Do More 60ml 0mg",
-      brand: "Black Jet",
-      chillType: ChillType.nonChilled,
-      nicType: NicType.freebase,
-      bottleSize: BottleSize.ml60,
-      nicLevel: NicLevel.mg0,
-      bottleColor: BottleColor.clear,
-      nicProfileFullName: "Black Jet Do More Freebase - 0MG - Old Mix",
-    );
-    final List locations = [
-      "32 St.",
-      "Macleod",
-    ];
+    final id = widget.id;
+    final async = ref.watch(productionOrderDetailsProvider(id));
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(24.0),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 720),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+    return async.when(
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (e, _) => Column(
+        children: [
+          Tooltip(
+            message: "Production Orders",
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  shape: const CircleBorder(),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  size: 14,
+                ),
+              ),
+            ),
+          ),
+          Center(
+            child: TextButton(
+              onPressed: () =>
+                  ref.invalidate(productionOrderDetailsProvider(id)),
+              child: Text('Failed to load. Retry\n$e'),
+            ),
+          ),
+        ],
+      ),
+      data: (po) {
+        if (po == null) {
+          return const Center(
+            child: Text('Order not found'),
+          );
+        }
+
+        final eliquid = po.eliquid;
+        final allocations = po.allocations;
+
+        return Scaffold(
+          body: SingleChildScrollView(
+            padding: EdgeInsets.all(24.0),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 720),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          spacing: 8.0,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Tooltip(
-                              message: "Production Orders",
-                              child: SizedBox(
-                                width: 30,
-                                height: 30,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size.zero,
-                                    shape: const CircleBorder(),
+                            Row(
+                              spacing: 8.0,
+                              children: [
+                                Tooltip(
+                                  message: "Production Orders",
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        padding: EdgeInsets.zero,
+                                        minimumSize: Size.zero,
+                                        shape: const CircleBorder(),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Icon(
+                                        Icons.arrow_back_ios_rounded,
+                                        size: 14,
+                                      ),
+                                    ),
                                   ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Icon(
-                                    Icons.arrow_back_ios_rounded,
-                                    size: 14,
+                                ),
+                                Text(
+                                  '#${po.orderNumber}',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold,
                                   ),
+                                ),
+                              ],
+                            ),
+                            Gap(2.0),
+                            Text(
+                              _getFormattedDate(po.createdAt),
+                              style: TextStyle(
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            Gap(4.0),
+                            Row(
+                              spacing: 4.0,
+                              children: [
+                                po.isPriority
+                                    ? ProductionOrderPriorityChip()
+                                    : SizedBox.shrink(),
+                                _getStatusChip(po.status),
+                                _getJobChip(po.job, _getStatusChip(po.status)),
+                              ],
+                            ),
+                          ],
+                        ),
+                        MenuAnchor(
+                          builder: (context, controller, child) {
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadiusGeometry.circular(8.0),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 16.0,
+                                ),
+                              ),
+                              onPressed: () {
+                                if (controller.isOpen) {
+                                  controller.close();
+                                } else {
+                                  controller.open();
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  const Text('More actions'),
+                                  Gap(2.0),
+                                  Icon(Icons.arrow_drop_down_rounded)
+                                ],
+                              ),
+                            );
+                          },
+                          menuChildren: List<MenuItemButton>.generate(
+                            3,
+                            (int index) => MenuItemButton(
+                              onPressed: () => setState(() =>
+                                  selectedMenu = MoreActions.values[index]),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Expanded(
+                                  child:
+                                      MoreActions.values[index].toMenuButton(),
                                 ),
                               ),
                             ),
-                            Text(
-                              '#${po.orderNumber}',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Gap(2.0),
-                        Text(
-                          _getFormattedDate(po.createdAt),
-                          style: TextStyle(
-                            fontSize: 14.0,
                           ),
-                        ),
-                        Gap(4.0),
-                        Row(
-                          spacing: 4.0,
-                          children: [
-                            po.isPriority
-                                ? ProductionOrderPriorityChip()
-                                : SizedBox.shrink(),
-                            _getStatusChip(po.status),
-                            _getJobChip(po.job, _getStatusChip(po.status)),
-                          ],
+                          alignmentOffset: Offset(0, 4),
+                          style: MenuStyle(),
+                          crossAxisUnconstrained: false,
                         ),
                       ],
                     ),
-                    MenuAnchor(
-                      builder: (context, controller, child) {
-                        return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                          onPressed: () {
-                            if (controller.isOpen) {
-                              controller.close();
-                            } else {
-                              controller.open();
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              const Text('More actions'),
-                              Gap(2.0),
-                              Icon(Icons.arrow_drop_down_rounded)
-                            ],
-                          ),
-                        );
-                      },
-                      menuChildren: List<MenuItemButton>.generate(
-                        3,
-                        (int index) => MenuItemButton(
-                          onPressed: () => setState(
-                              () => selectedMenu = MoreActions.values[index]),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: MoreActions.values[index].toMenuButton(),
-                          ),
-                        ),
+                    Gap(16.0),
+                    Card(
+                      elevation: 0.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(8.0),
                       ),
-                      alignmentOffset: Offset(0, 4),
-                      style: MenuStyle(),
-                    ),
-                  ],
-                ),
-                Gap(16.0),
-                Card(
-                  elevation: 0.0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadiusGeometry.circular(8.0),
-                  ),
-                  margin: EdgeInsets.zero,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            border: BoxBorder.all(width: 1.0),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                      margin: EdgeInsets.zero,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                border: BoxBorder.all(width: 1.0),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        eliquid.description,
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            eliquid.description,
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            eliquid.upc,
+                                            style: TextStyle(fontSize: 14.0),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        eliquid.upc,
-                                        style: TextStyle(fontSize: 14.0),
-                                      ),
-                                    ],
-                                  ),
-                                  po.orderedQuantity != null
-                                      ? Row(
-                                          children: [
-                                            Text(
-                                              'x',
+                                      po.orderedQuantity != null
+                                          ? Row(
+                                              children: [
+                                                Text(
+                                                  'x',
+                                                  style: TextStyle(
+                                                    fontSize: 16.0,
+                                                  ),
+                                                ),
+                                                Gap(8.0),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .surface,
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16.0),
+                                                  ),
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    '${po.orderedQuantity}',
+                                                    style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Text(
+                                              '--',
                                               style: TextStyle(
                                                 fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
                                               ),
+                                            )
+                                    ],
+                                  ),
+                                  Gap(20.0),
+                                  allocations.isNotEmpty
+                                      ? Column(
+                                          spacing: 8.0,
+                                          children: [
+                                            Divider(
+                                              thickness: 0.25,
                                             ),
-                                            Gap(8.0),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .surface,
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(16.0),
-                                              ),
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Text(
-                                                '${po.orderedQuantity}',
-                                                style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        )
-                                      : Text(
-                                          '--',
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                ],
-                              ),
-                              Gap(20.0),
-                              locations.isNotEmpty
-                                  ? Column(
-                                      spacing: 8.0,
-                                      children: [
-                                        Divider(
-                                          thickness: 0.25,
-                                        ),
-                                        ...locations.map(
-                                          (location) {
-                                            return Row(
-                                              children: [
-                                                Expanded(
-                                                  child: SizedBox(),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                            ...allocations.map(
+                                              (allocation) {
+                                                return Row(
                                                   children: [
-                                                    Text(
-                                                      location,
-                                                      style: TextStyle(
-                                                        fontSize: 16.0,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                    Expanded(
+                                                      child: SizedBox(),
                                                     ),
-                                                    Gap(16.0),
-                                                    po.orderedQuantity != null
-                                                        ? Row(
-                                                            children: [
-                                                              Text(
-                                                                'x',
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          allocation
+                                                              .location.name,
+                                                          style: TextStyle(
+                                                            fontSize: 16.0,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        Gap(16.0),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              'x',
+                                                              style: TextStyle(
+                                                                fontSize: 16.0,
+                                                              ),
+                                                            ),
+                                                            Gap(8.0),
+                                                            Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .surface,
+                                                                shape: BoxShape
+                                                                    .rectangle,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                  16.0,
+                                                                ),
+                                                              ),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Text(
+                                                                allocation
+                                                                    .quantity
+                                                                    .toString(),
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
                                                                       16.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
                                                                 ),
                                                               ),
-                                                              Gap(8.0),
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .colorScheme
-                                                                      .surface,
-                                                                  shape: BoxShape
-                                                                      .rectangle,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              16.0),
-                                                                ),
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(
-                                                                            8.0),
-                                                                child: Text(
-                                                                  '5',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        16.0,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        : Text(
-                                                            '--',
-                                                            style: TextStyle(
-                                                              fontSize: 16.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
                                                             ),
-                                                          )
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ],
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
-                        ),
-                        Gap(16.0),
-                        Row(
-                          spacing: 8.0,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0E76BD),
-                                side: BorderSide(
-                                  color: const Color(0xFF0B5E97),
-                                  width: 1.0,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 16.0,
-                                ),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
                               ),
-                              onPressed: () {},
-                              child: Text("Assign to Mix"),
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0E76BD),
-                                side: BorderSide(
-                                  color: const Color(0xFF0B5E97),
-                                  width: 1.0,
+                            Gap(16.0),
+                            Row(
+                              spacing: 8.0,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0E76BD),
+                                    side: BorderSide(
+                                      color: const Color(0xFF0B5E97),
+                                      width: 1.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical: 16.0,
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: Text("Assign to Mix"),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0E76BD),
+                                    side: BorderSide(
+                                      color: const Color(0xFF0B5E97),
+                                      width: 1.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical: 16.0,
+                                    ),
+                                  ),
+                                  onPressed: () {},
+                                  child: Text("Assign to Streamline"),
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 16.0,
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: Text("Assign to Streamline"),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                    Gap(40.0),
+                    Text(
+                      "Timeline",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                Gap(40.0),
-                Text(
-                  "Timeline",
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

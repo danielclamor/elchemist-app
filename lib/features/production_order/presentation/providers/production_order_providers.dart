@@ -201,3 +201,9 @@ final eliquidPastOrdersPagerProvider = NotifierProvider.autoDispose
     .family<EliquidPastOrdersPager, ProductionOrderListPagerState, String>(
   EliquidPastOrdersPager.new,
 );
+
+final productionOrderDetailsProvider =
+    FutureProvider.autoDispose.family<ProductionOrder?, String>(
+  (ref, id) => ref.watch(productionOrderRepositoryProvider).getDetails(id: id),
+  retry: (retryCount, error) => null,
+);
