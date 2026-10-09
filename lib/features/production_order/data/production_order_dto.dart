@@ -1,3 +1,5 @@
+import 'package:elchemist_app/features/eliquid/data/eliquid_dto.dart';
+import 'package:elchemist_app/features/location/data/location_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_activity_log_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_mix_job.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_repat_job.dart';
@@ -53,10 +55,11 @@ class ProductionOrderDto {
   final ProductionOrderJobDto? job;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final Map<String, dynamic> eliquid;
-  final List<ProductionOrderActivityLogDto>? activityLogs;
-  final List<ProductionOrderMixJobDto>? mixJobs;
-  final List<ProductionOrderRepatJobDto>? repatJobs;
+  final EliquidSummaryDto eliquid;
+  // final List<ProductionOrderActivityLogDto>? activityLogs;
+  // final List<ProductionOrderMixJobDto>? mixJobs;
+  // final List<ProductionOrderRepatJobDto>? repatJobs;
+  final List<ProductionOrderAllocationDto> allocations;
 
   const ProductionOrderDto({
     required this.id,
@@ -69,22 +72,29 @@ class ProductionOrderDto {
     required this.createdAt,
     required this.updatedAt,
     required this.eliquid,
-    this.activityLogs,
-    this.mixJobs,
-    this.repatJobs,
+    // this.activityLogs,
+    // this.mixJobs,
+    // this.repatJobs,
+    required this.allocations,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
-    final activityLogsJson = json['activityLogs'] as Map<String, dynamic>?;
-    final activityLogEdges = activityLogsJson?['edges'] as List<dynamic>?;
+    // final activityLogsJson = json['activityLogs'] as Map<String, dynamic>?;
+    // final activityLogEdges = activityLogsJson?['edges'] as List<dynamic>?;
 
-    final mixJobsJson = json['productionOrderMixJobs'] as Map<String, dynamic>?;
-    final mixJobEdges = mixJobsJson?['edges'] as List<dynamic>?;
+    // final mixJobsJson = json['productionOrderMixJobs'] as Map<String, dynamic>?;
+    // final mixJobEdges = mixJobsJson?['edges'] as List<dynamic>?;
 
-    final repatJobsJson =
-        json['productionOrderRepatJobs'] as Map<String, dynamic>?;
-    final repatJobEdges = repatJobsJson?['edges'] as List<dynamic>?;
+    // final repatJobsJson =
+    //     json['productionOrderRepatJobs'] as Map<String, dynamic>?;
+    // final repatJobEdges = repatJobsJson?['edges'] as List<dynamic>?;
 
+    final allocationsJson = json['allocations'] as List<dynamic>;
+    print('here');
+    print(allocationsJson
+        .map((a) => ProductionOrderAllocationDto.fromJson(
+            Map<String, dynamic>.from(a as Map)))
+        .toList());
     return ProductionOrderDto(
       id: json['id'] as String,
       orderNumber: json['orderNumber'] as String,
@@ -95,27 +105,23 @@ class ProductionOrderDto {
       job: ProductionOrderJobDto.fromJson(json['job'] as String?),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
-      eliquid: json['eliquid'] as Map<String, dynamic>,
-      activityLogs: activityLogEdges
-          ?.map(
-            (e) => ProductionOrderActivityLogDto.fromJson(
-              (e as Map<String, dynamic>)['node'] as Map<String, dynamic>,
-            ),
-          )
-          .toList(),
-      mixJobs: mixJobEdges
-          ?.map(
-            (e) => ProductionOrderMixJobDto.fromJson(
-              (e as Map<String, dynamic>)['node'] as Map<String, dynamic>,
-            ),
-          )
-          .toList(),
-      repatJobs: repatJobEdges
-          ?.map(
-            (e) => ProductionOrderRepatJobDto.fromJson(
-              (e as Map<String, dynamic>)['node'] as Map<String, dynamic>,
-            ),
-          )
+      eliquid:
+          EliquidSummaryDto.fromJson(json['eliquid'] as Map<String, dynamic>),
+      // activityLogs: activityLogEdges
+      //     ?.map((e) => ProductionOrderActivityLogDto.fromJson(
+      //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
+      //     .toList(),
+      // mixJobs: mixJobEdges
+      //     ?.map((e) => ProductionOrderMixJobDto.fromJson(
+      //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
+      //     .toList(),
+      // repatJobs: repatJobEdges
+      //     ?.map((e) => ProductionOrderRepatJobDto.fromJson(
+      //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
+      //     .toList(),
+      allocations: allocationsJson
+          .map((a) => ProductionOrderAllocationDto.fromJson(
+              Map<String, dynamic>.from(a as Map)))
           .toList(),
     );
   }
@@ -161,5 +167,27 @@ enum ProductionOrderJobDto {
       null => null,
       _ => throw FormatException('Unknown ProductionOrderJob: $value'),
     };
+  }
+}
+
+class ProductionOrderAllocationDto {
+  final String id;
+  final LocationSummaryDto location;
+  final int quantity;
+
+  const ProductionOrderAllocationDto({
+    required this.id,
+    required this.location,
+    required this.quantity,
+  });
+
+  factory ProductionOrderAllocationDto.fromJson(Map<String, dynamic> json) {
+    return ProductionOrderAllocationDto(
+      id: json['id'],
+      location: LocationSummaryDto.fromJson(
+        json['location'] as Map<String, dynamic>,
+      ),
+      quantity: json['quantity'],
+    );
   }
 }

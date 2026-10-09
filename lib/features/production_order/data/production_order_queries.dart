@@ -50,7 +50,7 @@ const String productionOrderStatusCountsQuery = r'''
 
 const String productionOrderDetailsQuery = r'''
   query ProductionOrder($id: ID!) {
-    productionOrder(identifier: $id) {
+    productionOrder(identifier: {id: $id}) {
       id
       orderNumber
       orderedQuantity
@@ -60,6 +60,17 @@ const String productionOrderDetailsQuery = r'''
       isPriority
       createdAt
       updatedAt
+      allocations { 
+        id 
+        quantity 
+        location { id code name }
+      }
+      eliquid {
+        id
+        upc
+        description
+        brand
+      }
     }
   }
 ''';

@@ -1,3 +1,5 @@
+import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
+import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
 
 class ProductionOrder {
@@ -9,6 +11,8 @@ class ProductionOrder {
   final int? fulfilledQuantity;
   final bool isPriority;
   final ProductionOrderJob? job;
+  final List<ProductionOrderAllocation> allocations;
+  final EliquidSummary eliquid;
 
   ProductionOrder({
     required this.id,
@@ -19,6 +23,8 @@ class ProductionOrder {
     required this.fulfilledQuantity,
     required this.isPriority,
     required this.job,
+    required this.allocations,
+    required this.eliquid,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -33,6 +39,10 @@ class ProductionOrder {
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
       job: ProductionOrderJob.fromDto(job),
+      allocations: o.allocations
+          .map((a) => ProductionOrderAllocation.fromDto(a))
+          .toList(),
+      eliquid: EliquidSummary.fromDto(o.eliquid),
     );
   }
 }
@@ -130,5 +140,25 @@ enum ProductionOrderJob {
       ProductionOrderJobDto.repat => ProductionOrderJob.repat,
       null => null,
     };
+  }
+}
+
+class ProductionOrderAllocation {
+  final String id;
+  final LocationSummary location;
+  final int quantity;
+
+  const ProductionOrderAllocation({
+    required this.id,
+    required this.location,
+    required this.quantity,
+  });
+
+  factory ProductionOrderAllocation.fromDto(ProductionOrderAllocationDto a) {
+    return ProductionOrderAllocation(
+      id: a.id,
+      location: LocationSummary.fromDto(a.location),
+      quantity: a.quantity,
+    );
   }
 }
