@@ -32,13 +32,13 @@ class ProductionOrderSummaryDto {
     return ProductionOrderSummaryDto(
       id: json['id'] as String,
       orderNumber: json['orderNumber'] as String,
-      status: ProductionOrderStatusDto.fromJson(json['status'] as String),
+      status: ProductionOrderStatusDto.fromString(json['status'] as String),
       orderedQuantity: json['orderedQuantity'] as int?,
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPriority: json['isPriority'] as bool,
       job: json['job'] != null
-          ? ProductionOrderJobDto.fromJson(json['job'] as String)
+          ? ProductionOrderJobDto.fromString(json['job'] as String)
           : null,
       eliquidDescription: json['eliquid']['description'] as String,
     );
@@ -56,7 +56,7 @@ class ProductionOrderDto {
   final DateTime createdAt;
   final DateTime updatedAt;
   final EliquidSummaryDto eliquid;
-  // final List<ProductionOrderActivityLogDto>? activityLogs;
+  final List<ProductionOrderActivityLogDto> activityLogs;
   // final List<ProductionOrderMixJobDto>? mixJobs;
   // final List<ProductionOrderRepatJobDto>? repatJobs;
   final List<ProductionOrderAllocationDto> allocations;
@@ -72,15 +72,14 @@ class ProductionOrderDto {
     required this.createdAt,
     required this.updatedAt,
     required this.eliquid,
-    // this.activityLogs,
+    required this.activityLogs,
     // this.mixJobs,
     // this.repatJobs,
     required this.allocations,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
-    // final activityLogsJson = json['activityLogs'] as Map<String, dynamic>?;
-    // final activityLogEdges = activityLogsJson?['edges'] as List<dynamic>?;
+    final activityLogsJson = json['activityLogs'] as List<dynamic>;
 
     // final mixJobsJson = json['productionOrderMixJobs'] as Map<String, dynamic>?;
     // final mixJobEdges = mixJobsJson?['edges'] as List<dynamic>?;
@@ -90,27 +89,23 @@ class ProductionOrderDto {
     // final repatJobEdges = repatJobsJson?['edges'] as List<dynamic>?;
 
     final allocationsJson = json['allocations'] as List<dynamic>;
-    print('here');
-    print(allocationsJson
-        .map((a) => ProductionOrderAllocationDto.fromJson(
-            Map<String, dynamic>.from(a as Map)))
-        .toList());
+
     return ProductionOrderDto(
       id: json['id'] as String,
       orderNumber: json['orderNumber'] as String,
       orderedQuantity: json['orderedQuantity'] as int?,
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       isPriority: json['isPriority'] as bool,
-      status: ProductionOrderStatusDto.fromJson(json['status'] as String),
-      job: ProductionOrderJobDto.fromJson(json['job'] as String?),
+      status: ProductionOrderStatusDto.fromString(json['status'] as String),
+      job: ProductionOrderJobDto.fromString(json['job'] as String?),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       eliquid:
           EliquidSummaryDto.fromJson(json['eliquid'] as Map<String, dynamic>),
-      // activityLogs: activityLogEdges
-      //     ?.map((e) => ProductionOrderActivityLogDto.fromJson(
-      //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
-      //     .toList(),
+      activityLogs: activityLogsJson
+          .map((l) => ProductionOrderActivityLogDto.fromJson(
+              Map<String, dynamic>.from(l as Map)))
+          .toList(),
       // mixJobs: mixJobEdges
       //     ?.map((e) => ProductionOrderMixJobDto.fromJson(
       //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
@@ -134,7 +129,7 @@ enum ProductionOrderStatusDto {
   inProgress,
   pending;
 
-  static ProductionOrderStatusDto fromJson(String value) {
+  static ProductionOrderStatusDto fromString(String value) {
     return switch (value) {
       'CANCELLED' => ProductionOrderStatusDto.cancelled,
       'DELIVERED' => ProductionOrderStatusDto.delivered,
@@ -160,7 +155,7 @@ enum ProductionOrderJobDto {
   mix,
   repat;
 
-  static ProductionOrderJobDto? fromJson(String? value) {
+  static ProductionOrderJobDto? fromString(String? value) {
     return switch (value) {
       'MIX' => ProductionOrderJobDto.mix,
       'REPAT' => ProductionOrderJobDto.repat,

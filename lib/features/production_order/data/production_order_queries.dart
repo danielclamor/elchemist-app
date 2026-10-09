@@ -71,6 +71,13 @@ const String productionOrderDetailsQuery = r'''
         description
         brand
       }
+      activityLogs {
+        id
+        newValue
+        oldValue
+        type
+        triggeredAt
+      }
     }
   }
 ''';
