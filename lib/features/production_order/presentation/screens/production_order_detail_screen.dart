@@ -546,18 +546,224 @@ class _ProductionOrderDetailScreenState
                             final newValue = activityLog.newValue;
 
                             return switch (activityLog.type) {
-                              ProductionOrderActivityType.created =>
-                                Text("Order #${data.orderNumber} created."),
-                              ProductionOrderActivityType.adjustQuantity => Text(
-                                  "Adjusted quantity from $oldValue to $newValue."),
-                              ProductionOrderActivityType.changeStatus => Text(
-                                  "Status changed from $oldValue to $newValue."),
+                              ProductionOrderActivityType.created => Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.radio_button_checked_rounded,
+                                          size: 12,
+                                        ),
+                                        Gap(12.0),
+                                        Text(
+                                          "Order #${data.orderNumber} created.",
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      _getFormattedDate(
+                                          activityLog.triggeredAt),
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ProductionOrderActivityType.adjustQuantity =>
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons
+                                                  .radio_button_checked_rounded,
+                                              size: 12,
+                                            ),
+                                            Gap(12.0),
+                                            Text(
+                                              "Adjusted quantity from $oldValue to $newValue.",
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          _getFormattedDate(
+                                              activityLog.triggeredAt),
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6.0),
+                                      child: Container(
+                                        height: 24,
+                                        width: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ProductionOrderActivityType.changeStatus =>
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons
+                                                  .radio_button_checked_rounded,
+                                              size: 12,
+                                            ),
+                                            Gap(12.0),
+                                            Text(
+                                              "Status changed from $oldValue to $newValue.",
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          _getFormattedDate(
+                                              activityLog.triggeredAt),
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6.0),
+                                      child: Container(
+                                        height: 24,
+                                        width: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ProductionOrderActivityType.switchPriority =>
-                                Text("Priority changed"),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons
+                                                  .radio_button_checked_rounded,
+                                              size: 12,
+                                            ),
+                                            Gap(12.0),
+                                            Text("Priority changed"),
+                                          ],
+                                        ),
+                                        Text(
+                                          _getFormattedDate(
+                                              activityLog.triggeredAt),
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6.0),
+                                      child: Container(
+                                        height: 24,
+                                        width: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ProductionOrderActivityType.toggleArchived =>
-                                Text("Archived"),
-                              ProductionOrderActivityType.assignJob =>
-                                Text("Assigned to $newValue."),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons
+                                                  .radio_button_checked_rounded,
+                                              size: 12,
+                                            ),
+                                            Gap(12.0),
+                                            Text("Archived"),
+                                          ],
+                                        ),
+                                        Text(
+                                          _getFormattedDate(
+                                              activityLog.triggeredAt),
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6.0),
+                                      child: Container(
+                                        height: 24,
+                                        width: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ProductionOrderActivityType.assignJob => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons
+                                                  .radio_button_checked_rounded,
+                                              size: 12,
+                                            ),
+                                            Gap(12.0),
+                                            Text("Assigned to $newValue"),
+                                          ],
+                                        ),
+                                        Text(
+                                          _getFormattedDate(
+                                              activityLog.triggeredAt),
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 6.0),
+                                      child: Container(
+                                        height: 24,
+                                        width: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                             };
                           },
                           itemCount: data.activityLogs.length,
