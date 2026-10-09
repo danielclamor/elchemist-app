@@ -1,4 +1,5 @@
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
@@ -532,6 +533,39 @@ class _ProductionOrderDetailScreenState
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                Gap(20),
+                async.when(
+                  data: (data) => data != null
+                      ? ListView.builder(
+                          reverse: true,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final activityLog = data.activityLogs[index];
+                            final oldValue = activityLog.oldValue;
+                            final newValue = activityLog.newValue;
+
+                            return switch (activityLog.type) {
+                              ProductionOrderActivityType.created =>
+                                Text("Order #${data.orderNumber} created."),
+                              ProductionOrderActivityType.adjustQuantity => Text(
+                                  "Adjusted quantity from $oldValue to $newValue."),
+                              ProductionOrderActivityType.changeStatus => Text(
+                                  "Status changed from $oldValue to $newValue."),
+                              ProductionOrderActivityType.switchPriority =>
+                                Text("Priority changed"),
+                              ProductionOrderActivityType.toggleArchived =>
+                                Text("Archived"),
+                              ProductionOrderActivityType.assignJob =>
+                                Text("Assigned to $newValue."),
+                            };
+                          },
+                          itemCount: data.activityLogs.length,
+                        )
+                      : SizedBox.shrink(),
+                  error: (e, _) => SizedBox.shrink(),
+                  loading: () => SizedBox.shrink(),
+                )
               ],
             ),
           ),

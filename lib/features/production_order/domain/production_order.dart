@@ -1,5 +1,6 @@
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_allocation.dart';
 
 class ProductionOrder {
@@ -13,6 +14,7 @@ class ProductionOrder {
   final ProductionOrderJob? job;
   final List<ProductionOrderAllocation> allocations;
   final EliquidSummary eliquid;
+  final List<ProductionOrderActivityLog> activityLogs;
 
   ProductionOrder({
     required this.id,
@@ -25,6 +27,7 @@ class ProductionOrder {
     required this.job,
     required this.allocations,
     required this.eliquid,
+    required this.activityLogs,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -43,6 +46,9 @@ class ProductionOrder {
           .map((a) => ProductionOrderAllocation.fromDto(a))
           .toList(),
       eliquid: EliquidSummary.fromDto(o.eliquid),
+      activityLogs: o.activityLogs
+          .map((l) => ProductionOrderActivityLog.fromDto(l))
+          .toList(),
     );
   }
 }
