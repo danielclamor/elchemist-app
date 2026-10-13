@@ -53,4 +53,17 @@ class LocationSummary {
       isHq: l.isHq,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is LocationSummary &&
+        other.runtimeType == runtimeType &&
+        other.id == id &&
+        other.code == code;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, code);
 }

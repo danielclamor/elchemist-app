@@ -62,6 +62,19 @@ class EliquidSummary {
       brand: e.brand,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is EliquidSummary &&
+        other.runtimeType == runtimeType &&
+        other.id == id &&
+        other.upc == upc;
+  }
+
+  @override
+  int get hashCode => Object.hash(id, upc);
 }
 
 enum ChillType {
