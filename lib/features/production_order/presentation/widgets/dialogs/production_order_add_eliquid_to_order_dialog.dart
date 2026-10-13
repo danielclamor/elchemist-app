@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class ProductionOrderAddEliquidToOrderDialog extends StatefulWidget {
-  const ProductionOrderAddEliquidToOrderDialog({super.key});
+  final EliquidSummary? selected;
+
+  const ProductionOrderAddEliquidToOrderDialog({
+    super.key,
+    this.selected,
+  });
 
   @override
   State<ProductionOrderAddEliquidToOrderDialog> createState() =>
@@ -13,8 +18,16 @@ class ProductionOrderAddEliquidToOrderDialog extends StatefulWidget {
 
 class _ProductionOrderAddEliquidToOrderDialogState
     extends State<ProductionOrderAddEliquidToOrderDialog> {
-  EliquidSummary? _selectedEliquid;
-  bool get _selectionFilled => _selectedEliquid != null;
+  late final EliquidSummary? _initialSelection;
+  EliquidSummary? _selected;
+  bool get _selectionFilled => _selected != null;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialSelection = widget.selected;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +64,7 @@ class _ProductionOrderAddEliquidToOrderDialogState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Select e-liquid",
+                          "${_initialSelection != null ? "Change selected" : "Select"} e-liquid",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -128,10 +141,10 @@ class _ProductionOrderAddEliquidToOrderDialogState
                   shape: BoxShape.rectangle,
                 ),
                 child: EliquidPickerList(
-                  selectedId: _selectedEliquid?.id,
+                  preSelected: _initialSelection,
+                  selected: _selected,
                   onSelected: (eliquid) => setState(() {
-                    _selectedEliquid =
-                        _selectedEliquid?.id == eliquid.id ? null : eliquid;
+                    _selected = _selected?.id == eliquid.id ? null : eliquid;
                   }),
                 ),
               ),
@@ -201,10 +214,11 @@ class _ProductionOrderAddEliquidToOrderDialogState
                             ),
                           ),
                           onPressed: _selectionFilled
-                              ? () =>
-                                  Navigator.of(context).pop(_selectedEliquid)
+                              ? () => Navigator.of(context).pop(_selected)
                               : null,
-                          child: Text("Add"),
+                          child: Text(
+                            _initialSelection != null ? "Save" : "Add",
+                          ),
                         ),
                       ],
                     ),

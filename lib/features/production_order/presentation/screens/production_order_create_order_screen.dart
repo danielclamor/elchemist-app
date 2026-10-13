@@ -21,6 +21,87 @@ class _ProductionOrderCreateOrderScreenState
 
   List<LocationSummary> _selectedLocations = [];
 
+  void _selectEliquid() async {
+    final eliquid = await showDialog<EliquidSummary>(
+      context: context,
+      builder: (_) => ProductionOrderAddEliquidToOrderDialog(
+        selected: _selectedEliquid,
+      ),
+    );
+
+    if (eliquid != null) {
+      setState(() {
+        _selectedEliquid = eliquid;
+      });
+    }
+  }
+
+  Widget _addEliquidButton() => ElevatedButton(
+        onPressed: () => _selectEliquid(),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          side: BorderSide(
+            color:
+                Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
+            width: 1.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 16.0,
+          ),
+        ),
+        child: Text(
+          "+ E-liquid",
+          style: const TextStyle(
+            color: Color(0xFFDAF0FF),
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+      );
+
+  Widget _addLocationsButton() => ElevatedButton(
+        onPressed: () async {
+          final locations = await showDialog<List<LocationSummary>>(
+            context: context,
+            builder: (_) => ProductionOrderAddLocationsToOrderDialog(
+              selectedList: _selectedLocations,
+            ),
+          );
+
+          if (locations != null) {
+            setState(() {
+              _selectedLocations = locations;
+            });
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          side: BorderSide(
+            color:
+                Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
+            width: 1.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.all(16.0),
+        ),
+        child: Text(
+          "+ Location",
+          style: const TextStyle(
+            color: Color(0xFFDAF0FF),
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,8 +167,24 @@ class _ProductionOrderCreateOrderScreenState
                   margin: EdgeInsets.zero,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: _selectedEliquid != null
-                        ? Column(
+                    child: _selectedEliquid == null &&
+                            _selectedLocations.isEmpty
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: _addEliquidButton(),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(
+                                  8.0,
+                                ),
+                                child: _addLocationsButton(),
+                              ),
+                            ],
+                          )
+                        : Column(
                             children: [
                               Container(
                                 decoration: BoxDecoration(
@@ -98,96 +195,108 @@ class _ProductionOrderCreateOrderScreenState
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                    _selectedEliquid != null
+                                        ? Row(
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            _selectedEliquid!
-                                                                .description,
-                                                            style: TextStyle(
-                                                              fontSize: 16.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                              Expanded(
+                                                flex: 1,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  _selectedEliquid!
+                                                                      .description,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        16.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  _selectedEliquid!
+                                                                      .upc,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14.0,
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          width: 100,
+                                                          child: ElTextField(
+                                                            controller:
+                                                                TextEditingController(),
+                                                            contentType:
+                                                                ElTextFieldContentType
+                                                                    .numeric,
                                                           ),
-                                                          Text(
-                                                            _selectedEliquid!
-                                                                .upc,
-                                                            style: TextStyle(
-                                                              fontSize: 14.0,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    width: 100,
-                                                    child: ElTextField(
-                                                      controller:
-                                                          TextEditingController(),
-                                                      contentType:
-                                                          ElTextFieldContentType
-                                                              .numeric,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Gap(8.0),
+                                              Expanded(
+                                                flex: 0,
+                                                child: SizedBox(
+                                                  width: 30,
+                                                  height: 30,
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      padding: EdgeInsets.zero,
+                                                      minimumSize: Size.zero,
+                                                      shape:
+                                                          const CircleBorder(),
+                                                    ),
+                                                    onPressed: () =>
+                                                        _selectEliquid(),
+                                                    child: const Icon(
+                                                      Icons.sync_rounded,
+                                                      size: 14,
                                                     ),
                                                   ),
-                                                ],
+                                                ),
                                               ),
                                             ],
+                                          )
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              _addEliquidButton(),
+                                            ],
                                           ),
-                                        ),
-                                        Gap(8.0),
-                                        Expanded(
-                                          flex: 0,
-                                          child: SizedBox(
-                                            width: 30,
-                                            height: 30,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                padding: EdgeInsets.zero,
-                                                minimumSize: Size.zero,
-                                                shape: const CircleBorder(),
-                                              ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _selectedEliquid = null;
-                                                });
-                                              },
-                                              child: const Icon(
-                                                Icons.close,
-                                                size: 14,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Gap(8.0),
+                                    Divider(
+                                      thickness: 0.25,
                                     ),
                                     Gap(8.0),
                                     _selectedLocations.isNotEmpty
                                         ? Column(
                                             spacing: 8.0,
                                             children: [
-                                              Divider(
-                                                thickness: 0.25,
-                                              ),
                                               ..._selectedLocations.map(
                                                 (location) {
                                                   return Row(
@@ -268,68 +377,32 @@ class _ProductionOrderCreateOrderScreenState
                                                   );
                                                 },
                                               ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                      top: 4.0,
+                                                      right: 34.0,
+                                                    ),
+                                                    child:
+                                                        _addLocationsButton(),
+                                                  ),
+                                                ],
+                                              ),
                                             ],
                                           )
                                         : Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.end,
                                             children: [
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                  top: 16.0,
+                                                  right: 34.0,
                                                 ),
-                                                child: ElevatedButton(
-                                                  onPressed: () async {
-                                                    final locations =
-                                                        await showDialog<
-                                                            List<
-                                                                LocationSummary>>(
-                                                      context: context,
-                                                      builder: (_) =>
-                                                          const ProductionOrderAddLocationsToOrderDialog(),
-                                                    );
-
-                                                    setState(() {
-                                                      _selectedLocations =
-                                                          locations ?? [];
-                                                    });
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Theme.of(context)
-                                                            .colorScheme
-                                                            .surfaceContainer,
-                                                    side: BorderSide(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .surfaceContainer
-                                                          .withAlpha(200),
-                                                      width: 1.0,
-                                                    ),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                    ),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      horizontal: 16.0,
-                                                      vertical: 16.0,
-                                                    ),
-                                                  ),
-                                                  child: Text(
-                                                    "+ Location",
-                                                    style: const TextStyle(
-                                                      color: Color(0xFFDAF0FF),
-                                                      fontSize: 14.0,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      letterSpacing: 0.5,
-                                                    ),
-                                                  ),
-                                                ),
+                                                child: _addLocationsButton(),
                                               ),
                                             ],
                                           ),
@@ -357,60 +430,11 @@ class _ProductionOrderCreateOrderScreenState
                                         vertical: 16.0,
                                       ),
                                     ),
-                                    onPressed: () {},
+                                    onPressed:
+                                        _selectedEliquid != null ? () {} : null,
                                     child: Text("Create"),
                                   ),
                                 ],
-                              ),
-                            ],
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    final eliquid =
-                                        await showDialog<EliquidSummary>(
-                                      context: context,
-                                      builder: (_) =>
-                                          const ProductionOrderAddEliquidToOrderDialog(),
-                                    );
-
-                                    setState(() {
-                                      _selectedEliquid = eliquid;
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceContainer,
-                                    side: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surfaceContainer
-                                          .withAlpha(200),
-                                      width: 1.0,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                      vertical: 16.0,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    "+ E-liquid",
-                                    style: const TextStyle(
-                                      color: Color(0xFFDAF0FF),
-                                      fontSize: 14.0,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                ),
                               ),
                             ],
                           ),

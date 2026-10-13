@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LocationPickerList extends ConsumerStatefulWidget {
-  final List<String> selectedIds;
+  final List<LocationSummary> selectedList;
   final ValueChanged<LocationSummary> onSelected;
 
   const LocationPickerList({
     super.key,
-    required this.selectedIds,
+    this.selectedList = const [],
     required this.onSelected,
   });
 
@@ -103,10 +103,12 @@ class _LocationPickerListState extends ConsumerState<LocationPickerList> {
                 );
               }
               final location = items[index];
+              final isSelected = widget.selectedList.contains(location);
+
               return LocationPickerListTile(
                 key: ValueKey(location.id),
                 location: location,
-                isSelected: widget.selectedIds.contains(location.id),
+                isSelected: isSelected,
                 onTap: () => widget.onSelected(location),
               );
             },

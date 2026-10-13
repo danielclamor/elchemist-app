@@ -1,10 +1,16 @@
 import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/location/presentation/widgets/location_picker_list.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class ProductionOrderAddLocationsToOrderDialog extends StatefulWidget {
-  const ProductionOrderAddLocationsToOrderDialog({super.key});
+  final List<LocationSummary> selectedList;
+
+  const ProductionOrderAddLocationsToOrderDialog({
+    super.key,
+    required this.selectedList,
+  });
 
   @override
   State<ProductionOrderAddLocationsToOrderDialog> createState() =>
@@ -13,7 +19,17 @@ class ProductionOrderAddLocationsToOrderDialog extends StatefulWidget {
 
 class _ProductionOrderAddLocationsToOrderDialogState
     extends State<ProductionOrderAddLocationsToOrderDialog> {
-  final List<LocationSummary> _selectedLocations = [];
+  late final Set<LocationSummary> _initialSelection;
+  late final List<LocationSummary> _selectedList;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialSelection = widget.selectedList.toSet();
+    _selectedList = List.of(widget.selectedList);
+  }
+
+  bool get _hasChanges => !setEquals(_initialSelection, _selectedList.toSet());
 
   @override
   Widget build(BuildContext context) {
@@ -140,13 +156,13 @@ class _ProductionOrderAddLocationsToOrderDialogState
                   shape: BoxShape.rectangle,
                 ),
                 child: LocationPickerList(
-                  selectedIds: _selectedLocations.map((s) => s.id).toList(),
+                  selectedList: _selectedList,
                   onSelected: (location) {
                     setState(() {
-                      if (_selectedLocations.contains(location)) {
-                        _selectedLocations.remove(location);
+                      if (_selectedList.contains(location)) {
+                        _selectedList.remove(location);
                       } else {
-                        _selectedLocations.add(location);
+                        _selectedList.add(location);
                       }
                     });
                   },
@@ -188,7 +204,7 @@ class _ProductionOrderAddLocationsToOrderDialogState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${_selectedLocations.length} selected'),
+                      Text('${_selectedList.length} selected'),
                       Row(
                         spacing: 8.0,
                         children: [
@@ -196,10 +212,8 @@ class _ProductionOrderAddLocationsToOrderDialogState
                             style: TextButton.styleFrom(
                               foregroundColor: const Color(0xFF0E76BD),
                             ),
-                            onPressed: _selectedLocations.isNotEmpty
-                                ? () => setState(() {
-                                      _selectedLocations.clear();
-                                    })
+                            onPressed: _selectedList.isNotEmpty
+                                ? () => setState(() => _selectedList.clear())
                                 : null,
                             child: Text("Clear"),
                           ),
@@ -226,10 +240,12 @@ class _ProductionOrderAddLocationsToOrderDialogState
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
+                              side: _hasChanges
+                                  ? BorderSide(
+                                      color: const Color(0xFF0B5E97),
+                                      width: 1.0,
+                                    )
+                                  : null,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
@@ -238,11 +254,10 @@ class _ProductionOrderAddLocationsToOrderDialogState
                                 vertical: 16.0,
                               ),
                             ),
-                            onPressed: _selectedLocations.isNotEmpty
-                                ? () => Navigator.of(context)
-                                    .pop(_selectedLocations)
+                            onPressed: _hasChanges
+                                ? () => Navigator.of(context).pop(_selectedList)
                                 : null,
-                            child: Text("Add"),
+                            child: Text("Save"),
                           ),
                         ],
                       ),
