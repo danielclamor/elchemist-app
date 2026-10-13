@@ -80,7 +80,11 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
 
     final textStyle = TextStyle(
       fontSize: 14,
-      color: isClosed ? Colors.grey : null,
+      color: isClosed
+          ? Colors.grey
+          : order.isPriority
+              ? Colors.red.shade200
+              : null,
       decoration: order.status == ProductionOrderStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
