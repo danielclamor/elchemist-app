@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EliquidPickerList extends ConsumerStatefulWidget {
-  final String? selectedId;
+  final EliquidSummary? preSelected;
+  final EliquidSummary? selected;
   final ValueChanged<EliquidSummary> onSelected;
 
   const EliquidPickerList({
     super.key,
-    this.selectedId,
+    this.preSelected,
+    this.selected,
     required this.onSelected,
   });
 
@@ -106,8 +108,11 @@ class _EliquidPickerListState extends ConsumerState<EliquidPickerList> {
               return EliquidPickerListTile(
                 key: ValueKey(eliquid.id),
                 eliquid: eliquid,
-                isSelected: eliquid.id == widget.selectedId,
-                onTap: () => widget.onSelected(eliquid),
+                isSelected:
+                    eliquid == widget.selected || eliquid == widget.preSelected,
+                onTap: eliquid == widget.preSelected
+                    ? null
+                    : () => widget.onSelected(eliquid),
               );
             },
           ),
