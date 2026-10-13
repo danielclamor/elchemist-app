@@ -13,8 +13,8 @@ class ProductionOrderAddEliquidToOrderDialog extends StatefulWidget {
 
 class _ProductionOrderAddEliquidToOrderDialogState
     extends State<ProductionOrderAddEliquidToOrderDialog> {
-  EliquidSummary? _selected;
-  bool get _selectionFilled => _selected != null;
+  EliquidSummary? _selectedEliquid;
+  bool get _selectionFilled => _selectedEliquid != null;
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +128,10 @@ class _ProductionOrderAddEliquidToOrderDialogState
                   shape: BoxShape.rectangle,
                 ),
                 child: EliquidPickerList(
-                  selectedId: _selected?.id,
+                  selectedId: _selectedEliquid?.id,
                   onSelected: (eliquid) => setState(() {
-                    _selected = _selected?.id == eliquid.id ? null : eliquid;
+                    _selectedEliquid =
+                        _selectedEliquid?.id == eliquid.id ? null : eliquid;
                   }),
                 ),
               ),
@@ -200,7 +201,8 @@ class _ProductionOrderAddEliquidToOrderDialogState
                             ),
                           ),
                           onPressed: _selectionFilled
-                              ? () => Navigator.of(context).pop(_selected)
+                              ? () =>
+                                  Navigator.of(context).pop(_selectedEliquid)
                               : null,
                           child: Text("Add"),
                         ),
