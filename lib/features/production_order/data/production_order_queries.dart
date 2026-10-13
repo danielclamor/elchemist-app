@@ -63,7 +63,7 @@ const String productionOrderDetailsQuery = r'''
       allocations { 
         id 
         quantity 
-        location { id code name }
+        location { id code name isHq }
       }
       eliquid {
         id

@@ -34,11 +34,13 @@ class LocationSummaryDto {
   final String id;
   final String code;
   final String name;
+  final bool isHq;
 
   const LocationSummaryDto({
     required this.id,
     required this.code,
     required this.name,
+    required this.isHq,
   });
 
   factory LocationSummaryDto.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class LocationSummaryDto {
       id: json['id'] as String,
       code: json['code'] as String,
       name: json['name'] as String,
+      isHq: json['isHq'] as bool,
     );
   }
 }
