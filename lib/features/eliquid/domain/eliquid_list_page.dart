@@ -12,4 +12,11 @@ class EliquidListPage {
     required this.hasPreviousPage,
     required this.hasNextPage,
   });
+
+  EliquidListPage append(EliquidListPage next) => EliquidListPage(
+        items: [...items, ...next.items],
+        endCursor: next.endCursor,
+        hasPreviousPage: hasPreviousPage,
+        hasNextPage: next.hasNextPage,
+      );
 }

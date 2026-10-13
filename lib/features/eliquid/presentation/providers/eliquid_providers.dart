@@ -74,40 +74,81 @@ final eliquidListPagerProvider =
   EliquidListPager.new,
 );
 
-class EliquidListInfinitePagerState {
-  final List<EliquidListPage> pages;
+class EliquidInfiniteListState {
+  final EliquidListPage page;
+  final bool isLoadingMore;
+  final Object? loadMoreError;
 
-  const EliquidListInfinitePagerState({
-    this.pages = const [],
+  const EliquidInfiniteListState({
+    required this.page,
+    this.isLoadingMore = false,
+    this.loadMoreError,
   });
 
-  EliquidListPage get lastPage => pages.last;
-  String? get currentCursor => lastPage.endCursor;
-
-  EliquidListInfinitePagerState copyWith({
-    List<EliquidListPage>? pages,
+  EliquidInfiniteListState copyWith({
+    EliquidListPage? page,
+    bool? isLoadingMore,
+    Object? loadMoreError,
+    bool clearError = false,
   }) =>
-      EliquidListInfinitePagerState(
-        pages: pages ?? this.pages,
+      EliquidInfiniteListState(
+        page: page ?? this.page,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+        loadMoreError:
+            clearError ? null : (loadMoreError ?? this.loadMoreError),
       );
 }
 
-class EliquidListInfinitePager extends Notifier<EliquidListInfinitePagerState> {
+class EliquidInfiniteList extends AsyncNotifier<EliquidInfiniteListState> {
+  int _generation = 0;
+
   @override
-  EliquidListInfinitePagerState build() {
-    return const EliquidListInfinitePagerState();
+  Future<EliquidInfiniteListState> build() async {
+    _generation++; // any in-flight loadMore from before a rebuild is now stale
+    // Later: ref.watch(eliquidSearchProvider) here, so a new search restarts the list.
+    final page = await ref
+        .watch(eliquidRepositoryProvider)
+        .getListPage(first: eliquidPageSize);
+
+    return EliquidInfiniteListState(page: page);
   }
 
-  void next(EliquidListPage? page) {
-    if (page == null) return;
-    final pages = [...state.pages, page];
-    state = state.copyWith(pages: pages);
-  }
+  Future<void> loadMore({bool retry = false}) async {
+    final current = state.value;
+    if (current == null || !current.page.hasNextPage || current.isLoadingMore) {
+      return;
+    }
+    if (current.loadMoreError != null && !retry) {
+      return; // don't auto-loop on errors
+    }
 
-  void reset() => state = const EliquidListInfinitePagerState();
+    final token = _generation;
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, clearError: true),
+    );
+
+    try {
+      final next = await ref.read(eliquidRepositoryProvider).getListPage(
+            first: eliquidPageSize,
+            after: current.page.endCursor,
+          );
+      if (!ref.mounted || token != _generation) return;
+
+      state = AsyncData(current.copyWith(
+        page: current.page.append(next),
+        isLoadingMore: false,
+      ));
+    } catch (e) {
+      if (!ref.mounted || token != _generation) return;
+      state = AsyncData(
+        current.copyWith(isLoadingMore: false, loadMoreError: e),
+      );
+    }
+  }
 }
 
-final eliquidListInfinitePagerProvider = NotifierProvider.autoDispose<
-    EliquidListInfinitePager, EliquidListInfinitePagerState>(
-  EliquidListInfinitePager.new,
+final eliquidInfiniteListProvider = AsyncNotifierProvider.autoDispose<
+    EliquidInfiniteList, EliquidInfiniteListState>(
+  EliquidInfiniteList.new,
+  retry: (retryCount, error) => null,
 );
