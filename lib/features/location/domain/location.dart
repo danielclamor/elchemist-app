@@ -36,11 +36,13 @@ class LocationSummary {
   final String id;
   final String code;
   final String name;
+  final bool isHq;
 
   const LocationSummary({
     required this.id,
     required this.code,
     required this.name,
+    required this.isHq,
   });
 
   factory LocationSummary.fromDto(LocationSummaryDto l) {
@@ -48,6 +50,7 @@ class LocationSummary {
       id: l.id,
       code: l.code,
       name: l.name,
+      isHq: l.isHq,
     );
   }
 }
