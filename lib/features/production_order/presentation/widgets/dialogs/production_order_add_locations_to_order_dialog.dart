@@ -1,3 +1,5 @@
+import 'package:elchemist_app/features/location/domain/location.dart';
+import 'package:elchemist_app/features/location/presentation/widgets/location_picker_list.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -11,10 +13,8 @@ class ProductionOrderAddLocationsToOrderDialog extends StatefulWidget {
 
 class _ProductionOrderAddLocationsToOrderDialogState
     extends State<ProductionOrderAddLocationsToOrderDialog> {
-  final List<String> locations = [
-    "32 St.",
-    "Macleod",
-  ];
+  final List<LocationSummary> _selectedLocations = [];
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -139,27 +139,16 @@ class _ProductionOrderAddLocationsToOrderDialogState
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                 ),
-                child: ListView.separated(
-                  itemCount: locations.length,
-                  separatorBuilder: (context, index) => Divider(
-                    height: 0.0,
-                    thickness: 0.25,
-                  ),
-                  itemBuilder: (context, index) {
-                    final location = locations[index];
-
-                    return ListTile(
-                      onTap: () {},
-                      selected: true,
-                      title: Text(location),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 4.0,
-                      ),
-                      trailing: Icon(
-                        Icons.check_box_outline_blank_rounded,
-                      ),
-                    );
+                child: LocationPickerList(
+                  selectedIds: _selectedLocations.map((s) => s.id).toList(),
+                  onSelected: (location) {
+                    setState(() {
+                      if (_selectedLocations.contains(location)) {
+                        _selectedLocations.remove(location);
+                      } else {
+                        _selectedLocations.add(location);
+                      }
+                    });
                   },
                 ),
               ),
@@ -199,10 +188,21 @@ class _ProductionOrderAddLocationsToOrderDialogState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("0 selected"),
+                      Text('${_selectedLocations.length} selected'),
                       Row(
                         spacing: 8.0,
                         children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: const Color(0xFF0E76BD),
+                            ),
+                            onPressed: _selectedLocations.isNotEmpty
+                                ? () => setState(() {
+                                      _selectedLocations.clear();
+                                    })
+                                : null,
+                            child: Text("Clear"),
+                          ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0E76BD),
@@ -238,7 +238,10 @@ class _ProductionOrderAddLocationsToOrderDialogState
                                 vertical: 16.0,
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: _selectedLocations.isNotEmpty
+                                ? () => Navigator.of(context)
+                                    .pop(_selectedLocations)
+                                : null,
                             child: Text("Add"),
                           ),
                         ],
