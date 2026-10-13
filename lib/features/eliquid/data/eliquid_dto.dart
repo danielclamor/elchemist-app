@@ -29,11 +29,11 @@ class EliquidDto {
       upc: json['upc'] as String,
       description: json['description'] as String,
       brand: json['brand'] as String,
-      chillType: ChillTypeDto.fromJson(json['chillType'] as String),
-      nicType: NicTypeDto.fromJson(json['nicType'] as String),
-      bottleSize: BottleSizeDto.fromJson(json['bottleSize'] as String),
-      nicLevel: NicLevelDto.fromJson(json['nicLevel'] as String),
-      bottleColor: BottleColorDto.fromJson(json['bottleColor'] as String),
+      chillType: ChillTypeDto.fromString(json['chillType'] as String),
+      nicType: NicTypeDto.fromString(json['nicType'] as String),
+      bottleSize: BottleSizeDto.fromString(json['bottleSize'] as String),
+      nicLevel: NicLevelDto.fromString(json['nicLevel'] as String),
+      bottleColor: BottleColorDto.fromString(json['bottleColor'] as String),
       nicProfile: json['nicProfile'] as Map<String, dynamic>,
     );
   }
@@ -66,7 +66,7 @@ enum ChillTypeDto {
   chilled,
   nonChilled;
 
-  static ChillTypeDto fromJson(String value) {
+  static ChillTypeDto fromString(String value) {
     return switch (value) {
       'CHILLED' => ChillTypeDto.chilled,
       'NON_CHILLED' => ChillTypeDto.nonChilled,
@@ -79,7 +79,7 @@ enum NicTypeDto {
   freebase,
   salt;
 
-  static NicTypeDto fromJson(String value) {
+  static NicTypeDto fromString(String value) {
     return switch (value) {
       'FREEBASE' => NicTypeDto.freebase,
       'SALT' => NicTypeDto.salt,
@@ -93,7 +93,7 @@ enum BottleSizeDto {
   ml60,
   ml120;
 
-  static BottleSizeDto fromJson(String value) {
+  static BottleSizeDto fromString(String value) {
     return switch (value) {
       '30_ML' => BottleSizeDto.ml30,
       '60_ML' => BottleSizeDto.ml60,
@@ -116,7 +116,7 @@ enum NicLevelDto {
   hit35,
   hit50;
 
-  static NicLevelDto fromJson(String value) {
+  static NicLevelDto fromString(String value) {
     return switch (value) {
       '0_MG' => NicLevelDto.mg0,
       '3_MG' => NicLevelDto.mg3,
@@ -151,7 +151,7 @@ enum BottleColorDto {
     }
   }
 
-  static BottleColorDto fromJson(String value) {
+  static BottleColorDto fromString(String value) {
     return switch (value) {
       'CLEAR' => BottleColorDto.clear,
       'BLACK' => BottleColorDto.black,
