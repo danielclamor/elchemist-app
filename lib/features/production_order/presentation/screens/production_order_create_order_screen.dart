@@ -1,5 +1,6 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
+import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_eliquid_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_locations_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/eliquid_past_orders_preview.dart';
@@ -18,10 +19,7 @@ class _ProductionOrderCreateOrderScreenState
     extends State<ProductionOrderCreateOrderScreen> {
   EliquidSummary? _selectedEliquid;
 
-  final List<String> _selectedLocations = [
-    "32 St.",
-    "Macleod",
-  ];
+  List<LocationSummary> _selectedLocations = [];
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +205,7 @@ class _ProductionOrderCreateOrderScreenState
                                                             Row(
                                                               children: [
                                                                 Text(
-                                                                  location,
+                                                                  location.name,
                                                                   style:
                                                                       TextStyle(
                                                                     fontSize:
@@ -282,14 +280,19 @@ class _ProductionOrderCreateOrderScreenState
                                                 ),
                                                 child: ElevatedButton(
                                                   onPressed: () async {
-                                                    final result =
-                                                        await showDialog(
+                                                    final locations =
+                                                        await showDialog<
+                                                            List<
+                                                                LocationSummary>>(
                                                       context: context,
                                                       builder: (_) =>
                                                           const ProductionOrderAddLocationsToOrderDialog(),
                                                     );
 
-                                                    if (result == null) return;
+                                                    setState(() {
+                                                      _selectedLocations =
+                                                          locations ?? [];
+                                                    });
                                                   },
                                                   style:
                                                       ElevatedButton.styleFrom(
@@ -375,11 +378,9 @@ class _ProductionOrderCreateOrderScreenState
                                           const ProductionOrderAddEliquidToOrderDialog(),
                                     );
 
-                                    if (eliquid != null) {
-                                      setState(() {
-                                        _selectedEliquid = eliquid;
-                                      });
-                                    }
+                                    setState(() {
+                                      _selectedEliquid = eliquid;
+                                    });
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Theme.of(context)
