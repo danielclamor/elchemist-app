@@ -73,3 +73,82 @@ final locationSummaryListPagerProvider = NotifierProvider.autoDispose<
     LocationSummaryListPager, LocationSummaryListPagerState>(
   LocationSummaryListPager.new,
 );
+
+class LocationInfiniteListState {
+  final LocationListPage page;
+  final bool isLoadingMore;
+  final Object? loadMoreError;
+
+  const LocationInfiniteListState({
+    required this.page,
+    this.isLoadingMore = false,
+    this.loadMoreError,
+  });
+
+  LocationInfiniteListState copyWith({
+    LocationListPage? page,
+    bool? isLoadingMore,
+    Object? loadMoreError,
+    bool clearError = false,
+  }) =>
+      LocationInfiniteListState(
+        page: page ?? this.page,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+        loadMoreError:
+            clearError ? null : (loadMoreError ?? this.loadMoreError),
+      );
+}
+
+class LocationInfiniteList extends AsyncNotifier<LocationInfiniteListState> {
+  int _generation = 0;
+
+  @override
+  Future<LocationInfiniteListState> build() async {
+    _generation++; // any in-flight loadMore from before a rebuild is now stale
+    // Later: ref.watch(locationSearchProvider) here, so a new search restarts the list.
+    final page = await ref
+        .watch(locationRepositoryProvider)
+        .getListPage(first: locationPageSize);
+
+    return LocationInfiniteListState(page: page);
+  }
+
+  Future<void> loadMore({bool retry = false}) async {
+    final current = state.value;
+    if (current == null || !current.page.hasNextPage || current.isLoadingMore) {
+      return;
+    }
+    if (current.loadMoreError != null && !retry) {
+      return; // don't auto-loop on errors
+    }
+
+    final token = _generation;
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, clearError: true),
+    );
+
+    try {
+      final next = await ref.read(locationRepositoryProvider).getListPage(
+            first: locationPageSize,
+            after: current.page.endCursor,
+          );
+      if (!ref.mounted || token != _generation) return;
+
+      state = AsyncData(current.copyWith(
+        page: current.page.append(next),
+        isLoadingMore: false,
+      ));
+    } catch (e) {
+      if (!ref.mounted || token != _generation) return;
+      state = AsyncData(
+        current.copyWith(isLoadingMore: false, loadMoreError: e),
+      );
+    }
+  }
+}
+
+final locationInfiniteListProvider = AsyncNotifierProvider.autoDispose<
+    LocationInfiniteList, LocationInfiniteListState>(
+  LocationInfiniteList.new,
+  retry: (retryCount, error) => null,
+);

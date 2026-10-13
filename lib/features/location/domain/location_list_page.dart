@@ -12,4 +12,11 @@ class LocationListPage {
     required this.hasPreviousPage,
     required this.hasNextPage,
   });
+
+  LocationListPage append(LocationListPage next) => LocationListPage(
+        items: [...items, ...next.items],
+        endCursor: next.endCursor,
+        hasPreviousPage: hasPreviousPage,
+        hasNextPage: next.hasNextPage,
+      );
 }
