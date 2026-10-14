@@ -273,7 +273,7 @@ class _ProductionOrderCreateOrderScreenState
                                                     onPressed: () =>
                                                         _selectEliquid(),
                                                     child: const Icon(
-                                                      Icons.sync_rounded,
+                                                      Icons.loop_rounded,
                                                       size: 14,
                                                     ),
                                                   ),
