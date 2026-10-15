@@ -1,3 +1,4 @@
+import 'package:elchemist_app/features/production_order/data/production_order_mutations.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_date_range.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_list_page.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -193,5 +194,52 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
       hasNextPage: pageInfo['hasNextPage'] as bool,
       totalCount: conn['totalCount'] as int,
     );
+  }
+
+  @override
+  Future<ProductionOrder> createOrder({
+    required String eliquidId,
+    int? quantity,
+    required bool isPriority,
+    required List<AllocationInput> allocations,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderCreateMutation),
+        variables: {
+          'eliquidId': eliquidId,
+          'productionOrder': {
+            'quantity': quantity,
+            'isPriority': isPriority,
+            'allocations': allocations
+                .map((a) => {
+                      'locationIdentifier': {'id': a.locationId},
+                      'quantity': a.quantity
+                    })
+                .toList()
+          },
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    print('submitted');
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['productionOrderCreate'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['productionOrder'] as Map<String, dynamic>?;
+
+    print(feedback);
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not create the order',
+      );
+    }
+
+    return ProductionOrder.fromDto(ProductionOrderDto.fromJson(data));
   }
 }

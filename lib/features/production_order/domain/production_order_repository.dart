@@ -3,6 +3,8 @@ import 'package:elchemist_app/features/production_order/domain/production_order_
 
 import 'production_order.dart';
 
+typedef AllocationInput = ({String locationId, int quantity});
+
 abstract class ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
@@ -28,5 +30,12 @@ abstract class ProductionOrderRepository {
     required String eliquidId,
     required int first,
     String? after,
+  });
+
+  Future<ProductionOrder> createOrder({
+    required String eliquidId,
+    int? quantity,
+    required bool isPriority,
+    required List<AllocationInput> allocations,
   });
 }

@@ -1,29 +1,94 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/location/domain/location.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
+import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
+import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_eliquid_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_locations_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/eliquid_past_orders_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 // TODO fix layout
 
-class ProductionOrderCreateOrderScreen extends StatefulWidget {
+class ProductionOrderCreateOrderScreen extends ConsumerStatefulWidget {
   const ProductionOrderCreateOrderScreen({super.key});
 
   @override
-  State<ProductionOrderCreateOrderScreen> createState() =>
+  ConsumerState<ProductionOrderCreateOrderScreen> createState() =>
       _ProductionOrderCreateOrderScreenState();
 }
 
 class _ProductionOrderCreateOrderScreenState
-    extends State<ProductionOrderCreateOrderScreen> {
+    extends ConsumerState<ProductionOrderCreateOrderScreen> {
   EliquidSummary? _selectedEliquid;
-
   List<LocationSummary> _selectedLocations = [];
 
+  final _quantityController = TextEditingController();
+  final _allocationControllers = <String, TextEditingController>{};
   bool _isPriority = false;
+  bool _isSubmitting = false;
+
+  TextEditingController _allocationController(LocationSummary l) =>
+      _allocationControllers.putIfAbsent(l.id, TextEditingController.new);
+
+  @override
+  void dispose() {
+    _quantityController.dispose();
+    for (final c in _allocationControllers.values) {
+      c.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    final eliquid = _selectedEliquid;
+    if (eliquid == null || _isSubmitting) return;
+
+    final allocations = <AllocationInput>[
+      for (final l in _selectedLocations)
+        (
+          locationId: l.id,
+          quantity: int.tryParse(_allocationController(l).text.trim()) ?? 0,
+        )
+    ];
+
+    if (allocations.any((a) => a.quantity <= 0)) {
+      _showError('Enter a quantity for each location');
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+
+    try {
+      final order =
+          await ref.read(productionOrderRepositoryProvider).createOrder(
+                eliquidId: eliquid.id,
+                quantity: int.tryParse(_quantityController.text.trim()),
+                isPriority: _isPriority,
+                allocations: allocations,
+              );
+
+      if (!mounted) return;
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => ProductionOrderDetailScreen(id: order.id),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
+      _showError(e is Exception
+          ? e.toString()
+          : 'Something went wrong. Please try again.');
+    }
+  }
+
+  void _showError(String message) => ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text(message)));
 
   void _selectEliquid() async {
     final eliquid = await showDialog<EliquidSummary>(
@@ -123,8 +188,64 @@ class _ProductionOrderCreateOrderScreenState
             vertical: 16.0,
           ),
         ),
-        onPressed: _selectedEliquid != null ? () {} : null,
+        onPressed: _selectedEliquid != null ? () => _submit() : null,
         child: Text("Create"),
+      );
+
+  Widget _allocationEntryRow(LocationSummary location) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            flex: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    location.name,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 2,
+                  ),
+                ),
+                Gap(16.0),
+                SizedBox(
+                  width: 100,
+                  child: ElTextField(
+                    controller: _allocationController(location),
+                    contentType: ElTextFieldContentType.numeric,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Gap(8.0),
+          Expanded(
+            flex: 0,
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  shape: const CircleBorder(),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _selectedLocations.remove(location);
+                  });
+                },
+                child: const Icon(
+                  Icons.close,
+                  size: 14,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
 
   @override
@@ -261,7 +382,7 @@ class _ProductionOrderCreateOrderScreenState
                                                                   child:
                                                                       ElTextField(
                                                                     controller:
-                                                                        TextEditingController(),
+                                                                        _quantityController,
                                                                     contentType:
                                                                         ElTextFieldContentType
                                                                             .numeric,
@@ -407,71 +528,7 @@ class _ProductionOrderCreateOrderScreenState
                                     children: [
                                       ..._selectedLocations.map(
                                         (location) {
-                                          return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        location.name,
-                                                        style: TextStyle(
-                                                          fontSize: 14.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        maxLines: 2,
-                                                      ),
-                                                    ),
-                                                    Gap(16.0),
-                                                    SizedBox(
-                                                      width: 100,
-                                                      child: ElTextField(
-                                                        controller:
-                                                            TextEditingController(),
-                                                        contentType:
-                                                            ElTextFieldContentType
-                                                                .numeric,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Gap(8.0),
-                                              Expanded(
-                                                flex: 0,
-                                                child: SizedBox(
-                                                  width: 30,
-                                                  height: 30,
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      padding: EdgeInsets.zero,
-                                                      minimumSize: Size.zero,
-                                                      shape:
-                                                          const CircleBorder(),
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        _selectedLocations
-                                                            .remove(location);
-                                                      });
-                                                    },
-                                                    child: const Icon(
-                                                      Icons.close,
-                                                      size: 14,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          );
+                                          return _allocationEntryRow(location);
                                         },
                                       ),
                                       Gap(12.0),
