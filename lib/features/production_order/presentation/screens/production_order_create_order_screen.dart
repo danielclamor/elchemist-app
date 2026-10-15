@@ -435,9 +435,7 @@ class _ProductionOrderCreateOrderScreenState
                                         ),
                                         Gap(16.0),
                                         Divider(
-                                          height: 0.0,
                                           thickness: 0.25,
-                                          color: Colors.grey.shade500,
                                         ),
                                         Gap(16.0),
                                         Row(

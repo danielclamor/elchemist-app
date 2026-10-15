@@ -298,26 +298,26 @@ class _ProductionOrderDetailScreenState
                   margin: EdgeInsets.zero,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            border: BoxBorder.all(width: 1.0),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          padding: EdgeInsets.all(16.0),
-                          child: async.when(
-                            loading: () => SizedBox.shrink(),
-                            error: (e, _) => Center(
-                              child: TextButton(
-                                onPressed: () => ref.invalidate(
-                                    productionOrderDetailsProvider(id)),
-                                child: Text('Failed to load. Retry\n$e'),
-                              ),
-                            ),
-                            data: (data) => data != null
-                                ? Column(
+                    child: async.when(
+                      loading: () => SizedBox.shrink(),
+                      error: (e, _) => Center(
+                        child: TextButton(
+                          onPressed: () => ref
+                              .invalidate(productionOrderDetailsProvider(id)),
+                          child: Text('Failed to load. Retry\n$e'),
+                        ),
+                      ),
+                      data: (data) => data != null
+                          ? Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    border: BoxBorder.all(width: 1.0),
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
@@ -474,56 +474,74 @@ class _ProductionOrderDetailScreenState
                                             )
                                           : SizedBox.shrink(),
                                     ],
-                                  )
-                                : SizedBox.shrink(),
-                          ),
-                        ),
-                        Gap(16.0),
-                        Row(
-                          spacing: 8.0,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0E76BD),
-                                side: BorderSide(
-                                  color: const Color(0xFF0B5E97),
-                                  width: 1.0,
+                                  ),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
+                                Gap(16.0),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Prioritize order',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Checkbox(
+                                      value: data.isPriority,
+                                      visualDensity: VisualDensity.compact,
+                                      onChanged: null,
+                                    ),
+                                  ],
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 16.0,
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: Text("Assign to Mix"),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0E76BD),
-                                side: BorderSide(
-                                  color: const Color(0xFF0B5E97),
-                                  width: 1.0,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 16.0,
-                                ),
-                              ),
-                              onPressed: () {},
-                              child: Text("Assign to Streamline"),
-                            ),
-                          ],
-                        ),
-                      ],
+                              ],
+                            )
+                          : SizedBox.shrink(),
                     ),
                   ),
+                ),
+                Gap(16.0),
+                Row(
+                  spacing: 8.0,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0E76BD),
+                        side: BorderSide(
+                          color: const Color(0xFF0B5E97),
+                          width: 1.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 16.0,
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text("Assign to Mix"),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF0E76BD),
+                        side: BorderSide(
+                          color: const Color(0xFF0B5E97),
+                          width: 1.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 16.0,
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text("Assign to Streamline"),
+                    ),
+                  ],
                 ),
                 Gap(40.0),
                 Text(
