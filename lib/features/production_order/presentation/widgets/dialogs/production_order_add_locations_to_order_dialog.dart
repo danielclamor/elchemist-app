@@ -157,6 +157,7 @@ class _ProductionOrderAddLocationsToOrderDialogState
                 ),
                 child: LocationPickerList(
                   selectedList: _selectedList,
+                  disableHq: true,
                   onSelected: (location) {
                     setState(() {
                       if (_selectedList.contains(location)) {

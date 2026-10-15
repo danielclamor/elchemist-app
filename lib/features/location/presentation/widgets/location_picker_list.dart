@@ -8,11 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class LocationPickerList extends ConsumerStatefulWidget {
   final List<LocationSummary> selectedList;
   final ValueChanged<LocationSummary> onSelected;
+  final bool disableHq;
 
   const LocationPickerList({
     super.key,
     this.selectedList = const [],
     required this.onSelected,
+    this.disableHq = false,
   });
 
   @override
@@ -109,7 +111,9 @@ class _LocationPickerListState extends ConsumerState<LocationPickerList> {
                 key: ValueKey(location.id),
                 location: location,
                 isSelected: isSelected,
-                onTap: () => widget.onSelected(location),
+                onTap: widget.disableHq && location.isHq
+                    ? null
+                    : () => widget.onSelected(location),
               );
             },
           ),
