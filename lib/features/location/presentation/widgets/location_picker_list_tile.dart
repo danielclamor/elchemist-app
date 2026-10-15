@@ -20,6 +20,12 @@ class LocationPickerListTile extends StatelessWidget {
       enabled: onTap != null,
       selected: isSelected,
       title: Text(location.name),
+      subtitle: location.isHq
+          ? Text(
+              "Headquarters",
+              style: TextStyle(fontSize: 12),
+            )
+          : null,
       contentPadding: EdgeInsets.symmetric(
         horizontal: 20.0,
         vertical: 4.0,
