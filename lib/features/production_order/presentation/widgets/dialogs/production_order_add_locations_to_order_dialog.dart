@@ -46,107 +46,90 @@ class _ProductionOrderAddLocationsToOrderDialogState
         ),
         child: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(25),
-                    blurRadius: 10.0,
-                    spreadRadius: 2.0,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-                border: Border(
-                  bottom: BorderSide(
-                    width: 0.25,
-                  ),
+            Card(
+              elevation: 0.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20.0),
+                  bottom: Radius.circular(0.0),
                 ),
               ),
-              child: Card(
-                elevation: 0.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(20.0),
-                    bottom: Radius.circular(0.0),
-                  ),
+              margin: EdgeInsets.zero,
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 20.0,
                 ),
-                margin: EdgeInsets.zero,
-                color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                    horizontal: 20.0,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Select locations",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Select locations",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
-                          SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                minimumSize: Size.zero,
-                                shape: const CircleBorder(),
-                                backgroundColor: Theme.of(context)
-                                    .colorScheme
-                                    .surfaceContainer,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Icon(
-                                Icons.close,
-                                size: 14,
-                              ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              shape: const CircleBorder(),
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainer,
                             ),
-                          ),
-                        ],
-                      ),
-                      Gap(16.0),
-                      TextField(
-                        style: TextStyle(fontSize: 14.0),
-                        cursorWidth: 1.0,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 12.0,
-                            horizontal: 12.0,
-                          ),
-                          hintText: "Search",
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4.0),
-                            ),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4.0),
-                            ),
-                            borderSide: const BorderSide(),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(4.0),
-                            ),
-                            borderSide: const BorderSide(
-                              color: Colors.white,
-                              width: 1.5,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Icon(
+                              Icons.close,
+                              size: 14,
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                    Gap(16.0),
+                    TextField(
+                      style: TextStyle(fontSize: 14.0),
+                      cursorWidth: 1.0,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 12.0,
+                          horizontal: 12.0,
+                        ),
+                        hintText: "Search",
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(4.0),
+                          ),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(4.0),
+                          ),
+                          borderSide: const BorderSide(),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(4.0),
+                          ),
+                          borderSide: const BorderSide(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -170,100 +153,83 @@ class _ProductionOrderAddLocationsToOrderDialogState
                 ),
               ),
             ),
-            Gap(16.0),
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(25),
-                    blurRadius: 10.0,
-                    spreadRadius: 2.0,
-                    offset: Offset(0, -4),
-                  ),
-                ],
-                border: Border(
-                  bottom: BorderSide(
-                    width: 0.25,
-                  ),
+            Card(
+              elevation: 0.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(0.0),
+                  bottom: Radius.circular(20.0),
                 ),
               ),
-              child: Card(
-                elevation: 0.0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(0.0),
-                    bottom: Radius.circular(20.0),
-                  ),
+              margin: EdgeInsets.zero,
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 20.0,
                 ),
-                margin: EdgeInsets.zero,
-                color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16.0,
-                    horizontal: 20.0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('${_selectedList.length} selected'),
-                      Row(
-                        spacing: 8.0,
-                        children: [
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              foregroundColor: const Color(0xFF0E76BD),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('${_selectedList.length} selected'),
+                    Row(
+                      spacing: 8.0,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFF0E76BD),
+                            textStyle: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          onPressed: _selectedList.isNotEmpty
+                              ? () => setState(() => _selectedList.clear())
+                              : null,
+                          child: Text("Clear"),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
                             ),
-                            onPressed: _selectedList.isNotEmpty
-                                ? () => setState(() => _selectedList.clear())
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("Cancel"),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: _hasChanges
+                                ? BorderSide(
+                                    color: const Color(0xFF0B5E97),
+                                    width: 1.0,
+                                  )
                                 : null,
-                            child: Text("Clear"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("Cancel"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: _hasChanges
-                                  ? BorderSide(
-                                      color: const Color(0xFF0B5E97),
-                                      width: 1.0,
-                                    )
-                                  : null,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
                             ),
-                            onPressed: _hasChanges
-                                ? () => Navigator.of(context).pop(_selectedList)
-                                : null,
-                            child: Text("Save"),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                          onPressed: _hasChanges
+                              ? () => Navigator.of(context).pop(_selectedList)
+                              : null,
+                          child: Text("Save"),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
