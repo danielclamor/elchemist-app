@@ -75,7 +75,7 @@ class _LocationPickerListState extends ConsumerState<LocationPickerList> {
 
         return FadingVerticalScroll(
           controller: _scrollController,
-          fadeHeight: 16,
+          fadeHeight: 10,
           child: ListView.separated(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
