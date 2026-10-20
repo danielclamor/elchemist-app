@@ -115,7 +115,7 @@ const String eliquidPastOrdersQuery = r'''
             orderedQuantity
             fulfilledQuantity
             status
-            job
+            jobType
             isPriority
             createdAt
             eliquid { description }

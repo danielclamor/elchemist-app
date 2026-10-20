@@ -18,7 +18,10 @@ class EliquidPastOrdersPreview extends ConsumerWidget {
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Text('Failed to load history\n$e'),
+      error: (e, _) => TextButton(
+          onPressed: () =>
+              ref.invalidate(eliquidPastOrdersPreviewProvider(eliquidId)),
+          child: Text('Failed to load history\n$e')),
       data: (page) {
         if (page.items.isEmpty) {
           return Center(
