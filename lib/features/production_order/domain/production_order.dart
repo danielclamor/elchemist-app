@@ -11,7 +11,7 @@ class ProductionOrder {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
-  final ProductionOrderJob? job;
+  final ProductionOrderJobType? jobType;
   final List<ProductionOrderAllocation> allocations;
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
@@ -24,15 +24,13 @@ class ProductionOrder {
     required this.orderedQuantity,
     required this.fulfilledQuantity,
     required this.isPriority,
-    required this.job,
+    required this.jobType,
     required this.allocations,
     required this.eliquid,
     required this.activityLogs,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
-    final job = o.job;
-
     return ProductionOrder(
       id: o.id,
       orderNumber: o.orderNumber,
@@ -41,7 +39,7 @@ class ProductionOrder {
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
-      job: ProductionOrderJob.fromDto(job),
+      jobType: ProductionOrderJobType.fromDto(o.jobType),
       allocations: o.allocations
           .map((a) => ProductionOrderAllocation.fromDto(a))
           .toList(),
@@ -61,7 +59,7 @@ class ProductionOrderSummary {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
-  final ProductionOrderJob? job;
+  final ProductionOrderJobType? jobType;
   final String eliquidDescription;
 
   const ProductionOrderSummary({
@@ -72,13 +70,11 @@ class ProductionOrderSummary {
     required this.orderedQuantity,
     required this.fulfilledQuantity,
     required this.isPriority,
-    this.job,
+    this.jobType,
     required this.eliquidDescription,
   });
 
   factory ProductionOrderSummary.fromDto(ProductionOrderSummaryDto o) {
-    final job = o.job;
-
     return ProductionOrderSummary(
       id: o.id,
       orderNumber: o.orderNumber,
@@ -87,7 +83,7 @@ class ProductionOrderSummary {
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
-      job: ProductionOrderJob.fromDto(job),
+      jobType: ProductionOrderJobType.fromDto(o.jobType),
       eliquidDescription: o.eliquidDescription,
     );
   }
@@ -128,22 +124,22 @@ enum ProductionOrderStatus {
   }
 }
 
-enum ProductionOrderJob {
+enum ProductionOrderJobType {
   mix,
   repat;
 
   @override
   String toString() {
     return switch (this) {
-      ProductionOrderJob.mix => 'Mix',
-      ProductionOrderJob.repat => 'Repat',
+      ProductionOrderJobType.mix => 'Mix',
+      ProductionOrderJobType.repat => 'Repat',
     };
   }
 
-  static ProductionOrderJob? fromDto(ProductionOrderJobDto? j) {
+  static ProductionOrderJobType? fromDto(ProductionOrderJobTypeDto? j) {
     return switch (j) {
-      ProductionOrderJobDto.mix => ProductionOrderJob.mix,
-      ProductionOrderJobDto.repat => ProductionOrderJob.repat,
+      ProductionOrderJobTypeDto.mix => ProductionOrderJobType.mix,
+      ProductionOrderJobTypeDto.repat => ProductionOrderJobType.repat,
       null => null,
     };
   }

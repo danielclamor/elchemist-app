@@ -26,7 +26,7 @@ const String productionOrderListPageQuery = r'''
           orderedQuantity
           fulfilledQuantity
           status
-          job
+          jobType
           isPriority
           createdAt
           eliquid { description }
@@ -56,7 +56,7 @@ const String productionOrderDetailsQuery = r'''
       orderedQuantity
       fulfilledQuantity
       status
-      job
+      jobType
       isPriority
       createdAt
       updatedAt
@@ -77,6 +77,15 @@ const String productionOrderDetailsQuery = r'''
         oldValue
         type
         triggeredAt
+      }
+      currentJob {
+        __typename
+        ... on MixJobType {
+          id
+        }
+        ... on RepatJobType {
+          id
+        }
       }
     }
   }

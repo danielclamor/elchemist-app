@@ -30,7 +30,7 @@ class ProductionOrderListTile extends StatelessWidget {
   }
 
   ProductionOrderJobChip _getJobChip(
-    ProductionOrderJob? job,
+    ProductionOrderJobType? job,
     ProductionOrderStatusChip statusChip,
   ) {
     if (job == null) {
@@ -38,12 +38,12 @@ class ProductionOrderListTile extends StatelessWidget {
     }
 
     switch (job) {
-      case ProductionOrderJob.mix:
+      case ProductionOrderJobType.mix:
         return ProductionOrderJobChip.mix(
           fgColor: statusChip.fgColor,
           bgColor: statusChip.bgColor,
         );
-      case ProductionOrderJob.repat:
+      case ProductionOrderJobType.repat:
         return ProductionOrderJobChip.repat(
           fgColor: statusChip.fgColor,
           bgColor: statusChip.bgColor,
@@ -100,7 +100,8 @@ class ProductionOrderListTile extends StatelessWidget {
         order.status == ProductionOrderStatus.delivered;
 
     final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
-    final ProductionOrderJobChip jobChip = _getJobChip(order.job, statusChip);
+    final ProductionOrderJobChip jobChip =
+        _getJobChip(order.jobType, statusChip);
     final String formattedDate = _getFormattedDate(order.createdAt);
     final renderPriority =
         order.isPriority && order.status != ProductionOrderStatus.delivered;

@@ -1,8 +1,6 @@
 import 'package:elchemist_app/features/eliquid/data/eliquid_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_activity_log_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_allocation_dto.dart';
-import 'package:elchemist_app/features/production_order/data/production_order_mix_job.dart';
-import 'package:elchemist_app/features/production_order/data/production_order_repat_job.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 
 class ProductionOrderSummaryDto {
@@ -13,7 +11,7 @@ class ProductionOrderSummaryDto {
   final DateTime createdAt;
   final ProductionOrderStatusDto status;
   final bool isPriority;
-  final ProductionOrderJobDto? job;
+  final ProductionOrderJobTypeDto? jobType;
   final String eliquidDescription;
 
   const ProductionOrderSummaryDto({
@@ -24,7 +22,7 @@ class ProductionOrderSummaryDto {
     required this.createdAt,
     required this.status,
     required this.isPriority,
-    required this.job,
+    required this.jobType,
     required this.eliquidDescription,
   });
 
@@ -37,9 +35,7 @@ class ProductionOrderSummaryDto {
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPriority: json['isPriority'] as bool,
-      job: json['job'] != null
-          ? ProductionOrderJobDto.fromString(json['job'] as String)
-          : null,
+      jobType: ProductionOrderJobTypeDto.fromString(json['jobType'] as String?),
       eliquidDescription: json['eliquid']['description'] as String,
     );
   }
@@ -52,14 +48,13 @@ class ProductionOrderDto {
   final int? fulfilledQuantity;
   final bool isPriority;
   final ProductionOrderStatusDto status;
-  final ProductionOrderJobDto? job;
+  final ProductionOrderJobTypeDto? jobType;
   final DateTime createdAt;
   final DateTime updatedAt;
   final EliquidSummaryDto eliquid;
   final List<ProductionOrderActivityLogDto> activityLogs;
-  // final List<ProductionOrderMixJobDto>? mixJobs;
-  // final List<ProductionOrderRepatJobDto>? repatJobs;
   final List<ProductionOrderAllocationDto> allocations;
+  final String? currentJobId;
 
   const ProductionOrderDto({
     required this.id,
@@ -68,27 +63,21 @@ class ProductionOrderDto {
     required this.fulfilledQuantity,
     required this.isPriority,
     required this.status,
-    required this.job,
+    required this.jobType,
     required this.createdAt,
     required this.updatedAt,
     required this.eliquid,
     required this.activityLogs,
-    // this.mixJobs,
-    // this.repatJobs,
     required this.allocations,
+    required this.currentJobId,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
     final activityLogsJson = json['activityLogs'] as List<dynamic>;
 
-    // final mixJobsJson = json['productionOrderMixJobs'] as Map<String, dynamic>?;
-    // final mixJobEdges = mixJobsJson?['edges'] as List<dynamic>?;
-
-    // final repatJobsJson =
-    //     json['productionOrderRepatJobs'] as Map<String, dynamic>?;
-    // final repatJobEdges = repatJobsJson?['edges'] as List<dynamic>?;
-
     final allocationsJson = json['allocations'] as List<dynamic>;
+
+    final currentJobJson = json['currentJob'] as Map<String, dynamic>?;
 
     return ProductionOrderDto(
       id: json['id'] as String,
@@ -97,7 +86,7 @@ class ProductionOrderDto {
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       isPriority: json['isPriority'] as bool,
       status: ProductionOrderStatusDto.fromString(json['status'] as String),
-      job: ProductionOrderJobDto.fromString(json['job'] as String?),
+      jobType: ProductionOrderJobTypeDto.fromString(json['jobType'] as String?),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       eliquid:
@@ -106,18 +95,12 @@ class ProductionOrderDto {
           .map((l) => ProductionOrderActivityLogDto.fromJson(
               Map<String, dynamic>.from(l as Map)))
           .toList(),
-      // mixJobs: mixJobEdges
-      //     ?.map((e) => ProductionOrderMixJobDto.fromJson(
-      //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
-      //     .toList(),
-      // repatJobs: repatJobEdges
-      //     ?.map((e) => ProductionOrderRepatJobDto.fromJson(
-      //         (e as Map<String, dynamic>)['node'] as Map<String, dynamic>))
-      //     .toList(),
       allocations: allocationsJson
           .map((a) => ProductionOrderAllocationDto.fromJson(
               Map<String, dynamic>.from(a as Map)))
           .toList(),
+      currentJobId:
+          currentJobJson != null ? currentJobJson['id'] as String : null,
     );
   }
 }
@@ -151,14 +134,14 @@ extension ProductionOrderStatusGraphQl on ProductionOrderStatus {
       };
 }
 
-enum ProductionOrderJobDto {
+enum ProductionOrderJobTypeDto {
   mix,
   repat;
 
-  static ProductionOrderJobDto? fromString(String? value) {
+  static ProductionOrderJobTypeDto? fromString(String? value) {
     return switch (value) {
-      'MIX' => ProductionOrderJobDto.mix,
-      'REPAT' => ProductionOrderJobDto.repat,
+      'MIX' => ProductionOrderJobTypeDto.mix,
+      'REPAT' => ProductionOrderJobTypeDto.repat,
       null => null,
       _ => throw FormatException('Unknown ProductionOrderJob: $value'),
     };
