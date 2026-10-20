@@ -97,7 +97,7 @@ class _ProductionOrderDetailScreenState
   }
 
   ProductionOrderJobChip _getJobChip(
-    ProductionOrderJob? job,
+    ProductionOrderJobType? job,
     ProductionOrderStatusChip statusChip,
   ) {
     if (job == null) {
@@ -105,12 +105,12 @@ class _ProductionOrderDetailScreenState
     }
 
     switch (job) {
-      case ProductionOrderJob.mix:
+      case ProductionOrderJobType.mix:
         return ProductionOrderJobChip.mix(
           fgColor: statusChip.fgColor,
           bgColor: statusChip.bgColor,
         );
-      case ProductionOrderJob.repat:
+      case ProductionOrderJobType.repat:
         return ProductionOrderJobChip.repat(
           fgColor: statusChip.fgColor,
           bgColor: statusChip.bgColor,
@@ -233,7 +233,7 @@ class _ProductionOrderDetailScreenState
                             async.when(
                               data: (data) => data != null
                                   ? _getJobChip(
-                                      data.job, _getStatusChip(data.status))
+                                      data.jobType, _getStatusChip(data.status))
                                   : SizedBox.shrink(),
                               error: (e, _) => SizedBox.shrink(),
                               loading: () => SizedBox.shrink(),
@@ -242,6 +242,22 @@ class _ProductionOrderDetailScreenState
                         ),
                       ],
                     ),
+                    Expanded(child: SizedBox.shrink()),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(8.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 16.0,
+                        ),
+                      ),
+                      onPressed: () {}, // TODO implement edit state
+                      label: Text("Edit"),
+                      icon: Icon(Icons.edit),
+                    ),
+                    Gap(8.0),
                     MenuAnchor(
                       builder: (context, controller, child) {
                         return ElevatedButton(
@@ -482,7 +498,7 @@ class _ProductionOrderDetailScreenState
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      'Prioritize order',
+                                      'Priority',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -501,47 +517,63 @@ class _ProductionOrderDetailScreenState
                   ),
                 ),
                 Gap(16.0),
-                Row(
-                  spacing: 8.0,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0E76BD),
-                        side: BorderSide(
-                          color: const Color(0xFF0B5E97),
-                          width: 1.0,
+                async.when(
+                  error: (e, _) => SizedBox.shrink(),
+                  loading: () => SizedBox.shrink(),
+                  data: (data) {
+                    final jobType = data?.jobType;
+
+                    return Row(
+                      spacing: 8.0,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: jobType == ProductionOrderJobType.mix
+                              ? () {} // TODO integrate repat job details
+                              : () {}, // TODO integrate assign to repat job
+                          child: jobType == ProductionOrderJobType.mix
+                              ? Text("View mix job")
+                              : Text("Assign to Mix"),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: jobType == ProductionOrderJobType.repat
+                              ? () {} // TODO integrate repat job details
+                              : () {}, // TODO integrate assign to repat job
+                          child: jobType == ProductionOrderJobType.repat
+                              ? Text("View streamline job")
+                              : Text("Assign to Streamline"),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 16.0,
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text("Assign to Mix"),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0E76BD),
-                        side: BorderSide(
-                          color: const Color(0xFF0B5E97),
-                          width: 1.0,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 16.0,
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Text("Assign to Streamline"),
-                    ),
-                  ],
+                      ],
+                    );
+                  },
                 ),
                 Gap(40.0),
                 Text(
