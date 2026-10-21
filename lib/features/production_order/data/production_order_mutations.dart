@@ -17,7 +17,7 @@ const String productionOrderCreateMutation = r'''
         orderedQuantity
         fulfilledQuantity
         status
-        job
+        jobType
         isPriority
         createdAt
         updatedAt
