@@ -1,9 +1,11 @@
+import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_input_quantity_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -158,6 +160,16 @@ class _ProductionOrderDetailScreenState
           ? e.toString()
           : 'Something went wrong. Please try again.');
     }
+  }
+
+  Future<int?> _showInputQuantityDialog(int? orderedQuantity) async {
+    return await showDialog<int>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => ProductionOrderInputQuantityDialog(
+        orderedQuantity: orderedQuantity,
+      ),
+    );
   }
 
   @override
@@ -576,8 +588,17 @@ class _ProductionOrderDetailScreenState
                               ? null
                               : jobType == ProductionOrderJobType.mix
                                   ? () {} // TODO integrate mix job details
-                                  : () => _submit(data?.orderedQuantity ?? 1,
-                                      ProductionOrderJobType.mix),
+                                  : () async {
+                                      int? qty = data?.orderedQuantity;
+                                      qty = await _showInputQuantityDialog(qty);
+
+                                      if (qty != null) {
+                                        _submit(
+                                          data?.orderedQuantity ?? 1,
+                                          ProductionOrderJobType.mix,
+                                        );
+                                      }
+                                    },
                           child: jobType == ProductionOrderJobType.mix
                               ? Text("View mix job")
                               : Text("Assign to Mix"),
