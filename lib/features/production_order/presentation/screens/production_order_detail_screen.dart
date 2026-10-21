@@ -601,8 +601,10 @@ class _ProductionOrderDetailScreenState
                               ? null
                               : jobType == ProductionOrderJobType.repat
                                   ? () {} // TODO integrate repat job details
-                                  : () => _submit(data?.orderedQuantity ?? 1,
-                                      ProductionOrderJobType.repat),
+                                  : () => _submit(
+                                        data?.orderedQuantity,
+                                        ProductionOrderJobType.repat,
+                                      ),
                           child: jobType == ProductionOrderJobType.repat
                               ? Text("View streamline job")
                               : Text("Assign to Streamline"),
