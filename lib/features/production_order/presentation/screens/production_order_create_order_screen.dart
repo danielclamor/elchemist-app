@@ -436,6 +436,14 @@ class _ProductionOrderCreateOrderScreenState
                                                                     contentType:
                                                                         ElTextFieldContentType
                                                                             .numeric,
+                                                                    onSubmitted:
+                                                                        (value) {
+                                                                      setState(
+                                                                          () {
+                                                                        _quantityController.text =
+                                                                            value;
+                                                                      });
+                                                                    },
                                                                   ),
                                                                 ),
                                                               ],
@@ -581,29 +589,42 @@ class _ProductionOrderCreateOrderScreenState
                                             entry: _allocationEntry(location),
                                             onRemoved: () =>
                                                 _removeAllocation(location),
-                                            onQuantitySubmitted: (_) {
+                                            onQuantitySubmitted: (value) {
+                                              setState(() {
+                                                _allocationEntries[location.id]
+                                                    ?.controller
+                                                    .text = value;
+                                              });
+
                                               final qty = int.tryParse(
-                                                  _quantityController.text);
-                                              if (qty == null ||
-                                                  _totalAllocationQuantity() >
-                                                      qty) {
+                                                _quantityController.text,
+                                              );
+
+                                              if (_totalAllocationQuantity() >
+                                                      0 &&
+                                                  (qty == null ||
+                                                      _totalAllocationQuantity() >
+                                                          qty)) {
                                                 setState(() {
                                                   _quantityController.text =
                                                       _totalAllocationQuantity()
                                                           .toString();
                                                 });
                                               }
-                                              final keys = _allocationEntries
-                                                  .keys
-                                                  .toList();
-                                              final currentIndex =
-                                                  keys.indexOf(location.id);
-                                              if (currentIndex + 1 <
-                                                  keys.length) {
-                                                _allocationEntries[
-                                                        keys[currentIndex + 1]]!
-                                                    .focusNode
-                                                    .requestFocus();
+
+                                              if (value != "") {
+                                                final keys = _allocationEntries
+                                                    .keys
+                                                    .toList();
+                                                final currentIndex =
+                                                    keys.indexOf(location.id);
+                                                if (currentIndex + 1 <
+                                                    keys.length) {
+                                                  _allocationEntries[keys[
+                                                          currentIndex + 1]]!
+                                                      .focusNode
+                                                      .requestFocus();
+                                                }
                                               }
                                             },
                                           );
