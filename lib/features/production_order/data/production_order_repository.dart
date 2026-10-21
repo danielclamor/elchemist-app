@@ -273,4 +273,37 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
 
     return data['id'];
   }
+
+  @override
+  Future<void> setOrderedQuantity({
+    required String id,
+    required int? orderedQuantity,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderSetQuantity),
+        variables: {
+          'id': id,
+          'orderedQuantity': orderedQuantity,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload = result.data?['productionOrderSetOrderedQuantity']
+        as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['productionOrder'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ??
+            'Could not set the order $id ordered quantity to $orderedQuantity',
+      );
+    }
+
+    return;
+  }
 }

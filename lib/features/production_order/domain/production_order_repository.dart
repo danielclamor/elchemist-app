@@ -46,4 +46,9 @@ abstract class ProductionOrderRepository {
     int? orderedQuantity,
     required ProductionOrderJobType jobType,
   });
+
+  Future<void> setOrderedQuantity({
+    required String id,
+    required int? orderedQuantity,
+  });
 }

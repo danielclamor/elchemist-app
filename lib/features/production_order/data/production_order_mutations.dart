@@ -73,3 +73,24 @@ const String productionOrderAssignJobMutation = r'''
   }
 }
 ''';
+
+const String productionOrderSetQuantity = r'''
+  mutation SetProductionOrderQuantity(
+    $id: ID!
+    $orderedQuantity: Int!
+  ) {
+    productionOrderSetOrderedQuantity(
+      identifier: {id: $id}
+      orderedQuantity: $orderedQuantity
+    ) {
+      productionOrder {
+        id
+        orderedQuantity
+      }
+      feedback {
+        message
+        status
+      }
+    }
+  }
+''';
