@@ -130,6 +130,36 @@ class _ProductionOrderDetailScreenState
 
   MoreActions? selectedMenu;
 
+  bool _isSubmitting = false;
+
+  void _showError(String message) => ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text(message)));
+
+  Future<void> _submit(
+      int? orderedQuantity, ProductionOrderJobType jobType) async {
+    setState(() => _isSubmitting = true);
+
+    try {
+      await ref.read(productionOrderRepositoryProvider).assignJob(
+            id: widget.id,
+            orderedQuantity: orderedQuantity,
+            jobType: jobType,
+          );
+
+      setState(() => _isSubmitting = false);
+
+      if (!mounted) return;
+
+      ref.invalidate(productionOrderDetailsProvider(widget.id));
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
+      _showError(e is Exception
+          ? e.toString()
+          : 'Something went wrong. Please try again.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final id = widget.id;
@@ -542,9 +572,12 @@ class _ProductionOrderDetailScreenState
                               vertical: 16.0,
                             ),
                           ),
-                          onPressed: jobType == ProductionOrderJobType.mix
-                              ? () {} // TODO integrate repat job details
-                              : () {}, // TODO integrate assign to repat job
+                          onPressed: _isSubmitting
+                              ? null
+                              : jobType == ProductionOrderJobType.mix
+                                  ? () {} // TODO integrate mix job details
+                                  : () => _submit(data?.orderedQuantity ?? 1,
+                                      ProductionOrderJobType.mix),
                           child: jobType == ProductionOrderJobType.mix
                               ? Text("View mix job")
                               : Text("Assign to Mix"),
@@ -564,9 +597,12 @@ class _ProductionOrderDetailScreenState
                               vertical: 16.0,
                             ),
                           ),
-                          onPressed: jobType == ProductionOrderJobType.repat
-                              ? () {} // TODO integrate repat job details
-                              : () {}, // TODO integrate assign to repat job
+                          onPressed: _isSubmitting
+                              ? null
+                              : jobType == ProductionOrderJobType.repat
+                                  ? () {} // TODO integrate repat job details
+                                  : () => _submit(data?.orderedQuantity ?? 1,
+                                      ProductionOrderJobType.repat),
                           child: jobType == ProductionOrderJobType.repat
                               ? Text("View streamline job")
                               : Text("Assign to Streamline"),

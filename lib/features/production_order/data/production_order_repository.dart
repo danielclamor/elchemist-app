@@ -223,16 +223,12 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
       ),
     );
 
-    print('submitted');
-
     if (result.hasException) throw result.exception!;
 
     final payload =
         result.data?['productionOrderCreate'] as Map<String, dynamic>?;
     final feedback = payload?['feedback'] as Map<String, dynamic>?;
     final data = payload?['productionOrder'] as Map<String, dynamic>?;
-
-    print(feedback);
 
     if (data == null || feedback?['status'] != 'SUCCESS') {
       throw Exception(
@@ -241,5 +237,40 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     }
 
     return ProductionOrder.fromDto(ProductionOrderDto.fromJson(data));
+  }
+
+  @override
+  Future<JobId> assignJob({
+    required String id,
+    int? orderedQuantity,
+    required ProductionOrderJobType jobType,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderAssignJobMutation),
+        variables: {
+          'id': id,
+          'orderedQuantity': orderedQuantity,
+          'jobType': jobType.gql,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['productionOrderAssignJob'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['createdProductionOrderJob'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ??
+            'Could not assign the order to $jobType',
+      );
+    }
+
+    return data['id'];
   }
 }

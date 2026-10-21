@@ -1,10 +1,10 @@
 const String productionOrderCreateMutation = r'''
   mutation CreateProductionOrder(
-    $eliquidId: ID,
+    $eliquidId: ID
     $productionOrder: ProductionOrderCreateInput!
   ) {
     productionOrderCreate (
-      eliquidIdentifier: {id: $eliquidId},
+      eliquidIdentifier: {id: $eliquidId}
       productionOrder: $productionOrder
     ) {
       feedback {
@@ -42,4 +42,34 @@ const String productionOrderCreateMutation = r'''
       }
     }
   }
+''';
+
+const String productionOrderAssignJobMutation = r'''
+  mutation AssignProductionOrderToJob(
+    $id: ID!
+    $orderedQuantity: Int
+    $jobType: ProductionOrderJobTypeEnum!
+  ) {
+  productionOrderAssignJob (
+    identifier: {id: $id}
+    orderedQuantity: $orderedQuantity
+    jobType: $jobType
+  ) {
+    productionOrder {
+      jobType
+    }
+    createdProductionOrderJob {
+      ... on MixJobType {
+        id
+      }
+      ... on RepatJobType {
+        id
+      }
+    }
+    feedback {
+      message
+      status
+    }
+  }
+}
 ''';

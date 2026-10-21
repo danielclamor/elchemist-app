@@ -147,3 +147,10 @@ enum ProductionOrderJobTypeDto {
     };
   }
 }
+
+extension ProductionOrderJobTypeGraphQl on ProductionOrderJobType {
+  String get gql => switch (this) {
+        ProductionOrderJobType.mix => 'MIX',
+        ProductionOrderJobType.repat => 'REPAT',
+      };
+}
