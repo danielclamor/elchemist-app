@@ -4,6 +4,7 @@ import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/allocation_entry_row.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_eliquid_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_locations_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/eliquid_past_orders_preview.dart';
@@ -27,21 +28,191 @@ class _ProductionOrderCreateOrderScreenState
   List<LocationSummary> _selectedLocations = [];
 
   final _quantityController = TextEditingController();
-  final _allocationControllers = <String, TextEditingController>{};
+  final _quantityFocusNode = FocusNode();
+
   bool _isPriority = false;
   bool _isSubmitting = false;
-
-  TextEditingController _allocationController(LocationSummary l) =>
-      _allocationControllers.putIfAbsent(l.id, TextEditingController.new);
 
   @override
   void dispose() {
     _quantityController.dispose();
-    for (final c in _allocationControllers.values) {
-      c.dispose();
-    }
+    _quantityFocusNode.dispose();
     super.dispose();
   }
+
+  final _allocationEntries = <String, AllocationEntry>{};
+
+  AllocationEntry _allocationEntry(LocationSummary l) =>
+      _allocationEntries.putIfAbsent(l.id, () => AllocationEntry(location: l));
+
+  int _totalAllocationQuantity() =>
+      _allocationEntries.values.fold(0, (sum, e) => sum + e.quantity);
+
+  void _disposeAllocationEntry(String id) {
+    final entry = _allocationEntries.remove(id);
+    WidgetsBinding.instance.addPostFrameCallback((_) => entry?.dispose());
+    _selectQuantityText();
+  }
+
+  void _removeAllocation(LocationSummary l) {
+    setState(() => _selectedLocations.remove(l));
+    _disposeAllocationEntry(l.id);
+    _selectQuantityText();
+  }
+
+  void _selectQuantityText() {
+    final length = _quantityController.text.length;
+    if (length > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _quantityFocusNode.requestFocus();
+        _quantityController.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: length,
+        );
+      });
+    }
+  }
+
+  void _selectAllocationQuantityText(String id) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final entry = _allocationEntries[id];
+      if (entry != null) {
+        entry.focusNode.requestFocus();
+        entry.controller.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: entry.controller.text.length,
+        );
+      }
+    });
+  }
+
+  Widget _addLocationsButton() => ElevatedButton(
+        onPressed: _selectedEliquid != null
+            ? () async {
+                final locations = await showDialog<List<LocationSummary>>(
+                  context: context,
+                  builder: (_) => ProductionOrderAddLocationsToOrderDialog(
+                    selectedList: _selectedLocations,
+                  ),
+                );
+
+                if (locations != null) {
+                  if (!mounted) return;
+
+                  final selectedIds = locations.map((l) => l.id).toSet();
+                  final newIds = selectedIds
+                      .where((id) => !_allocationEntries.keys.contains(id));
+                  final removedIds = _allocationEntries.keys
+                      .where((id) => !selectedIds.contains(id))
+                      .toList();
+
+                  setState(() {
+                    _selectedLocations = locations;
+                  });
+
+                  removedIds.forEach(_disposeAllocationEntry);
+
+                  _selectAllocationQuantityText(newIds.first);
+                }
+              }
+            : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          side: BorderSide(
+            color:
+                Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
+            width: 1.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          textStyle: const TextStyle(
+            color: Color(0xFFDAF0FF),
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+        child: Text(
+          "+ Location",
+        ),
+      );
+
+  void _selectEliquid(BuildContext context) async {
+    final eliquid = await showDialog<EliquidSummary>(
+      context: context,
+      builder: (_) => ProductionOrderAddEliquidToOrderDialog(
+        selected: _selectedEliquid,
+      ),
+    );
+
+    if (eliquid != null) {
+      setState(() {
+        _selectedEliquid = eliquid;
+      });
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Added ${eliquid.description}'),
+        ));
+      }
+    }
+  }
+
+  Widget _addEliquidButton() => ElevatedButton(
+        onPressed: () => _selectEliquid(context),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          side: BorderSide(
+            color:
+                Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
+            width: 1.0,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 16.0,
+          ),
+        ),
+        child: Text(
+          "+ E-liquid",
+          style: const TextStyle(
+            color: Color(0xFFDAF0FF),
+            fontSize: 14.0,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
+          ),
+        ),
+      );
+
+  Widget _createOrderButton() => ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF0E76BD),
+          side: _selectedEliquid != null
+              ? BorderSide(
+                  color: const Color(0xFF0B5E97),
+                  width: 1.0,
+                )
+              : null,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 16.0,
+          ),
+        ),
+        onPressed: _selectedEliquid != null ? () => _submit() : null,
+        child: Text("Create"),
+      );
+
+  void _showError(String message) => ScaffoldMessenger.of(context)
+      .showSnackBar(SnackBar(content: Text(message)));
 
   Future<void> _submit() async {
     final eliquid = _selectedEliquid;
@@ -51,7 +222,8 @@ class _ProductionOrderCreateOrderScreenState
       for (final l in _selectedLocations)
         (
           locationId: l.id,
-          quantity: int.tryParse(_allocationController(l).text.trim()) ?? 0,
+          quantity:
+              int.tryParse(_allocationEntry(l).controller.text.trim()) ?? 0,
         )
     ];
 
@@ -87,166 +259,38 @@ class _ProductionOrderCreateOrderScreenState
     }
   }
 
-  void _showError(String message) => ScaffoldMessenger.of(context)
-      .showSnackBar(SnackBar(content: Text(message)));
-
-  void _selectEliquid() async {
-    final eliquid = await showDialog<EliquidSummary>(
-      context: context,
-      builder: (_) => ProductionOrderAddEliquidToOrderDialog(
-        selected: _selectedEliquid,
-      ),
-    );
-
-    if (eliquid != null) {
-      setState(() {
-        _selectedEliquid = eliquid;
-      });
-    }
-  }
-
-  Widget _addEliquidButton() => ElevatedButton(
-        onPressed: () => _selectEliquid(),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-          side: BorderSide(
-            color:
-                Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
-            width: 1.0,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 16.0,
-          ),
-        ),
-        child: Text(
-          "+ E-liquid",
-          style: const TextStyle(
-            color: Color(0xFFDAF0FF),
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-          ),
-        ),
-      );
-
-  Widget _addLocationsButton() => ElevatedButton(
-        onPressed: () async {
-          final locations = await showDialog<List<LocationSummary>>(
-            context: context,
-            builder: (_) => ProductionOrderAddLocationsToOrderDialog(
-              selectedList: _selectedLocations,
+  Future<bool> _showExitConfirmationDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text('Discard new order?'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
             ),
-          );
-
-          if (locations != null) {
-            setState(() {
-              _selectedLocations = locations;
-            });
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-          side: BorderSide(
-            color:
-                Theme.of(context).colorScheme.surfaceContainer.withAlpha(200),
-            width: 1.0,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.all(16.0),
-        ),
-        child: Text(
-          "+ Location",
-          style: const TextStyle(
-            color: Color(0xFFDAF0FF),
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-          ),
-        ),
-      );
-
-  Widget _createOrderButton() => ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0E76BD),
-          side: _selectedEliquid != null
-              ? BorderSide(
-                  color: const Color(0xFF0B5E97),
-                  width: 1.0,
-                )
-              : null,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16.0,
-            vertical: 16.0,
-          ),
-        ),
-        onPressed: _selectedEliquid != null ? () => _submit() : null,
-        child: Text("Create"),
-      );
-
-  Widget _allocationEntryRow(LocationSummary location) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    location.name,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                Gap(16.0),
-                SizedBox(
-                  width: 100,
-                  child: ElTextField(
-                    controller: _allocationController(location),
-                    contentType: ElTextFieldContentType.numeric,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Gap(8.0),
-          Expanded(
-            flex: 0,
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                  shape: const CircleBorder(),
-                ),
-                onPressed: () {
-                  setState(() {
-                    _selectedLocations.remove(location);
-                  });
-                },
-                child: const Icon(
-                  Icons.close,
-                  size: 14,
-                ),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text('Yes'),
               ),
-            ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+            ],
           ),
-        ],
-      );
+        ) ??
+        false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -273,8 +317,12 @@ class _ProductionOrderCreateOrderScreenState
                             minimumSize: Size.zero,
                             shape: const CircleBorder(),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                          onPressed: () async {
+                            final bool shouldExit =
+                                await _showExitConfirmationDialog();
+                            if (shouldExit && context.mounted) {
+                              Navigator.of(context).pop();
+                            }
                           },
                           child: const Icon(
                             Icons.arrow_back_ios_rounded,
@@ -383,6 +431,8 @@ class _ProductionOrderCreateOrderScreenState
                                                                       ElTextField(
                                                                     controller:
                                                                         _quantityController,
+                                                                    focusNode:
+                                                                        _quantityFocusNode,
                                                                     contentType:
                                                                         ElTextFieldContentType
                                                                             .numeric,
@@ -412,7 +462,8 @@ class _ProductionOrderCreateOrderScreenState
                                                                   const CircleBorder(),
                                                             ),
                                                             onPressed: () =>
-                                                                _selectEliquid(),
+                                                                _selectEliquid(
+                                                                    context),
                                                             child: const Icon(
                                                               Icons
                                                                   .loop_rounded,
@@ -526,7 +577,36 @@ class _ProductionOrderCreateOrderScreenState
                                     children: [
                                       ..._selectedLocations.map(
                                         (location) {
-                                          return _allocationEntryRow(location);
+                                          return AllocationEntryRow(
+                                            entry: _allocationEntry(location),
+                                            onRemoved: () =>
+                                                _removeAllocation(location),
+                                            onQuantitySubmitted: (_) {
+                                              final qty = int.tryParse(
+                                                  _quantityController.text);
+                                              if (qty == null ||
+                                                  _totalAllocationQuantity() >
+                                                      qty) {
+                                                setState(() {
+                                                  _quantityController.text =
+                                                      _totalAllocationQuantity()
+                                                          .toString();
+                                                });
+                                              }
+                                              final keys = _allocationEntries
+                                                  .keys
+                                                  .toList();
+                                              final currentIndex =
+                                                  keys.indexOf(location.id);
+                                              if (currentIndex + 1 <
+                                                  keys.length) {
+                                                _allocationEntries[
+                                                        keys[currentIndex + 1]]!
+                                                    .focusNode
+                                                    .requestFocus();
+                                              }
+                                            },
+                                          );
                                         },
                                       ),
                                       Gap(12.0),
