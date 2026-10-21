@@ -9,6 +9,7 @@ enum ElTextFieldLabelPosition { left, top }
 class ElTextField extends StatelessWidget {
   final ElTextFieldLabelPosition? labelPosition;
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final int? decimalPlaces;
   final Widget? label;
   final String? labelText;
@@ -22,6 +23,7 @@ class ElTextField extends StatelessWidget {
   const ElTextField({
     super.key,
     required this.controller,
+    this.focusNode,
     required this.contentType,
     this.decimalPlaces,
     this.label,
@@ -91,6 +93,7 @@ class ElTextField extends StatelessWidget {
           );
 
     final textField = TextField(
+      focusNode: focusNode,
       style: GoogleFonts.robotoMono(
         fontSize: 16,
         fontWeight: FontWeight.w300,
