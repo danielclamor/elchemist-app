@@ -3,7 +3,7 @@ import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
-import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
+// import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/allocation_entry_row.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_eliquid_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_locations_to_order_dialog.dart';
@@ -235,21 +235,28 @@ class _ProductionOrderCreateOrderScreenState
     setState(() => _isSubmitting = true);
 
     try {
-      final order =
-          await ref.read(productionOrderRepositoryProvider).createOrder(
-                eliquidId: eliquid.id,
-                quantity: int.tryParse(_quantityController.text.trim()),
-                isPriority: _isPriority,
-                allocations: allocations,
-              );
+      await ref.read(productionOrderRepositoryProvider).createOrder(
+            eliquidId: eliquid.id,
+            quantity: int.tryParse(_quantityController.text.trim()),
+            isPriority: _isPriority,
+            allocations: allocations,
+          );
 
       if (!mounted) return;
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => ProductionOrderDetailScreen(id: order.id),
-        ),
-      );
+      Navigator.of(context).pop();
+
+      ref.invalidate(
+          productionOrderListPageProvider); // every cursor/filter instance refetches now
+      ref.invalidate(productionOrderStatusCountsProvider);
+      ref.invalidate(
+          productionOrderListPagerProvider); // back to page 1, where the newest order sorts
+
+      // Navigator.of(context).pushReplacement(
+      //   MaterialPageRoute(
+      //     builder: (_) => ProductionOrderDetailScreen(id: order.id),
+      //   ),
+      // );
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
