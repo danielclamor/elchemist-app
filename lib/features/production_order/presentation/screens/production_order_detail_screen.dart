@@ -1,4 +1,3 @@
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
@@ -11,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 
-enum MoreActions {
+enum MoreActionsItemType {
   cancel,
   delete,
   archive;
@@ -19,44 +18,9 @@ enum MoreActions {
   @override
   String toString() {
     return switch (this) {
-      MoreActions.cancel => 'Cancel',
-      MoreActions.delete => 'Delete',
-      MoreActions.archive => 'Archive',
-    };
-  }
-
-  Widget toMenuButton() {
-    return switch (this) {
-      MoreActions.cancel => Row(
-          children: [
-            Icon(
-              Icons.close,
-              size: 16,
-            ),
-            Gap(8.0),
-            Text('Cancel'),
-          ],
-        ),
-      MoreActions.delete => Row(
-          children: [
-            Icon(
-              Icons.delete,
-              size: 16,
-            ),
-            Gap(8.0),
-            Text('Delete'),
-          ],
-        ),
-      MoreActions.archive => Row(
-          children: [
-            Icon(
-              Icons.archive,
-              size: 16,
-            ),
-            Gap(8.0),
-            Text('Archive'),
-          ],
-        ),
+      MoreActionsItemType.cancel => 'Cancel',
+      MoreActionsItemType.delete => 'Delete',
+      MoreActionsItemType.archive => 'Archive',
     };
   }
 }
@@ -133,31 +97,57 @@ class _ProductionOrderDetailScreenState
     return '$monthDayYear at $timeStr';
   }
 
-  MoreActions? selectedMenu;
+  MoreActionsItemType? selectedMenu;
 
   bool _isSubmitting = false;
 
   void _showError(String message) => ScaffoldMessenger.of(context)
       .showSnackBar(SnackBar(content: Text(message)));
 
-  Future<void> _submit(
-    int? orderedQuantity,
-    ProductionOrderJobType jobType,
-  ) async {
+  Future<bool> _showConfirmationDialog(MoreActionsItemType type) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('${type.toString()} order?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text(type.toString()),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text('Cancel'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  Future<void> _delete() async {
+    final bool shouldDelete = await _showConfirmationDialog(
+      MoreActionsItemType.delete,
+    );
+    if (!shouldDelete) return;
+
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(productionOrderRepositoryProvider).assignJob(
-            id: widget.id,
-            orderedQuantity: orderedQuantity,
-            jobType: jobType,
-          );
-
-      setState(() => _isSubmitting = false);
+      await ref
+          .read(productionOrderRepositoryProvider)
+          .deleteOrder(id: widget.id);
 
       if (!mounted) return;
 
-      ref.invalidate(productionOrderDetailsProvider(widget.id));
+      Navigator.of(context).pop();
+
+      ref.invalidate(
+          productionOrderListPageProvider); // every cursor/filter instance refetches now
+      ref.invalidate(productionOrderStatusCountsProvider);
     } catch (e) {
       if (!mounted) return;
       setState(() => _isSubmitting = false);
@@ -167,15 +157,56 @@ class _ProductionOrderDetailScreenState
     }
   }
 
-  Future<int?> _showInputQuantityDialog(int? orderedQuantity) async {
-    return await showDialog<int>(
+  Future<void> _cancel() async {
+    final bool shouldCancel = await _showConfirmationDialog(
+      MoreActionsItemType.cancel,
+    );
+    if (!shouldCancel) return;
+
+    setState(() => _isSubmitting = true);
+  }
+
+  void _showInputQuantityDialog(
+    int? orderedQuantity,
+    ProductionOrderJobType jobType,
+  ) {
+    showDialog<int>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) => ProductionOrderInputQuantityDialog(
+        id: widget.id,
         orderedQuantity: orderedQuantity,
+        jobType: jobType,
       ),
     );
   }
+
+  List<MenuItemButton> _menuItemButtons() => [
+        MenuItemButton(
+          onPressed: () => _cancel(),
+          leadingIcon: Icon(
+            Icons.close,
+            size: 16,
+          ),
+          child: Text(MoreActionsItemType.cancel.toString()),
+        ),
+        MenuItemButton(
+          onPressed: () => _delete(),
+          leadingIcon: Icon(
+            Icons.delete,
+            size: 16,
+          ),
+          child: Text(MoreActionsItemType.delete.toString()),
+        ),
+        MenuItemButton(
+          onPressed: () {},
+          leadingIcon: Icon(
+            Icons.archive,
+            size: 16,
+          ),
+          child: Text(MoreActionsItemType.archive.toString()),
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -345,19 +376,7 @@ class _ProductionOrderDetailScreenState
                           ),
                         );
                       },
-                      menuChildren: List<MenuItemButton>.generate(
-                        3,
-                        (int index) => MenuItemButton(
-                          onPressed: () => setState(
-                              () => selectedMenu = MoreActions.values[index]),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Expanded(
-                              child: MoreActions.values[index].toMenuButton(),
-                            ),
-                          ),
-                        ),
-                      ),
+                      menuChildren: _menuItemButtons(),
                       alignmentOffset: Offset(0, 4),
                       style: MenuStyle(),
                       crossAxisUnconstrained: false,
@@ -605,21 +624,14 @@ class _ProductionOrderDetailScreenState
                               vertical: 16.0,
                             ),
                           ),
-                          onPressed: _isSubmitting
-                              ? null
-                              : jobType == ProductionOrderJobType.mix
+                          onPressed: !_isSubmitting && data != null
+                              ? jobType == ProductionOrderJobType.mix
                                   ? () {} // TODO integrate mix job details
-                                  : () async {
-                                      int? qty = data?.orderedQuantity;
-                                      qty = await _showInputQuantityDialog(qty);
-
-                                      if (qty != null) {
-                                        _submit(
-                                          data?.orderedQuantity ?? 1,
-                                          ProductionOrderJobType.mix,
-                                        );
-                                      }
-                                    },
+                                  : () => _showInputQuantityDialog(
+                                        data.orderedQuantity,
+                                        ProductionOrderJobType.mix,
+                                      )
+                              : null,
                           child: jobType == ProductionOrderJobType.mix
                               ? Text("View mix job")
                               : Text("Assign to Mix"),
@@ -639,14 +651,14 @@ class _ProductionOrderDetailScreenState
                               vertical: 16.0,
                             ),
                           ),
-                          onPressed: _isSubmitting
-                              ? null
-                              : jobType == ProductionOrderJobType.repat
+                          onPressed: !_isSubmitting && data != null
+                              ? jobType == ProductionOrderJobType.repat
                                   ? () {} // TODO integrate repat job details
-                                  : () => _submit(
-                                        data?.orderedQuantity,
+                                  : () => _showInputQuantityDialog(
+                                        data.orderedQuantity,
                                         ProductionOrderJobType.repat,
-                                      ),
+                                      )
+                              : null,
                           child: jobType == ProductionOrderJobType.repat
                               ? Text("View streamline job")
                               : Text("Assign to Streamline"),
