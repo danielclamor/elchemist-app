@@ -325,9 +325,13 @@ class _ProductionOrderCreateOrderScreenState
                             shape: const CircleBorder(),
                           ),
                           onPressed: () async {
-                            final bool shouldExit =
-                                await _showExitConfirmationDialog();
-                            if (shouldExit && context.mounted) {
+                            if (_selectedEliquid != null) {
+                              final bool shouldExit =
+                                  await _showExitConfirmationDialog();
+                              if (shouldExit && context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                            } else {
                               Navigator.of(context).pop();
                             }
                           },
