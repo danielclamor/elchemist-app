@@ -1,26 +1,33 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductionOrderInputQuantityDialog extends StatefulWidget {
+class ProductionOrderInputQuantityDialog extends ConsumerStatefulWidget {
+  final String id;
   final int? orderedQuantity;
   final ProductionOrderJobType jobType;
 
   const ProductionOrderInputQuantityDialog({
     super.key,
-    this.orderedQuantity,
+    required this.id,
+    required this.orderedQuantity,
     required this.jobType,
   });
 
   @override
-  State<ProductionOrderInputQuantityDialog> createState() =>
+  ConsumerState<ProductionOrderInputQuantityDialog> createState() =>
       _ProductionOrderInputQuantityDialogState();
 }
 
 class _ProductionOrderInputQuantityDialogState
-    extends State<ProductionOrderInputQuantityDialog> {
+    extends ConsumerState<ProductionOrderInputQuantityDialog> {
   final _quantityController = TextEditingController();
-  bool _hasError = false;
+  String? _errorMessage;
+  bool _hasError() => _errorMessage != null;
+
+  bool _isSubmitting = false;
 
   @override
   void initState() {
@@ -36,14 +43,42 @@ class _ProductionOrderInputQuantityDialogState
     _quantityController.dispose();
   }
 
-  bool _isQuantityRequired() => switch (widget.jobType) {
-        ProductionOrderJobType.mix => true,
-        ProductionOrderJobType.repat => false,
-      };
+  Future<void> _submit(
+    int? orderedQuantity,
+    ProductionOrderJobType jobType,
+  ) async {
+    setState(() {
+      _isSubmitting = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await ref.read(productionOrderRepositoryProvider).assignJob(
+            id: widget.id,
+            orderedQuantity: orderedQuantity,
+            jobType: jobType,
+          );
+
+      setState(() => _isSubmitting = false);
+
+      if (!mounted) return;
+      Navigator.of(context).pop();
+      ref.invalidate(productionOrderDetailsProvider(widget.id));
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isSubmitting = false;
+        _errorMessage = e is Exception
+            ? e.toString()
+            : 'Something went wrong. Please try again.';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      constraints: BoxConstraints(maxWidth: 400, minWidth: 400),
       title: Text(
         '${widget.orderedQuantity != null ? 'Confirm' : 'Enter'} ordered quantity',
       ),
@@ -54,15 +89,8 @@ class _ProductionOrderInputQuantityDialogState
           ElTextField(
             controller: _quantityController,
             contentType: ElTextFieldContentType.numeric,
-            hasError: _hasError,
+            hasError: _hasError(),
             onSubmitted: (value) {
-              if (_hasError) {
-                final qty = int.tryParse(value);
-                if (qty != null && qty > 0) {
-                  setState(() => _hasError = false);
-                }
-              }
-
               setState(() => _quantityController.text = value);
             },
           ),
@@ -72,6 +100,14 @@ class _ProductionOrderInputQuantityDialogState
               child: Text(
                 'Quantity is required for mixing',
                 style: TextStyle(color: Colors.grey),
+              ),
+            ),
+          if (_errorMessage != "")
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                _errorMessage ?? "",
+                style: TextStyle(color: Colors.red),
               ),
             ),
         ],
@@ -86,16 +122,12 @@ class _ProductionOrderInputQuantityDialogState
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          onPressed: () {
-            final qty = int.tryParse(_quantityController.text);
-
-            if (_isQuantityRequired() && (qty == null || qty <= 0)) {
-              setState(() => _hasError = true);
-            } else {
-              setState(() => _hasError = false);
-              Navigator.of(context).pop(qty);
-            }
-          },
+          onPressed: _isSubmitting
+              ? null
+              : () {
+                  final qty = int.tryParse(_quantityController.text);
+                  _submit(qty, widget.jobType);
+                },
           child: Text('Submit'),
         ),
         TextButton(
@@ -104,7 +136,7 @@ class _ProductionOrderInputQuantityDialogState
               borderRadius: BorderRadius.circular(8.0),
             ),
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
           child: Text('Cancel'),
         ),
       ],
