@@ -103,7 +103,10 @@ class _ProductionOrderDetailScreenState
     ProductionOrderStatusChip statusChip,
   ) {
     if (job == null) {
-      return ProductionOrderJobChip.unassigned();
+      return ProductionOrderJobChip.unassigned(
+        fgColor: statusChip.fgColor,
+        bgColor: statusChip.bgColor,
+      );
     }
 
     switch (job) {
@@ -138,7 +141,9 @@ class _ProductionOrderDetailScreenState
       .showSnackBar(SnackBar(content: Text(message)));
 
   Future<void> _submit(
-      int? orderedQuantity, ProductionOrderJobType jobType) async {
+    int? orderedQuantity,
+    ProductionOrderJobType jobType,
+  ) async {
     setState(() => _isSubmitting = true);
 
     try {
@@ -275,7 +280,9 @@ class _ProductionOrderDetailScreenState
                             async.when(
                               data: (data) => data != null
                                   ? _getJobChip(
-                                      data.jobType, _getStatusChip(data.status))
+                                      data.jobType,
+                                      _getStatusChip(data.status),
+                                    )
                                   : SizedBox.shrink(),
                               error: (e, _) => SizedBox.shrink(),
                               loading: () => SizedBox.shrink(),
@@ -285,19 +292,29 @@ class _ProductionOrderDetailScreenState
                       ],
                     ),
                     Expanded(child: SizedBox.shrink()),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(8.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 16.0,
-                        ),
-                      ),
-                      onPressed: () {}, // TODO implement edit state
-                      label: Text("Edit"),
-                      icon: Icon(Icons.edit),
+                    async.when(
+                      error: (e, _) => SizedBox.shrink(),
+                      loading: () => SizedBox.shrink(),
+                      data: (data) {
+                        if (data?.status == ProductionOrderStatus.cancelled) {
+                          return SizedBox.shrink();
+                        }
+
+                        return ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: () {}, // TODO implement edit state
+                          label: Text("Edit"),
+                          icon: Icon(Icons.edit),
+                        );
+                      },
                     ),
                     Gap(8.0),
                     MenuAnchor(
@@ -563,6 +580,10 @@ class _ProductionOrderDetailScreenState
                   error: (e, _) => SizedBox.shrink(),
                   loading: () => SizedBox.shrink(),
                   data: (data) {
+                    if (data?.status == ProductionOrderStatus.cancelled) {
+                      return SizedBox.shrink();
+                    }
+
                     final jobType = data?.jobType;
 
                     return Row(
