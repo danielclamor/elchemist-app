@@ -1,12 +1,15 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:flutter/material.dart';
 
 class ProductionOrderInputQuantityDialog extends StatefulWidget {
   final int? orderedQuantity;
+  final ProductionOrderJobType jobType;
 
   const ProductionOrderInputQuantityDialog({
     super.key,
     this.orderedQuantity,
+    required this.jobType,
   });
 
   @override
@@ -33,26 +36,45 @@ class _ProductionOrderInputQuantityDialogState
     _quantityController.dispose();
   }
 
+  bool _isQuantityRequired() => switch (widget.jobType) {
+        ProductionOrderJobType.mix => true,
+        ProductionOrderJobType.repat => false,
+      };
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        '${widget.orderedQuantity != null ? 'Confirm' : 'Enter'} production quantity',
+        '${widget.orderedQuantity != null ? 'Confirm' : 'Enter'} ordered quantity',
       ),
-      content: ElTextField(
-        controller: _quantityController,
-        contentType: ElTextFieldContentType.numeric,
-        hasError: _hasError,
-        onSubmitted: (value) {
-          if (_hasError) {
-            final qty = int.tryParse(value);
-            if (qty != null && qty > 0) {
-              setState(() => _hasError = false);
-            }
-          }
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ElTextField(
+            controller: _quantityController,
+            contentType: ElTextFieldContentType.numeric,
+            hasError: _hasError,
+            onSubmitted: (value) {
+              if (_hasError) {
+                final qty = int.tryParse(value);
+                if (qty != null && qty > 0) {
+                  setState(() => _hasError = false);
+                }
+              }
 
-          setState(() => _quantityController.text = value);
-        },
+              setState(() => _quantityController.text = value);
+            },
+          ),
+          if (widget.jobType == ProductionOrderJobType.mix)
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                'Quantity is required for mixing',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
+        ],
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -67,7 +89,7 @@ class _ProductionOrderInputQuantityDialogState
           onPressed: () {
             final qty = int.tryParse(_quantityController.text);
 
-            if (qty == null || qty <= 0) {
+            if (_isQuantityRequired() && (qty == null || qty <= 0)) {
               setState(() => _hasError = true);
             } else {
               setState(() => _hasError = false);
