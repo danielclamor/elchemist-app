@@ -1,16 +1,18 @@
 const String productionOrderListPageQuery = r'''
   query ProductionOrders(
-    $first: Int!, 
-    $after: String, 
-    $status: ProductionOrderStatusEnum,
-    $createdFrom: DateTime, 
+    $first: Int!
+    $after: String
+    $jobType: ProductionOrderJobTypeEnum
+    $status: ProductionOrderStatusEnum
+    $createdFrom: DateTime
     $createdTo: DateTime
   ) {
     productionOrders(
-      first: $first, 
-      after: $after, 
-      status: $status,
-      createdFrom: $createdFrom,
+      first: $first
+      after: $after
+      jobType: $jobType
+      status: $status
+      createdFrom: $createdFrom
       createdTo: $createdTo
     ) {
       totalCount
@@ -38,11 +40,11 @@ const String productionOrderListPageQuery = r'''
 
 const String productionOrderStatusCountsQuery = r'''
   query ProductionOrderStatusCounts(
-    $createdFrom: DateTime, 
+    $createdFrom: DateTime
     $createdTo: DateTime
   ) {
     productionOrderStatusCounts(
-      createdFrom: $createdFrom, 
+      createdFrom: $createdFrom
       createdTo: $createdTo
     ) { status count }
   }
@@ -93,13 +95,13 @@ const String productionOrderDetailsQuery = r'''
 
 const String eliquidPastOrdersQuery = r'''
   query EliquidPastOrders(
-    $id: ID!,
-    $first: Int!, 
+    $id: ID!
+    $first: Int! 
     $after: String
   ) {
     eliquid(identifier: {id: $id}) {
       productionOrders(
-        first: $first, 
+        first: $first
         after: $after
       ) {
         totalCount

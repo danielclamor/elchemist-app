@@ -33,6 +33,7 @@ final productionOrderDateRangeProvider = Provider<DateRange?>(
 
 typedef ProductionOrderPageKey = ({
   String? after,
+  ProductionOrderJobType? jobType,
   ProductionOrderStatus? status,
   DateRange? range
 });
@@ -62,6 +63,7 @@ final productionOrderListPageProvider = StreamProvider.autoDispose
   (ref, key) => ref.watch(productionOrderRepositoryProvider).watchListPage(
         first: productionOrderPageSize,
         after: key.after,
+        jobType: key.jobType,
         status: key.status,
         range: key.range,
       ),

@@ -17,6 +17,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,
+    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   }) async {
@@ -26,6 +27,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
         variables: {
           'first': first,
           'after': after,
+          'jobType': jobType?.gql,
           'status': status?.gql,
           'createdFrom': range?.from?.toUtc().toIso8601String(),
           'createdTo': range?.from?.toUtc().toIso8601String(),
@@ -56,6 +58,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   Stream<ProductionOrderListPage> watchListPage({
     required int first,
     String? after,
+    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   }) async* {
@@ -65,6 +68,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
         variables: {
           'first': first,
           'after': after,
+          'jobType': jobType?.gql,
           'status': status?.gql,
           'createdFrom': range?.from?.toUtc().toIso8601String(),
           'createdTo': range?.to?.toUtc().toIso8601String(),

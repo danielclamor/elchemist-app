@@ -11,6 +11,7 @@ abstract class ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,
+    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   });
@@ -18,6 +19,7 @@ abstract class ProductionOrderRepository {
   Stream<ProductionOrderListPage> watchListPage({
     required int first,
     String? after,
+    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   });
