@@ -17,12 +17,14 @@ class ProductionOrderJobChip extends StatelessWidget {
 
   factory ProductionOrderJobChip.unassigned({
     String label = 'Unassigned',
+    Color fgColor = Colors.grey,
+    Color bgColor = Colors.grey,
   }) =>
       ProductionOrderJobChip(
         labelIcon: Icons.radio_button_unchecked_rounded,
         labelText: label,
-        fgColor: Colors.grey.shade800,
-        bgColor: Colors.yellow.shade400,
+        fgColor: fgColor,
+        bgColor: bgColor,
       );
 
   factory ProductionOrderJobChip.mix({

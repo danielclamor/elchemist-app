@@ -34,7 +34,10 @@ class ProductionOrderListTile extends StatelessWidget {
     ProductionOrderStatusChip statusChip,
   ) {
     if (job == null) {
-      return ProductionOrderJobChip.unassigned();
+      return ProductionOrderJobChip.unassigned(
+        fgColor: statusChip.fgColor,
+        bgColor: statusChip.bgColor,
+      );
     }
 
     switch (job) {
