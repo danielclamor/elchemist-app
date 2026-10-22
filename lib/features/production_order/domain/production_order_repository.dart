@@ -51,4 +51,12 @@ abstract class ProductionOrderRepository {
     required String id,
     required int? orderedQuantity,
   });
+
+  Future<void> deleteOrder({
+    required String id,
+  });
+
+  Future<void> markCancelled({
+    required String id,
+  });
 }

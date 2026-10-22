@@ -74,7 +74,7 @@ const String productionOrderAssignJobMutation = r'''
 }
 ''';
 
-const String productionOrderSetQuantity = r'''
+const String productionOrderSetQuantityMutation = r'''
   mutation SetProductionOrderQuantity(
     $id: ID!
     $orderedQuantity: Int!
@@ -90,6 +90,37 @@ const String productionOrderSetQuantity = r'''
       feedback {
         message
         status
+      }
+    }
+  }
+''';
+
+const String productionOrderDeleteMutation = r'''
+  mutation DeleteProductionOrder(
+    $id: ID!
+  ) {
+    productionOrderDelete(
+      identifier: {id: $id}
+    ) {
+      deletedOrderNumber
+      feedback {
+        message
+        status
+      }
+    }
+  }
+''';
+
+const String productionOrderMarkCancelledMutation = r'''
+  mutation CancelProductionOrder($id: ID!) {
+    productionOrderMarkCancelled(identifier: {id: $id}) {
+      productionOrder {
+        id
+        status
+      }
+      feedback {
+        status
+        message
       }
     }
   }

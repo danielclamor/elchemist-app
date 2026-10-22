@@ -281,7 +281,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   }) async {
     final result = await _client.mutate(
       MutationOptions(
-        document: gql(productionOrderSetQuantity),
+        document: gql(productionOrderSetQuantityMutation),
         variables: {
           'id': id,
           'orderedQuantity': orderedQuantity,
@@ -301,6 +301,62 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
       throw Exception(
         feedback?['message'] as String? ??
             'Could not set the order $id ordered quantity to $orderedQuantity',
+      );
+    }
+
+    return;
+  }
+
+  @override
+  Future<void> deleteOrder({required String id}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderDeleteMutation),
+        variables: {
+          'id': id,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['productionOrderDelete'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['deletedOrderNumber'] as String?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not delete order $id',
+      );
+    }
+
+    return;
+  }
+
+  @override
+  Future<void> markCancelled({required String id}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderMarkCancelledMutation),
+        variables: {
+          'id': id,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['productionOrderMarkCancelled'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['productionOrder'] as String?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not cancel order $id',
       );
     }
 
