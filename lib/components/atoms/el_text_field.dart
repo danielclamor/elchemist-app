@@ -19,6 +19,7 @@ class ElTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
   final TapRegionCallback? onTapOutside;
+  final bool hasError;
 
   const ElTextField({
     super.key,
@@ -34,6 +35,7 @@ class ElTextField extends StatelessWidget {
     this.onChanged,
     this.onSubmitted,
     this.onTapOutside,
+    this.hasError = false,
   });
 
   int _getDecimalPlaces(double value) {
@@ -109,7 +111,9 @@ class ElTextField extends StatelessWidget {
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderRadius: borderRadius,
-          borderSide: BorderSide(color: Theme.of(context).focusColor),
+          borderSide: BorderSide(
+            color: hasError ? Colors.red : Theme.of(context).focusColor,
+          ),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: borderRadius,
@@ -148,6 +152,7 @@ class ElTextField extends StatelessWidget {
 
     return labelPosition == ElTextFieldLabelPosition.top
         ? Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               label ??
