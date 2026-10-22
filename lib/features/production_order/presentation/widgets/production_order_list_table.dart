@@ -1,5 +1,6 @@
 import 'package:elchemist_app/core/widgets/fading_horizontal_scroll.dart';
 import 'package:elchemist_app/core/widgets/fading_vertical_scroll.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_footer.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_list_header.dart';
@@ -9,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductionOrderListTable extends ConsumerStatefulWidget {
-  const ProductionOrderListTable({super.key});
+  final ProductionOrderJobType? jobType;
+
+  const ProductionOrderListTable({super.key, this.jobType});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -38,7 +41,12 @@ class _ProductionOrderListTable
     final pager = ref.watch(productionOrderListPagerProvider);
     final range = ref.watch(productionOrderDateRangeProvider);
     final status = ref.watch(productionOrderStatusFilterProvider);
-    final pageKey = (after: pager.currentCursor, status: status, range: range);
+    final pageKey = (
+      after: pager.currentCursor,
+      jobType: widget.jobType,
+      status: status,
+      range: range
+    );
     final pageAsync = ref.watch(productionOrderListPageProvider(pageKey));
     ref.listen(
       productionOrderListPageProvider(pageKey),
