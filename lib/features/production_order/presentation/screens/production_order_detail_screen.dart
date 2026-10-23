@@ -599,16 +599,18 @@ class _ProductionOrderDetailScreenState
                   error: (e, _) => SizedBox.shrink(),
                   loading: () => SizedBox.shrink(),
                   data: (data) {
-                    if (data?.status == ProductionOrderStatus.cancelled) {
+                    if (data == null ||
+                        data.status == ProductionOrderStatus.cancelled) {
                       return SizedBox.shrink();
                     }
 
-                    final jobType = data?.jobType;
+                    final jobType = data.jobType;
+                    final isAssigned = jobType != null;
 
-                    return Row(
-                      spacing: 8.0,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
+                    List<Widget> rowChildren = [];
+
+                    if (data.status == ProductionOrderStatus.fulfilled) {
+                      rowChildren = [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF0E76BD),
@@ -624,17 +626,41 @@ class _ProductionOrderDetailScreenState
                               vertical: 16.0,
                             ),
                           ),
-                          onPressed: !_isSubmitting && data != null
-                              ? jobType == ProductionOrderJobType.mix
-                                  ? () {} // TODO integrate mix job details
-                                  : () => _showInputQuantityDialog(
-                                        data.orderedQuantity,
-                                        ProductionOrderJobType.mix,
-                                      )
+                          onPressed: !_isSubmitting
+                              ? () => _showInputQuantityDialog(
+                                    data.orderedQuantity,
+                                    ProductionOrderJobType.mix,
+                                  )
                               : null,
-                          child: jobType == ProductionOrderJobType.mix
-                              ? Text("View mix job")
-                              : Text("Assign to Mix"),
+                          child: Text("Mark as delivered"),
+                        ),
+                      ];
+                    }
+
+                    if (!isAssigned) {
+                      rowChildren = [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: !_isSubmitting
+                              ? () => _showInputQuantityDialog(
+                                    data.orderedQuantity,
+                                    ProductionOrderJobType.mix,
+                                  )
+                              : null,
+                          child: Text("Assign to Mix"),
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -651,20 +677,49 @@ class _ProductionOrderDetailScreenState
                               vertical: 16.0,
                             ),
                           ),
-                          onPressed: !_isSubmitting && data != null
-                              ? jobType == ProductionOrderJobType.repat
-                                  ? () {} // TODO integrate repat job details
-                                  : () => _showInputQuantityDialog(
-                                        data.orderedQuantity,
-                                        ProductionOrderJobType.repat,
-                                      )
+                          onPressed: !_isSubmitting
+                              ? () => _showInputQuantityDialog(
+                                    data.orderedQuantity,
+                                    ProductionOrderJobType.repat,
+                                  )
                               : null,
-                          child: jobType == ProductionOrderJobType.repat
-                              ? Text("View streamline job")
-                              : Text("Assign to Streamline"),
+                          child: Text("Assign to Streamline"),
                         ),
-                      ],
-                    );
+                      ];
+                    }
+
+                    if (isAssigned && jobType == ProductionOrderJobType.repat) {
+                      rowChildren = [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: !_isSubmitting ? () {} : null,
+                          child: Text("Mark as fulfilled"),
+                        ),
+                      ];
+                    }
+
+                    if (rowChildren.isNotEmpty) {
+                      return Row(
+                        spacing: 8.0,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: rowChildren,
+                      );
+                    }
+
+                    return SizedBox.fromSize();
                   },
                 ),
                 Gap(40.0),
