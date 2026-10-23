@@ -38,38 +38,6 @@ class _ProductionOrderMixJobListScreenState
                     fontSize: 20,
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => ProductionOrderCreateOrderScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF0E76BD),
-                    side: BorderSide(
-                      color: const Color(0xFF0B5E97),
-                      width: 1.0,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 16.0,
-                    ),
-                  ),
-                  child: Text(
-                    "Create Order",
-                    style: const TextStyle(
-                      color: Color(0xFFDAF0FF),
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
               ],
             ),
             ProductionOrderFilters(),
