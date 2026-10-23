@@ -41,6 +41,7 @@ abstract class ProductionOrderRepository {
     int? quantity,
     required bool isPriority,
     required List<AllocationInput> allocations,
+    ProductionOrderJobType? jobType,
   });
 
   Future<JobId> assignJob({

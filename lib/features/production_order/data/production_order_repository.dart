@@ -206,6 +206,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     int? quantity,
     required bool isPriority,
     required List<AllocationInput> allocations,
+    ProductionOrderJobType? jobType,
   }) async {
     final result = await _client.mutate(
       MutationOptions(
@@ -220,7 +221,8 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
                       'locationIdentifier': {'id': a.locationId},
                       'quantity': a.quantity
                     })
-                .toList()
+                .toList(),
+            'jobType': jobType?.gql,
           },
         },
         fetchPolicy: FetchPolicy.noCache,
