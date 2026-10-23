@@ -132,7 +132,7 @@ enum ProductionOrderJobType {
   String toString() {
     return switch (this) {
       ProductionOrderJobType.mix => 'Mix',
-      ProductionOrderJobType.repat => 'Repat',
+      ProductionOrderJobType.repat => 'Streamline',
     };
   }
 
