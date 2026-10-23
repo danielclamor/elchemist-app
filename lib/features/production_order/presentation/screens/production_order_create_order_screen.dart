@@ -1,6 +1,7 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/location/domain/location.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 // import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
@@ -32,6 +33,12 @@ class _ProductionOrderCreateOrderScreenState
 
   bool _isPriority = false;
   bool _isSubmitting = false;
+
+  bool _shouldAssignJob = false;
+  final _jobOptions = {
+    ProductionOrderJobType.mix: true,
+    ProductionOrderJobType.repat: false
+  };
 
   @override
   void dispose() {
@@ -234,12 +241,17 @@ class _ProductionOrderCreateOrderScreenState
 
     setState(() => _isSubmitting = true);
 
+    final jobType = _shouldAssignJob
+        ? _jobOptions.entries.firstWhere((e) => e.value).key
+        : null;
+
     try {
       await ref.read(productionOrderRepositoryProvider).createOrder(
             eliquidId: eliquid.id,
             quantity: int.tryParse(_quantityController.text.trim()),
             isPriority: _isPriority,
             allocations: allocations,
+            jobType: jobType,
           );
 
       if (!mounted) return;
@@ -518,16 +530,151 @@ class _ProductionOrderCreateOrderScreenState
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            Checkbox(
-                                              value: _isPriority,
-                                              visualDensity:
-                                                  VisualDensity.compact,
-                                              onChanged: (b) => setState(
-                                                () => _isPriority = b ?? false,
+                                            Transform.scale(
+                                              scale: 0.75,
+                                              child: Switch(
+                                                value: _isPriority,
+                                                onChanged: (b) => setState(
+                                                    () => _isPriority = b),
+                                                padding: EdgeInsets.zero,
+                                                thumbIcon:
+                                                    WidgetStatePropertyAll(
+                                                  Icon(
+                                                    _isPriority
+                                                        ? Icons.check
+                                                        : Icons.close,
+                                                    size: 12,
+                                                  ),
+                                                ),
+                                                thumbColor: _isPriority
+                                                    ? WidgetStatePropertyAll(
+                                                        Color(0xFF0E76BD),
+                                                      )
+                                                    : null,
+                                                trackOutlineColor: _isPriority
+                                                    ? WidgetStatePropertyAll(
+                                                        Color(0xFF0E76BD),
+                                                      )
+                                                    : WidgetStatePropertyAll(
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .surfaceContainer,
+                                                      ),
+                                                trackColor: _isPriority
+                                                    ? WidgetStatePropertyAll(
+                                                        Color(0xFF0E76BD)
+                                                            .withAlpha(50),
+                                                      )
+                                                    : null,
                                               ),
                                             ),
                                           ],
                                         ),
+                                        Gap(4.0),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Assign job',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Transform.scale(
+                                              scale: 0.75,
+                                              child: Switch(
+                                                value: _shouldAssignJob,
+                                                onChanged: (b) => setState(
+                                                  () => _shouldAssignJob = b,
+                                                ),
+                                                padding: EdgeInsets.zero,
+                                                thumbIcon:
+                                                    WidgetStatePropertyAll(
+                                                  Icon(
+                                                    _shouldAssignJob
+                                                        ? Icons.check
+                                                        : Icons.close,
+                                                    size: 12,
+                                                  ),
+                                                ),
+                                                thumbColor: _shouldAssignJob
+                                                    ? WidgetStatePropertyAll(
+                                                        Color(0xFF0E76BD),
+                                                      )
+                                                    : null,
+                                                trackOutlineColor:
+                                                    _shouldAssignJob
+                                                        ? WidgetStatePropertyAll(
+                                                            Color(0xFF0E76BD),
+                                                          )
+                                                        : WidgetStatePropertyAll(
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .surfaceContainer,
+                                                          ),
+                                                trackColor: _shouldAssignJob
+                                                    ? WidgetStatePropertyAll(
+                                                        Color(0xFF0E76BD)
+                                                            .withAlpha(50),
+                                                      )
+                                                    : null,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        if (_shouldAssignJob)
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: SizedBox.shrink(),
+                                                ),
+                                                ToggleButtons(
+                                                  constraints:
+                                                      const BoxConstraints(),
+                                                  isSelected: _jobOptions.values
+                                                      .toList(),
+                                                  onPressed: (index) {
+                                                    final targetKey =
+                                                        _jobOptions.keys
+                                                            .elementAt(index);
+
+                                                    setState(() {
+                                                      for (final key
+                                                          in _jobOptions.keys) {
+                                                        _jobOptions[key] =
+                                                            (key == targetKey);
+                                                      }
+                                                    });
+                                                  },
+                                                  selectedColor: Colors.white,
+                                                  selectedBorderColor:
+                                                      Color(0xFF0E76BD),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0),
+                                                  children: _jobOptions.keys
+                                                      .map(
+                                                        (key) => Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            vertical: 8.0,
+                                                            horizontal: 16.0,
+                                                          ),
+                                                          child: Text(
+                                                            key.toString(),
+                                                          ),
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                       ],
                                     ),
                             ),
