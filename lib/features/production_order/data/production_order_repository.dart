@@ -358,11 +358,71 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     final payload =
         result.data?['productionOrderMarkCancelled'] as Map<String, dynamic>?;
     final feedback = payload?['feedback'] as Map<String, dynamic>?;
-    final data = payload?['productionOrder'] as String?;
+    final data = payload?['productionOrder'] as Map<String, dynamic>?;
 
     if (data == null || feedback?['status'] != 'SUCCESS') {
       throw Exception(
         feedback?['message'] as String? ?? 'Could not cancel order $id',
+      );
+    }
+
+    return;
+  }
+
+  @override
+  Future<void> markDelivered({required String id}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderMarkDeliveredMutation),
+        variables: {
+          'id': id,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['productionOrderMarkDelivered'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['productionOrder'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not mark order $id delivered',
+      );
+    }
+
+    return;
+  }
+
+  @override
+  Future<void> markFulfilled({
+    required String id,
+    required int fulfilledQuantity,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderMarkFulfilledMutation),
+        variables: {
+          'id': id,
+          'fulfilledQuantity': fulfilledQuantity,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['productionOrderMarkFulfilled'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['productionOrder'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not fulfill order $id',
       );
     }
 

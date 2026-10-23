@@ -62,4 +62,13 @@ abstract class ProductionOrderRepository {
   Future<void> markCancelled({
     required String id,
   });
+
+  Future<void> markDelivered({
+    required String id,
+  });
+
+  Future<void> markFulfilled({
+    required String id,
+    required int fulfilledQuantity,
+  });
 }

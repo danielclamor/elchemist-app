@@ -125,3 +125,39 @@ const String productionOrderMarkCancelledMutation = r'''
     }
   }
 ''';
+
+const String productionOrderMarkDeliveredMutation = r'''
+  mutation MarkProductionOrderDelivered($id: ID!) {
+    productionOrderMarkDelivered(identifier: {id: $id}) {
+      productionOrder {
+        id
+        status
+      }
+      feedback {
+        status
+        message
+      }
+    }
+  }
+''';
+
+const String productionOrderMarkFulfilledMutation = r'''
+  mutation MarkProductionOrderFulfilled(
+    $id: ID!
+    $fulfilledQuantity: Int! 
+  ) {
+    productionOrderMarkFulfilled(
+      identifier: {id: $id}
+      fulfilledQuantity: $fulfilledQuantity
+    ) {
+      productionOrder {
+        id
+        status
+      }
+      feedback {
+        status
+        message
+      }
+    }
+  }
+''';
