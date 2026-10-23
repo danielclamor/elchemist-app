@@ -4,6 +4,7 @@ import 'package:elchemist_app/features/production_order/presentation/providers/p
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/mark_fulfilled_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_input_quantity_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -179,6 +180,31 @@ class _ProductionOrderDetailScreenState
         jobType: jobType,
       ),
     );
+  }
+
+  Future<void> _markFulfilled() async {
+    showDialog<int>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => MarkFulfilledDialog(id: widget.id),
+    );
+  }
+
+  Future<void> _markDelivered() async {
+    setState(() => _isSubmitting = true);
+
+    try {
+      await ref
+          .read(productionOrderRepositoryProvider)
+          .markDelivered(id: widget.id);
+      ref.invalidate(productionOrderDetailsProvider(widget.id));
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
+      _showError(e is Exception
+          ? e.toString()
+          : 'Something went wrong. Please try again.');
+    }
   }
 
   List<MenuItemButton> _menuItemButtons() => [
@@ -629,146 +655,148 @@ class _ProductionOrderDetailScreenState
                   error: (e, _) => SizedBox.shrink(),
                   loading: () => SizedBox.shrink(),
                   data: (data) {
-                    if (data == null ||
-                        data.status == ProductionOrderStatus.cancelled) {
+                    if (data == null || !data.isOpen) {
                       return SizedBox.shrink();
+                    }
+
+                    if (data.status == ProductionOrderStatus.fulfilled) {
+                      return Row(
+                        spacing: 8.0,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed:
+                                !_isSubmitting ? () => _markDelivered() : null,
+                            child: Text("Mark as delivered"),
+                          ),
+                        ],
+                      );
                     }
 
                     final jobType = data.jobType;
                     final isAssigned = jobType != null;
 
-                    List<Widget> rowChildren = [];
-
-                    if (data.status == ProductionOrderStatus.fulfilled) {
-                      rowChildren = [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0E76BD),
-                            side: BorderSide(
-                              color: const Color(0xFF0B5E97),
-                              width: 1.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                          onPressed: !_isSubmitting
-                              ? () => _showInputQuantityDialog(
-                                    data.orderedQuantity,
-                                    ProductionOrderJobType.mix,
-                                  )
-                              : null,
-                          child: Text("Mark as delivered"),
-                        ),
-                      ];
-                    }
-
                     if (!isAssigned) {
-                      rowChildren = [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0E76BD),
-                            side: BorderSide(
-                              color: const Color(0xFF0B5E97),
-                              width: 1.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                          onPressed: !_isSubmitting
-                              ? () => _showInputQuantityDialog(
-                                    data.orderedQuantity,
-                                    ProductionOrderJobType.mix,
-                                  )
-                              : null,
-                          child: Text("Assign to Mix"),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0E76BD),
-                            side: BorderSide(
-                              color: const Color(0xFF0B5E97),
-                              width: 1.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                          onPressed: !_isSubmitting
-                              ? () => _showInputQuantityDialog(
-                                    data.orderedQuantity,
-                                    ProductionOrderJobType.repat,
-                                  )
-                              : null,
-                          child: Text("Assign to Streamline"),
-                        ),
-                      ];
-                    }
-
-                    if (jobType == ProductionOrderJobType.repat) {
-                      rowChildren = [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0E76BD),
-                            side: BorderSide(
-                              color: const Color(0xFF0B5E97),
-                              width: 1.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                          onPressed: !_isSubmitting ? () {} : null,
-                          child: Text("Mark as fulfilled"),
-                        ),
-                      ];
-                    }
-
-                    if (jobType == ProductionOrderJobType.mix) {
-                      rowChildren = [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0E76BD),
-                            side: BorderSide(
-                              color: const Color(0xFF0B5E97),
-                              width: 1.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                          ),
-                          onPressed: !_isSubmitting ? () {} : null,
-                          child: Text("Start mixing"),
-                        ),
-                      ];
-                    }
-
-                    if (rowChildren.isNotEmpty) {
                       return Row(
                         spacing: 8.0,
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: rowChildren,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed: !_isSubmitting
+                                ? () => _showInputQuantityDialog(
+                                      data.orderedQuantity,
+                                      ProductionOrderJobType.mix,
+                                    )
+                                : null,
+                            child: Text("Assign to Mix"),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed: !_isSubmitting
+                                ? () => _showInputQuantityDialog(
+                                      data.orderedQuantity,
+                                      ProductionOrderJobType.repat,
+                                    )
+                                : null,
+                            child: Text("Assign to Streamline"),
+                          ),
+                        ],
+                      );
+                    }
+
+                    if (jobType == ProductionOrderJobType.repat) {
+                      return Row(
+                        spacing: 8.0,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed:
+                                !_isSubmitting ? () => _markFulfilled() : null,
+                            child: Text("Mark as fulfilled"),
+                          ),
+                        ],
+                      );
+                    }
+
+                    if (jobType == ProductionOrderJobType.mix) {
+                      return Row(
+                        spacing: 8.0,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed: !_isSubmitting ? () {} : null,
+                            child: Text("Start mixing"),
+                          ),
+                        ],
                       );
                     }
 
