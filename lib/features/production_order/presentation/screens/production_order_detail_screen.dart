@@ -581,10 +581,40 @@ class _ProductionOrderDetailScreenState
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Checkbox(
-                                      value: data.isPriority,
-                                      visualDensity: VisualDensity.compact,
-                                      onChanged: null,
+                                    Transform.scale(
+                                      scale: 0.75,
+                                      child: Switch(
+                                        value: data.isPriority,
+                                        onChanged: null,
+                                        padding: EdgeInsets.zero,
+                                        thumbIcon: WidgetStatePropertyAll(
+                                          Icon(
+                                            data.isPriority
+                                                ? Icons.check
+                                                : Icons.close,
+                                            size: 12,
+                                          ),
+                                        ),
+                                        thumbColor: data.isPriority
+                                            ? WidgetStatePropertyAll(
+                                                Colors.red,
+                                              )
+                                            : null,
+                                        trackOutlineColor: data.isPriority
+                                            ? WidgetStatePropertyAll(
+                                                Colors.red,
+                                              )
+                                            : WidgetStatePropertyAll(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .surfaceContainer,
+                                              ),
+                                        trackColor: data.isPriority
+                                            ? WidgetStatePropertyAll(
+                                                Colors.red.withAlpha(50),
+                                              )
+                                            : null,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -688,7 +718,7 @@ class _ProductionOrderDetailScreenState
                       ];
                     }
 
-                    if (isAssigned && jobType == ProductionOrderJobType.repat) {
+                    if (jobType == ProductionOrderJobType.repat) {
                       rowChildren = [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
