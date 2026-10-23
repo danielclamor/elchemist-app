@@ -711,6 +711,29 @@ class _ProductionOrderDetailScreenState
                       ];
                     }
 
+                    if (jobType == ProductionOrderJobType.mix) {
+                      rowChildren = [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed: !_isSubmitting ? () {} : null,
+                          child: Text("Start mixing"),
+                        ),
+                      ];
+                    }
+
                     if (rowChildren.isNotEmpty) {
                       return Row(
                         spacing: 8.0,
