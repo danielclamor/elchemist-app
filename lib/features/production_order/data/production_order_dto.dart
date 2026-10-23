@@ -55,6 +55,7 @@ class ProductionOrderDto {
   final List<ProductionOrderActivityLogDto> activityLogs;
   final List<ProductionOrderAllocationDto> allocations;
   final String? currentJobId;
+  final bool isOpen;
 
   const ProductionOrderDto({
     required this.id,
@@ -70,6 +71,7 @@ class ProductionOrderDto {
     required this.activityLogs,
     required this.allocations,
     required this.currentJobId,
+    required this.isOpen,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
@@ -101,6 +103,7 @@ class ProductionOrderDto {
           .toList(),
       currentJobId:
           currentJobJson != null ? currentJobJson['id'] as String : null,
+      isOpen: json['isOpen'],
     );
   }
 }

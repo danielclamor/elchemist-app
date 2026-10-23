@@ -15,6 +15,7 @@ class ProductionOrder {
   final List<ProductionOrderAllocation> allocations;
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
+  final bool isOpen;
 
   ProductionOrder({
     required this.id,
@@ -28,6 +29,7 @@ class ProductionOrder {
     required this.allocations,
     required this.eliquid,
     required this.activityLogs,
+    required this.isOpen,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -47,6 +49,7 @@ class ProductionOrder {
       activityLogs: o.activityLogs
           .map((l) => ProductionOrderActivityLog.fromDto(l))
           .toList(),
+      isOpen: o.isOpen,
     );
   }
 }

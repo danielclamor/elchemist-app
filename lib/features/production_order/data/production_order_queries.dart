@@ -60,6 +60,7 @@ const String productionOrderDetailsQuery = r'''
       status
       jobType
       isPriority
+      isOpen
       createdAt
       updatedAt
       allocations { 
