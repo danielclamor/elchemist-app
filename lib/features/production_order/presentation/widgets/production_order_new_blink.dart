@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:elchemist_app/core/widgets/el_blinker.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,21 +54,9 @@ class _ProductionOrderNewBlinkState
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-
-    return AnimatedBuilder(
-      animation: _controller,
+    return ElBlinker(
+      controller: _controller,
       child: widget.child,
-      builder: (context, child) {
-        // 0 -> 1 -> 0, repeated _blinks times, ends at 0
-        final blink = (1 - cos(_controller.value * 2 * pi * _blinks)) / 2;
-        return DecoratedBox(
-          position: DecorationPosition.foreground,
-          decoration:
-              BoxDecoration(color: color.withValues(alpha: 0.3 * blink)),
-          child: child,
-        );
-      },
     );
   }
 }
