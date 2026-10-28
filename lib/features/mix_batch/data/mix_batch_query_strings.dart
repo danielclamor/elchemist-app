@@ -30,3 +30,32 @@ const String mixBatchListPageQuery = r'''
     }
   }
 ''';
+
+const String mixBatchDetailsQuery = r'''
+  query MixBatch($id: ID!) {
+    mixBatch(
+      identifier: {id: $id}
+    ) {
+      id
+      mixNumber
+      status
+      batchCode
+      mixedAt
+      createdAt
+      totalVolumeMl
+      nicProfile {
+        id
+        name
+        fullName
+        isPreMix
+        formula {
+          id
+          brand
+          name
+          chillType
+          nicType
+        }
+      }
+    }
+  }
+''';

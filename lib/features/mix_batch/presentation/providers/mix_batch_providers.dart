@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
 import 'package:elchemist_app/features/mix_batch/data/mix_batch_repository.dart';
+import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
 import 'package:elchemist_app/features/mix_batch/domain/mix_batch_list_page.dart';
 import 'package:elchemist_app/features/mix_batch/domain/mix_batch_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -103,4 +104,10 @@ class MixBatchNewIds extends Notifier<Set<String>> {
 
 final mixBatchNewIdsProvider = NotifierProvider<MixBatchNewIds, Set<String>>(
   MixBatchNewIds.new,
+);
+
+final mixBatchDetailsProvider =
+    FutureProvider.autoDispose.family<MixBatch?, String>(
+  (ref, id) => ref.watch(mixBatchRepositoryProvider).getDetails(id: id),
+  retry: (retryCount, error) => null,
 );

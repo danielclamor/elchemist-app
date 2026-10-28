@@ -54,4 +54,27 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
       observable.close();
     }
   }
+
+  @override
+  Future<MixBatch?> getDetails({required String id}) async {
+    final result = await _client.query(
+      QueryOptions(
+        document: gql(mixBatchDetailsQuery),
+        variables: {'id': id},
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+    if (result.hasException) {
+      throw result.exception!;
+    }
+
+    final data = result.data?['mixBatch'] as Map<String, dynamic>?;
+    print(data);
+    if (data == null) return null;
+    final mixBatchDto = MixBatchDto.fromJson(data);
+    print(mixBatchDto);
+    final mixBatch = MixBatch.fromDto(mixBatchDto);
+    print(mixBatch);
+    return mixBatch;
+  }
 }

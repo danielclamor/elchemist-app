@@ -6,4 +6,8 @@ abstract class MixBatchRepository {
     required int first,
     String? after,
   });
+
+  Future<MixBatch?> getDetails({
+    required String id,
+  });
 }
