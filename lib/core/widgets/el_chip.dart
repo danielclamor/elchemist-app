@@ -25,43 +25,30 @@ class ElChip extends StatelessWidget {
       ),
     );
 
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
+    return Card(
+      color: bgColor,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24.0),
-        color: bgColor,
       ),
-      padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 0.0),
-      child: labelIcon != null
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              spacing: 4.0,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Icon(
-                    labelIcon,
-                    color: fgColor,
-                    size: 12.0,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 0.0,
-                    right: 12.0,
-                  ),
-                  child: text,
-                ),
-              ],
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 0.0,
-                horizontal: 12.0,
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 12.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 4.0,
+          children: [
+            if (labelIcon != null)
+              Icon(
+                labelIcon,
+                color: fgColor,
+                size: 12.0,
               ),
-              child: text,
-            ),
+            text,
+          ],
+        ),
+      ),
     );
   }
 }
