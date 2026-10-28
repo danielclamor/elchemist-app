@@ -214,8 +214,10 @@ class _SearchMixViewState extends State<SearchMixView> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
-    var sectionWidth = 500.0;
-    var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 400.0;
+    var sectionWidth = 400.0;
+    var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 350.0;
+    var recipeSectionWidth =
+        screenSize.width < 1920 ? sectionWidth : sectionWidth + midSectionWidth;
 
     final List<Formula> formulas = widget.formulas;
 
@@ -376,86 +378,95 @@ class _SearchMixViewState extends State<SearchMixView> {
                         ],
                       ),
                     ),
-                    NicBaseSection(
-                      width: midSectionWidth,
-                      nicStrController: _nicBaseNicStrController,
-                      vgController: _nicBaseVGController,
-                      pgController: _nicBasePGController,
-                      nicBaseEntries: List.generate(
-                        _nicBaseEntries.length,
-                        (index) {
-                          final entry = _nicBaseEntries[index];
-                          return NicBaseEntryRow(
-                            nicBaseOptions: widget.nicBaseOptions,
-                            entry: entry,
-                            isCustom: _isCustom,
-                            withHeaders: index == 0,
-                            showDeleteIcon:
-                                _isCustom && _nicBaseEntries.length > 1,
-                            onEntryDeleted: () => _removeNicBaseEntry(entry),
-                            onOptionSelected: (value) {
-                              final nicBaseOption = value;
+                    Column(
+                      spacing: 20.0,
+                      children: [
+                        NicBaseSection(
+                          width: midSectionWidth,
+                          nicStrController: _nicBaseNicStrController,
+                          vgController: _nicBaseVGController,
+                          pgController: _nicBasePGController,
+                          nicBaseEntries: List.generate(
+                            _nicBaseEntries.length,
+                            (index) {
+                              final entry = _nicBaseEntries[index];
+                              return NicBaseEntryRow(
+                                nicBaseOptions: widget.nicBaseOptions,
+                                entry: entry,
+                                isCustom: _isCustom,
+                                withHeaders: index == 0,
+                                showDeleteIcon:
+                                    _isCustom && _nicBaseEntries.length > 1,
+                                onEntryDeleted: () =>
+                                    _removeNicBaseEntry(entry),
+                                onOptionSelected: (value) {
+                                  final nicBaseOption = value;
 
-                              if (nicBaseOption == null) {
-                                return;
-                              }
+                                  if (nicBaseOption == null) {
+                                    return;
+                                  }
 
-                              setState(() {
-                                entry.nicBase = NicBase(
-                                  nicBaseOption: nicBaseOption,
-                                  ratio: entry.ratio,
-                                );
-                              });
+                                  setState(() {
+                                    entry.nicBase = NicBase(
+                                      nicBaseOption: nicBaseOption,
+                                      ratio: entry.ratio,
+                                    );
+                                  });
 
-                              _calculateTotalNicBaseRatio();
+                                  _calculateTotalNicBaseRatio();
+                                },
+                                onPercentSubmitted: (value) =>
+                                    _calculateTotalNicBaseRatio(),
+                              );
                             },
-                            onPercentSubmitted: (value) =>
-                                _calculateTotalNicBaseRatio(),
-                          );
-                        },
-                      ),
-                      addEntryButton: !_isCustom ||
-                              double.parse(_targetNicStrController.text) <= 0.0
-                          ? null
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => _addNicBaseEntry(null),
-                                    child: const Text("+ Add"),
+                          ),
+                          addEntryButton: !_isCustom ||
+                                  double.parse(_targetNicStrController.text) <=
+                                      0.0
+                              ? null
+                              : Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () => _addNicBaseEntry(null),
+                                        child: const Text("+ Add"),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                    ),
-                    TargetSection(
-                      width: midSectionWidth,
-                      nicStrController: _targetNicStrController,
-                      vgController: _targetVGController,
-                      onVGSubmitted: !_isCustom
-                          ? null
-                          : (value) {
-                              setState(() {
-                                _targetVGController.text = value;
-                                _targetPGController.text =
-                                    (100 - (double.parse(value))).toString();
-                              });
-                            },
-                      pgController: _targetPGController,
-                      onPGSubmitted: !_isCustom
-                          ? null
-                          : (value) {
-                              setState(() {
-                                _targetPGController.text = value;
-                                _targetVGController.text =
-                                    (100 - (double.parse(value))).toString();
-                              });
-                            },
+                                ),
+                        ),
+                        TargetSection(
+                          width: midSectionWidth,
+                          nicStrController: _targetNicStrController,
+                          vgController: _targetVGController,
+                          onVGSubmitted: !_isCustom
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _targetVGController.text = value;
+                                    _targetPGController.text =
+                                        (100 - (double.parse(value)))
+                                            .toString();
+                                  });
+                                },
+                          pgController: _targetPGController,
+                          onPGSubmitted: !_isCustom
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _targetPGController.text = value;
+                                    _targetVGController.text =
+                                        (100 - (double.parse(value)))
+                                            .toString();
+                                  });
+                                },
+                        ),
+                      ],
                     ),
                     RecipeSection(
-                      width: sectionWidth,
+                      width: recipeSectionWidth,
                       ingredients: MixRecipeCalculator(
                         batchVolume: double.parse(_volumeController.text),
                         nicBaseNicStr:
