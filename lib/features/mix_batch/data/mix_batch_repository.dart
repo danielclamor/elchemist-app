@@ -69,12 +69,9 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
     }
 
     final data = result.data?['mixBatch'] as Map<String, dynamic>?;
-    print(data);
+
     if (data == null) return null;
-    final mixBatchDto = MixBatchDto.fromJson(data);
-    print(mixBatchDto);
-    final mixBatch = MixBatch.fromDto(mixBatchDto);
-    print(mixBatch);
-    return mixBatch;
+
+    return MixBatch.fromDto(MixBatchDto.fromJson(data));
   }
 }
