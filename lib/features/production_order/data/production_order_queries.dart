@@ -81,15 +81,6 @@ const String productionOrderDetailsQuery = r'''
         type
         triggeredAt
       }
-      currentJob {
-        __typename
-        ... on MixJobType {
-          id
-        }
-        ... on RepatJobType {
-          id
-        }
-      }
     }
   }
 ''';
