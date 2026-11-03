@@ -16,6 +16,7 @@ class ProductionOrder {
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
   final bool isOpen;
+  final String? mixBatchId;
 
   ProductionOrder({
     required this.id,
@@ -30,6 +31,7 @@ class ProductionOrder {
     required this.eliquid,
     required this.activityLogs,
     required this.isOpen,
+    required this.mixBatchId,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -50,6 +52,7 @@ class ProductionOrder {
           .map((l) => ProductionOrderActivityLog.fromDto(l))
           .toList(),
       isOpen: o.isOpen,
+      mixBatchId: o.mixBatchId,
     );
   }
 }
