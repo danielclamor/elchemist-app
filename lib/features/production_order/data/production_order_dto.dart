@@ -56,6 +56,7 @@ class ProductionOrderDto {
   final List<ProductionOrderAllocationDto> allocations;
   final String? currentJobId;
   final bool isOpen;
+  final String? mixBatchId;
 
   const ProductionOrderDto({
     required this.id,
@@ -72,9 +73,12 @@ class ProductionOrderDto {
     required this.allocations,
     required this.currentJobId,
     required this.isOpen,
+    required this.mixBatchId,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
+    final mixBatchJson = json['mixBatch'] as Map<String, dynamic>?;
+
     final activityLogsJson = json['activityLogs'] as List<dynamic>;
 
     final allocationsJson = json['allocations'] as List<dynamic>;
@@ -104,6 +108,7 @@ class ProductionOrderDto {
       currentJobId:
           currentJobJson != null ? currentJobJson['id'] as String : null,
       isOpen: json['isOpen'],
+      mixBatchId: mixBatchJson != null ? mixBatchJson['id'] : null,
     );
   }
 }

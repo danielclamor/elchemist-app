@@ -1,8 +1,10 @@
+import 'package:elchemist_app/features/formula/data/formula_dto.dart';
+
 class MixBatchDto {
   final String id;
   final String mixNumber;
   final MixBatchStatusDto status;
-  final NicProfileSummaryDto nicProfile;
+  final FormulaSummaryDto formula;
   final String? batchCode;
   final DateTime? mixedAt;
   final DateTime createdAt;
@@ -12,7 +14,7 @@ class MixBatchDto {
     required this.id,
     required this.mixNumber,
     required this.status,
-    required this.nicProfile,
+    required this.formula,
     required this.batchCode,
     required this.mixedAt,
     required this.createdAt,
@@ -20,14 +22,14 @@ class MixBatchDto {
   });
 
   factory MixBatchDto.fromJson(Map<String, dynamic> json) {
-    final nicProfileJson = json['nicProfile'];
+    final formulaJson = json['formula'];
 
     return MixBatchDto(
       id: json['id'] as String,
       mixNumber: json['mixNumber'] as String,
       status: MixBatchStatusDto.fromString(json['status'] as String),
-      nicProfile:
-          NicProfileSummaryDto.fromJson(nicProfileJson as Map<String, dynamic>),
+      formula: FormulaSummaryDto.fromJson(
+          Map<String, dynamic>.from(formulaJson as Map)),
       batchCode: json['batchCode'] as String?,
       mixedAt: json['mixedAt'] != null
           ? DateTime.parse(json['mixedAt'] as String)
@@ -42,8 +44,8 @@ class MixBatchSummaryDto {
   final String id;
   final String mixNumber;
   final MixBatchStatusDto status;
-  final String nicProfileFullName;
-  final bool nicProfileIsPreMix;
+  final String formulaFullName;
+  final bool formulaIsPreMix;
   final String? batchCode;
   final DateTime? mixedAt;
   final DateTime createdAt;
@@ -52,22 +54,22 @@ class MixBatchSummaryDto {
     required this.id,
     required this.mixNumber,
     required this.status,
-    required this.nicProfileFullName,
-    required this.nicProfileIsPreMix,
+    required this.formulaFullName,
+    required this.formulaIsPreMix,
     required this.batchCode,
     required this.mixedAt,
     required this.createdAt,
   });
 
   factory MixBatchSummaryDto.fromJson(Map<String, dynamic> json) {
-    final nicProfileJson = json['nicProfile'];
+    final formulaJson = json['formula'];
 
     return MixBatchSummaryDto(
       id: json['id'] as String,
       mixNumber: json['mixNumber'] as String,
       status: MixBatchStatusDto.fromString(json['status'] as String),
-      nicProfileFullName: nicProfileJson['fullName'] as String,
-      nicProfileIsPreMix: nicProfileJson['isPreMix'] as bool,
+      formulaFullName: formulaJson['fullName'] as String,
+      formulaIsPreMix: formulaJson['isPreMix'] as bool,
       batchCode: json['batchCode'] as String?,
       mixedAt: json['mixedAt'] != null
           ? DateTime.parse(json['mixedAt'] as String)
@@ -91,61 +93,5 @@ enum MixBatchStatusDto {
       'MIXED' => MixBatchStatusDto.mixed,
       _ => throw FormatException('Unknown MixBatchStatus: $value'),
     };
-  }
-}
-
-class NicProfileSummaryDto {
-  final String id;
-  final String name;
-  final String fullName;
-  final bool isPreMix;
-  final FormulaSummaryDto formula;
-
-  const NicProfileSummaryDto({
-    required this.id,
-    required this.name,
-    required this.fullName,
-    required this.isPreMix,
-    required this.formula,
-  });
-
-  factory NicProfileSummaryDto.fromJson(Map<String, dynamic> json) {
-    final formulaJson = json['formula'];
-
-    return NicProfileSummaryDto(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      fullName: json['fullName'] as String,
-      isPreMix: json['isPreMix'] as bool,
-      formula: FormulaSummaryDto.fromJson(
-        formulaJson as Map<String, dynamic>,
-      ),
-    );
-  }
-}
-
-class FormulaSummaryDto {
-  final String id;
-  final String brand;
-  final String name;
-  final String chillType;
-  final String nicType;
-
-  const FormulaSummaryDto({
-    required this.id,
-    required this.brand,
-    required this.name,
-    required this.chillType,
-    required this.nicType,
-  });
-
-  factory FormulaSummaryDto.fromJson(Map<String, dynamic> json) {
-    return FormulaSummaryDto(
-      id: json['id'] as String,
-      brand: json['brand'] as String,
-      name: json['name'] as String,
-      chillType: json['chillType'] as String,
-      nicType: json['nicType'] as String,
-    );
   }
 }

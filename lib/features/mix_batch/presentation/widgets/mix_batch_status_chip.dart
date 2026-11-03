@@ -1,5 +1,4 @@
 import 'package:elchemist_app/core/widgets/el_chip.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
 import 'package:flutter/material.dart';
 
 class MixBatchStatusChip extends StatelessWidget {

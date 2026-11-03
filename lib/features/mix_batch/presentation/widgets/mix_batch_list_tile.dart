@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_detail_screen.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_pre_mix_chip.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_screen.dart';
+import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -86,7 +86,7 @@ class MixBatchListTile extends StatelessWidget {
       tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => MixBatchDetailScreen(id: batch.id)),
+          MaterialPageRoute(builder: (_) => MixBatchScreen(id: batch.id)),
         );
       },
       contentPadding: EdgeInsets.zero,
@@ -103,9 +103,9 @@ class MixBatchListTile extends StatelessWidget {
                 child: Row(
                   spacing: 8.0,
                   children: [
-                    Text(batch.nicProfileFullName, style: textStyle),
-                    if (batch.nicProfileIsPreMix)
-                      MixBatchPreMixChip(
+                    Text(batch.formulaFullName, style: textStyle),
+                    if (batch.formulaIsPreMix)
+                      PreMixChip(
                         fgColor: _getStatusChip(batch.status).fgColor,
                         bgColor: _getStatusChip(batch.status).bgColor,
                       )

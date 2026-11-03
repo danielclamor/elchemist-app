@@ -1,4 +1,5 @@
 import 'package:elchemist_app/features/eliquid/data/eliquid_dto.dart';
+import 'package:elchemist_app/features/formula/domain/formula.dart';
 
 class Eliquid {
   final String id;
@@ -10,7 +11,7 @@ class Eliquid {
   final BottleSize bottleSize;
   final NicLevel nicLevel;
   final BottleColor bottleColor;
-  final String? nicProfileSlug;
+  final String? formulaId;
 
   const Eliquid({
     required this.id,
@@ -22,7 +23,7 @@ class Eliquid {
     required this.bottleSize,
     required this.nicLevel,
     required this.bottleColor,
-    required this.nicProfileSlug,
+    required this.formulaId,
   });
 
   factory Eliquid.fromDto(EliquidDto e) {
@@ -36,7 +37,7 @@ class Eliquid {
       bottleSize: BottleSize.fromDto(e.bottleSize),
       nicLevel: NicLevel.fromDto(e.nicLevel),
       bottleColor: BottleColor.fromDto(e.bottleColor),
-      nicProfileSlug: e.nicProfile != null ? e.nicProfile!['slug'] : null,
+      formulaId: e.formulaId,
     );
   }
 }
@@ -46,20 +47,25 @@ class EliquidSummary {
   final String upc;
   final String description;
   final String brand;
+  final FormulaSummary? formula;
 
   const EliquidSummary({
     required this.id,
     required this.upc,
     required this.description,
     required this.brand,
+    required this.formula,
   });
 
   factory EliquidSummary.fromDto(EliquidSummaryDto e) {
+    final formula = e.formula;
+
     return EliquidSummary(
       id: e.id,
       upc: e.upc,
       description: e.description,
       brand: e.brand,
+      formula: formula != null ? FormulaSummary.fromDto(formula) : null,
     );
   }
 

@@ -21,7 +21,7 @@ const String mixBatchListPageQuery = r'''
           batchCode
           mixedAt
           createdAt
-          nicProfile {
+          formula {
             fullName
             isPreMix
           }
@@ -43,12 +43,12 @@ const String mixBatchDetailsQuery = r'''
       mixedAt
       createdAt
       totalVolumeMl
-      nicProfile {
+      formula {
         id
         name
         fullName
         isPreMix
-        formula {
+        flavor {
           id
           brand
           name

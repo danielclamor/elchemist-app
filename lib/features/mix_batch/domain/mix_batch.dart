@@ -1,10 +1,11 @@
 import 'package:elchemist_app/features/mix_batch/data/mix_batch_dto.dart';
+import 'package:elchemist_app/features/formula/domain/formula.dart';
 
 class MixBatch {
   final String id;
   final String mixNumber;
   final MixBatchStatus status;
-  final NicProfileSummary nicProfile;
+  final FormulaSummary formula;
   final String? batchCode;
   final DateTime? mixedAt;
   final DateTime createdAt;
@@ -14,7 +15,7 @@ class MixBatch {
     required this.id,
     required this.mixNumber,
     required this.status,
-    required this.nicProfile,
+    required this.formula,
     required this.batchCode,
     required this.mixedAt,
     required this.createdAt,
@@ -26,7 +27,7 @@ class MixBatch {
       id: b.id,
       mixNumber: b.mixNumber,
       status: MixBatchStatus.fromDto(b.status),
-      nicProfile: NicProfileSummary.fromDto(b.nicProfile),
+      formula: FormulaSummary.fromDto(b.formula),
       batchCode: b.batchCode,
       mixedAt: b.mixedAt,
       createdAt: b.createdAt,
@@ -39,8 +40,8 @@ class MixBatchSummary {
   final String id;
   final String mixNumber;
   final MixBatchStatus status;
-  final String nicProfileFullName;
-  final bool nicProfileIsPreMix;
+  final String formulaFullName;
+  final bool formulaIsPreMix;
   final String? batchCode;
   final DateTime? mixedAt;
   final DateTime createdAt;
@@ -49,8 +50,8 @@ class MixBatchSummary {
     required this.id,
     required this.mixNumber,
     required this.status,
-    required this.nicProfileFullName,
-    required this.nicProfileIsPreMix,
+    required this.formulaFullName,
+    required this.formulaIsPreMix,
     required this.batchCode,
     required this.mixedAt,
     required this.createdAt,
@@ -61,8 +62,8 @@ class MixBatchSummary {
       id: b.id,
       mixNumber: b.mixNumber,
       status: MixBatchStatus.fromDto(b.status),
-      nicProfileFullName: b.nicProfileFullName,
-      nicProfileIsPreMix: b.nicProfileIsPreMix,
+      formulaFullName: b.formulaFullName,
+      formulaIsPreMix: b.formulaIsPreMix,
       batchCode: b.batchCode,
       mixedAt: b.mixedAt,
       createdAt: b.createdAt,
@@ -83,28 +84,5 @@ enum MixBatchStatus {
       MixBatchStatusDto.inProgress => MixBatchStatus.inProgress,
       MixBatchStatusDto.mixed => MixBatchStatus.mixed,
     };
-  }
-}
-
-class NicProfileSummary {
-  final String id;
-  final String name;
-  final String fullName;
-  final bool isPreMix;
-
-  const NicProfileSummary({
-    required this.id,
-    required this.name,
-    required this.fullName,
-    required this.isPreMix,
-  });
-
-  factory NicProfileSummary.fromDto(NicProfileSummaryDto p) {
-    return NicProfileSummary(
-      id: p.id,
-      name: p.name,
-      fullName: p.fullName,
-      isPreMix: p.isPreMix,
-    );
   }
 }

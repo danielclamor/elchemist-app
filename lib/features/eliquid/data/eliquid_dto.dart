@@ -1,3 +1,5 @@
+import 'package:elchemist_app/features/formula/data/formula_dto.dart';
+
 class EliquidDto {
   final String id;
   final String upc;
@@ -8,7 +10,7 @@ class EliquidDto {
   final BottleSizeDto bottleSize;
   final NicLevelDto nicLevel;
   final BottleColorDto bottleColor;
-  final Map<String, dynamic>? nicProfile;
+  final String? formulaId;
 
   const EliquidDto({
     required this.id,
@@ -20,10 +22,12 @@ class EliquidDto {
     required this.bottleSize,
     required this.nicLevel,
     required this.bottleColor,
-    required this.nicProfile,
+    required this.formulaId,
   });
 
   factory EliquidDto.fromJson(Map<String, dynamic> json) {
+    final formulaJson = json['formula'];
+
     return EliquidDto(
       id: json['id'] as String,
       upc: json['upc'] as String,
@@ -34,7 +38,7 @@ class EliquidDto {
       bottleSize: BottleSizeDto.fromString(json['bottleSize'] as String),
       nicLevel: NicLevelDto.fromString(json['nicLevel'] as String),
       bottleColor: BottleColorDto.fromString(json['bottleColor'] as String),
-      nicProfile: json['nicProfile'] as Map<String, dynamic>,
+      formulaId: formulaJson != null ? formulaJson['id'] as String : null,
     );
   }
 }
@@ -44,20 +48,26 @@ class EliquidSummaryDto {
   final String upc;
   final String description;
   final String brand;
+  final FormulaSummaryDto? formula;
 
   const EliquidSummaryDto({
     required this.id,
     required this.upc,
     required this.description,
     required this.brand,
+    required this.formula,
   });
 
   factory EliquidSummaryDto.fromJson(Map<String, dynamic> json) {
+    final formulaJson = json['formula'] as Map<String, dynamic>?;
+
     return EliquidSummaryDto(
       id: json['id'] as String,
       upc: json['upc'] as String,
       description: json['description'] as String,
       brand: json['brand'] as String,
+      formula:
+          formulaJson != null ? FormulaSummaryDto.fromJson(formulaJson) : null,
     );
   }
 }

@@ -73,6 +73,19 @@ const String productionOrderDetailsQuery = r'''
         upc
         description
         brand
+        formula {
+          id
+          name
+          fullName
+          isPreMix
+          flavor {
+            id
+            brand
+            name
+            chillType
+            nicType
+          }
+        }
       }
       activityLogs {
         id
@@ -80,6 +93,9 @@ const String productionOrderDetailsQuery = r'''
         oldValue
         type
         triggeredAt
+      }
+      mixBatch {
+        id
       }
     }
   }
