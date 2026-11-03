@@ -1,3 +1,5 @@
+import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_screen.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
@@ -774,6 +776,8 @@ class _ProductionOrderDetailScreenState
                     }
 
                     if (jobType == ProductionOrderJobType.mix) {
+                      final formula = data.eliquid.formula;
+
                       return Row(
                         spacing: 8.0,
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -793,8 +797,45 @@ class _ProductionOrderDetailScreenState
                                 vertical: 16.0,
                               ),
                             ),
-                            onPressed: !_isSubmitting ? () {} : null,
-                            child: Text("Start mixing"),
+                            onPressed: !_isSubmitting
+                                ? formula == null
+                                    ? null
+                                    : () {
+                                        final mixBatchId = data.mixBatchId;
+
+                                        if (mixBatchId == null) return;
+
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) =>
+                                                MixBatchScreen(id: mixBatchId),
+                                          ),
+                                        );
+                                      }
+                                : null,
+                            child: Text("Mix a batch"),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed: !_isSubmitting
+                                ? () {
+                                    // TODO integrate mark fulfilled
+                                  }
+                                : null,
+                            child: Text("Mark as fulfilled"),
                           ),
                         ],
                       );
@@ -802,6 +843,79 @@ class _ProductionOrderDetailScreenState
 
                     return SizedBox.fromSize();
                   },
+                ),
+                Gap(16),
+                async.when(
+                  data: (data) {
+                    if (data != null &&
+                        data.jobType == ProductionOrderJobType.mix) {
+                      final formula = data.eliquid.formula;
+
+                      return Card(
+                        elevation: 0.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(8.0),
+                        ),
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Formula",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Gap(4.0),
+                                  formula == null
+                                      ? Text("No formula available")
+                                      : Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              formula.fullName,
+                                            ),
+                                            Gap(4.0),
+                                            PreMixChip(
+                                              fgColor: Colors.black,
+                                              bgColor: Colors.grey,
+                                            ),
+                                          ],
+                                        )
+                                ],
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // TODO integrate view formula
+                                },
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadiusGeometry.circular(8.0),
+                                  ),
+                                  foregroundColor: const Color(0xFF0E76BD),
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                child: Text("View formula"),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    return SizedBox.shrink();
+                  },
+                  error: (e, _) => SizedBox.shrink(),
+                  loading: () => SizedBox.shrink(),
                 ),
                 Gap(40.0),
                 Text(
