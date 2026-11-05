@@ -11,21 +11,21 @@ class NicBaseEntry {
   NicBaseEntry({
     required this.nicBaseOption,
     double? ratio,
-  })  : id = nicBaseOption.code,
-        controller = TextEditingController(
-            text: ratio != null ? (ratio * 100).toString() : ""),
-        focusNode = FocusNode();
+  })  : id = nicBaseOption.id,
+        percController =
+            TextEditingController(text: ((ratio ?? 0) * 100).toString()),
+        percFocusNode = FocusNode();
 
   final String id;
   final NicBaseOption nicBaseOption;
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final TextEditingController percController;
+  final FocusNode percFocusNode;
 
-  double get ratio => (int.tryParse(controller.text) ?? 0) / 100;
+  double get ratio => double.parse(percController.text) / 100;
 
   void dispose() {
-    controller.dispose();
-    focusNode.dispose();
+    percController.dispose();
+    percFocusNode.dispose();
   }
 }
 
@@ -116,15 +116,15 @@ class NicBaseEntryRow extends StatelessWidget {
         ),
         Expanded(
           flex: 4,
-          child: SizedBox(
-            width: 100,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 100),
             child: ElTextField(
-              controller: entry.controller,
-              focusNode: entry.focusNode,
+              controller: entry.percController,
+              focusNode: entry.percFocusNode,
               contentType: ElTextFieldContentType.numeric,
               // labelText: 'Percentage',
               suffixText: '%',
-              readOnly: !isCustom,
+              readOnly: onPercentSubmitted == null,
               onSubmitted: onPercentSubmitted,
             ),
           ),
