@@ -3,8 +3,8 @@ import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_en
 import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/organisms/batch_section.dart';
-import 'package:elchemist_app/components/organisms/flavoring_section.dart';
-import 'package:elchemist_app/components/organisms/nic_base_section.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_section.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/nic_base_section.dart';
 import 'package:elchemist_app/components/organisms/recipe_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/features/formula/providers/formula_providers.dart';
