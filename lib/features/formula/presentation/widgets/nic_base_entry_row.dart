@@ -1,11 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
-import 'package:elchemist_app/components/molecules/el_dropdown_menu.dart';
-import 'package:elchemist_app/features/formula/domain/nic_base.dart';
 import 'package:elchemist_app/features/nic_base_option/domain/nic_base_option.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class NicBaseEntry {
   NicBaseEntry({

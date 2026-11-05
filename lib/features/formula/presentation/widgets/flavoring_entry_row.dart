@@ -2,7 +2,6 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class FlavoringEntry {
   FlavoringEntry({
