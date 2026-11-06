@@ -1,5 +1,5 @@
 import 'package:elchemist_app/components/molecules/section_card.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
 import 'package:elchemist_app/features/recipe/providers/recipe_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
