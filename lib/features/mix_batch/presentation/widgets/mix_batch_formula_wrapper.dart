@@ -2,14 +2,13 @@ import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.
 import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_entry_row.dart';
 import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/nic_base_entry_row.dart';
-import 'package:elchemist_app/components/organisms/batch_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_volume_section.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_section.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/nic_base_section.dart';
-import 'package:elchemist_app/components/organisms/recipe_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_recipe_section.dart';
 import 'package:elchemist_app/components/organisms/target_section.dart';
 import 'package:elchemist_app/features/formula/providers/formula_providers.dart';
 import 'package:elchemist_app/features/nic_base_option/domain/nic_base_option.dart';
-import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -217,7 +216,6 @@ class _MixBatchFormulaWrapperState
     var screenSize = MediaQuery.of(context).size;
     var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
     var sectionWidth = 350.0;
-    var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 250.0;
     var recipeSectionWidth =
         screenSize.width < 1920 ? sectionWidth : sectionWidth + 250;
 
@@ -295,51 +293,9 @@ class _MixBatchFormulaWrapperState
                       child: Column(
                         spacing: 20.0,
                         children: [
-                          // FormulaSection(
-
-                          //   formula: formula,
-                          //   isNicProfileFinal: isNicProfileFinal,
-                          //   nicLevelController: nicLevelController,
-                          //   onNicLevelSubmitted: !_isCustom
-                          //       ? null
-                          //       : (value) {
-                          //           double targetNicStr = double.parse(value) /
-                          //               (formula.isOldMix ? 10 : 2.5);
-                          //           setState(() {
-                          //             targetNicStrController.text =
-                          //                 targetNicStr.toString();
-                          //           });
-                          //         },
-                          //   showCustomCheckBox: false,
-                          //   isCustom: _isCustom,
-                          //   onIsCustomChanged: (bool? value) {
-                          //     setState(() {
-                          //       _isCustom = value ?? false;
-                          //     });
-                          //   },
-                          // ),
-                          BatchSection(
-                            // width: recipeSectionWidth,
-                            volumeController: _volumeController,
-                            onVolumeSubmitted: (value) => setState(() {}),
-                          ),
-                          RecipeSection(
-                            // width: recipeSectionWidth,
-                            ingredients: MixRecipeCalculator(
-                              batchVolume: double.parse(_volumeController.text),
-                              nicBaseNicStr:
-                                  double.parse(nicBaseNicStrController.text) /
-                                      100,
-                              targetNicStr:
-                                  double.parse(targetNicStrController.text) /
-                                      100,
-                              targetVG:
-                                  double.parse(targetVGController.text) / 100,
-                              targetPG:
-                                  double.parse(targetPGController.text) / 100,
-                              nicBaseEntries: _nicBaseEntries,
-                              flavoringEntries: _flavoringEntries,
-                            ).ingredients,
+                          MixBatchVolumeSection(),
+                          MixBatchRecipeSection(
+                            formulaId: formula.id,
                           ),
                         ],
                       ),
@@ -352,7 +308,6 @@ class _MixBatchFormulaWrapperState
                         spacing: 20.0,
                         children: [
                           FlavoringSection(
-                            // width: sectionWidth,
                             flavoringEntries: List.generate(
                               flavorings.length,
                               (index) {
@@ -364,8 +319,6 @@ class _MixBatchFormulaWrapperState
                                 return FlavoringEntryRow(
                                   entry: entry,
                                   isCustom: _isCustom,
-                                  // withHeaders: index == 0,
-                                  // showDeleteIcon: false,
                                   onPercentSubmitted: _isCustom
                                       ? (value) => setState(() {})
                                       : null,
@@ -374,7 +327,6 @@ class _MixBatchFormulaWrapperState
                             ),
                           ),
                           TargetSection(
-                            // width: midSectionWidth,
                             nicStrController: targetNicStrController,
                             vgController: targetVGController,
                             onVGSubmitted: !_isCustom
@@ -400,7 +352,6 @@ class _MixBatchFormulaWrapperState
                                   },
                           ),
                           NicBaseSection(
-                            // width: midSectionWidth,
                             nicStrController: nicBaseNicStrController,
                             vgController: nicBaseVGController,
                             pgController: nicBasePGController,
@@ -415,47 +366,12 @@ class _MixBatchFormulaWrapperState
                                 return NicBaseEntryRow(
                                   entry: entry,
                                   isCustom: _isCustom,
-                                  // withHeaders: index == 0,
-                                  // showDeleteIcon:
-                                  //     _isCustom && _nicBaseEntries.length > 1,
-                                  // onEntryDeleted: () => _removeNicBaseEntry(entry),
-                                  // onOptionSelected: (value) {
-                                  //   final nicBaseOption = value;
-
-                                  //   if (nicBaseOption == null) {
-                                  //     return;
-                                  //   }
-
-                                  //   setState(() {
-                                  //     entry.nicBaseOption = NicBase(
-                                  //       nicBaseOption: nicBaseOption,
-                                  //       ratio: entry.ratio,
-                                  //     );
-                                  //   });
-
-                                  //   _calculateTotalNicBaseRatio();
-                                  // },
                                   onPercentSubmitted: _isCustom
                                       ? (value) => setState(() {})
                                       : null,
                                 );
                               },
                             ),
-                            // addEntryButton: !_isCustom ||
-                            //         double.parse(_targetNicStrController.text) <= 0.0
-                            //     ? null
-                            //     : Padding(
-                            //         padding: const EdgeInsets.only(top: 8.0),
-                            //         child: Row(
-                            //           mainAxisAlignment: MainAxisAlignment.end,
-                            //           children: [
-                            //             TextButton(
-                            //               onPressed: () => _addNicBaseEntry(null),
-                            //               child: const Text("+ Add"),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
                           ),
                         ],
                       ),
