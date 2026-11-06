@@ -1,5 +1,5 @@
 import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_screen.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_mix_screen.dart';
 import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_status_chip.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +86,7 @@ class MixBatchListTile extends StatelessWidget {
       tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => MixBatchScreen(id: batch.id)),
+          MaterialPageRoute(builder: (_) => MixBatchMixScreen(id: batch.id)),
         );
       },
       contentPadding: EdgeInsets.zero,

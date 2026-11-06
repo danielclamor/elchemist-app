@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class MixBatchScreen extends ConsumerStatefulWidget {
+class MixBatchMixScreen extends ConsumerStatefulWidget {
   final String id;
 
-  const MixBatchScreen({super.key, required this.id});
+  const MixBatchMixScreen({super.key, required this.id});
 
   @override
-  ConsumerState<MixBatchScreen> createState() => _MixBatchScreenState();
+  ConsumerState<MixBatchMixScreen> createState() => _MixBatchScreenState();
 }
 
-class _MixBatchScreenState extends ConsumerState<MixBatchScreen> {
+class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
   @override
   Widget build(BuildContext context) {
     final id = widget.id;
