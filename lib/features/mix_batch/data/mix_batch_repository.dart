@@ -62,8 +62,10 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
         document: gql(mixBatchDetailsQuery),
         variables: {'id': id},
         fetchPolicy: FetchPolicy.networkOnly,
+        // cacheRereadPolicy: CacheRereadPolicy.ignoreAll,
       ),
     );
+
     if (result.hasException) {
       throw result.exception!;
     }
