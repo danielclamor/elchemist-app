@@ -4,12 +4,14 @@ import 'package:gap/gap.dart';
 class SectionCard extends StatelessWidget {
   final double? width;
   final String? title;
+  final Widget? titleTrailing;
   final Widget child;
 
   const SectionCard({
     super.key,
     this.width,
     this.title,
+    this.titleTrailing,
     required this.child,
   });
 
@@ -30,19 +32,25 @@ class SectionCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              title != null
-                  ? Text(
-                      title!.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primaryFixedDim
-                            .withAlpha(150),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  title != null
+                      ? Text(
+                          title!.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primaryFixedDim
+                                .withAlpha(150),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  titleTrailing ?? const SizedBox.shrink(),
+                ],
+              ),
               const Gap(20),
               child,
             ],

@@ -1,5 +1,5 @@
-import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
-import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_entry_row.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/nic_base_entry_row.dart';
 import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/models/ingredient.dart';
 
@@ -8,11 +8,11 @@ class MixRecipeCalculator {
   final double nicBaseNicStr;
   final double nicBaseVG;
   final double nicBasePG;
-  final List<NicBaseEntry> nicBaseEntries;
+  final Map<String, NicBaseEntry> nicBaseEntries;
   final double targetNicStr;
   final double targetVG;
   final double targetPG;
-  final List<FlavoringEntry> flavoringEntries;
+  final Map<String, FlavoringEntry> flavoringEntries;
 
   double totalNicBaseVGRatio;
   double totalNicBasePGRatio;
@@ -24,12 +24,12 @@ class MixRecipeCalculator {
     required this.nicBaseNicStr,
     this.nicBaseVG = 0.0,
     this.nicBasePG = 0.0,
-    List<NicBaseEntry>? nicBaseEntries,
+    Map<String, NicBaseEntry>? nicBaseEntries,
     required this.targetNicStr,
     required this.targetVG,
     required this.targetPG,
     required this.flavoringEntries,
-  })  : nicBaseEntries = nicBaseEntries ?? [],
+  })  : nicBaseEntries = nicBaseEntries ?? {},
         totalNicBaseVGRatio = 0.0,
         totalNicBasePGRatio = 0.0,
         totalFlavVGRatio = 0.0,
@@ -117,9 +117,14 @@ class MixRecipeCalculator {
     if (targetNicStr <= 0.0) return [];
 
     if (nicBaseEntries.isNotEmpty) {
-      return nicBaseEntries
+      return nicBaseEntries.values
           .map((entry) {
-            return _getNicBase(entry.ratio, entry.isVG, entry.code);
+            // return _getNicBase(entry.ratio, entry.isVG, entry.code);
+            return _getNicBase(
+              entry.ratio,
+              entry.nicBaseOption.isVg,
+              entry.nicBaseOption.code,
+            );
           })
           .whereType<Ingredient>()
           .toList();
@@ -132,22 +137,22 @@ class MixRecipeCalculator {
   }
 
   List<Ingredient> get _allFlavorings {
-    return flavoringEntries.map((flavor) {
-      final volume = flavor.ratio * batchVolume;
+    return flavoringEntries.values.map((entry) {
+      final volume = entry.ratio * batchVolume;
       double weight;
 
-      if (flavor.isVG) {
-        totalFlavVGRatio += flavor.ratio;
+      if (entry.flavoringOption.isVg) {
+        totalFlavVGRatio += entry.ratio;
         weight = volume * vgFlavDensity;
       } else {
-        totalFlavPGRatio += flavor.ratio;
+        totalFlavPGRatio += entry.ratio;
         weight = volume * pgFlavDensity;
       }
 
       return Ingredient(
         name:
-            '${flavor.name == '' ? 'Flavour' : flavor.name} (${flavor.isVG ? 'VG' : 'PG'})',
-        ratio: flavor.ratio,
+            '${entry.name == '' ? 'Flavour' : entry.name} (${entry.flavoringOption.isVg ? 'VG' : 'PG'})',
+        ratio: entry.ratio,
         volume: volume,
         weight: weight,
       );

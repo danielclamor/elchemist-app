@@ -1,491 +1,491 @@
-import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
-import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
-import 'package:elchemist_app/components/organisms/batch_section.dart';
-import 'package:elchemist_app/components/organisms/flavoring_section.dart';
-import 'package:elchemist_app/components/organisms/formula_search_section.dart';
-import 'package:elchemist_app/components/organisms/formula_section.dart';
-import 'package:elchemist_app/components/organisms/nic_base_section.dart';
-import 'package:elchemist_app/components/organisms/recipe_section.dart';
-import 'package:elchemist_app/components/organisms/target_section.dart';
-import 'package:elchemist_app/models/flavoring.dart';
-import 'package:elchemist_app/models/nic_base.dart';
-import 'package:elchemist_app/models/nic_base_option.dart';
-import 'package:elchemist_app/models/nic_profile.dart';
-import 'package:elchemist_app/models/formula.dart';
-import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
-import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
+// import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
+// import 'package:elchemist_app/components/molecules/nic_base_entry_row.dart';
+// import 'package:elchemist_app/components/organisms/batch_section.dart';
+// import 'package:elchemist_app/components/organisms/flavoring_section.dart';
+// import 'package:elchemist_app/components/organisms/formula_search_section.dart';
+// import 'package:elchemist_app/components/organisms/formula_section.dart';
+// import 'package:elchemist_app/components/organisms/nic_base_section.dart';
+// import 'package:elchemist_app/components/organisms/recipe_section.dart';
+// import 'package:elchemist_app/components/organisms/target_section.dart';
+// import 'package:elchemist_app/models/flavoring.dart';
+// import 'package:elchemist_app/models/nic_base.dart';
+// import 'package:elchemist_app/models/nic_base_option.dart';
+// import 'package:elchemist_app/models/nic_profile.dart';
+// import 'package:elchemist_app/models/formula.dart';
+// import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
+// import 'package:flutter/material.dart';
+// import 'package:gap/gap.dart';
 
-class SearchMixView extends StatefulWidget {
-  final List<Formula> formulas;
-  final List<NicBaseOption> nicBaseOptions;
+// class SearchMixView extends StatefulWidget {
+//   final List<Formula> formulas;
+//   final List<NicBaseOption> nicBaseOptions;
 
-  const SearchMixView({
-    super.key,
-    required this.formulas,
-    required this.nicBaseOptions,
-  });
+//   const SearchMixView({
+//     super.key,
+//     required this.formulas,
+//     required this.nicBaseOptions,
+//   });
 
-  @override
-  State<SearchMixView> createState() => _SearchMixViewState();
-}
+//   @override
+//   State<SearchMixView> createState() => _SearchMixViewState();
+// }
 
-class _SearchMixViewState extends State<SearchMixView> {
-  final List<NicBaseEntry> _nicBaseEntries = [];
+// class _SearchMixViewState extends State<SearchMixView> {
+//   final List<NicBaseEntry> _nicBaseEntries = [];
 
-  final List<FlavoringEntry> _flavoringEntries = [];
+//   final List<FlavoringEntry> _flavoringEntries = [];
 
-  Formula? _formula;
-  NicProfile? _nicProfile;
-  bool _isCustom = false;
+//   Formula? _formula;
+//   NicProfile? _nicProfile;
+//   bool _isCustom = false;
 
-  late SearchController _searchController;
-  late TextEditingController _nicLevelController;
-  late TextEditingController _volumeController;
-  late TextEditingController _nicBaseNicStrController;
-  late TextEditingController _nicBaseVGController;
-  late TextEditingController _nicBasePGController;
-  late TextEditingController _targetNicStrController;
-  late TextEditingController _targetVGController;
-  late TextEditingController _targetPGController;
+//   late SearchController _searchController;
+//   late TextEditingController _nicLevelController;
+//   late TextEditingController _volumeController;
+//   late TextEditingController _nicBaseNicStrController;
+//   late TextEditingController _nicBaseVGController;
+//   late TextEditingController _nicBasePGController;
+//   late TextEditingController _targetNicStrController;
+//   late TextEditingController _targetVGController;
+//   late TextEditingController _targetPGController;
 
-  List<TextEditingController> get _allControllers => [
-        _searchController,
-        _nicLevelController,
-        _volumeController,
-        _nicBaseNicStrController,
-        _nicBaseVGController,
-        _nicBasePGController,
-        _targetNicStrController,
-        _targetVGController,
-        _targetPGController
-      ];
+//   List<TextEditingController> get _allControllers => [
+//         _searchController,
+//         _nicLevelController,
+//         _volumeController,
+//         _nicBaseNicStrController,
+//         _nicBaseVGController,
+//         _nicBasePGController,
+//         _targetNicStrController,
+//         _targetVGController,
+//         _targetPGController
+//       ];
 
-  @override
-  void initState() {
-    _searchController = SearchController();
-    _volumeController = TextEditingController(text: "0");
-    _nicLevelController = TextEditingController(text: "0");
+//   @override
+//   void initState() {
+//     _searchController = SearchController();
+//     _volumeController = TextEditingController(text: "0");
+//     _nicLevelController = TextEditingController(text: "0");
 
-    _targetNicStrController = TextEditingController(text: "0");
-    _targetVGController = TextEditingController(text: "0");
-    _targetPGController = TextEditingController(text: "0");
+//     _targetNicStrController = TextEditingController(text: "0");
+//     _targetVGController = TextEditingController(text: "0");
+//     _targetPGController = TextEditingController(text: "0");
 
-    _nicBaseNicStrController = TextEditingController(text: "0");
-    _nicBaseVGController = TextEditingController(text: "0");
-    _nicBasePGController = TextEditingController(text: "0");
+//     _nicBaseNicStrController = TextEditingController(text: "0");
+//     _nicBaseVGController = TextEditingController(text: "0");
+//     _nicBasePGController = TextEditingController(text: "0");
 
-    super.initState();
-  }
+//     super.initState();
+//   }
 
-  @override
-  void dispose() {
-    for (final c in _allControllers) {
-      c.dispose();
-    }
+//   @override
+//   void dispose() {
+//     for (final c in _allControllers) {
+//       c.dispose();
+//     }
 
-    super.dispose();
-  }
+//     super.dispose();
+//   }
 
-  void _changeFormula() {
-    _searchController.clear();
-    setState(() {
-      _formula = null;
-      _isCustom = false;
-      _setNicProfile(null);
-    });
-  }
+//   void _changeFormula() {
+//     _searchController.clear();
+//     setState(() {
+//       _formula = null;
+//       _isCustom = false;
+//       _setNicProfile(null);
+//     });
+//   }
 
-  void _setNicProfile(NicProfile? nicProfile) {
-    if (_nicProfile == nicProfile) return;
+//   void _setNicProfile(NicProfile? nicProfile) {
+//     if (_nicProfile == nicProfile) return;
 
-    setState(() {
-      _nicProfile = nicProfile;
+//     setState(() {
+//       _nicProfile = nicProfile;
 
-      if (_nicProfile == null) {
-        _volumeController = TextEditingController(text: "0");
-        _nicLevelController = TextEditingController(text: "0");
+//       if (_nicProfile == null) {
+//         _volumeController = TextEditingController(text: "0");
+//         _nicLevelController = TextEditingController(text: "0");
 
-        _targetNicStrController = TextEditingController(text: "0");
-        _targetVGController = TextEditingController(text: "0");
-        _targetPGController = TextEditingController(text: "0");
+//         _targetNicStrController = TextEditingController(text: "0");
+//         _targetVGController = TextEditingController(text: "0");
+//         _targetPGController = TextEditingController(text: "0");
 
-        _nicBaseNicStrController = TextEditingController(text: "0");
-        _nicBaseVGController = TextEditingController(text: "0");
-        _nicBasePGController = TextEditingController(text: "0");
-      } else {
-        _nicLevelController.text =
-            (_nicProfile!.targetNicStr * _nicProfile!.nicLevelMultiplier)
-                .toString();
-        _nicBaseNicStrController.text =
-            (_nicProfile!.nicBaseNicStr * 100.0).toString();
-        _targetNicStrController.text =
-            (_nicProfile!.targetNicStr * 100.0).toString();
-        _targetVGController.text = (_nicProfile!.targetVg * 100.0).toString();
-        _targetPGController.text = (_nicProfile!.targetPg * 100.0).toString();
-      }
+//         _nicBaseNicStrController = TextEditingController(text: "0");
+//         _nicBaseVGController = TextEditingController(text: "0");
+//         _nicBasePGController = TextEditingController(text: "0");
+//       } else {
+//         _nicLevelController.text =
+//             (_nicProfile!.targetNicStr * _nicProfile!.nicLevelMultiplier)
+//                 .toString();
+//         _nicBaseNicStrController.text =
+//             (_nicProfile!.nicBaseNicStr * 100.0).toString();
+//         _targetNicStrController.text =
+//             (_nicProfile!.targetNicStr * 100.0).toString();
+//         _targetVGController.text = (_nicProfile!.targetVg * 100.0).toString();
+//         _targetPGController.text = (_nicProfile!.targetPg * 100.0).toString();
+//       }
 
-      if (_nicBaseEntries.isNotEmpty) {
-        _nicBaseEntries.clear();
-      }
+//       if (_nicBaseEntries.isNotEmpty) {
+//         _nicBaseEntries.clear();
+//       }
 
-      if (_flavoringEntries.isNotEmpty) {
-        _flavoringEntries.clear();
-      }
-    });
+//       if (_flavoringEntries.isNotEmpty) {
+//         _flavoringEntries.clear();
+//       }
+//     });
 
-    _populateFlavoringEntries();
-    _populateNicBaseEntries();
-  }
+//     _populateFlavoringEntries();
+//     _populateNicBaseEntries();
+//   }
 
-  void _populateFlavoringEntries() {
-    if (_nicProfile == null) return;
+//   void _populateFlavoringEntries() {
+//     if (_nicProfile == null) return;
 
-    for (Flavoring flavoring in _nicProfile!.flavorings) {
-      _addFlavoringEntry(
-        FlavoringEntry(
-          name: flavoring.flavoringOption.name,
-          ratio: flavoring.ratio,
-          isVG: flavoring.flavoringOption.isVg,
-        ),
-      );
-    }
-  }
+//     for (Flavoring flavoring in _nicProfile!.flavorings) {
+//       _addFlavoringEntry(
+//         FlavoringEntry(
+//           name: flavoring.flavoringOption.name,
+//           ratio: flavoring.ratio,
+//           isVG: flavoring.flavoringOption.isVg,
+//         ),
+//       );
+//     }
+//   }
 
-  void _addFlavoringEntry(FlavoringEntry? entry) {
-    setState(() {
-      _flavoringEntries.add(entry ?? FlavoringEntry());
-    });
-  }
+//   void _addFlavoringEntry(FlavoringEntry? entry) {
+//     setState(() {
+//       _flavoringEntries.add(entry ?? FlavoringEntry());
+//     });
+//   }
 
-  // void _removeFlavoringEntry(FlavoringEntry entry) {
-  //   setState(() {
-  //     entry.dispose();
-  //     _flavoringEntries.remove(entry);
-  //   });
-  // }
+//   // void _removeFlavoringEntry(FlavoringEntry entry) {
+//   //   setState(() {
+//   //     entry.dispose();
+//   //     _flavoringEntries.remove(entry);
+//   //   });
+//   // }
 
-  void _populateNicBaseEntries() {
-    if (_nicProfile == null) return;
+//   void _populateNicBaseEntries() {
+//     if (_nicProfile == null) return;
 
-    for (NicBase nicBase in _nicProfile!.nicBases) {
-      _addNicBaseEntry(
-        NicBaseEntry(
-          nicBase: nicBase,
-        ),
-      );
-    }
+//     for (NicBase nicBase in _nicProfile!.nicBases) {
+//       _addNicBaseEntry(
+//         NicBaseEntry(
+//           nicBase: nicBase,
+//         ),
+//       );
+//     }
 
-    _calculateTotalNicBaseRatio();
-  }
+//     _calculateTotalNicBaseRatio();
+//   }
 
-  void _calculateTotalNicBaseRatio() {
-    double totalNicBaseVGPerc = (_nicBaseEntries
-            .where((entry) => entry.isVG)
-            .fold(0.0, (sum, entry) => sum + entry.ratio)) *
-        100;
+//   void _calculateTotalNicBaseRatio() {
+//     double totalNicBaseVGPerc = (_nicBaseEntries
+//             .where((entry) => entry.isVG)
+//             .fold(0.0, (sum, entry) => sum + entry.ratio)) *
+//         100;
 
-    double totalNicBasePGPerc = (_nicBaseEntries
-            .where((entry) => !entry.isVG)
-            .fold(0.0, (sum, entry) => sum + entry.ratio)) *
-        100;
+//     double totalNicBasePGPerc = (_nicBaseEntries
+//             .where((entry) => !entry.isVG)
+//             .fold(0.0, (sum, entry) => sum + entry.ratio)) *
+//         100;
 
-    setState(() {
-      _nicBaseVGController.text = totalNicBaseVGPerc.toString();
-      _nicBasePGController.text = totalNicBasePGPerc.toString();
-    });
-  }
+//     setState(() {
+//       _nicBaseVGController.text = totalNicBaseVGPerc.toString();
+//       _nicBasePGController.text = totalNicBasePGPerc.toString();
+//     });
+//   }
 
-  void _addNicBaseEntry(NicBaseEntry? entry) {
-    setState(() {
-      _nicBaseEntries.add(entry ?? NicBaseEntry());
-    });
-  }
+//   void _addNicBaseEntry(NicBaseEntry? entry) {
+//     setState(() {
+//       _nicBaseEntries.add(entry ?? NicBaseEntry());
+//     });
+//   }
 
-  void _removeNicBaseEntry(NicBaseEntry entry) {
-    setState(() {
-      entry.dispose();
-      _nicBaseEntries.remove(entry);
-    });
-    _calculateTotalNicBaseRatio();
-  }
+//   void _removeNicBaseEntry(NicBaseEntry entry) {
+//     setState(() {
+//       entry.dispose();
+//       _nicBaseEntries.remove(entry);
+//     });
+//     _calculateTotalNicBaseRatio();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
-    var sectionWidth = 400.0;
-    var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 350.0;
-    var recipeSectionWidth =
-        screenSize.width < 1920 ? sectionWidth : sectionWidth + midSectionWidth;
+//   @override
+//   Widget build(BuildContext context) {
+//     var screenSize = MediaQuery.of(context).size;
+//     var wrapperWidth = screenSize.width < 1920 ? 800.0 : null;
+//     var sectionWidth = 400.0;
+//     var midSectionWidth = screenSize.width < 1920 ? sectionWidth : 350.0;
+//     var recipeSectionWidth =
+//         screenSize.width < 1920 ? sectionWidth : sectionWidth + midSectionWidth;
 
-    final List<Formula> formulas = widget.formulas;
+//     final List<Formula> formulas = widget.formulas;
 
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.all(24.0),
-            constraints: BoxConstraints(
-              maxWidth: wrapperWidth ?? double.infinity,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Search and Mix",
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Gap(24),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 20.0,
-                  runSpacing: 20.0,
-                  children: [
-                    Container(
-                      constraints: BoxConstraints(
-                        maxWidth: sectionWidth,
-                      ),
-                      child: Column(
-                        spacing: 20.0,
-                        children: [
-                          _formula == null
-                              ? FormulaSearchSection(
-                                  searchController: _searchController,
-                                  suggestionsBuilder: (context, controller) {
-                                    final String input =
-                                        controller.value.text.toLowerCase();
-                                    final Iterable<Formula>
-                                        filteredSuggestions =
-                                        formulas.where((formulaItem) {
-                                      return formulaItem.name
-                                          .toLowerCase()
-                                          .contains(input);
-                                    });
+//     return Scaffold(
+//       body: SingleChildScrollView(
+//         child: Center(
+//           child: Container(
+//             padding: const EdgeInsets.all(24.0),
+//             constraints: BoxConstraints(
+//               maxWidth: wrapperWidth ?? double.infinity,
+//             ),
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 const Text(
+//                   "Search and Mix",
+//                   style: TextStyle(
+//                     fontSize: 24.0,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 const Gap(24),
+//                 Wrap(
+//                   alignment: WrapAlignment.center,
+//                   spacing: 20.0,
+//                   runSpacing: 20.0,
+//                   children: [
+//                     Container(
+//                       constraints: BoxConstraints(
+//                         maxWidth: sectionWidth,
+//                       ),
+//                       child: Column(
+//                         spacing: 20.0,
+//                         children: [
+//                           _formula == null
+//                               ? FormulaSearchSection(
+//                                   searchController: _searchController,
+//                                   suggestionsBuilder: (context, controller) {
+//                                     final String input =
+//                                         controller.value.text.toLowerCase();
+//                                     final Iterable<Formula>
+//                                         filteredSuggestions =
+//                                         formulas.where((formulaItem) {
+//                                       return formulaItem.name
+//                                           .toLowerCase()
+//                                           .contains(input);
+//                                     });
 
-                                    return filteredSuggestions
-                                        .map((suggestionItem) {
-                                      return ListTile(
-                                        title: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              suggestionItem.brand
-                                                  .toUpperCase(),
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
-                                            Text(
-                                              suggestionItem.name,
-                                              style: const TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              "${suggestionItem.nicType.toString()} — ${suggestionItem.chillType.toString()}",
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _searchController.closeView(
-                                              suggestionItem.name,
-                                            );
-                                            _formula = suggestionItem;
-                                          });
-                                        },
-                                      );
-                                    });
-                                  },
-                                )
-                              : FormulaSection(
-                                  formula: _formula,
-                                  auxiliaryTool: IconButton(
-                                    icon: const Icon(
-                                      Icons.change_circle_sharp,
-                                    ),
-                                    onPressed: () => _changeFormula(),
-                                  ),
-                                  nicProfile: _nicProfile,
-                                  onNicProfileSelected: (NicProfile? value) =>
-                                      _setNicProfile(value),
-                                  nicLevelController: _nicLevelController,
-                                  onNicLevelSubmitted:
-                                      _nicProfile == null || !_isCustom
-                                          ? null
-                                          : (value) {
-                                              if (_nicProfile != null) {
-                                                double targetNicStr =
-                                                    double.parse(value) /
-                                                        (_nicProfile!.isOldMix
-                                                            ? 10
-                                                            : 2.5);
-                                                setState(() {
-                                                  _targetNicStrController.text =
-                                                      targetNicStr.toString();
-                                                });
-                                              }
-                                            },
-                                  showCustomCheckBox: true,
-                                  isCustom: _isCustom,
-                                  onIsCustomChanged: _nicProfile == null
-                                      ? null
-                                      : (bool? value) {
-                                          setState(() {
-                                            _isCustom = value ?? false;
-                                          });
+//                                     return filteredSuggestions
+//                                         .map((suggestionItem) {
+//                                       return ListTile(
+//                                         title: Column(
+//                                           crossAxisAlignment:
+//                                               CrossAxisAlignment.start,
+//                                           children: [
+//                                             Text(
+//                                               suggestionItem.brand
+//                                                   .toUpperCase(),
+//                                               style: const TextStyle(
+//                                                 fontWeight: FontWeight.w300,
+//                                               ),
+//                                             ),
+//                                             Text(
+//                                               suggestionItem.name,
+//                                               style: const TextStyle(
+//                                                 fontSize: 16.0,
+//                                                 fontWeight: FontWeight.bold,
+//                                               ),
+//                                             ),
+//                                             Text(
+//                                               "${suggestionItem.nicType.toString()} — ${suggestionItem.chillType.toString()}",
+//                                               style: const TextStyle(
+//                                                 fontWeight: FontWeight.w300,
+//                                               ),
+//                                             ),
+//                                           ],
+//                                         ),
+//                                         onTap: () {
+//                                           setState(() {
+//                                             _searchController.closeView(
+//                                               suggestionItem.name,
+//                                             );
+//                                             _formula = suggestionItem;
+//                                           });
+//                                         },
+//                                       );
+//                                     });
+//                                   },
+//                                 )
+//                               : FormulaSection(
+//                                   formula: _formula,
+//                                   auxiliaryTool: IconButton(
+//                                     icon: const Icon(
+//                                       Icons.change_circle_sharp,
+//                                     ),
+//                                     onPressed: () => _changeFormula(),
+//                                   ),
+//                                   nicProfile: _nicProfile,
+//                                   onNicProfileSelected: (NicProfile? value) =>
+//                                       _setNicProfile(value),
+//                                   nicLevelController: _nicLevelController,
+//                                   onNicLevelSubmitted:
+//                                       _nicProfile == null || !_isCustom
+//                                           ? null
+//                                           : (value) {
+//                                               if (_nicProfile != null) {
+//                                                 double targetNicStr =
+//                                                     double.parse(value) /
+//                                                         (_nicProfile!.isOldMix
+//                                                             ? 10
+//                                                             : 2.5);
+//                                                 setState(() {
+//                                                   _targetNicStrController.text =
+//                                                       targetNicStr.toString();
+//                                                 });
+//                                               }
+//                                             },
+//                                   showCustomCheckBox: true,
+//                                   isCustom: _isCustom,
+//                                   onIsCustomChanged: _nicProfile == null
+//                                       ? null
+//                                       : (bool? value) {
+//                                           setState(() {
+//                                             _isCustom = value ?? false;
+//                                           });
 
-                                          if (value == false) {
-                                            _setNicProfile(
-                                              _nicProfile,
-                                            );
-                                          }
-                                        },
-                                ),
-                          _nicProfile == null
-                              ? const SizedBox.shrink()
-                              : BatchSection(
-                                  volumeController: _volumeController,
-                                  onVolumeSubmitted: (value) => setState(() {}),
-                                ),
-                          _nicProfile == null
-                              ? const SizedBox.shrink()
-                              : FlavoringSection(
-                                  flavoringEntries: List.generate(
-                                    _flavoringEntries.length,
-                                    (index) {
-                                      final entry = _flavoringEntries[index];
-                                      return FlavoringEntryRow(
-                                        entry: entry,
-                                        withHeaders: index == 0,
-                                        showDeleteIcon: false,
-                                        onPercentSubmitted: _isCustom
-                                            ? (value) => setState(() {})
-                                            : null,
-                                      );
-                                    },
-                                  ),
-                                ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      spacing: 20.0,
-                      children: [
-                        NicBaseSection(
-                          width: midSectionWidth,
-                          nicStrController: _nicBaseNicStrController,
-                          vgController: _nicBaseVGController,
-                          pgController: _nicBasePGController,
-                          nicBaseEntries: List.generate(
-                            _nicBaseEntries.length,
-                            (index) {
-                              final entry = _nicBaseEntries[index];
-                              return NicBaseEntryRow(
-                                nicBaseOptions: widget.nicBaseOptions,
-                                entry: entry,
-                                isCustom: _isCustom,
-                                withHeaders: index == 0,
-                                showDeleteIcon:
-                                    _isCustom && _nicBaseEntries.length > 1,
-                                onEntryDeleted: () =>
-                                    _removeNicBaseEntry(entry),
-                                onOptionSelected: (value) {
-                                  final nicBaseOption = value;
+//                                           if (value == false) {
+//                                             _setNicProfile(
+//                                               _nicProfile,
+//                                             );
+//                                           }
+//                                         },
+//                                 ),
+//                           _nicProfile == null
+//                               ? const SizedBox.shrink()
+//                               : BatchSection(
+//                                   volumeController: _volumeController,
+//                                   onVolumeSubmitted: (value) => setState(() {}),
+//                                 ),
+//                           _nicProfile == null
+//                               ? const SizedBox.shrink()
+//                               : FlavoringSection(
+//                                   flavoringEntries: List.generate(
+//                                     _flavoringEntries.length,
+//                                     (index) {
+//                                       final entry = _flavoringEntries[index];
+//                                       return FlavoringEntryRow(
+//                                         entry: entry,
+//                                         withHeaders: index == 0,
+//                                         showDeleteIcon: false,
+//                                         onPercentSubmitted: _isCustom
+//                                             ? (value) => setState(() {})
+//                                             : null,
+//                                       );
+//                                     },
+//                                   ),
+//                                 ),
+//                         ],
+//                       ),
+//                     ),
+//                     Column(
+//                       spacing: 20.0,
+//                       children: [
+//                         NicBaseSection(
+//                           width: midSectionWidth,
+//                           nicStrController: _nicBaseNicStrController,
+//                           vgController: _nicBaseVGController,
+//                           pgController: _nicBasePGController,
+//                           nicBaseEntries: List.generate(
+//                             _nicBaseEntries.length,
+//                             (index) {
+//                               final entry = _nicBaseEntries[index];
+//                               return NicBaseEntryRow(
+//                                 nicBaseOptions: widget.nicBaseOptions,
+//                                 entry: entry,
+//                                 isCustom: _isCustom,
+//                                 withHeaders: index == 0,
+//                                 showDeleteIcon:
+//                                     _isCustom && _nicBaseEntries.length > 1,
+//                                 onEntryDeleted: () =>
+//                                     _removeNicBaseEntry(entry),
+//                                 onOptionSelected: (value) {
+//                                   final nicBaseOption = value;
 
-                                  if (nicBaseOption == null) {
-                                    return;
-                                  }
+//                                   if (nicBaseOption == null) {
+//                                     return;
+//                                   }
 
-                                  setState(() {
-                                    entry.nicBase = NicBase(
-                                      nicBaseOption: nicBaseOption,
-                                      ratio: entry.ratio,
-                                    );
-                                  });
+//                                   setState(() {
+//                                     entry.nicBase = NicBase(
+//                                       nicBaseOption: nicBaseOption,
+//                                       ratio: entry.ratio,
+//                                     );
+//                                   });
 
-                                  _calculateTotalNicBaseRatio();
-                                },
-                                onPercentSubmitted: (value) =>
-                                    _calculateTotalNicBaseRatio(),
-                              );
-                            },
-                          ),
-                          addEntryButton: !_isCustom ||
-                                  double.parse(_targetNicStrController.text) <=
-                                      0.0
-                              ? null
-                              : Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      TextButton(
-                                        onPressed: () => _addNicBaseEntry(null),
-                                        child: const Text("+ Add"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                        ),
-                        TargetSection(
-                          width: midSectionWidth,
-                          nicStrController: _targetNicStrController,
-                          vgController: _targetVGController,
-                          onVGSubmitted: !_isCustom
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    _targetVGController.text = value;
-                                    _targetPGController.text =
-                                        (100 - (double.parse(value)))
-                                            .toString();
-                                  });
-                                },
-                          pgController: _targetPGController,
-                          onPGSubmitted: !_isCustom
-                              ? null
-                              : (value) {
-                                  setState(() {
-                                    _targetPGController.text = value;
-                                    _targetVGController.text =
-                                        (100 - (double.parse(value)))
-                                            .toString();
-                                  });
-                                },
-                        ),
-                      ],
-                    ),
-                    RecipeSection(
-                      width: recipeSectionWidth,
-                      ingredients: MixRecipeCalculator(
-                        batchVolume: double.parse(_volumeController.text),
-                        nicBaseNicStr:
-                            double.parse(_nicBaseNicStrController.text) / 100,
-                        targetNicStr:
-                            double.parse(_targetNicStrController.text) / 100,
-                        targetVG: double.parse(_targetVGController.text) / 100,
-                        targetPG: double.parse(_targetPGController.text) / 100,
-                        nicBaseEntries: _nicBaseEntries,
-                        flavoringEntries: _flavoringEntries,
-                      ).ingredients,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//                                   _calculateTotalNicBaseRatio();
+//                                 },
+//                                 onPercentSubmitted: (value) =>
+//                                     _calculateTotalNicBaseRatio(),
+//                               );
+//                             },
+//                           ),
+//                           addEntryButton: !_isCustom ||
+//                                   double.parse(_targetNicStrController.text) <=
+//                                       0.0
+//                               ? null
+//                               : Padding(
+//                                   padding: const EdgeInsets.only(top: 8.0),
+//                                   child: Row(
+//                                     mainAxisAlignment: MainAxisAlignment.end,
+//                                     children: [
+//                                       TextButton(
+//                                         onPressed: () => _addNicBaseEntry(null),
+//                                         child: const Text("+ Add"),
+//                                       ),
+//                                     ],
+//                                   ),
+//                                 ),
+//                         ),
+//                         TargetSection(
+//                           width: midSectionWidth,
+//                           nicStrController: _targetNicStrController,
+//                           vgController: _targetVGController,
+//                           onVGSubmitted: !_isCustom
+//                               ? null
+//                               : (value) {
+//                                   setState(() {
+//                                     _targetVGController.text = value;
+//                                     _targetPGController.text =
+//                                         (100 - (double.parse(value)))
+//                                             .toString();
+//                                   });
+//                                 },
+//                           pgController: _targetPGController,
+//                           onPGSubmitted: !_isCustom
+//                               ? null
+//                               : (value) {
+//                                   setState(() {
+//                                     _targetPGController.text = value;
+//                                     _targetVGController.text =
+//                                         (100 - (double.parse(value)))
+//                                             .toString();
+//                                   });
+//                                 },
+//                         ),
+//                       ],
+//                     ),
+//                     RecipeSection(
+//                       width: recipeSectionWidth,
+//                       ingredients: MixRecipeCalculator(
+//                         batchVolume: double.parse(_volumeController.text),
+//                         nicBaseNicStr:
+//                             double.parse(_nicBaseNicStrController.text) / 100,
+//                         targetNicStr:
+//                             double.parse(_targetNicStrController.text) / 100,
+//                         targetVG: double.parse(_targetVGController.text) / 100,
+//                         targetPG: double.parse(_targetPGController.text) / 100,
+//                         nicBaseEntries: _nicBaseEntries,
+//                         flavoringEntries: _flavoringEntries,
+//                       ).ingredients,
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

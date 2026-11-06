@@ -1,15 +1,10 @@
 import 'dart:io';
 
 // import 'package:elchemist_app/constants.dart';
+import 'package:elchemist_app/core/widgets/nested_navigator.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_list_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
-import 'package:elchemist_app/models/formula.dart';
-import 'package:elchemist_app/models/nic_base_option.dart';
-import 'package:elchemist_app/services/api_service.dart';
-import 'package:elchemist_app/services/local_service.dart';
 import 'package:elchemist_app/views/diy_mix_view.dart';
-import 'package:elchemist_app/views/formula_list_view.dart';
-import 'package:elchemist_app/views/search_mix_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -25,7 +20,7 @@ void main() async {
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(1280, 720),
+      fullScreen: true,
       center: true,
     );
 
@@ -36,40 +31,17 @@ void main() async {
     });
   }
 
-  List<Formula> formulas = (LocalService().getFormulas())
-      .map((formulaDto) => Formula.fromDto(formulaDto))
-      .toList();
-  // List<Formula> formulas = (kDebugMode
-  //         ? LocalService().getFormulas()
-  //         : await ApiService().getFormulas())
-  //     .map((formulaDto) => Formula.fromDto(formulaDto))
-  //     .toList();
-
-  List<NicBaseOption> nicBaseOptions = (LocalService().getNicBaseOptions())
-      .map((o) => NicBaseOption.fromDto(o))
-      .toList();
-  // List<NicBaseOption> nicBaseOptions = (kDebugMode
-  //         ? LocalService().getNicBaseOptions()
-  //         : await ApiService().getNicBaseOptions())
-  //     .map((o) => NicBaseOption.fromDto(o))
-  //     .toList();
-
   runApp(
     ProviderScope(
-      child: MyApp(
-        formulas: formulas,
-        nicBaseOptions: nicBaseOptions,
-      ),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final List<Formula> formulas;
-  final List<NicBaseOption> nicBaseOptions;
-
-  const MyApp(
-      {super.key, required this.formulas, required this.nicBaseOptions});
+  const MyApp({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +64,6 @@ class MyApp extends StatelessWidget {
       ),
       home: MyHomePage(
         title: 'ELChemist',
-        formulas: formulas,
-        nicBaseOptions: nicBaseOptions,
       ),
       builder: (context, child) {
         return MediaQuery(
@@ -114,12 +84,8 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({
     super.key,
     required this.title,
-    required this.formulas,
-    required this.nicBaseOptions,
   });
 
-  final List<Formula> formulas;
-  final List<NicBaseOption> nicBaseOptions;
   final String title;
 
   @override
@@ -129,32 +95,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
-  static late List<Widget> _widgetOptions;
-  static late List<String> _drawerItems;
+  final _productionOrdersNavKey = GlobalKey<NavigatorState>();
+  final _mixBatchesNavKey = GlobalKey<NavigatorState>();
+
+  late final List<Widget> _widgetOptions;
+  late final List<String> _drawerItems;
 
   @override
   void initState() {
+    super.initState();
+
     _widgetOptions = <Widget>[
-      ProductionOrderListScreen(),
+      NestedNavigator(
+        navigatorKey: _productionOrdersNavKey,
+        root: ProductionOrderListScreen(),
+      ),
+      NestedNavigator(
+        navigatorKey: _mixBatchesNavKey,
+        root: MixBatchListScreen(),
+      ),
       const DiyMixView(),
-      SearchMixView(
-        formulas: widget.formulas,
-        nicBaseOptions: widget.nicBaseOptions,
-      ),
-      FormulaListView(
-        formulas: widget.formulas,
-        nicBaseOptions: widget.nicBaseOptions,
-      ),
     ];
 
     _drawerItems = [
       "Production Orders",
+      "Mix Batches",
       "DIY",
-      "Search & Mix",
-      "Formulas",
     ];
-
-    super.initState();
   }
 
   void _onItemTapped(int index) {
@@ -185,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               elevation: 2.0,
             ),
             body: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   width: 280,
@@ -229,7 +197,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Expanded(
-                  child: _widgetOptions.elementAt(_selectedIndex),
+                  child: IndexedStack(
+                    index: _selectedIndex,
+                    children: _widgetOptions,
+                  ),
                 ),
               ],
             ),

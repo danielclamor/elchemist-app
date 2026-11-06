@@ -1,9 +1,9 @@
-import 'package:elchemist_app/components/molecules/flavoring_entry_row.dart';
-import 'package:elchemist_app/components/organisms/batch_section.dart';
-import 'package:elchemist_app/components/organisms/flavoring_section.dart';
-import 'package:elchemist_app/components/organisms/nic_base_section.dart';
-import 'package:elchemist_app/components/organisms/recipe_section.dart';
-import 'package:elchemist_app/components/organisms/target_section.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_entry_row.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_volume_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_flavoring_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_nic_base_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_recipe_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_target_section.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -16,7 +16,7 @@ class DiyMixView extends StatefulWidget {
 }
 
 class _DiyMixViewState extends State<DiyMixView> {
-  final List<FlavoringEntry> _flavoringEntries = [];
+  final _flavoringEntries = <String, FlavoringEntry>{};
 
   late TextEditingController _volumeController;
   late TextEditingController _nicBaseNicStrController;
@@ -59,16 +59,16 @@ class _DiyMixViewState extends State<DiyMixView> {
   }
 
   void _addFlavoringEntry() {
-    final flavor = 'Flavour ${_flavoringEntries.length + 1}';
-    const ratio = 0.0;
+    // final flavor = 'Flavour ${_flavoringEntries.length + 1}';
+    // const ratio = 0.0;
 
-    final entry = FlavoringEntry(
-      name: flavor,
-      ratio: ratio,
-    );
-    setState(() {
-      _flavoringEntries.add(entry);
-    });
+    // final entry = FlavoringEntry(
+    //   name: flavor,
+    //   ratio: ratio,
+    // );
+    // setState(() {
+    //   _flavoringEntries.add(entry);
+    // });
   }
 
   void _removeFlavoringEntry(FlavoringEntry entry) {
@@ -116,106 +116,102 @@ class _DiyMixViewState extends State<DiyMixView> {
                       Column(
                         spacing: 12.0,
                         children: [
-                          BatchSection(
-                            width: sectionWidth,
-                            volumeController: _volumeController,
-                            onVolumeSubmitted: (value) => setState(() {}),
-                          ),
-                          FlavoringSection(
-                            width: sectionWidth,
-                            flavoringEntries: List.generate(
-                              _flavoringEntries.length,
-                              (index) {
-                                final entry = _flavoringEntries[index];
-                                final withHeaders = index == 0 ? true : false;
+                          MixBatchVolumeSection(),
+                          // FlavoringSection(
+                          //   width: sectionWidth,
+                          //   flavoringEntries: List.generate(
+                          //     _flavoringEntries.length,
+                          //     (index) {
+                          //       final entry = _flavoringEntries[index];
+                          //       final withHeaders = index == 0 ? true : false;
 
-                                return FlavoringEntryRow(
-                                  entry: entry,
-                                  withHeaders: withHeaders,
-                                  showDeleteIcon: true,
-                                  onEntryDeleted: () =>
-                                      _removeFlavoringEntry(entry),
-                                  onNameSubmitted: (value) => setState(() {}),
-                                  onPercentSubmitted: (value) =>
-                                      setState(() {}),
-                                  onIsVGChanged: (value) => setState(() {
-                                    entry.isVG = value ?? false;
-                                  }),
-                                );
-                              },
-                            ),
-                            addEntryButton: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => _addFlavoringEntry(),
-                                    child: const Text("+ Add"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          //       return FlavoringEntryRow(
+                          //         entry: entry,
+                          //         // withHeaders: withHeaders,
+                          //         // showDeleteIcon: true,
+                          //         // onEntryDeleted: () =>
+                          //         //     _removeFlavoringEntry(entry),
+                          //         // onNameSubmitted: (value) => setState(() {}),
+                          //         // onPercentSubmitted: (value) =>
+                          //         //     setState(() {}),
+                          //         // onIsVGChanged: (value) => setState(() {
+                          //         //   entry.isVG = value ?? false;
+                          //         // }),
+                          //       );
+                          //     },
+                          //   ),
+                          //   addEntryButton: Padding(
+                          //     padding: const EdgeInsets.only(top: 8.0),
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.end,
+                          //       children: [
+                          //         TextButton(
+                          //           onPressed: () => _addFlavoringEntry(),
+                          //           child: const Text("+ Add"),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
-                      NicBaseSection(
-                        width: midSectionWidth,
-                        nicStrController: _nicBaseNicStrController,
-                        onNicStrSubmitted: (value) => setState(() {}),
-                        vgController: _nicBaseVGController,
-                        onVGSubmitted: (value) {
-                          setState(() {
-                            _nicBasePGController.text =
-                                (100 - (double.parse(value))).toString();
-                          });
-                        },
-                        pgController: _nicBasePGController,
-                        onPGSubmitted: (value) {
-                          setState(() {
-                            _nicBaseVGController.text =
-                                (100 - (double.parse(value))).toString();
-                          });
-                        },
-                      ),
-                      TargetSection(
-                        width: midSectionWidth,
-                        nicStrController: _targetNicStrController,
-                        onNicStrSubmitted: (value) => setState(() {}),
-                        vgController: _targetVGController,
-                        onVGSubmitted: (value) {
-                          setState(() {
-                            _targetPGController.text =
-                                (100 - (double.parse(value))).toString();
-                          });
-                        },
-                        pgController: _targetPGController,
-                        onPGSubmitted: (value) {
-                          setState(() {
-                            _targetVGController.text =
-                                (100 - (double.parse(value))).toString();
-                          });
-                        },
-                      ),
-                      RecipeSection(
-                        width: sectionWidth,
-                        ingredients: MixRecipeCalculator(
-                          batchVolume: double.parse(_volumeController.text),
-                          nicBaseNicStr:
-                              double.parse(_nicBaseNicStrController.text) / 100,
-                          nicBaseVG:
-                              double.parse(_nicBaseVGController.text) / 100,
-                          nicBasePG:
-                              double.parse(_nicBasePGController.text) / 100,
-                          targetNicStr:
-                              double.parse(_targetNicStrController.text) / 100,
-                          targetVG:
-                              double.parse(_targetVGController.text) / 100,
-                          targetPG:
-                              double.parse(_targetPGController.text) / 100,
-                          flavoringEntries: _flavoringEntries,
-                        ).ingredients,
-                      ),
+                      // NicBaseSection(
+                      //   width: midSectionWidth,
+                      //   nicStrController: _nicBaseNicStrController,
+                      //   onNicStrSubmitted: (value) => setState(() {}),
+                      //   vgController: _nicBaseVGController,
+                      //   onVGSubmitted: (value) {
+                      //     setState(() {
+                      //       _nicBasePGController.text =
+                      //           (100 - (double.parse(value))).toString();
+                      //     });
+                      //   },
+                      //   pgController: _nicBasePGController,
+                      //   onPGSubmitted: (value) {
+                      //     setState(() {
+                      //       _nicBaseVGController.text =
+                      //           (100 - (double.parse(value))).toString();
+                      //     });
+                      //   },
+                      // ),
+                      // MixBatchTargetSection(
+                      //   width: midSectionWidth,
+                      //   nicStrController: _targetNicStrController,
+                      //   onNicStrSubmitted: (value) => setState(() {}),
+                      //   vgController: _targetVGController,
+                      //   onVGSubmitted: (value) {
+                      //     setState(() {
+                      //       _targetPGController.text =
+                      //           (100 - (double.parse(value))).toString();
+                      //     });
+                      //   },
+                      //   pgController: _targetPGController,
+                      //   onPGSubmitted: (value) {
+                      //     setState(() {
+                      //       _targetVGController.text =
+                      //           (100 - (double.parse(value))).toString();
+                      //     });
+                      //   },
+                      // ),
+                      // RecipeSection(
+                      //   width: sectionWidth,
+                      //   ingredients: MixRecipeCalculator(
+                      //     batchVolume: double.parse(_volumeController.text),
+                      //     nicBaseNicStr:
+                      //         double.parse(_nicBaseNicStrController.text) / 100,
+                      //     nicBaseVG:
+                      //         double.parse(_nicBaseVGController.text) / 100,
+                      //     nicBasePG:
+                      //         double.parse(_nicBasePGController.text) / 100,
+                      //     targetNicStr:
+                      //         double.parse(_targetNicStrController.text) / 100,
+                      //     targetVG:
+                      //         double.parse(_targetVGController.text) / 100,
+                      //     targetPG:
+                      //         double.parse(_targetPGController.text) / 100,
+                      //     flavoringEntries: _flavoringEntries,
+                      //   ).ingredients,
+                      // ),
                     ],
                   ),
                 ),
