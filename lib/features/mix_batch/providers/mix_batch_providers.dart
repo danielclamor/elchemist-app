@@ -120,6 +120,6 @@ class MixBatchVolumeMlValue extends Notifier<double> {
 }
 
 final mixBatchVolumeMlValueProvider =
-    NotifierProvider<MixBatchVolumeMlValue, double>(
+    NotifierProvider.autoDispose<MixBatchVolumeMlValue, double>(
   MixBatchVolumeMlValue.new,
 );
