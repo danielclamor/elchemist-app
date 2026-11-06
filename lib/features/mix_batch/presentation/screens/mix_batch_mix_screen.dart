@@ -1,6 +1,12 @@
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_target_section.dart';
 import 'package:elchemist_app/core/utils/date_helper.dart';
+import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_flavoring_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_nic_base_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_orders_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_recipe_section.dart';
+import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_volume_section.dart';
 import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_formula_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -19,6 +25,12 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
   Widget build(BuildContext context) {
     final id = widget.id;
     final async = ref.watch(mixBatchDetailsProvider(id));
+
+    var screenSize = MediaQuery.of(context).size;
+    var mixWrapperWidth = screenSize.width < 1920 ? 800.0 : null;
+    var sectionWidth = 350.0;
+    var recipeSectionWidth =
+        screenSize.width < 1920 ? sectionWidth : sectionWidth + 250;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -92,13 +104,115 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                             fontSize: 14.0,
                           ),
                         ),
+                        Gap(28.0),
+                        MixBatchOrdersSection(
+                          width: sectionWidth,
+                          productionOrders: async.when(
+                            data: (data) =>
+                                data != null ? data.productionOrders : [],
+                            error: (error, stackTrace) => [],
+                            loading: () => [],
+                          ),
+                        ),
                       ],
                     ),
-                    Gap(48.0),
+                    Gap(20.0),
                     async.when(
-                      data: (data) => data != null
-                          ? MixBatchFormulaWrapper(formulaId: data.formula.id)
-                          : SizedBox.shrink(),
+                      data: (data) {
+                        if (data == null) {
+                          return SizedBox.shrink();
+                        }
+                        final formula = data.formula;
+                        final nicBases = formula.nicBases;
+                        final flavorings = formula.flavorings;
+                        final nicLevel =
+                            formula.targetNicStr * formula.nicLevelMultiplier;
+
+                        return Center(
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth: mixWrapperWidth ?? double.infinity,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      formula.fullName,
+                                      style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    if (formula.isPreMix)
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: PreMixChip(
+                                          fgColor: Colors.black,
+                                          bgColor: Colors.grey,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                Text(
+                                  'Nic Level: ${nicLevel.toInt()}mg',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const Gap(24),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 20.0,
+                                  runSpacing: 8.0,
+                                  children: [
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: recipeSectionWidth,
+                                      ),
+                                      child: Column(
+                                        spacing: 20.0,
+                                        children: [
+                                          MixBatchVolumeSection(),
+                                          MixBatchRecipeSection(
+                                            formulaId: formula.id,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth: sectionWidth,
+                                      ),
+                                      child: Column(
+                                        spacing: 20.0,
+                                        children: [
+                                          MixBatchFlavoringSection(
+                                            flavorings: flavorings,
+                                          ),
+                                          MixBatchTargetSection(
+                                            nicStr: formula.targetNicStr,
+                                            vg: formula.targetVg,
+                                            pg: formula.targetPg,
+                                          ),
+                                          MixNicBaseSection(
+                                            nicStr: formula.nicBaseNicStr,
+                                            vg: formula.nicBaseVg,
+                                            pg: formula.nicBasePg,
+                                            nicBases: nicBases,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                       error: (error, stackTrace) => SizedBox.shrink(),
                       loading: () => SizedBox.shrink(),
                     ),

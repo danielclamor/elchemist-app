@@ -4,25 +4,34 @@ import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.d
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MixBatchVolumeSection extends ConsumerWidget {
+class MixBatchVolumeSection extends ConsumerStatefulWidget {
   final double? width;
 
-  const MixBatchVolumeSection({
-    super.key,
-    this.width,
-  });
+  const MixBatchVolumeSection({super.key, this.width});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final volumeController = TextEditingController(
-      text: ref.watch(mixBatchVolumeMlValueProvider).toString(),
-    );
+  ConsumerState<MixBatchVolumeSection> createState() =>
+      _MixBatchVolumeSectionState();
+}
 
+class _MixBatchVolumeSectionState extends ConsumerState<MixBatchVolumeSection> {
+  late final TextEditingController _volumeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _volumeController = TextEditingController(text: "0");
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.invalidate(mixBatchVolumeMlValueProvider));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SectionCard(
-      width: width,
+      width: widget.width,
       title: 'BATCH',
       child: ElTextField(
-        controller: volumeController,
+        controller: _volumeController,
         contentType: ElTextFieldContentType.numeric,
         labelText: 'Volume',
         labelPosition: ElTextFieldLabelPosition.left,
