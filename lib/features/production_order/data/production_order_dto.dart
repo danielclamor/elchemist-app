@@ -12,6 +12,7 @@ class ProductionOrderSummaryDto {
   final ProductionOrderStatusDto status;
   final bool isPriority;
   final ProductionOrderJobTypeDto? jobType;
+  final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
 
   const ProductionOrderSummaryDto({
@@ -23,6 +24,7 @@ class ProductionOrderSummaryDto {
     required this.status,
     required this.isPriority,
     required this.jobType,
+    required this.eliquidBottleSize,
     required this.eliquidDescription,
   });
 
@@ -36,6 +38,8 @@ class ProductionOrderSummaryDto {
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPriority: json['isPriority'] as bool,
       jobType: ProductionOrderJobTypeDto.fromString(json['jobType'] as String?),
+      eliquidBottleSize:
+          BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
     );
   }

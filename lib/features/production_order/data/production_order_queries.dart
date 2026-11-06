@@ -31,7 +31,11 @@ const String productionOrderListPageQuery = r'''
           jobType
           isPriority
           createdAt
-          eliquid { description }
+          eliquid { 
+            id
+            bottleSize 
+            description 
+          }
         }
       }
     }

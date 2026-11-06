@@ -66,6 +66,7 @@ class ProductionOrderSummary {
   final int? fulfilledQuantity;
   final bool isPriority;
   final ProductionOrderJobType? jobType;
+  final BottleSize eliquidBottleSize;
   final String eliquidDescription;
 
   const ProductionOrderSummary({
@@ -77,6 +78,7 @@ class ProductionOrderSummary {
     required this.fulfilledQuantity,
     required this.isPriority,
     this.jobType,
+    required this.eliquidBottleSize,
     required this.eliquidDescription,
   });
 
@@ -90,6 +92,7 @@ class ProductionOrderSummary {
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
       jobType: ProductionOrderJobType.fromDto(o.jobType),
+      eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
     );
   }
