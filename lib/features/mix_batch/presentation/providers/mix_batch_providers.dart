@@ -111,3 +111,15 @@ final mixBatchDetailsProvider =
   (ref, id) => ref.watch(mixBatchRepositoryProvider).getDetails(id: id),
   retry: (retryCount, error) => null,
 );
+
+class MixBatchVolumeMlValue extends Notifier<double> {
+  @override
+  double build() => 0.0;
+
+  void set(String volumeMl) => state = double.tryParse(volumeMl) ?? 0.0;
+}
+
+final mixBatchVolumeMlValueProvider =
+    NotifierProvider<MixBatchVolumeMlValue, double>(
+  MixBatchVolumeMlValue.new,
+);
