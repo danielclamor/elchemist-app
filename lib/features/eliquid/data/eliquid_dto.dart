@@ -105,9 +105,9 @@ enum BottleSizeDto {
 
   static BottleSizeDto fromString(String value) {
     return switch (value) {
-      '30_ML' => BottleSizeDto.ml30,
-      '60_ML' => BottleSizeDto.ml60,
-      '120_ML' => BottleSizeDto.ml120,
+      'ML_30' => BottleSizeDto.ml30,
+      'ML_60' => BottleSizeDto.ml60,
+      'ML_120' => BottleSizeDto.ml120,
       _ => throw FormatException('Unknown SizeOption: $value'),
     };
   }
@@ -128,15 +128,15 @@ enum NicLevelDto {
 
   static NicLevelDto fromString(String value) {
     return switch (value) {
-      '0_MG' => NicLevelDto.mg0,
-      '3_MG' => NicLevelDto.mg3,
-      '5_MG' => NicLevelDto.mg5,
-      '6_MG' => NicLevelDto.mg6,
-      '10_MG' => NicLevelDto.mg10,
-      '12_MG' => NicLevelDto.mg12,
-      '15_MG' => NicLevelDto.mg15,
-      '18_MG' => NicLevelDto.mg18,
-      '20_MG' => NicLevelDto.mg20,
+      'MG_0' => NicLevelDto.mg0,
+      'MG_3' => NicLevelDto.mg3,
+      'MG_5' => NicLevelDto.mg5,
+      'MG_6' => NicLevelDto.mg6,
+      'MG_10' => NicLevelDto.mg10,
+      'MG_12' => NicLevelDto.mg12,
+      'MG_15' => NicLevelDto.mg15,
+      'MG_18' => NicLevelDto.mg18,
+      'MG_20' => NicLevelDto.mg20,
       'HIT_35' => NicLevelDto.hit35,
       'HIT_50' => NicLevelDto.hit50,
       _ => throw FormatException('Unknown NicLevelOption: $value'),

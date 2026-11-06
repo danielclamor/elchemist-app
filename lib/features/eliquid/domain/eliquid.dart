@@ -137,6 +137,14 @@ enum BottleSize {
     };
   }
 
+  int toInt() {
+    return switch (this) {
+      BottleSize.ml30 => 30,
+      BottleSize.ml60 => 60,
+      BottleSize.ml120 => 120,
+    };
+  }
+
   static BottleSize fromDto(BottleSizeDto s) {
     return switch (s) {
       BottleSizeDto.ml30 => BottleSize.ml30,
