@@ -1,5 +1,4 @@
 import 'package:elchemist_app/components/molecules/section_card.dart';
-import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
 import 'package:elchemist_app/features/recipe/providers/recipe_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,14 +16,7 @@ class MixBatchRecipeSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final batchVolumeMl = ref.watch(mixBatchVolumeMlValueProvider);
-
-    final recipeInput = (
-      formulaId: formulaId,
-      batchVolumeMl: batchVolumeMl,
-    );
-
-    final async = ref.watch(recipeDetailsProvider(recipeInput));
+    final async = ref.watch(recipeDetailsProvider(formulaId));
     final recipe = async.hasValue ? async.value : null;
     final ingredients = recipe?.ingredients ?? [];
     final totalVolumeMl = recipe?.totalVolumeMl ?? 0.0;

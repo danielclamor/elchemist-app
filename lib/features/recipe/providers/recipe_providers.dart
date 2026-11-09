@@ -14,10 +14,14 @@ final recipeRepositoryProvider = Provider<RecipeRepository>(
 );
 
 final recipeDetailsProvider =
-    FutureProvider.autoDispose.family<Recipe?, RecipeInput>(
-  (ref, input) => ref.watch(recipeRepositoryProvider).getDetails(
-        formulaId: input.formulaId,
-        batchVolumeMl: input.batchVolumeMl,
-      ),
+    FutureProvider.autoDispose.family<Recipe?, String>(
+  (ref, formulaId) {
+    final batchVolumeMl = ref.watch(mixBatchVolumeMlValueProvider);
+
+    return ref.watch(recipeRepositoryProvider).getDetails(
+          formulaId: formulaId,
+          batchVolumeMl: batchVolumeMl,
+        );
+  },
   retry: (retryCount, error) => null,
 );
