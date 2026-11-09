@@ -26,6 +26,12 @@ class _MixBatchVolumeSectionState extends ConsumerState<MixBatchVolumeSection> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _volumeController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SectionCard(
       width: widget.width,
