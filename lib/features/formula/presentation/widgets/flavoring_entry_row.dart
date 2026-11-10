@@ -35,25 +35,17 @@ class FlavoringEntry {
 
 class FlavoringEntryRow extends StatelessWidget {
   final FlavoringEntry entry;
-  // final bool withHeaders;
-  // final bool showDeleteIcon;
-  // final VoidCallback? onEntryDeleted;
   final bool isCustom;
   final VoidCallback? onRemoved;
   final ValueChanged<String>? onNameSubmitted;
   final ValueChanged<String>? onPercentSubmitted;
-  // final ValueChanged<bool?>? onIsVGChanged;
 
   FlavoringEntryRow({
     required this.entry,
-    // required this.withHeaders,
-    // required this.showDeleteIcon,
-    // this.onEntryDeleted,
     this.isCustom = false,
     this.onRemoved,
     this.onNameSubmitted,
     this.onPercentSubmitted,
-    // this.onIsVGChanged,
   }) : super(key: ValueKey(entry.id));
 
   @override
@@ -62,15 +54,6 @@ class FlavoringEntryRow extends StatelessWidget {
       spacing: 4.0,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // showDeleteIcon
-        //     ? Padding(
-        //         padding: EdgeInsets.only(top: withHeaders ? 28.0 : 4.0),
-        //         child: IconButton(
-        //           onPressed: onEntryDeleted,
-        //           icon: const Icon(Icons.delete),
-        //         ),
-        //       )
-        //     : const SizedBox.shrink(),
         isCustom
             ? SizedBox(
                 width: 30,
