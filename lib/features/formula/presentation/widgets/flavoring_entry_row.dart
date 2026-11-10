@@ -88,15 +88,25 @@ class FlavoringEntryRow extends StatelessWidget {
             : SizedBox.shrink(),
         Expanded(
           flex: 4,
-          child: Text(
-            entry.flavoringOption.name,
-            style: const TextStyle(
-              fontSize: 14.0,
-              fontWeight: FontWeight.bold,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+          child: isCustom
+              ? ElTextField(
+                  controller: entry.nameController,
+                  focusNode: entry.nameFocusNode,
+                  contentType: ElTextFieldContentType.text,
+                  // labelText: withHeaders ? 'Percentage' : null,
+                  suffixText: '%',
+                  readOnly: onNameSubmitted == null,
+                  onSubmitted: onNameSubmitted,
+                )
+              : Text(
+                  entry.flavoringOption.name,
+                  style: const TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
         ),
         Expanded(
           flex: 4,
