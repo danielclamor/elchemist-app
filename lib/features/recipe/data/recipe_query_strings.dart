@@ -41,3 +41,41 @@ query Recipe (
   }
 }
 ''';
+
+const recipeDiyQuery = r'''
+query Recipe (
+  $input: RecipeDiyInput!
+) {
+  recipeDiy(
+    input: $input
+  ) {
+    ingredients {
+      name
+      ratio
+      volumeMl
+      weightG
+    }
+    totalRatio
+    totalVolumeMl
+    totalWeightG
+    mixParameters {
+      batchVolumeMl
+      flavorings {
+        isVg
+        name
+        ratio
+      }
+      nicBaseNicStr
+      nicBases {
+        code
+        isVg
+        name
+        ratio
+      }
+      targetNicStr
+      targetPg
+      targetVg
+    }
+  }
+}
+''';

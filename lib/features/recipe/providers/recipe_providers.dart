@@ -1,13 +1,11 @@
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
+import 'package:elchemist_app/features/diy_mix/providers/diy_mix_providers.dart';
+import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
 import 'package:elchemist_app/features/recipe/data/recipe_repository.dart';
 import 'package:elchemist_app/features/recipe/domain/recipe.dart';
+import 'package:elchemist_app/features/recipe/domain/recipe_diy.dart';
 import 'package:elchemist_app/features/recipe/domain/recipe_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-typedef RecipeInput = ({
-  String formulaId,
-  double batchVolumeMl,
-});
 
 final recipeRepositoryProvider = Provider<RecipeRepository>(
   (ref) => RecipeRepositoryImpl(ref.watch(graphQLClientProvider)),
@@ -21,6 +19,31 @@ final recipeDetailsProvider =
     return ref.watch(recipeRepositoryProvider).getDetails(
           formulaId: formulaId,
           batchVolumeMl: batchVolumeMl,
+        );
+  },
+  retry: (retryCount, error) => null,
+);
+
+final recipeDiyDetailsProvider = FutureProvider<RecipeDiy?>(
+  (ref) {
+    final batchVolumeMl = ref.watch(diyMixVolumeMlValueProvider);
+    final nicBaseNicStr = ref.watch(diyMixNicBaseNicStrPercProvider) / 100;
+    final nicBaseVg = ref.watch(diyMixNicBaseVgPercProvider) / 100;
+    final nicBasePg = ref.watch(diyMixNicBasePgPercProvider) / 100;
+    final targetNicStr = ref.watch(diyMixTargetNicStrPercProvider) / 100;
+    final targetVg = ref.watch(diyMixTargetVgPercProvider) / 100;
+    final targetPg = ref.watch(diyMixTargetPgPercProvider) / 100;
+    final flavorings = []; // TODO add flavorings provider
+
+    return ref.watch(recipeRepositoryProvider).getDiyDetails(
+          batchVolumeMl: batchVolumeMl,
+          nicBaseNicStr: nicBaseNicStr,
+          nicBaseVg: nicBaseVg,
+          nicBasePg: nicBasePg,
+          targetNicStr: targetNicStr,
+          targetVg: targetVg,
+          targetPg: targetPg,
+          flavorings: flavorings,
         );
   },
   retry: (retryCount, error) => null,
