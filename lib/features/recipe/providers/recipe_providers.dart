@@ -33,7 +33,16 @@ final recipeDiyDetailsProvider = FutureProvider<RecipeDiy?>(
     final targetNicStr = ref.watch(diyMixTargetNicStrPercProvider) / 100;
     final targetVg = ref.watch(diyMixTargetVgPercProvider) / 100;
     final targetPg = ref.watch(diyMixTargetPgPercProvider) / 100;
-    final flavorings = []; // TODO add flavorings provider
+    final flavorings = ref
+        .watch(diyMixFlavoringEntriesProvider)
+        .where((f) =>
+            f.percentage > 0) // empty or zero rows aren't part of the recipe
+        .map((f) => {
+              'name': f.name,
+              "ratio": f.percentage / 100,
+              "isVg": f.isVg,
+            })
+        .toList();
 
     return ref.watch(recipeRepositoryProvider).getDiyDetails(
           batchVolumeMl: batchVolumeMl,
