@@ -2,9 +2,9 @@ import 'dart:io';
 
 // import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/core/widgets/nested_navigator.dart';
+import 'package:elchemist_app/features/diy_mix/presentations/screens/diy_mix_screen.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_list_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
-import 'package:elchemist_app/views/diy_mix_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -20,7 +20,8 @@ void main() async {
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     WindowOptions windowOptions = const WindowOptions(
-      fullScreen: true,
+      // size: Size(1920, 1080),
+      // fullScreen: false,
       center: true,
     );
 
@@ -97,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final _productionOrdersNavKey = GlobalKey<NavigatorState>();
   final _mixBatchesNavKey = GlobalKey<NavigatorState>();
+  final _diyMixNavKey = GlobalKey<NavigatorState>();
 
   late final List<Widget> _widgetOptions;
   late final List<String> _drawerItems;
@@ -114,7 +116,10 @@ class _MyHomePageState extends State<MyHomePage> {
         navigatorKey: _mixBatchesNavKey,
         root: MixBatchListScreen(),
       ),
-      const DiyMixView(),
+      NestedNavigator(
+        navigatorKey: _diyMixNavKey,
+        root: DiyMixScreen(),
+      ),
     ];
 
     _drawerItems = [
