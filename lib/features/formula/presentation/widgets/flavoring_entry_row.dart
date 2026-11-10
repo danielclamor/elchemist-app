@@ -29,6 +29,7 @@ class FlavoringEntry {
     nameController.dispose();
     percController.dispose();
     nameFocusNode.dispose();
+    percFocusNode.dispose();
   }
 }
 
