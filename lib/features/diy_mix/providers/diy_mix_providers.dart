@@ -34,7 +34,7 @@ final diyMixNicBaseVgPercProvider =
 );
 
 final diyMixNicBasePgPercProvider = Provider.autoDispose<double>(
-  (ref) => 100 - ref.watch(diyMixTargetVgPercProvider),
+  (ref) => 100 - ref.watch(diyMixNicBaseVgPercProvider),
 );
 
 final diyMixTargetNicStrPercProvider =
