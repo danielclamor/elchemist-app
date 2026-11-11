@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 typedef PageIndexRange = ({int first, int last});
 
-class MixBatchListTableFooter extends StatelessWidget {
+class MixSessionListTableFooter extends StatelessWidget {
   final PageIndexRange? range;
   final bool hasPreviousPage;
   final bool hasNextPage;
@@ -11,7 +11,7 @@ class MixBatchListTableFooter extends StatelessWidget {
   final VoidCallback? onNext;
   final Color? cardColor;
 
-  const MixBatchListTableFooter({
+  const MixSessionListTableFooter({
     super.key,
     this.range,
     required this.hasPreviousPage,

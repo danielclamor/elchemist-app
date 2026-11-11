@@ -1,10 +1,10 @@
 import 'package:elchemist_app/features/formula/data/formula_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
 
-class MixBatchDto {
+class MixSessionDto {
   final String id;
-  final String mixNumber;
-  final MixBatchStatusDto status;
+  final String sessionNumber;
+  final MixSessionStatusDto status;
   final FormulaDto formula;
   final String? batchCode;
   final DateTime? mixedAt;
@@ -12,9 +12,9 @@ class MixBatchDto {
   final int? totalVolumeMl;
   final List<ProductionOrderSummaryDto> productionOrders;
 
-  const MixBatchDto({
+  const MixSessionDto({
     required this.id,
-    required this.mixNumber,
+    required this.sessionNumber,
     required this.status,
     required this.formula,
     required this.batchCode,
@@ -24,7 +24,7 @@ class MixBatchDto {
     required this.productionOrders,
   });
 
-  factory MixBatchDto.fromJson(Map<String, dynamic> json) {
+  factory MixSessionDto.fromJson(Map<String, dynamic> json) {
     final formulaJson = json['formula'];
     final productionOrderJson = json['productionOrders'] as List<dynamic>;
     final productionOrders = productionOrderJson
@@ -32,10 +32,10 @@ class MixBatchDto {
             ProductionOrderSummaryDto.fromJson(o as Map<String, dynamic>))
         .toList();
 
-    return MixBatchDto(
+    return MixSessionDto(
       id: json['id'] as String,
-      mixNumber: json['mixNumber'] as String,
-      status: MixBatchStatusDto.fromString(json['status'] as String),
+      sessionNumber: json['sessionNumber'] as String,
+      status: MixSessionStatusDto.fromString(json['status'] as String),
       formula:
           FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson as Map)),
       batchCode: json['batchCode'] as String?,
@@ -49,19 +49,19 @@ class MixBatchDto {
   }
 }
 
-class MixBatchSummaryDto {
+class MixSessionSummaryDto {
   final String id;
-  final String mixNumber;
-  final MixBatchStatusDto status;
+  final String sessionNumber;
+  final MixSessionStatusDto status;
   final String formulaName;
   final bool formulaIsPreMix;
   final String? batchCode;
   final DateTime? mixedAt;
   final DateTime createdAt;
 
-  const MixBatchSummaryDto({
+  const MixSessionSummaryDto({
     required this.id,
-    required this.mixNumber,
+    required this.sessionNumber,
     required this.status,
     required this.formulaName,
     required this.formulaIsPreMix,
@@ -70,13 +70,13 @@ class MixBatchSummaryDto {
     required this.createdAt,
   });
 
-  factory MixBatchSummaryDto.fromJson(Map<String, dynamic> json) {
+  factory MixSessionSummaryDto.fromJson(Map<String, dynamic> json) {
     final formulaJson = json['formula'];
 
-    return MixBatchSummaryDto(
+    return MixSessionSummaryDto(
       id: json['id'] as String,
-      mixNumber: json['mixNumber'] as String,
-      status: MixBatchStatusDto.fromString(json['status'] as String),
+      sessionNumber: json['sessionNumber'] as String,
+      status: MixSessionStatusDto.fromString(json['status'] as String),
       formulaName: formulaJson['name'] as String,
       formulaIsPreMix: formulaJson['isPreMix'] as bool,
       batchCode: json['batchCode'] as String?,
@@ -89,22 +89,22 @@ class MixBatchSummaryDto {
 
   @override
   String toString() =>
-      'MixBatch: {number: $mixNumber, formulaName: $formulaName}';
+      'MixSession: {number: $sessionNumber, formulaName: $formulaName}';
 }
 
-enum MixBatchStatusDto {
+enum MixSessionStatusDto {
   cancelled,
   completed,
   inProgress,
   mixed;
 
-  static MixBatchStatusDto fromString(String value) {
+  static MixSessionStatusDto fromString(String value) {
     return switch (value) {
-      'CANCELLED' => MixBatchStatusDto.cancelled,
-      'COMPLETED' => MixBatchStatusDto.completed,
-      'IN_PROGRESS' => MixBatchStatusDto.inProgress,
-      'MIXED' => MixBatchStatusDto.mixed,
-      _ => throw FormatException('Unknown MixBatchStatus: $value'),
+      'CANCELLED' => MixSessionStatusDto.cancelled,
+      'COMPLETED' => MixSessionStatusDto.completed,
+      'IN_PROGRESS' => MixSessionStatusDto.inProgress,
+      'MIXED' => MixSessionStatusDto.mixed,
+      _ => throw FormatException('Unknown MixSessionStatus: $value'),
     };
   }
 }

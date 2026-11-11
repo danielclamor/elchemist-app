@@ -1,21 +1,22 @@
 import 'package:elchemist_app/core/widgets/fading_horizontal_scroll.dart';
 import 'package:elchemist_app/core/widgets/fading_vertical_scroll.dart';
-import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_table_footer.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_table_header.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_tile.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_new_blink.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_list_table_footer.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_list_table_header.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_list_tile.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_new_blink.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MixBatchListTable extends ConsumerStatefulWidget {
-  const MixBatchListTable({super.key});
+class MixSessionListTable extends ConsumerStatefulWidget {
+  const MixSessionListTable({super.key});
 
   @override
-  ConsumerState<MixBatchListTable> createState() => _MixBatchListTableState();
+  ConsumerState<MixSessionListTable> createState() =>
+      _MixSessionListTableState();
 }
 
-class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
+class _MixSessionListTableState extends ConsumerState<MixSessionListTable> {
   final ScrollController _verticalScrollController = ScrollController();
   final ScrollController _horizontalScrollController = ScrollController();
 
@@ -33,11 +34,11 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
 
   @override
   Widget build(BuildContext context) {
-    final pager = ref.watch(mixBatchListPagerProvider);
+    final pager = ref.watch(mixSessionListPagerProvider);
     final pageKey = (after: pager.currentCursor,);
-    final pageAsync = ref.watch(mixBatchListPageProvider(pageKey));
+    final pageAsync = ref.watch(mixSessionListPageProvider(pageKey));
     ref.listen(
-      mixBatchListPageProvider(pageKey),
+      mixSessionListPageProvider(pageKey),
       (prev, next) {
         final prevItems = prev?.value?.items;
         final nextItems = next.value?.items;
@@ -47,7 +48,7 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
         final added =
             nextItems.map((b) => b.id).where((id) => !known.contains(id));
 
-        ref.read(mixBatchNewIdsProvider.notifier).markNew(added);
+        ref.read(mixSessionNewIdsProvider.notifier).markNew(added);
       },
     );
 
@@ -112,7 +113,7 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
                   width: tableWidth,
                   child: Column(
                     children: [
-                      MixBatchListTableHeader(),
+                      MixSessionListTableHeader(),
                       Divider(
                         height: 1.0,
                         thickness: 0.25,
@@ -128,7 +129,7 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
                           child: Center(
                             child: TextButton(
                               onPressed: () => ref.invalidate(
-                                mixBatchListPageProvider(pageKey),
+                                mixSessionListPageProvider(pageKey),
                               ),
                               child: Text('Failed to load. Retry\n$e'),
                             ),
@@ -139,7 +140,7 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
                             return Expanded(
                               child: Center(
                                 child: Text(
-                                  'No mix batches',
+                                  'No mix session',
                                   style: TextStyle(
                                     fontStyle: FontStyle.italic,
                                   ),
@@ -165,10 +166,10 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
                                         ),
                                     itemBuilder: (context, index) {
                                       final batch = page.items[index];
-                                      return MixBatchNewBlink(
+                                      return MixSessionNewBlink(
                                         key: ValueKey(batch.id),
-                                        mixBatchId: batch.id,
-                                        child: MixBatchListTile(
+                                        mixSessionId: batch.id,
+                                        child: MixSessionListTile(
                                           batch: batch,
                                         ),
                                       );
@@ -202,21 +203,21 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
             color: Colors.black,
           ),
           pageAsync.when(
-            loading: () => MixBatchListTableFooter(
+            loading: () => MixSessionListTableFooter(
               range: null,
               hasPreviousPage: false,
               hasNextPage: false,
               onPrevious: null,
               onNext: null,
             ),
-            error: (e, _) => MixBatchListTableFooter(
+            error: (e, _) => MixSessionListTableFooter(
               range: null,
               hasPreviousPage: false,
               hasNextPage: false,
               onPrevious: null,
               onNext: null,
             ),
-            data: (page) => MixBatchListTableFooter(
+            data: (page) => MixSessionListTableFooter(
               range: page.items.isEmpty
                   ? null
                   : (
@@ -226,9 +227,9 @@ class _MixBatchListTableState extends ConsumerState<MixBatchListTable> {
               hasPreviousPage: page.hasPreviousPage,
               hasNextPage: page.hasNextPage,
               onPrevious: () =>
-                  ref.read(mixBatchListPagerProvider.notifier).previous(),
+                  ref.read(mixSessionListPagerProvider.notifier).previous(),
               onNext: () => ref
-                  .read(mixBatchListPagerProvider.notifier)
+                  .read(mixSessionListPagerProvider.notifier)
                   .next(page.endCursor),
             ),
           ),

@@ -30,7 +30,7 @@ enum ProductionOrderActivityTypeDto {
   changeStatus,
   switchPriority,
   toggleArchived,
-  assignMixBatch;
+  assignMixSession;
 
   static ProductionOrderActivityTypeDto fromString(String value) {
     return switch (value) {
@@ -39,7 +39,7 @@ enum ProductionOrderActivityTypeDto {
       'CHANGE_STATUS' => ProductionOrderActivityTypeDto.changeStatus,
       'SWITCH_PRIORITY' => ProductionOrderActivityTypeDto.switchPriority,
       'TOGGLE_ARCHIVED' => ProductionOrderActivityTypeDto.toggleArchived,
-      'ASSIGN_MIX_BATCH' => ProductionOrderActivityTypeDto.assignMixBatch,
+      'ASSIGN_MIX_SESSION' => ProductionOrderActivityTypeDto.assignMixSession,
       _ => throw FormatException('Unknown ProductionOrderActivityType: $value')
     };
   }

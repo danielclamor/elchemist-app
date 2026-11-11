@@ -13,7 +13,7 @@ class ProductionOrderSummaryDto {
   final bool isPriority;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
-  final String? mixBatchMixNumber;
+  final String? mixSessionMixNumber;
 
   const ProductionOrderSummaryDto({
     required this.id,
@@ -25,11 +25,11 @@ class ProductionOrderSummaryDto {
     required this.isPriority,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
-    required this.mixBatchMixNumber,
+    required this.mixSessionMixNumber,
   });
 
   factory ProductionOrderSummaryDto.fromJson(Map<String, dynamic> json) {
-    final mixBatchJson = json['mixBatch'] as Map<String, dynamic>?;
+    final mixSessionJson = json['mixSession'] as Map<String, dynamic>?;
 
     return ProductionOrderSummaryDto(
       id: json['id'] as String,
@@ -42,8 +42,9 @@ class ProductionOrderSummaryDto {
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
-      mixBatchMixNumber:
-          mixBatchJson != null ? mixBatchJson['mixNumber'] as String : null,
+      mixSessionMixNumber: mixSessionJson != null
+          ? mixSessionJson['sessionNumber'] as String
+          : null,
     );
   }
 }
@@ -61,8 +62,8 @@ class ProductionOrderDto {
   final List<ProductionOrderActivityLogDto> activityLogs;
   final List<ProductionOrderAllocationDto> allocations;
   final bool isOpen;
-  final String? mixBatchId;
-  final String? mixBatchMixNumber;
+  final String? mixSessionId;
+  final String? mixSessionMixNumber;
 
   const ProductionOrderDto({
     required this.id,
@@ -77,12 +78,12 @@ class ProductionOrderDto {
     required this.activityLogs,
     required this.allocations,
     required this.isOpen,
-    required this.mixBatchId,
-    required this.mixBatchMixNumber,
+    required this.mixSessionId,
+    required this.mixSessionMixNumber,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
-    final mixBatchJson = json['mixBatch'] as Map<String, dynamic>?;
+    final mixSessionJson = json['mixSession'] as Map<String, dynamic>?;
 
     final activityLogsJson = json['activityLogs'] as List<dynamic>;
 
@@ -108,9 +109,11 @@ class ProductionOrderDto {
               Map<String, dynamic>.from(a as Map)))
           .toList(),
       isOpen: json['isOpen'],
-      mixBatchId: mixBatchJson != null ? mixBatchJson['id'] as String : null,
-      mixBatchMixNumber:
-          mixBatchJson != null ? mixBatchJson['mixNumber'] as String : null,
+      mixSessionId:
+          mixSessionJson != null ? mixSessionJson['id'] as String : null,
+      mixSessionMixNumber: mixSessionJson != null
+          ? mixSessionJson['sessionNumber'] as String
+          : null,
     );
   }
 }

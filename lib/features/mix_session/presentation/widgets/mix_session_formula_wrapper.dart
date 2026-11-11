@@ -13,21 +13,21 @@
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:gap/gap.dart';
 
-// class MixBatchFormulaWrapper extends ConsumerStatefulWidget {
+// class MixSessionFormulaWrapper extends ConsumerStatefulWidget {
 //   final String formulaId;
 
-//   const MixBatchFormulaWrapper({
+//   const MixSessionFormulaWrapper({
 //     super.key,
 //     required this.formulaId,
 //   });
 
 //   @override
-//   ConsumerState<MixBatchFormulaWrapper> createState() =>
-//       _MixBatchFormulaWrapperState();
+//   ConsumerState<MixSessionFormulaWrapper> createState() =>
+//       _MixSessionFormulaWrapperState();
 // }
 
-// class _MixBatchFormulaWrapperState
-//     extends ConsumerState<MixBatchFormulaWrapper> {
+// class _MixSessionFormulaWrapperState
+//     extends ConsumerState<MixSessionFormulaWrapper> {
 //   final _nicBaseEntries = <String, NicBaseEntry>{};
 
 //   NicBaseEntry _nicBaseEntry(NicBaseOption o, double? ratio) => _nicBaseEntries
@@ -293,8 +293,8 @@
 //                       child: Column(
 //                         spacing: 20.0,
 //                         children: [
-//                           MixBatchVolumeSection(),
-//                           MixBatchRecipeSection(
+//                           MixSessionVolumeSection(),
+//                           MixSessionRecipeSection(
 //                             formulaId: formula.id,
 //                           ),
 //                         ],
@@ -307,7 +307,7 @@
 //                       child: Column(
 //                         spacing: 20.0,
 //                         children: [
-//                           MixBatchFlavoringSection(
+//                           MixSessionFlavoringSection(
 //                             flavoringEntries: List.generate(
 //                               flavorings.length,
 //                               (index) {
@@ -326,7 +326,7 @@
 //                               },
 //                             ),
 //                           ),
-//                           MixBatchTargetSection(
+//                           MixSessionTargetSection(
 //                             nicStrController: targetNicStrController,
 //                             vgController: targetVGController,
 //                             onVGSubmitted: !_isCustom

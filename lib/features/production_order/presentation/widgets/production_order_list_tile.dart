@@ -30,15 +30,15 @@ class ProductionOrderListTile extends StatelessWidget {
   }
 
   ProductionOrderMixChip? _getMixChip(
-    String? mixNumber,
+    String? sessionNumber,
     ProductionOrderStatusChip statusChip,
   ) {
-    if (mixNumber == null) {
+    if (sessionNumber == null) {
       return null;
     }
 
     return ProductionOrderMixChip(
-      labelText: mixNumber,
+      labelText: sessionNumber,
       fgColor: statusChip.fgColor,
       bgColor: statusChip.bgColor,
     );
@@ -94,7 +94,7 @@ class ProductionOrderListTile extends StatelessWidget {
 
     final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
     final ProductionOrderMixChip? mixChip =
-        _getMixChip(order.mixBatchMixNumber, statusChip);
+        _getMixChip(order.mixSessionMixNumber, statusChip);
     final String formattedDate = _getFormattedDate(order.createdAt);
     final renderPriority =
         order.isPriority && order.status != ProductionOrderStatus.delivered;

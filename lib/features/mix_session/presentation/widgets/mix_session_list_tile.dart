@@ -1,21 +1,21 @@
-import 'package:elchemist_app/features/mix_session/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_session/presentation/screens/mix_batch_mix_screen.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
+import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_status_chip.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MixBatchListTile extends StatelessWidget {
-  final MixBatchSummary batch;
+class MixSessionListTile extends StatelessWidget {
+  final MixSessionSummary batch;
 
-  const MixBatchListTile({super.key, required this.batch});
+  const MixSessionListTile({super.key, required this.batch});
 
-  MixBatchStatusChip _getStatusChip(MixBatchStatus status) {
+  MixSessionStatusChip _getStatusChip(MixSessionStatus status) {
     return switch (status) {
-      MixBatchStatus.cancelled => MixBatchStatusChip.cancelled(),
-      MixBatchStatus.completed => MixBatchStatusChip.completed(),
-      MixBatchStatus.inProgress => MixBatchStatusChip.inProgress(),
-      MixBatchStatus.mixed => MixBatchStatusChip.mixed(),
+      MixSessionStatus.cancelled => MixSessionStatusChip.cancelled(),
+      MixSessionStatus.completed => MixSessionStatusChip.completed(),
+      MixSessionStatus.inProgress => MixSessionStatusChip.inProgress(),
+      MixSessionStatus.mixed => MixSessionStatusChip.mixed(),
     };
   }
 
@@ -64,8 +64,8 @@ class MixBatchListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isClosed = batch.status == MixBatchStatus.cancelled ||
-        batch.status == MixBatchStatus.completed;
+    final isClosed = batch.status == MixSessionStatus.cancelled ||
+        batch.status == MixSessionStatus.completed;
 
     final formattedCreatedAtDate = _getFormattedDate(batch.createdAt);
     final mixedAt = batch.mixedAt;
@@ -75,7 +75,7 @@ class MixBatchListTile extends StatelessWidget {
     final textStyle = TextStyle(
       fontSize: 14,
       color: isClosed ? Colors.grey : null,
-      decoration: batch.status == MixBatchStatus.cancelled
+      decoration: batch.status == MixSessionStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
       decorationColor: Colors.grey,
@@ -86,7 +86,7 @@ class MixBatchListTile extends StatelessWidget {
       tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => MixBatchMixScreen(id: batch.id)),
+          MaterialPageRoute(builder: (_) => MixSessionMixScreen(id: batch.id)),
         );
       },
       contentPadding: EdgeInsets.zero,
@@ -99,7 +99,7 @@ class MixBatchListTile extends StatelessWidget {
           children: [
             Expanded(
               flex: 2,
-              child: Text(batch.mixNumber, style: textStyle),
+              child: Text(batch.sessionNumber, style: textStyle),
             ),
             Expanded(
               flex: 4,

@@ -1,23 +1,23 @@
-import 'package:elchemist_app/features/mix_session/data/mix_batch_dto.dart';
-import 'package:elchemist_app/features/mix_session/data/mix_batch_query_strings.dart';
-import 'package:elchemist_app/features/mix_session/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_session/domain/mix_batch_list_page.dart';
-import 'package:elchemist_app/features/mix_session/domain/mix_batch_repository.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_session_dto.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_session_query_strings.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_session_list_page.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_session_repository.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class MixBatchRepositoryImpl implements MixBatchRepository {
+class MixSessionRepositoryImpl implements MixSessionRepository {
   final GraphQLClient _client;
 
-  MixBatchRepositoryImpl(this._client);
+  MixSessionRepositoryImpl(this._client);
 
   @override
-  Stream<MixBatchListPage> watchListPage({
+  Stream<MixSessionListPage> watchListPage({
     required int first,
     String? after,
   }) async* {
     final observable = _client.watchQuery(
       WatchQueryOptions(
-        document: gql(mixBatchListPageQuery),
+        document: gql(mixSessionListPageQuery),
         variables: {
           'first': first,
           'after': after,
@@ -35,14 +35,14 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
           continue;
         }
 
-        final conn = result.data!['mixBatches'] as Map<String, dynamic>;
+        final conn = result.data!['mixSessions'] as Map<String, dynamic>;
         final pageInfo = conn['pageInfo'] as Map<String, dynamic>;
 
-        yield MixBatchListPage(
+        yield MixSessionListPage(
           items: (conn['edges'] as List<dynamic>)
-              .map((e) => MixBatchSummaryDto.fromJson(
+              .map((e) => MixSessionSummaryDto.fromJson(
                   Map<String, dynamic>.from((e as Map)['node'] as Map)))
-              .map((dto) => MixBatchSummary.fromDto(dto))
+              .map((dto) => MixSessionSummary.fromDto(dto))
               .toList(),
           endCursor: pageInfo['endCursor'] as String?,
           hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
@@ -56,10 +56,10 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
   }
 
   @override
-  Future<MixBatch?> getDetails({required String id}) async {
+  Future<MixSession?> getDetails({required String id}) async {
     final result = await _client.query(
       QueryOptions(
-        document: gql(mixBatchDetailsQuery),
+        document: gql(mixSessionDetailsQuery),
         variables: {'id': id},
         fetchPolicy: FetchPolicy.noCache,
       ),
@@ -69,10 +69,10 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
       throw result.exception!;
     }
 
-    final data = result.data?['mixBatch'] as Map<String, dynamic>?;
+    final data = result.data?['mixSession'] as Map<String, dynamic>?;
 
     if (data == null) return null;
 
-    return MixBatch.fromDto(MixBatchDto.fromJson(data));
+    return MixSession.fromDto(MixSessionDto.fromJson(data));
   }
 }

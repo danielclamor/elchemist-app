@@ -1,11 +1,11 @@
-import 'package:elchemist_app/features/mix_session/data/mix_batch_dto.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_session_dto.dart';
 import 'package:elchemist_app/features/formula/domain/formula.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 
-class MixBatch {
+class MixSession {
   final String id;
-  final String mixNumber;
-  final MixBatchStatus status;
+  final String sessionNumber;
+  final MixSessionStatus status;
   final Formula formula;
   final String? batchCode;
   final DateTime? mixedAt;
@@ -13,9 +13,9 @@ class MixBatch {
   final int? totalVolumeMl;
   final List<ProductionOrderSummary> productionOrders;
 
-  const MixBatch({
+  const MixSession({
     required this.id,
-    required this.mixNumber,
+    required this.sessionNumber,
     required this.status,
     required this.formula,
     required this.batchCode,
@@ -25,11 +25,11 @@ class MixBatch {
     required this.productionOrders,
   });
 
-  factory MixBatch.fromDto(MixBatchDto b) {
-    return MixBatch(
+  factory MixSession.fromDto(MixSessionDto b) {
+    return MixSession(
       id: b.id,
-      mixNumber: b.mixNumber,
-      status: MixBatchStatus.fromDto(b.status),
+      sessionNumber: b.sessionNumber,
+      status: MixSessionStatus.fromDto(b.status),
       formula: Formula.fromDto(b.formula),
       batchCode: b.batchCode,
       mixedAt: b.mixedAt,
@@ -42,19 +42,19 @@ class MixBatch {
   }
 }
 
-class MixBatchSummary {
+class MixSessionSummary {
   final String id;
-  final String mixNumber;
-  final MixBatchStatus status;
+  final String sessionNumber;
+  final MixSessionStatus status;
   final String formulaName;
   final bool formulaIsPreMix;
   final String? batchCode;
   final DateTime? mixedAt;
   final DateTime createdAt;
 
-  const MixBatchSummary({
+  const MixSessionSummary({
     required this.id,
-    required this.mixNumber,
+    required this.sessionNumber,
     required this.status,
     required this.formulaName,
     required this.formulaIsPreMix,
@@ -63,11 +63,11 @@ class MixBatchSummary {
     required this.createdAt,
   });
 
-  factory MixBatchSummary.fromDto(MixBatchSummaryDto b) {
-    return MixBatchSummary(
+  factory MixSessionSummary.fromDto(MixSessionSummaryDto b) {
+    return MixSessionSummary(
       id: b.id,
-      mixNumber: b.mixNumber,
-      status: MixBatchStatus.fromDto(b.status),
+      sessionNumber: b.sessionNumber,
+      status: MixSessionStatus.fromDto(b.status),
       formulaName: b.formulaName,
       formulaIsPreMix: b.formulaIsPreMix,
       batchCode: b.batchCode,
@@ -78,21 +78,21 @@ class MixBatchSummary {
 
   @override
   String toString() =>
-      'MixBatch: {number: $mixNumber, formulaName: $formulaName}';
+      'MixSession: {number: $sessionNumber, formulaName: $formulaName}';
 }
 
-enum MixBatchStatus {
+enum MixSessionStatus {
   cancelled,
   completed,
   inProgress,
   mixed;
 
-  static MixBatchStatus fromDto(MixBatchStatusDto value) {
+  static MixSessionStatus fromDto(MixSessionStatusDto value) {
     return switch (value) {
-      MixBatchStatusDto.cancelled => MixBatchStatus.cancelled,
-      MixBatchStatusDto.completed => MixBatchStatus.completed,
-      MixBatchStatusDto.inProgress => MixBatchStatus.inProgress,
-      MixBatchStatusDto.mixed => MixBatchStatus.mixed,
+      MixSessionStatusDto.cancelled => MixSessionStatus.cancelled,
+      MixSessionStatusDto.completed => MixSessionStatus.completed,
+      MixSessionStatusDto.inProgress => MixSessionStatus.inProgress,
+      MixSessionStatusDto.mixed => MixSessionStatus.mixed,
     };
   }
 }

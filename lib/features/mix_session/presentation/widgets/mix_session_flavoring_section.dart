@@ -5,13 +5,13 @@ import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class MixBatchFlavoringSection extends StatefulWidget {
+class MixSessionFlavoringSection extends StatefulWidget {
   final double? width;
   final List<Flavoring> flavorings;
   final bool isCustom;
   final Widget? addEntryButton;
 
-  const MixBatchFlavoringSection({
+  const MixSessionFlavoringSection({
     super.key,
     this.width,
     required this.flavorings,
@@ -20,11 +20,12 @@ class MixBatchFlavoringSection extends StatefulWidget {
   });
 
   @override
-  State<MixBatchFlavoringSection> createState() =>
-      _MixBatchFlavoringSectionState();
+  State<MixSessionFlavoringSection> createState() =>
+      _MixSessionFlavoringSectionState();
 }
 
-class _MixBatchFlavoringSectionState extends State<MixBatchFlavoringSection> {
+class _MixSessionFlavoringSectionState
+    extends State<MixSessionFlavoringSection> {
   final _flavoringEntries = <String, FlavoringEntry>{};
 
   FlavoringEntry _flavoringEntry(FlavoringOption o, double? ratio) =>

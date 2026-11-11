@@ -3,11 +3,11 @@ import 'package:elchemist_app/features/production_order/domain/production_order.
 import 'package:elchemist_app/features/production_order/presentation/widgets/cards/production_order_card.dart';
 import 'package:flutter/material.dart';
 
-class MixBatchOrdersSection extends StatelessWidget {
+class MixSessionOrdersSection extends StatelessWidget {
   final double? width;
   final List<ProductionOrderSummary> productionOrders;
 
-  const MixBatchOrdersSection({
+  const MixSessionOrdersSection({
     super.key,
     this.width,
     required this.productionOrders,

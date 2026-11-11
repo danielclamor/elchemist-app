@@ -1,9 +1,9 @@
-const String mixBatchListPageQuery = r'''
-  query MixBatches(
+const String mixSessionListPageQuery = r'''
+  query MixSessions(
     $first: Int!
     $after: String
   ) {
-    mixBatches(
+    mixSessions(
       first: $first
       after: $after
     ) {
@@ -16,7 +16,7 @@ const String mixBatchListPageQuery = r'''
       edges {
         node {
           id
-          mixNumber
+          sessionNumber
           status
           batchCode
           mixedAt
@@ -31,13 +31,13 @@ const String mixBatchListPageQuery = r'''
   }
 ''';
 
-const String mixBatchDetailsQuery = r'''
-  query MixBatch($id: ID!) {
-    mixBatch(
+const String mixSessionDetailsQuery = r'''
+  query MixSession($id: ID!) {
+    mixSession(
       identifier: {id: $id}
     ) {
       id
-      mixNumber
+      sessionNumber
       status
       batchCode
       mixedAt

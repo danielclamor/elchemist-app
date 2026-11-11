@@ -32,7 +32,7 @@ enum ProductionOrderActivityType {
   changeStatus,
   switchPriority,
   toggleArchived,
-  assignMixBatch;
+  assignMixSession;
 
   @override
   String toString() {
@@ -42,7 +42,7 @@ enum ProductionOrderActivityType {
       ProductionOrderActivityType.changeStatus => 'Change status',
       ProductionOrderActivityType.switchPriority => 'Switch priority',
       ProductionOrderActivityType.toggleArchived => 'Toggle archived',
-      ProductionOrderActivityType.assignMixBatch => 'Assign mix batch',
+      ProductionOrderActivityType.assignMixSession => 'Assign mix session',
     };
   }
 
@@ -58,8 +58,8 @@ enum ProductionOrderActivityType {
         ProductionOrderActivityType.switchPriority,
       ProductionOrderActivityTypeDto.toggleArchived =>
         ProductionOrderActivityType.toggleArchived,
-      ProductionOrderActivityTypeDto.assignMixBatch =>
-        ProductionOrderActivityType.assignMixBatch,
+      ProductionOrderActivityTypeDto.assignMixSession =>
+        ProductionOrderActivityType.assignMixSession,
     };
   }
 }

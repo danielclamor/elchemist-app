@@ -1,30 +1,30 @@
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_target_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_target_section.dart';
 import 'package:elchemist_app/core/utils/date_helper.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_flavoring_section.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_nic_base_section.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_orders_section.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_recipe_section.dart';
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_volume_section.dart';
-import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_flavoring_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_nic_base_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_orders_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_recipe_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_volume_section.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class MixBatchMixScreen extends ConsumerStatefulWidget {
+class MixSessionMixScreen extends ConsumerStatefulWidget {
   final String id;
 
-  const MixBatchMixScreen({super.key, required this.id});
+  const MixSessionMixScreen({super.key, required this.id});
 
   @override
-  ConsumerState<MixBatchMixScreen> createState() => _MixBatchScreenState();
+  ConsumerState<MixSessionMixScreen> createState() => _MixSessionScreenState();
 }
 
-class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
+class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
   @override
   Widget build(BuildContext context) {
     final id = widget.id;
-    final async = ref.watch(mixBatchDetailsProvider(id));
+    final async = ref.watch(mixSessionDetailsProvider(id));
 
     var screenSize = MediaQuery.of(context).size;
     var mixWrapperWidth = screenSize.width < 1920 ? 800.0 : null;
@@ -44,7 +44,7 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                 Align(
                   alignment: AlignmentGeometry.centerEnd,
                   child: Tooltip(
-                    message: "Cancel mix batch",
+                    message: "Cancel mix session",
                     child: SizedBox(
                       width: 30,
                       height: 30,
@@ -74,7 +74,7 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                       children: [
                         async.when(
                           data: (data) => Text(
-                            data != null ? data.mixNumber : "",
+                            data != null ? data.sessionNumber : "",
                             style: TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -105,7 +105,7 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                           ),
                         ),
                         Gap(28.0),
-                        MixBatchOrdersSection(
+                        MixSessionOrdersSection(
                           width: sectionWidth,
                           productionOrders: async.when(
                             data: (data) =>
@@ -175,8 +175,8 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                                       child: Column(
                                         spacing: 20.0,
                                         children: [
-                                          MixBatchVolumeSection(),
-                                          MixBatchRecipeSection(
+                                          MixSessionVolumeSection(),
+                                          MixSessionRecipeSection(
                                             formulaId: formula.id,
                                           ),
                                         ],
@@ -189,10 +189,10 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                                       child: Column(
                                         spacing: 20.0,
                                         children: [
-                                          MixBatchFlavoringSection(
+                                          MixSessionFlavoringSection(
                                             flavorings: flavorings,
                                           ),
-                                          MixBatchTargetSection(
+                                          MixSessionTargetSection(
                                             nicStr: formula.targetNicStr,
                                             vg: formula.targetVg,
                                             pg: formula.targetPg,

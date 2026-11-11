@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MixBatchRecipeSection extends ConsumerWidget {
+class MixSessionRecipeSection extends ConsumerWidget {
   final double? width;
   final String formulaId;
 
-  const MixBatchRecipeSection({
+  const MixSessionRecipeSection({
     super.key,
     this.width,
     required this.formulaId,

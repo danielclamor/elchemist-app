@@ -15,8 +15,8 @@ class ProductionOrder {
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
   final bool isOpen;
-  final String? mixBatchId;
-  final String? mixBatchMixNumber;
+  final String? mixSessionId;
+  final String? mixSessionMixNumber;
 
   ProductionOrder({
     required this.id,
@@ -30,8 +30,8 @@ class ProductionOrder {
     required this.eliquid,
     required this.activityLogs,
     required this.isOpen,
-    required this.mixBatchId,
-    required this.mixBatchMixNumber,
+    required this.mixSessionId,
+    required this.mixSessionMixNumber,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -51,8 +51,8 @@ class ProductionOrder {
           .map((l) => ProductionOrderActivityLog.fromDto(l))
           .toList(),
       isOpen: o.isOpen,
-      mixBatchId: o.mixBatchId,
-      mixBatchMixNumber: o.mixBatchMixNumber,
+      mixSessionId: o.mixSessionId,
+      mixSessionMixNumber: o.mixSessionMixNumber,
     );
   }
 }
@@ -67,7 +67,7 @@ class ProductionOrderSummary {
   final bool isPriority;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
-  final String? mixBatchMixNumber;
+  final String? mixSessionMixNumber;
 
   const ProductionOrderSummary({
     required this.id,
@@ -79,7 +79,7 @@ class ProductionOrderSummary {
     required this.isPriority,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
-    required this.mixBatchMixNumber,
+    required this.mixSessionMixNumber,
   });
 
   factory ProductionOrderSummary.fromDto(ProductionOrderSummaryDto o) {
@@ -93,7 +93,7 @@ class ProductionOrderSummary {
       isPriority: o.isPriority,
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
-      mixBatchMixNumber: o.mixBatchMixNumber,
+      mixSessionMixNumber: o.mixSessionMixNumber,
     );
   }
 

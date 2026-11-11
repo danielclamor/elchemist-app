@@ -33,9 +33,9 @@ const String productionOrderListPageQuery = r'''
             bottleSize 
             description 
           }
-          mixBatch {
+          mixSession {
             id
-            mixNumber
+            sessionNumber
           }
         }
       }
@@ -90,9 +90,9 @@ const String productionOrderDetailsQuery = r'''
         type
         triggeredAt
       }
-      mixBatch {
+      mixSession {
         id
-        mixNumber
+        sessionNumber
       }
     }
   }
@@ -125,7 +125,7 @@ const String eliquidPastOrdersQuery = r'''
             isPriority
             createdAt
             eliquid { id description bottleSize }
-            mixBatch { id mixNumber }
+            mixSession { id sessionNumber }
           }
         }
       }

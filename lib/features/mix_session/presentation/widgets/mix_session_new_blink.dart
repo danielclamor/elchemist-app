@@ -1,23 +1,23 @@
 import 'package:elchemist_app/core/widgets/el_blinker.dart';
-import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MixBatchNewBlink extends ConsumerStatefulWidget {
-  final String mixBatchId;
+class MixSessionNewBlink extends ConsumerStatefulWidget {
+  final String mixSessionId;
   final Widget child;
 
-  const MixBatchNewBlink({
+  const MixSessionNewBlink({
     super.key,
-    required this.mixBatchId,
+    required this.mixSessionId,
     required this.child,
   });
 
   @override
-  ConsumerState<MixBatchNewBlink> createState() => _MixBatchNewBlinkState();
+  ConsumerState<MixSessionNewBlink> createState() => _MixSessionNewBlinkState();
 }
 
-class _MixBatchNewBlinkState extends ConsumerState<MixBatchNewBlink>
+class _MixSessionNewBlinkState extends ConsumerState<MixSessionNewBlink>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -31,7 +31,8 @@ class _MixBatchNewBlinkState extends ConsumerState<MixBatchNewBlink>
     );
 
     ref.listenManual<bool>(
-      mixBatchNewIdsProvider.select((ids) => ids.contains(widget.mixBatchId)),
+      mixSessionNewIdsProvider
+          .select((ids) => ids.contains(widget.mixSessionId)),
       (prev, isNew) {
         if (isNew) _controller.forward(from: 0);
       },

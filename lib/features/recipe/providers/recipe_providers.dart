@@ -1,6 +1,6 @@
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
 import 'package:elchemist_app/features/diy_mix/providers/diy_mix_providers.dart';
-import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/recipe/data/recipe_repository.dart';
 import 'package:elchemist_app/features/recipe/domain/recipe.dart';
 import 'package:elchemist_app/features/recipe/domain/recipe_diy.dart';
@@ -14,7 +14,7 @@ final recipeRepositoryProvider = Provider<RecipeRepository>(
 final recipeDetailsProvider =
     FutureProvider.autoDispose.family<Recipe?, String>(
   (ref, formulaId) {
-    final batchVolumeMl = ref.watch(mixBatchVolumeMlValueProvider);
+    final batchVolumeMl = ref.watch(mixSessionVolumeMlValueProvider);
 
     return ref.watch(recipeRepositoryProvider).getDetails(
           formulaId: formulaId,

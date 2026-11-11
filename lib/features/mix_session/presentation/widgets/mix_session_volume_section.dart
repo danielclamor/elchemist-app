@@ -1,20 +1,21 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
-import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MixBatchVolumeSection extends ConsumerStatefulWidget {
+class MixSessionVolumeSection extends ConsumerStatefulWidget {
   final double? width;
 
-  const MixBatchVolumeSection({super.key, this.width});
+  const MixSessionVolumeSection({super.key, this.width});
 
   @override
-  ConsumerState<MixBatchVolumeSection> createState() =>
-      _MixBatchVolumeSectionState();
+  ConsumerState<MixSessionVolumeSection> createState() =>
+      _MixSessionVolumeSectionState();
 }
 
-class _MixBatchVolumeSectionState extends ConsumerState<MixBatchVolumeSection> {
+class _MixSessionVolumeSectionState
+    extends ConsumerState<MixSessionVolumeSection> {
   late final TextEditingController _volumeController;
 
   @override
@@ -22,7 +23,7 @@ class _MixBatchVolumeSectionState extends ConsumerState<MixBatchVolumeSection> {
     super.initState();
     _volumeController = TextEditingController(text: "0");
     WidgetsBinding.instance.addPostFrameCallback(
-        (_) => ref.invalidate(mixBatchVolumeMlValueProvider));
+        (_) => ref.invalidate(mixSessionVolumeMlValueProvider));
   }
 
   @override
@@ -43,7 +44,7 @@ class _MixBatchVolumeSectionState extends ConsumerState<MixBatchVolumeSection> {
         labelPosition: ElTextFieldLabelPosition.left,
         suffixText: 'mL',
         onSubmitted: (value) =>
-            ref.read(mixBatchVolumeMlValueProvider.notifier).set(value),
+            ref.read(mixSessionVolumeMlValueProvider.notifier).set(value),
       ),
     );
   }

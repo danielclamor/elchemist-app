@@ -3,7 +3,7 @@ import 'dart:io';
 // import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/core/widgets/nested_navigator.dart';
 import 'package:elchemist_app/features/diy_mix/presentations/screens/diy_mix_screen.dart';
-import 'package:elchemist_app/features/mix_session/presentation/screens/mix_batch_list_screen.dart';
+import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_list_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   final _productionOrdersNavKey = GlobalKey<NavigatorState>();
-  final _mixBatchesNavKey = GlobalKey<NavigatorState>();
+  final _mixSessionesNavKey = GlobalKey<NavigatorState>();
   final _diyMixNavKey = GlobalKey<NavigatorState>();
 
   late final List<Widget> _widgetOptions;
@@ -113,8 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
         root: ProductionOrderListScreen(),
       ),
       NestedNavigator(
-        navigatorKey: _mixBatchesNavKey,
-        root: MixBatchListScreen(),
+        navigatorKey: _mixSessionesNavKey,
+        root: MixSessionListScreen(),
       ),
       NestedNavigator(
         navigatorKey: _diyMixNavKey,
@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _drawerItems = [
       "Production Orders",
-      "Mix Batches",
+      "Mix Sessions",
       "DIY",
     ];
   }

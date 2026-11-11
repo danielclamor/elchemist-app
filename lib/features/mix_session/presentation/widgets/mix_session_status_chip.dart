@@ -1,13 +1,13 @@
 import 'package:elchemist_app/core/widgets/el_chip.dart';
 import 'package:flutter/material.dart';
 
-class MixBatchStatusChip extends StatelessWidget {
+class MixSessionStatusChip extends StatelessWidget {
   final IconData? labelIcon;
   final String labelText;
   final Color fgColor;
   final Color bgColor;
 
-  const MixBatchStatusChip({
+  const MixSessionStatusChip({
     super.key,
     this.labelIcon,
     required this.labelText,
@@ -15,40 +15,40 @@ class MixBatchStatusChip extends StatelessWidget {
     required this.bgColor,
   });
 
-  factory MixBatchStatusChip.cancelled({
+  factory MixSessionStatusChip.cancelled({
     String label = 'Cancelled',
   }) =>
-      MixBatchStatusChip(
+      MixSessionStatusChip(
         labelIcon: Icons.remove_circle_outline_rounded,
         labelText: label,
         fgColor: Colors.grey.shade800,
         bgColor: Colors.grey,
       );
 
-  factory MixBatchStatusChip.completed({
+  factory MixSessionStatusChip.completed({
     String label = 'Completed',
   }) =>
-      MixBatchStatusChip(
+      MixSessionStatusChip(
         labelIcon: Icons.radio_button_checked_rounded,
         labelText: label,
         fgColor: Colors.grey.shade800,
         bgColor: Colors.grey,
       );
 
-  factory MixBatchStatusChip.inProgress({
+  factory MixSessionStatusChip.inProgress({
     String label = 'In progress',
   }) =>
-      MixBatchStatusChip(
+      MixSessionStatusChip(
         labelIcon: Icons.radio_button_checked_rounded,
         labelText: label,
         fgColor: Colors.blue.shade900,
         bgColor: Colors.blue.shade200,
       );
 
-  factory MixBatchStatusChip.mixed({
+  factory MixSessionStatusChip.mixed({
     String label = 'Mixed',
   }) =>
-      MixBatchStatusChip(
+      MixSessionStatusChip(
         labelIcon: Icons.radio_button_checked_rounded,
         labelText: label,
         fgColor: Colors.green.shade900,

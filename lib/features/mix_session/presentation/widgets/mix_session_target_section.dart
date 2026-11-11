@@ -3,14 +3,14 @@ import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-class MixBatchTargetSection extends StatefulWidget {
+class MixSessionTargetSection extends StatefulWidget {
   final double? width;
   final double nicStr;
   final double vg;
   final double pg;
   final bool isCustom;
 
-  const MixBatchTargetSection({
+  const MixSessionTargetSection({
     super.key,
     this.width,
     required this.nicStr,
@@ -20,10 +20,11 @@ class MixBatchTargetSection extends StatefulWidget {
   });
 
   @override
-  State<MixBatchTargetSection> createState() => _MixBatchTargetSectionState();
+  State<MixSessionTargetSection> createState() =>
+      _MixSessionTargetSectionState();
 }
 
-class _MixBatchTargetSectionState extends State<MixBatchTargetSection> {
+class _MixSessionTargetSectionState extends State<MixSessionTargetSection> {
   late final TextEditingController _nicStrController;
   late final TextEditingController _vgController;
   late final TextEditingController _pgController;

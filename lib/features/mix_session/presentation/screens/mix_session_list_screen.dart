@@ -1,14 +1,14 @@
-import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_table.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_list_table.dart';
 import 'package:flutter/material.dart';
 
-class MixBatchListScreen extends StatefulWidget {
-  const MixBatchListScreen({super.key});
+class MixSessionListScreen extends StatefulWidget {
+  const MixSessionListScreen({super.key});
 
   @override
-  State<MixBatchListScreen> createState() => _MixBatchListScreenState();
+  State<MixSessionListScreen> createState() => _MixSessionListScreenState();
 }
 
-class _MixBatchListScreenState extends State<MixBatchListScreen> {
+class _MixSessionListScreenState extends State<MixSessionListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +27,7 @@ class _MixBatchListScreenState extends State<MixBatchListScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Mix Batches',
+                  'Mix Session',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -35,7 +35,7 @@ class _MixBatchListScreenState extends State<MixBatchListScreen> {
                 )
               ],
             ),
-            Expanded(child: MixBatchListTable()),
+            Expanded(child: MixSessionListTable()),
           ],
         ),
       ),

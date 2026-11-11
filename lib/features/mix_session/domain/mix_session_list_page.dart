@@ -1,13 +1,13 @@
-import 'package:elchemist_app/features/mix_session/domain/mix_batch.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
 
-class MixBatchListPage {
-  final List<MixBatchSummary> items;
+class MixSessionListPage {
+  final List<MixSessionSummary> items;
   final String? endCursor;
   final bool hasPreviousPage;
   final bool hasNextPage;
   final int totalCount;
 
-  const MixBatchListPage({
+  const MixSessionListPage({
     required this.items,
     required this.endCursor,
     required this.hasPreviousPage,

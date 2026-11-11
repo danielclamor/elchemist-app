@@ -1,5 +1,5 @@
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
-import 'package:elchemist_app/features/mix_session/presentation/screens/mix_batch_mix_screen.dart';
+import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
@@ -65,15 +65,15 @@ class _ProductionOrderDetailScreenState
   }
 
   ProductionOrderMixChip? _getMixChip(
-    String? mixNumber,
+    String? sessionNumber,
     ProductionOrderStatusChip statusChip,
   ) {
-    if (mixNumber == null) {
+    if (sessionNumber == null) {
       return null;
     }
 
     return ProductionOrderMixChip(
-      labelText: mixNumber,
+      labelText: sessionNumber,
       fgColor: statusChip.fgColor,
       bgColor: statusChip.bgColor,
     );
@@ -313,7 +313,7 @@ class _ProductionOrderDetailScreenState
                             async.when(
                               data: (data) => data != null
                                   ? _getMixChip(
-                                        data.mixBatchMixNumber,
+                                        data.mixSessionMixNumber,
                                         _getStatusChip(data.status),
                                       ) ??
                                       SizedBox.shrink()
@@ -670,7 +670,7 @@ class _ProductionOrderDetailScreenState
                       spacing: 8.0,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        if (data.mixBatchMixNumber != null)
+                        if (data.mixSessionMixNumber != null)
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0E76BD),
@@ -688,21 +688,21 @@ class _ProductionOrderDetailScreenState
                             ),
                             onPressed: !_isSubmitting
                                 ? () {
-                                    final mixBatchId = data.mixBatchId;
+                                    final mixSessionId = data.mixSessionId;
 
-                                    if (mixBatchId == null) return;
+                                    if (mixSessionId == null) return;
 
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) =>
-                                            MixBatchMixScreen(id: mixBatchId),
+                                        builder: (_) => MixSessionMixScreen(
+                                            id: mixSessionId),
                                       ),
                                     );
                                   }
                                 : null,
-                            child: Text("Continue ${data.mixBatchMixNumber}"),
+                            child: Text("Continue ${data.mixSessionMixNumber}"),
                           ),
-                        if (formula != null && data.mixBatchMixNumber == null)
+                        if (formula != null && data.mixSessionMixNumber == null)
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF0E76BD),
@@ -720,14 +720,14 @@ class _ProductionOrderDetailScreenState
                             ),
                             onPressed: !_isSubmitting
                                 ? () {
-                                    final mixBatchId = data.mixBatchId;
+                                    final mixSessionId = data.mixSessionId;
 
-                                    if (mixBatchId == null) return;
+                                    if (mixSessionId == null) return;
 
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder: (_) =>
-                                            MixBatchMixScreen(id: mixBatchId),
+                                        builder: (_) => MixSessionMixScreen(
+                                            id: mixSessionId),
                                       ),
                                     );
                                   }
@@ -1031,7 +1031,7 @@ class _ProductionOrderDetailScreenState
                                     ),
                                   ],
                                 ),
-                              ProductionOrderActivityType.assignMixBatch =>
+                              ProductionOrderActivityType.assignMixSession =>
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
