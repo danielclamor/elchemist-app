@@ -1,10 +1,8 @@
 import 'package:elchemist_app/components/atoms/el_text_field.dart';
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/location/domain/location.dart';
-import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
-// import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/allocation_entry_row.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_eliquid_to_order_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_add_locations_to_order_dialog.dart';
@@ -33,8 +31,6 @@ class _ProductionOrderCreateOrderScreenState
 
   bool _isPriority = false;
   bool _isSubmitting = false;
-
-  bool _shouldAssignJob = false;
 
   @override
   void dispose() {
