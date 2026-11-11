@@ -1110,7 +1110,8 @@ class _ProductionOrderDetailScreenState
                                     ),
                                   ],
                                 ),
-                              ProductionOrderActivityType.assignJob => Column(
+                              ProductionOrderActivityType.assignMixBatch =>
+                                Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
