@@ -9,7 +9,7 @@ query Recipe (
   ) {
     formula {
       slug
-      fullName
+      name
     }
     ingredients {
       name

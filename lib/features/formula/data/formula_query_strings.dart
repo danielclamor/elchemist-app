@@ -8,7 +8,10 @@ const String formulaDetailsQuery = r'''
       id
       slug
       name
-      fullName
+      nicLevel
+      brand
+      chillType
+      nicType
       isOldMix
       isPreMix
       targetNicStr
@@ -33,13 +36,8 @@ const String formulaDetailsQuery = r'''
         }
         ratio
       }
-      flavor {
-        id
-        brand
-        name
-        chillType
-        nicType
-      }
+      nicBaseVg
+      nicBasePg
     }
   }
 ''';

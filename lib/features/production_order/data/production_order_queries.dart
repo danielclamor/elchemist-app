@@ -80,15 +80,7 @@ const String productionOrderDetailsQuery = r'''
         formula {
           id
           name
-          fullName
           isPreMix
-          flavor {
-            id
-            brand
-            name
-            chillType
-            nicType
-          }
         }
       }
       activityLogs {

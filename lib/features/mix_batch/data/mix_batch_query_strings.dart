@@ -22,7 +22,7 @@ const String mixBatchListPageQuery = r'''
           mixedAt
           createdAt
           formula {
-            fullName
+            name
             isPreMix
           }
         }
@@ -47,7 +47,10 @@ const String mixBatchDetailsQuery = r'''
         id
         slug
         name
-        fullName
+        nicLevel
+        brand
+        chillType
+        nicType
         isOldMix
         isPreMix
         targetNicStr
@@ -72,13 +75,8 @@ const String mixBatchDetailsQuery = r'''
           }
           ratio
         }
-        flavor {
-          id
-          brand
-          name
-          chillType
-          nicType
-        }
+        nicBaseVg
+        nicBasePg
       }
       productionOrders {
         id
