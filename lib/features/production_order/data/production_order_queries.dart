@@ -2,7 +2,6 @@ const String productionOrderListPageQuery = r'''
   query ProductionOrders(
     $first: Int!
     $after: String
-    $jobType: ProductionOrderJobTypeEnum
     $status: ProductionOrderStatusEnum
     $createdFrom: DateTime
     $createdTo: DateTime
@@ -10,7 +9,6 @@ const String productionOrderListPageQuery = r'''
     productionOrders(
       first: $first
       after: $after
-      jobType: $jobType
       status: $status
       createdFrom: $createdFrom
       createdTo: $createdTo
@@ -28,7 +26,6 @@ const String productionOrderListPageQuery = r'''
           orderedQuantity
           fulfilledQuantity
           status
-          jobType
           isPriority
           createdAt
           eliquid { 
@@ -66,7 +63,6 @@ const String productionOrderDetailsQuery = r'''
       orderedQuantity
       fulfilledQuantity
       status
-      jobType
       isPriority
       isOpen
       createdAt
@@ -126,10 +122,10 @@ const String eliquidPastOrdersQuery = r'''
             orderedQuantity
             fulfilledQuantity
             status
-            jobType
             isPriority
             createdAt
-            eliquid { description }
+            eliquid { id description bottleSize }
+            mixBatch { id mixNumber }
           }
         }
       }

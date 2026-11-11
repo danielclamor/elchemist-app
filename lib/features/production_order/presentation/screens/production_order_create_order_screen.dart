@@ -561,59 +561,6 @@ class _ProductionOrderCreateOrderScreenState
                                             ),
                                           ],
                                         ),
-                                        Gap(4.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Assign job',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Transform.scale(
-                                              scale: 0.75,
-                                              child: Switch(
-                                                value: _shouldAssignJob,
-                                                onChanged: (b) => setState(
-                                                  () => _shouldAssignJob = b,
-                                                ),
-                                                padding: EdgeInsets.zero,
-                                                thumbIcon:
-                                                    WidgetStatePropertyAll(
-                                                  Icon(
-                                                    _shouldAssignJob
-                                                        ? Icons.check
-                                                        : Icons.close,
-                                                    size: 12,
-                                                  ),
-                                                ),
-                                                thumbColor: _shouldAssignJob
-                                                    ? WidgetStatePropertyAll(
-                                                        Color(0xFF0E76BD),
-                                                      )
-                                                    : null,
-                                                trackOutlineColor:
-                                                    _shouldAssignJob
-                                                        ? WidgetStatePropertyAll(
-                                                            Color(0xFF0E76BD),
-                                                          )
-                                                        : WidgetStatePropertyAll(
-                                                            Theme.of(context)
-                                                                .colorScheme
-                                                                .surfaceContainer,
-                                                          ),
-                                                trackColor: _shouldAssignJob
-                                                    ? WidgetStatePropertyAll(
-                                                        Color(0xFF0E76BD)
-                                                            .withAlpha(50),
-                                                      )
-                                                    : null,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
                                       ],
                                     ),
                             ),

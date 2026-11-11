@@ -17,7 +17,6 @@ const String productionOrderCreateMutation = r'''
         orderedQuantity
         fulfilledQuantity
         status
-        jobType
         isPriority
         createdAt
         updatedAt
@@ -42,36 +41,6 @@ const String productionOrderCreateMutation = r'''
       }
     }
   }
-''';
-
-const String productionOrderAssignJobMutation = r'''
-  mutation AssignProductionOrderToJob(
-    $id: ID!
-    $orderedQuantity: Int
-    $jobType: ProductionOrderJobTypeEnum!
-  ) {
-  productionOrderAssignJob (
-    identifier: {id: $id}
-    orderedQuantity: $orderedQuantity
-    jobType: $jobType
-  ) {
-    productionOrder {
-      jobType
-    }
-    createdProductionOrderJob {
-      ... on MixJobType {
-        id
-      }
-      ... on RepatJobType {
-        id
-      }
-    }
-    feedback {
-      message
-      status
-    }
-  }
-}
 ''';
 
 const String productionOrderSetQuantityMutation = r'''
