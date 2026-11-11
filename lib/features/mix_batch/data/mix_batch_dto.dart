@@ -53,7 +53,7 @@ class MixBatchSummaryDto {
   final String id;
   final String mixNumber;
   final MixBatchStatusDto status;
-  final String formulaFullName;
+  final String formulaName;
   final bool formulaIsPreMix;
   final String? batchCode;
   final DateTime? mixedAt;
@@ -63,7 +63,7 @@ class MixBatchSummaryDto {
     required this.id,
     required this.mixNumber,
     required this.status,
-    required this.formulaFullName,
+    required this.formulaName,
     required this.formulaIsPreMix,
     required this.batchCode,
     required this.mixedAt,
@@ -77,7 +77,7 @@ class MixBatchSummaryDto {
       id: json['id'] as String,
       mixNumber: json['mixNumber'] as String,
       status: MixBatchStatusDto.fromString(json['status'] as String),
-      formulaFullName: formulaJson['fullName'] as String,
+      formulaName: formulaJson['name'] as String,
       formulaIsPreMix: formulaJson['isPreMix'] as bool,
       batchCode: json['batchCode'] as String?,
       mixedAt: json['mixedAt'] != null
@@ -86,6 +86,10 @@ class MixBatchSummaryDto {
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
+
+  @override
+  String toString() =>
+      'MixBatch: {number: $mixNumber, formulaName: $formulaName}';
 }
 
 enum MixBatchStatusDto {

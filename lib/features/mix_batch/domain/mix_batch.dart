@@ -46,7 +46,7 @@ class MixBatchSummary {
   final String id;
   final String mixNumber;
   final MixBatchStatus status;
-  final String formulaFullName;
+  final String formulaName;
   final bool formulaIsPreMix;
   final String? batchCode;
   final DateTime? mixedAt;
@@ -56,7 +56,7 @@ class MixBatchSummary {
     required this.id,
     required this.mixNumber,
     required this.status,
-    required this.formulaFullName,
+    required this.formulaName,
     required this.formulaIsPreMix,
     required this.batchCode,
     required this.mixedAt,
@@ -68,13 +68,17 @@ class MixBatchSummary {
       id: b.id,
       mixNumber: b.mixNumber,
       status: MixBatchStatus.fromDto(b.status),
-      formulaFullName: b.formulaFullName,
+      formulaName: b.formulaName,
       formulaIsPreMix: b.formulaIsPreMix,
       batchCode: b.batchCode,
       mixedAt: b.mixedAt,
       createdAt: b.createdAt,
     );
   }
+
+  @override
+  String toString() =>
+      'MixBatch: {number: $mixNumber, formulaName: $formulaName}';
 }
 
 enum MixBatchStatus {

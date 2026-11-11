@@ -2,7 +2,7 @@ import 'package:elchemist_app/features/recipe/data/ingredient_dto.dart';
 
 class RecipeDto {
   final String formulaSlug;
-  final String formulaFullName;
+  final String formulaName;
   final List<IngredientDto> ingredients;
   final double totalRatio;
   final double totalVolumeMl;
@@ -10,7 +10,7 @@ class RecipeDto {
 
   const RecipeDto({
     required this.formulaSlug,
-    required this.formulaFullName,
+    required this.formulaName,
     required this.ingredients,
     required this.totalRatio,
     required this.totalVolumeMl,
@@ -27,7 +27,7 @@ class RecipeDto {
 
     return RecipeDto(
       formulaSlug: formulaJson['slug'],
-      formulaFullName: formulaJson['fullName'],
+      formulaName: formulaJson['name'],
       ingredients: ingredients,
       totalRatio: (json['totalRatio'] as num).toDouble(),
       totalVolumeMl: (json['totalVolumeMl'] as num).toDouble(),
@@ -37,5 +37,5 @@ class RecipeDto {
 
   @override
   toString() =>
-      '<RecipeDto $formulaFullName totalRatio=$totalRatio totalVolumeMl=$totalVolumeMl totalWeightG=$totalWeightG>';
+      '<RecipeDto $formulaName totalRatio=$totalRatio totalVolumeMl=$totalVolumeMl totalWeightG=$totalWeightG>';
 }
