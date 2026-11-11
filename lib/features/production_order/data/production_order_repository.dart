@@ -17,7 +17,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,
-    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   }) async {
@@ -27,7 +26,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
         variables: {
           'first': first,
           'after': after,
-          'jobType': jobType?.gql,
           'status': status?.gql,
           'createdFrom': range?.from?.toUtc().toIso8601String(),
           'createdTo': range?.from?.toUtc().toIso8601String(),
@@ -58,7 +56,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   Stream<ProductionOrderListPage> watchListPage({
     required int first,
     String? after,
-    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   }) async* {
@@ -68,7 +65,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
         variables: {
           'first': first,
           'after': after,
-          'jobType': jobType?.gql,
           'status': status?.gql,
           'createdFrom': range?.from?.toUtc().toIso8601String(),
           'createdTo': range?.to?.toUtc().toIso8601String(),
@@ -206,7 +202,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     int? quantity,
     required bool isPriority,
     required List<AllocationInput> allocations,
-    ProductionOrderJobType? jobType,
   }) async {
     final result = await _client.mutate(
       MutationOptions(
@@ -222,7 +217,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
                       'quantity': a.quantity
                     })
                 .toList(),
-            'jobType': jobType?.gql,
           },
         },
         fetchPolicy: FetchPolicy.noCache,
@@ -243,41 +237,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     }
 
     return ProductionOrder.fromDto(ProductionOrderDto.fromJson(data));
-  }
-
-  @override
-  Future<JobId> assignJob({
-    required String id,
-    int? orderedQuantity,
-    required ProductionOrderJobType jobType,
-  }) async {
-    final result = await _client.mutate(
-      MutationOptions(
-        document: gql(productionOrderAssignJobMutation),
-        variables: {
-          'id': id,
-          'orderedQuantity': orderedQuantity,
-          'jobType': jobType.gql,
-        },
-        fetchPolicy: FetchPolicy.noCache,
-      ),
-    );
-
-    if (result.hasException) throw result.exception!;
-
-    final payload =
-        result.data?['productionOrderAssignJob'] as Map<String, dynamic>?;
-    final feedback = payload?['feedback'] as Map<String, dynamic>?;
-    final data = payload?['createdProductionOrderJob'] as Map<String, dynamic>?;
-
-    if (data == null || feedback?['status'] != 'SUCCESS') {
-      throw Exception(
-        feedback?['message'] as String? ??
-            'Could not assign the order to $jobType',
-      );
-    }
-
-    return data['id'];
   }
 
   @override

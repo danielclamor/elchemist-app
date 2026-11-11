@@ -11,7 +11,6 @@ class ProductionOrder {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
-  final ProductionOrderJobType? jobType;
   final List<ProductionOrderAllocation> allocations;
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
@@ -27,7 +26,6 @@ class ProductionOrder {
     required this.orderedQuantity,
     required this.fulfilledQuantity,
     required this.isPriority,
-    required this.jobType,
     required this.allocations,
     required this.eliquid,
     required this.activityLogs,
@@ -45,7 +43,6 @@ class ProductionOrder {
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
-      jobType: ProductionOrderJobType.fromDto(o.jobType),
       allocations: o.allocations
           .map((a) => ProductionOrderAllocation.fromDto(a))
           .toList(),
@@ -68,7 +65,6 @@ class ProductionOrderSummary {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
-  final ProductionOrderJobType? jobType;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
   final String? mixBatchMixNumber;
@@ -81,7 +77,6 @@ class ProductionOrderSummary {
     required this.orderedQuantity,
     required this.fulfilledQuantity,
     required this.isPriority,
-    this.jobType,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
     required this.mixBatchMixNumber,
@@ -96,7 +91,6 @@ class ProductionOrderSummary {
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
-      jobType: ProductionOrderJobType.fromDto(o.jobType),
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
       mixBatchMixNumber: o.mixBatchMixNumber,
@@ -135,27 +129,6 @@ enum ProductionOrderStatus {
       ProductionOrderStatusDto.fulfilled => ProductionOrderStatus.fulfilled,
       ProductionOrderStatusDto.inProgress => ProductionOrderStatus.inProgress,
       ProductionOrderStatusDto.pending => ProductionOrderStatus.pending,
-    };
-  }
-}
-
-enum ProductionOrderJobType {
-  mix,
-  repat;
-
-  @override
-  String toString() {
-    return switch (this) {
-      ProductionOrderJobType.mix => 'Mix',
-      ProductionOrderJobType.repat => 'Streamline',
-    };
-  }
-
-  static ProductionOrderJobType? fromDto(ProductionOrderJobTypeDto? j) {
-    return switch (j) {
-      ProductionOrderJobTypeDto.mix => ProductionOrderJobType.mix,
-      ProductionOrderJobTypeDto.repat => ProductionOrderJobType.repat,
-      null => null,
     };
   }
 }

@@ -11,7 +11,6 @@ abstract class ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,
-    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   });
@@ -19,7 +18,6 @@ abstract class ProductionOrderRepository {
   Stream<ProductionOrderListPage> watchListPage({
     required int first,
     String? after,
-    ProductionOrderJobType? jobType,
     ProductionOrderStatus? status,
     DateRange? range,
   });
@@ -41,13 +39,6 @@ abstract class ProductionOrderRepository {
     int? quantity,
     required bool isPriority,
     required List<AllocationInput> allocations,
-    ProductionOrderJobType? jobType,
-  });
-
-  Future<JobId> assignJob({
-    required String id,
-    int? orderedQuantity,
-    required ProductionOrderJobType jobType,
   });
 
   Future<void> setOrderedQuantity({

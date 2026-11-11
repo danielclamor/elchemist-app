@@ -35,10 +35,6 @@ class _ProductionOrderCreateOrderScreenState
   bool _isSubmitting = false;
 
   bool _shouldAssignJob = false;
-  final _jobOptions = {
-    ProductionOrderJobType.mix: true,
-    ProductionOrderJobType.repat: false
-  };
 
   @override
   void dispose() {
@@ -241,17 +237,12 @@ class _ProductionOrderCreateOrderScreenState
 
     setState(() => _isSubmitting = true);
 
-    final jobType = _shouldAssignJob
-        ? _jobOptions.entries.firstWhere((e) => e.value).key
-        : null;
-
     try {
       await ref.read(productionOrderRepositoryProvider).createOrder(
             eliquidId: eliquid.id,
             quantity: int.tryParse(_quantityController.text.trim()),
             isPriority: _isPriority,
             allocations: allocations,
-            jobType: jobType,
           );
 
       if (!mounted) return;
@@ -623,58 +614,6 @@ class _ProductionOrderCreateOrderScreenState
                                             ),
                                           ],
                                         ),
-                                        if (_shouldAssignJob)
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 8.0),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: SizedBox.shrink(),
-                                                ),
-                                                ToggleButtons(
-                                                  constraints:
-                                                      const BoxConstraints(),
-                                                  isSelected: _jobOptions.values
-                                                      .toList(),
-                                                  onPressed: (index) {
-                                                    final targetKey =
-                                                        _jobOptions.keys
-                                                            .elementAt(index);
-
-                                                    setState(() {
-                                                      for (final key
-                                                          in _jobOptions.keys) {
-                                                        _jobOptions[key] =
-                                                            (key == targetKey);
-                                                      }
-                                                    });
-                                                  },
-                                                  selectedColor: Colors.white,
-                                                  selectedBorderColor:
-                                                      Color(0xFF0E76BD),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          4.0),
-                                                  children: _jobOptions.keys
-                                                      .map(
-                                                        (key) => Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            vertical: 8.0,
-                                                            horizontal: 16.0,
-                                                          ),
-                                                          child: Text(
-                                                            key.toString(),
-                                                          ),
-                                                        ),
-                                                      )
-                                                      .toList(),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
                                       ],
                                     ),
                             ),

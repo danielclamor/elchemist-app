@@ -11,7 +11,6 @@ class ProductionOrderSummaryDto {
   final DateTime createdAt;
   final ProductionOrderStatusDto status;
   final bool isPriority;
-  final ProductionOrderJobTypeDto? jobType;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
   final String? mixBatchMixNumber;
@@ -24,7 +23,6 @@ class ProductionOrderSummaryDto {
     required this.createdAt,
     required this.status,
     required this.isPriority,
-    required this.jobType,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
     required this.mixBatchMixNumber,
@@ -41,7 +39,6 @@ class ProductionOrderSummaryDto {
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPriority: json['isPriority'] as bool,
-      jobType: ProductionOrderJobTypeDto.fromString(json['jobType'] as String?),
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
@@ -58,7 +55,6 @@ class ProductionOrderDto {
   final int? fulfilledQuantity;
   final bool isPriority;
   final ProductionOrderStatusDto status;
-  final ProductionOrderJobTypeDto? jobType;
   final DateTime createdAt;
   final DateTime updatedAt;
   final EliquidSummaryDto eliquid;
@@ -76,7 +72,6 @@ class ProductionOrderDto {
     required this.fulfilledQuantity,
     required this.isPriority,
     required this.status,
-    required this.jobType,
     required this.createdAt,
     required this.updatedAt,
     required this.eliquid,
@@ -104,7 +99,6 @@ class ProductionOrderDto {
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       isPriority: json['isPriority'] as bool,
       status: ProductionOrderStatusDto.fromString(json['status'] as String),
-      jobType: ProductionOrderJobTypeDto.fromString(json['jobType'] as String?),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       eliquid:
@@ -153,26 +147,5 @@ extension ProductionOrderStatusGraphQl on ProductionOrderStatus {
         ProductionOrderStatus.fulfilled => 'FULFILLED',
         ProductionOrderStatus.delivered => 'DELIVERED',
         ProductionOrderStatus.cancelled => 'CANCELLED',
-      };
-}
-
-enum ProductionOrderJobTypeDto {
-  mix,
-  repat;
-
-  static ProductionOrderJobTypeDto? fromString(String? value) {
-    return switch (value) {
-      'MIX' => ProductionOrderJobTypeDto.mix,
-      'REPAT' => ProductionOrderJobTypeDto.repat,
-      null => null,
-      _ => throw FormatException('Unknown ProductionOrderJob: $value'),
-    };
-  }
-}
-
-extension ProductionOrderJobTypeGraphQl on ProductionOrderJobType {
-  String get gql => switch (this) {
-        ProductionOrderJobType.mix => 'MIX',
-        ProductionOrderJobType.repat => 'REPAT',
       };
 }

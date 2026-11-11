@@ -7,7 +7,6 @@ import 'package:elchemist_app/features/production_order/presentation/widgets/chi
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/mark_fulfilled_dialog.dart';
-import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/production_order_input_quantity_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -157,21 +156,6 @@ class _ProductionOrderDetailScreenState
     if (!shouldCancel) return;
 
     setState(() => _isSubmitting = true);
-  }
-
-  void _showInputQuantityDialog(
-    int? orderedQuantity,
-    ProductionOrderJobType jobType,
-  ) {
-    showDialog<int>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) => ProductionOrderInputQuantityDialog(
-        id: widget.id,
-        orderedQuantity: orderedQuantity,
-        jobType: jobType,
-      ),
-    );
   }
 
   Future<void> _markFulfilled() async {
@@ -680,166 +664,13 @@ class _ProductionOrderDetailScreenState
                       );
                     }
 
-                    final jobType = data.jobType;
-                    final isAssigned = jobType != null;
-
-                    if (!isAssigned) {
-                      return Row(
-                        spacing: 8.0,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
-                            ),
-                            onPressed: !_isSubmitting
-                                ? () => _showInputQuantityDialog(
-                                      data.orderedQuantity,
-                                      ProductionOrderJobType.mix,
-                                    )
-                                : null,
-                            child: Text("Assign to Mix"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
-                            ),
-                            onPressed: !_isSubmitting
-                                ? () => _showInputQuantityDialog(
-                                      data.orderedQuantity,
-                                      ProductionOrderJobType.repat,
-                                    )
-                                : null,
-                            child: Text("Assign to Streamline"),
-                          ),
-                        ],
-                      );
-                    }
-
-                    if (jobType == ProductionOrderJobType.repat) {
-                      return Row(
-                        spacing: 8.0,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
-                            ),
-                            onPressed:
-                                !_isSubmitting ? () => _markFulfilled() : null,
-                            child: Text("Mark as fulfilled"),
-                          ),
-                        ],
-                      );
-                    }
-
-                    if (jobType == ProductionOrderJobType.mix) {
-                      final formula = data.eliquid.formula;
-
-                      return Row(
-                        spacing: 8.0,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
-                            ),
-                            onPressed: !_isSubmitting
-                                ? formula == null
-                                    ? null
-                                    : () {
-                                        final mixBatchId = data.mixBatchId;
-
-                                        if (mixBatchId == null) return;
-
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (_) => MixBatchMixScreen(
-                                                id: mixBatchId),
-                                          ),
-                                        );
-                                      }
-                                : null,
-                            child: Text("Mix a batch"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0E76BD),
-                              side: BorderSide(
-                                color: const Color(0xFF0B5E97),
-                                width: 1.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 16.0,
-                              ),
-                            ),
-                            onPressed: !_isSubmitting
-                                ? () {
-                                    // TODO integrate mark fulfilled
-                                  }
-                                : null,
-                            child: Text("Mark as fulfilled"),
-                          ),
-                        ],
-                      );
-                    }
-
                     return SizedBox.fromSize();
                   },
                 ),
                 Gap(16),
                 async.when(
                   data: (data) {
-                    if (data != null &&
-                        data.jobType == ProductionOrderJobType.mix) {
+                    if (data != null) {
                       final formula = data.eliquid.formula;
 
                       return Card(
