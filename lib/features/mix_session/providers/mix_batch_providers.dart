@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
-import 'package:elchemist_app/features/mix_batch/data/mix_batch_repository.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch_list_page.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch_repository.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_batch_repository.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch_list_page.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final mixBatchRepositoryProvider = Provider<MixBatchRepository>(

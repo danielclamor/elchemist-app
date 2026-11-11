@@ -1,5 +1,5 @@
 import 'package:elchemist_app/core/widgets/el_blinker.dart';
-import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,8 +1,8 @@
-import 'package:elchemist_app/features/mix_batch/data/mix_batch_dto.dart';
-import 'package:elchemist_app/features/mix_batch/data/mix_batch_query_strings.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch_list_page.dart';
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch_repository.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_batch_dto.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_batch_query_strings.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch_list_page.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch_repository.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MixBatchRepositoryImpl implements MixBatchRepository {

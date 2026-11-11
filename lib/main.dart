@@ -3,7 +3,7 @@ import 'dart:io';
 // import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/core/widgets/nested_navigator.dart';
 import 'package:elchemist_app/features/diy_mix/presentations/screens/diy_mix_screen.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_list_screen.dart';
+import 'package:elchemist_app/features/mix_session/presentation/screens/mix_batch_list_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

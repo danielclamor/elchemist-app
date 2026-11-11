@@ -1,6 +1,6 @@
 import 'package:elchemist_app/core/graphql/graphql_client.dart';
 import 'package:elchemist_app/features/diy_mix/providers/diy_mix_providers.dart';
-import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
 import 'package:elchemist_app/features/recipe/data/recipe_repository.dart';
 import 'package:elchemist_app/features/recipe/domain/recipe.dart';
 import 'package:elchemist_app/features/recipe/domain/recipe_diy.dart';

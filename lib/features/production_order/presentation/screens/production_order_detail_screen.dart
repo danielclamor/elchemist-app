@@ -1,5 +1,5 @@
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_mix_screen.dart';
+import 'package:elchemist_app/features/mix_session/presentation/screens/mix_batch_mix_screen.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';

@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_list_table.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_table.dart';
 import 'package:flutter/material.dart';
 
 class MixBatchListScreen extends StatefulWidget {

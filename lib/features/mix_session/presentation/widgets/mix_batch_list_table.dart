@@ -1,10 +1,10 @@
 import 'package:elchemist_app/core/widgets/fading_horizontal_scroll.dart';
 import 'package:elchemist_app/core/widgets/fading_vertical_scroll.dart';
-import 'package:elchemist_app/features/mix_batch/providers/mix_batch_providers.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_list_table_footer.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_list_table_header.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_list_tile.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_new_blink.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_batch_providers.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_table_footer.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_table_header.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_list_tile.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_new_blink.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

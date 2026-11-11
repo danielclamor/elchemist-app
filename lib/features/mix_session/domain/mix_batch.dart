@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/mix_batch/data/mix_batch_dto.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_batch_dto.dart';
 import 'package:elchemist_app/features/formula/domain/formula.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 

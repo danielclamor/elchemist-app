@@ -1,9 +1,9 @@
 import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_entry_row.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_volume_section.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_flavoring_section.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_nic_base_section.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_recipe_section.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_target_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_volume_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_flavoring_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_nic_base_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_recipe_section.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_target_section.dart';
 import 'package:elchemist_app/providers/mix_recipe_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

@@ -1,7 +1,7 @@
-import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_mix_screen.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_batch.dart';
+import 'package:elchemist_app/features/mix_session/presentation/screens/mix_batch_mix_screen.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
-import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_status_chip.dart';
+import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_batch_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
