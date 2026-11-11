@@ -6,11 +6,19 @@ class FormulaSummary {
   final String id;
   final String name;
   final bool isPreMix;
+  final double nicLevel;
+  final String brand;
+  final ChillType chillType;
+  final NicType nicType;
 
   const FormulaSummary({
     required this.id,
     required this.name,
     required this.isPreMix,
+    required this.nicLevel,
+    required this.brand,
+    required this.chillType,
+    required this.nicType,
   });
 
   factory FormulaSummary.fromDto(FormulaSummaryDto p) {
@@ -18,6 +26,10 @@ class FormulaSummary {
       id: p.id,
       name: p.name,
       isPreMix: p.isPreMix,
+      nicLevel: p.nicLevel,
+      brand: p.brand,
+      chillType: ChillType.fromDto(p.chillType),
+      nicType: NicType.fromDto(p.nicType),
     );
   }
 }
@@ -71,14 +83,6 @@ class Formula {
             .map((flavoring) => Flavoring.fromDto(flavoring))
             .toList(),
       );
-
-  // double get nicBaseVg => nicBases
-  //     .where((nicBase) => nicBase.isVg)
-  //     .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
-
-  // double get nicBasePg => nicBases
-  //     .where((nicBase) => !nicBase.isVg)
-  //     .fold(0.0, (sum, nicBase) => sum + nicBase.ratio);
 
   double get nicLevelMultiplier => isOldMix ? 250 : 1000;
 

@@ -3,6 +3,7 @@ import 'dart:io';
 // import 'package:elchemist_app/constants.dart';
 import 'package:elchemist_app/core/widgets/nested_navigator.dart';
 import 'package:elchemist_app/features/diy_mix/presentations/screens/diy_mix_screen.dart';
+import 'package:elchemist_app/features/formula/presentation/screens/formula_list_screen.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_list_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _productionOrdersNavKey = GlobalKey<NavigatorState>();
   final _mixSessionesNavKey = GlobalKey<NavigatorState>();
   final _diyMixNavKey = GlobalKey<NavigatorState>();
+  final _formulaNavKey = GlobalKey<NavigatorState>();
 
   late final List<Widget> _widgetOptions;
   late final List<String> _drawerItems;
@@ -120,12 +122,17 @@ class _MyHomePageState extends State<MyHomePage> {
         navigatorKey: _diyMixNavKey,
         root: DiyMixScreen(),
       ),
+      NestedNavigator(
+        navigatorKey: _formulaNavKey,
+        root: FormulaListScreen(),
+      ),
     ];
 
     _drawerItems = [
       "Production Orders",
       "Mix Sessions",
       "DIY",
+      "Formulas",
     ];
   }
 

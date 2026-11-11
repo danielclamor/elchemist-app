@@ -1,0 +1,220 @@
+import 'package:elchemist_app/core/widgets/fading_horizontal_scroll.dart';
+import 'package:elchemist_app/core/widgets/fading_vertical_scroll.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/formula_list_table_footer.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/formula_list_table_header.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/formula_list_tile.dart';
+import 'package:elchemist_app/features/formula/providers/formula_providers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class FormulaListTable extends ConsumerStatefulWidget {
+  const FormulaListTable({super.key});
+
+  @override
+  ConsumerState<FormulaListTable> createState() => _FormulaListTableState();
+}
+
+class _FormulaListTableState extends ConsumerState<FormulaListTable> {
+  final ScrollController _verticalScrollController = ScrollController();
+  final ScrollController _horizontalScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _verticalScrollController.dispose();
+    _horizontalScrollController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pager = ref.watch(formulaListPagerProvider);
+    final pageKey = (after: pager.currentCursor);
+    final pageAsync = ref.watch(formulaListPageProvider(pageKey));
+
+    return Card(
+      elevation: 2.0,
+      clipBehavior: Clip.hardEdge,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(width: 0.5),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      margin: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            margin: EdgeInsets.zero,
+            elevation: 0.0,
+            shape: RoundedRectangleBorder(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: TextField(
+                style: TextStyle(fontSize: 14.0),
+                cursorWidth: 1.0,
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 12.0,
+                    horizontal: 12.0,
+                  ),
+                  hintText: "Search",
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    borderSide: const BorderSide(),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    borderSide: const BorderSide(
+                      color: Colors.white,
+                      width: 1.5,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final tableWidth = 1592.0;
+                final needsScroll = constraints.maxWidth < tableWidth;
+
+                final tableContent = SizedBox(
+                  width: tableWidth,
+                  child: Column(
+                    children: [
+                      FormulaListTableHeader(),
+                      Divider(
+                        height: 1.0,
+                        thickness: 0.25,
+                        color: Colors.black,
+                      ),
+                      pageAsync.when(
+                        loading: () => Expanded(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        error: (e, _) => Expanded(
+                          child: Center(
+                            child: TextButton(
+                              onPressed: () => ref.invalidate(
+                                formulaListPageProvider(pageKey),
+                              ),
+                              child: Text('Failed to load. Retry\n$e'),
+                            ),
+                          ),
+                        ),
+                        data: (page) {
+                          if (page.items.isEmpty) {
+                            return Expanded(
+                              child: Center(
+                                child: Text(
+                                  'No mix session',
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Expanded(
+                            child: Scrollbar(
+                              controller: _verticalScrollController,
+                              child: FadingVerticalScroll(
+                                controller: _verticalScrollController,
+                                fadeHeight: 16,
+                                child: ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: page.items.length,
+                                    separatorBuilder: (context, index) =>
+                                        Divider(
+                                          height: 0.0,
+                                          thickness: 0.25,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      final formula = page.items[index];
+                                      return FormulaListTile(
+                                        formula: formula,
+                                      );
+                                    }),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+
+                if (needsScroll) {
+                  return Scrollbar(
+                    controller: _horizontalScrollController,
+                    child: FadingHorizontalScroll(
+                      controller: _horizontalScrollController,
+                      child: tableContent,
+                    ),
+                  );
+                }
+
+                return tableContent;
+              },
+            ),
+          ),
+          Divider(
+            height: 1.0,
+            thickness: 0.25,
+            color: Colors.black,
+          ),
+          pageAsync.when(
+            loading: () => FormulaListTableFooter(
+              range: null,
+              hasPreviousPage: false,
+              hasNextPage: false,
+              onPrevious: null,
+              onNext: null,
+            ),
+            error: (e, _) => FormulaListTableFooter(
+              range: null,
+              hasPreviousPage: false,
+              hasNextPage: false,
+              onPrevious: null,
+              onNext: null,
+            ),
+            data: (page) => FormulaListTableFooter(
+              range: page.items.isEmpty
+                  ? null
+                  : (
+                      first: pager.firstIndex,
+                      last: pager.firstIndex + page.items.length - 1,
+                    ),
+              hasPreviousPage: page.hasPreviousPage,
+              hasNextPage: page.hasNextPage,
+              onPrevious: () =>
+                  ref.read(formulaListPagerProvider.notifier).previous(),
+              onNext: () => ref
+                  .read(formulaListPagerProvider.notifier)
+                  .next(page.endCursor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

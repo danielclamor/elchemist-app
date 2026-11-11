@@ -76,11 +76,19 @@ class FormulaSummaryDto {
   final String id;
   final String name;
   final bool isPreMix;
+  final double nicLevel;
+  final String brand;
+  final ChillTypeDto chillType;
+  final NicTypeDto nicType;
 
   const FormulaSummaryDto({
     required this.id,
     required this.name,
     required this.isPreMix,
+    required this.nicLevel,
+    required this.brand,
+    required this.chillType,
+    required this.nicType,
   });
 
   factory FormulaSummaryDto.fromJson(Map<String, dynamic> json) {
@@ -88,8 +96,14 @@ class FormulaSummaryDto {
       id: json['id'] as String,
       name: json['name'] as String,
       isPreMix: json['isPreMix'] as bool,
+      nicLevel: _toDouble(json['nicLevel']),
+      brand: json['brand'] as String,
+      chillType: ChillTypeDto.fromString(json['chillType'] as String),
+      nicType: NicTypeDto.fromString(json['nicType'] as String),
     );
   }
+
+  static double _toDouble(Object? v) => (v as num).toDouble();
 }
 
 enum ChillTypeDto {

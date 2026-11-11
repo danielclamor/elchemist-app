@@ -41,3 +41,33 @@ const String formulaDetailsQuery = r'''
     }
   }
 ''';
+
+const String formulaListPageQuery = r'''
+  query Formulas(
+    $first: Int!
+    $after: String
+  ) {
+    formulas(
+      first: $first
+      after: $after
+    ) {
+      totalCount
+      pageInfo {
+        hasPreviousPage
+        hasNextPage 
+        endCursor
+      }
+      edges {
+        node {
+          id
+          name
+          isPreMix
+          nicLevel
+          brand
+          chillType
+          nicType
+        }
+      }
+    }
+  }
+''';
