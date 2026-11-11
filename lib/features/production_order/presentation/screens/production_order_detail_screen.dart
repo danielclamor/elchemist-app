@@ -664,7 +664,97 @@ class _ProductionOrderDetailScreenState
                       );
                     }
 
-                    return SizedBox.fromSize();
+                    final formula = data.eliquid.formula;
+
+                    return Row(
+                      spacing: 8.0,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (data.mixBatchMixNumber != null)
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed: !_isSubmitting
+                                ? () {
+                                    final mixBatchId = data.mixBatchId;
+
+                                    if (mixBatchId == null) return;
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            MixBatchMixScreen(id: mixBatchId),
+                                      ),
+                                    );
+                                  }
+                                : null,
+                            child: Text("Continue ${data.mixBatchMixNumber}"),
+                          ),
+                        if (formula != null && data.mixBatchMixNumber == null)
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0E76BD),
+                              side: BorderSide(
+                                color: const Color(0xFF0B5E97),
+                                width: 1.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 16.0,
+                              ),
+                            ),
+                            onPressed: !_isSubmitting
+                                ? () {
+                                    final mixBatchId = data.mixBatchId;
+
+                                    if (mixBatchId == null) return;
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            MixBatchMixScreen(id: mixBatchId),
+                                      ),
+                                    );
+                                  }
+                                : null,
+                            child: Text("Mix a batch"),
+                          ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
+                          ),
+                          onPressed:
+                              !_isSubmitting ? () => _markFulfilled() : null,
+                          child: Text("Mark as fulfilled"),
+                        ),
+                      ],
+                    );
                   },
                 ),
                 Gap(16),
