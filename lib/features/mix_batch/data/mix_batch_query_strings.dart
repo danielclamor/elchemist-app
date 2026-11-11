@@ -84,7 +84,6 @@ const String mixBatchDetailsQuery = r'''
         orderedQuantity
         fulfilledQuantity
         status
-        jobType
         isPriority
         createdAt
         eliquid { 
