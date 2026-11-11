@@ -22,7 +22,7 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
           'first': first,
           'after': after,
         },
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.noCache,
         fetchResults: true,
         pollInterval: const Duration(seconds: 10),
       ),
@@ -61,8 +61,7 @@ class MixBatchRepositoryImpl implements MixBatchRepository {
       QueryOptions(
         document: gql(mixBatchDetailsQuery),
         variables: {'id': id},
-        fetchPolicy: FetchPolicy.networkOnly,
-        // cacheRereadPolicy: CacheRereadPolicy.ignoreAll,
+        fetchPolicy: FetchPolicy.noCache,
       ),
     );
 

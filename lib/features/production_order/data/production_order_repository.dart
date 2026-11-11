@@ -73,7 +73,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
           'createdFrom': range?.from?.toUtc().toIso8601String(),
           'createdTo': range?.to?.toUtc().toIso8601String(),
         },
-        fetchPolicy: FetchPolicy.networkOnly,
+        fetchPolicy: FetchPolicy.noCache,
         fetchResults: true,
         pollInterval: const Duration(seconds: 10),
       ),
