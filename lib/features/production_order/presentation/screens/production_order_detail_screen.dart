@@ -65,29 +65,19 @@ class _ProductionOrderDetailScreenState
     }
   }
 
-  ProductionOrderJobChip _getJobChip(
-    ProductionOrderJobType? job,
+  ProductionOrderMixChip? _getMixChip(
+    String? mixNumber,
     ProductionOrderStatusChip statusChip,
   ) {
-    if (job == null) {
-      return ProductionOrderJobChip.unassigned(
-        fgColor: statusChip.fgColor,
-        bgColor: statusChip.bgColor,
-      );
+    if (mixNumber == null) {
+      return null;
     }
 
-    switch (job) {
-      case ProductionOrderJobType.mix:
-        return ProductionOrderJobChip.mix(
-          fgColor: statusChip.fgColor,
-          bgColor: statusChip.bgColor,
-        );
-      case ProductionOrderJobType.repat:
-        return ProductionOrderJobChip.repat(
-          fgColor: statusChip.fgColor,
-          bgColor: statusChip.bgColor,
-        );
-    }
+    return ProductionOrderMixChip(
+      labelText: mixNumber,
+      fgColor: statusChip.fgColor,
+      bgColor: statusChip.bgColor,
+    );
   }
 
   String _getFormattedDate(DateTime datetime) {
@@ -338,10 +328,11 @@ class _ProductionOrderDetailScreenState
                             ),
                             async.when(
                               data: (data) => data != null
-                                  ? _getJobChip(
-                                      data.jobType,
-                                      _getStatusChip(data.status),
-                                    )
+                                  ? _getMixChip(
+                                        data.mixBatchMixNumber,
+                                        _getStatusChip(data.status),
+                                      ) ??
+                                      SizedBox.shrink()
                                   : SizedBox.shrink(),
                               error: (e, _) => SizedBox.shrink(),
                               loading: () => SizedBox.shrink(),

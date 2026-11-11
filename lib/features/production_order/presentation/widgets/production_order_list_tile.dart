@@ -29,29 +29,19 @@ class ProductionOrderListTile extends StatelessWidget {
     }
   }
 
-  ProductionOrderJobChip _getJobChip(
-    ProductionOrderJobType? job,
+  ProductionOrderMixChip? _getMixChip(
+    String? mixNumber,
     ProductionOrderStatusChip statusChip,
   ) {
-    if (job == null) {
-      return ProductionOrderJobChip.unassigned(
-        fgColor: statusChip.fgColor,
-        bgColor: statusChip.bgColor,
-      );
+    if (mixNumber == null) {
+      return null;
     }
 
-    switch (job) {
-      case ProductionOrderJobType.mix:
-        return ProductionOrderJobChip.mix(
-          fgColor: statusChip.fgColor,
-          bgColor: statusChip.bgColor,
-        );
-      case ProductionOrderJobType.repat:
-        return ProductionOrderJobChip.repat(
-          fgColor: statusChip.fgColor,
-          bgColor: statusChip.bgColor,
-        );
-    }
+    return ProductionOrderMixChip(
+      labelText: mixNumber,
+      fgColor: statusChip.fgColor,
+      bgColor: statusChip.bgColor,
+    );
   }
 
   bool _isSameDay(DateTime a, DateTime b) {
@@ -103,8 +93,8 @@ class ProductionOrderListTile extends StatelessWidget {
         order.status == ProductionOrderStatus.delivered;
 
     final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
-    final ProductionOrderJobChip jobChip =
-        _getJobChip(order.jobType, statusChip);
+    final ProductionOrderMixChip? mixChip =
+        _getMixChip(order.mixBatchMixNumber, statusChip);
     final String formattedDate = _getFormattedDate(order.createdAt);
     final renderPriority =
         order.isPriority && order.status != ProductionOrderStatus.delivered;
@@ -186,7 +176,7 @@ class ProductionOrderListTile extends StatelessWidget {
               flex: 1,
               child: Container(
                 alignment: AlignmentGeometry.centerLeft,
-                child: jobChip,
+                child: mixChip,
               ),
             ),
             Expanded(
