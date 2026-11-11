@@ -3,7 +3,7 @@ import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
-import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_mix_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/mark_fulfilled_dialog.dart';

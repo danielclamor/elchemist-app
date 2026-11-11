@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
-import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_job_chip.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_mix_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
 import 'package:flutter/material.dart';
