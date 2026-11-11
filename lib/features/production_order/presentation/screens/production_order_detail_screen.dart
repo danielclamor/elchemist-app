@@ -1047,7 +1047,8 @@ class _ProductionOrderDetailScreenState
                                               size: 12,
                                             ),
                                             Gap(12.0),
-                                            Text("Assigned to $newValue"),
+                                            Text(
+                                                "Assigned to $newValue session."),
                                           ],
                                         ),
                                         Text(
