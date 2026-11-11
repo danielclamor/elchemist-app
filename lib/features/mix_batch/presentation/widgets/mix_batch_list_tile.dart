@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/mix_batch/domain/mix_batch.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_mix_screen.dart';
-import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_status_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -97,31 +97,43 @@ class MixBatchListTile extends StatelessWidget {
         child: Row(
           spacing: 4.0,
           children: [
-            Expanded(flex: 2, child: Text(batch.mixNumber, style: textStyle)),
             Expanded(
-                flex: 4,
-                child: Row(
-                  spacing: 8.0,
-                  children: [
-                    Text(batch.formulaFullName, style: textStyle),
-                    if (batch.formulaIsPreMix)
-                      PreMixChip(
-                        fgColor: _getStatusChip(batch.status).fgColor,
-                        bgColor: _getStatusChip(batch.status).bgColor,
-                      )
-                  ],
-                )),
+              flex: 2,
+              child: Text(batch.mixNumber, style: textStyle),
+            ),
             Expanded(
-                flex: 2, child: Text(formattedCreatedAtDate, style: textStyle)),
+              flex: 4,
+              child: Row(
+                spacing: 8.0,
+                children: [
+                  Text(batch.formulaName, style: textStyle),
+                  if (batch.formulaIsPreMix)
+                    PreMixChip(
+                      fgColor: _getStatusChip(batch.status).fgColor,
+                      bgColor: _getStatusChip(batch.status).bgColor,
+                    ),
+                ],
+              ),
+            ),
             Expanded(
-                flex: 1,
-                child: Container(
-                    alignment: AlignmentGeometry.centerLeft,
-                    child: _getStatusChip(batch.status))),
+              flex: 2,
+              child: Text(formattedCreatedAtDate, style: textStyle),
+            ),
             Expanded(
-                flex: 2, child: Text(formattedMixedAtDate, style: textStyle)),
+              flex: 1,
+              child: Container(
+                alignment: AlignmentGeometry.centerLeft,
+                child: _getStatusChip(batch.status),
+              ),
+            ),
             Expanded(
-                flex: 2, child: Text(batch.batchCode ?? "", style: textStyle)),
+              flex: 2,
+              child: Text(formattedMixedAtDate, style: textStyle),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(batch.batchCode ?? "", style: textStyle),
+            ),
           ],
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_target_section.dart';
 import 'package:elchemist_app/core/utils/date_helper.dart';
-import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_flavoring_section.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_nic_base_section.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/widgets/mix_batch_orders_section.dart';
@@ -139,7 +139,7 @@ class _MixBatchScreenState extends ConsumerState<MixBatchMixScreen> {
                                 Row(
                                   children: [
                                     Text(
-                                      formula.fullName,
+                                      formula.name,
                                       style: TextStyle(
                                         fontSize: 20.0,
                                         fontWeight: FontWeight.bold,

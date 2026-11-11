@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/flavor/presentation/widgets/pre_mix_chip.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_batch/presentation/screens/mix_batch_mix_screen.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
@@ -879,7 +879,7 @@ class _ProductionOrderDetailScreenState
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              formula.fullName,
+                                              formula.name,
                                             ),
                                             Gap(4.0),
                                             PreMixChip(
