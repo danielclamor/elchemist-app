@@ -17,6 +17,7 @@ class ProductionOrder {
   final List<ProductionOrderActivityLog> activityLogs;
   final bool isOpen;
   final String? mixBatchId;
+  final String? mixBatchMixNumber;
 
   ProductionOrder({
     required this.id,
@@ -32,6 +33,7 @@ class ProductionOrder {
     required this.activityLogs,
     required this.isOpen,
     required this.mixBatchId,
+    required this.mixBatchMixNumber,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -53,6 +55,7 @@ class ProductionOrder {
           .toList(),
       isOpen: o.isOpen,
       mixBatchId: o.mixBatchId,
+      mixBatchMixNumber: o.mixBatchMixNumber,
     );
   }
 }
@@ -68,6 +71,7 @@ class ProductionOrderSummary {
   final ProductionOrderJobType? jobType;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
+  final String? mixBatchMixNumber;
 
   const ProductionOrderSummary({
     required this.id,
@@ -80,6 +84,7 @@ class ProductionOrderSummary {
     this.jobType,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
+    required this.mixBatchMixNumber,
   });
 
   factory ProductionOrderSummary.fromDto(ProductionOrderSummaryDto o) {
@@ -94,6 +99,7 @@ class ProductionOrderSummary {
       jobType: ProductionOrderJobType.fromDto(o.jobType),
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
+      mixBatchMixNumber: o.mixBatchMixNumber,
     );
   }
 

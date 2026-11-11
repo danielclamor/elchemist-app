@@ -36,6 +36,10 @@ const String productionOrderListPageQuery = r'''
             bottleSize 
             description 
           }
+          mixBatch {
+            id
+            mixNumber
+          }
         }
       }
     }
@@ -92,6 +96,7 @@ const String productionOrderDetailsQuery = r'''
       }
       mixBatch {
         id
+        mixNumber
       }
     }
   }

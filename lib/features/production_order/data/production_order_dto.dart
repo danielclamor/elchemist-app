@@ -14,6 +14,7 @@ class ProductionOrderSummaryDto {
   final ProductionOrderJobTypeDto? jobType;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
+  final String? mixBatchMixNumber;
 
   const ProductionOrderSummaryDto({
     required this.id,
@@ -26,9 +27,12 @@ class ProductionOrderSummaryDto {
     required this.jobType,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
+    required this.mixBatchMixNumber,
   });
 
   factory ProductionOrderSummaryDto.fromJson(Map<String, dynamic> json) {
+    final mixBatchJson = json['mixBatch'] as Map<String, dynamic>?;
+
     return ProductionOrderSummaryDto(
       id: json['id'] as String,
       orderNumber: json['orderNumber'] as String,
@@ -41,6 +45,8 @@ class ProductionOrderSummaryDto {
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
+      mixBatchMixNumber:
+          mixBatchJson != null ? mixBatchJson['mixNumber'] as String : null,
     );
   }
 }
@@ -61,6 +67,7 @@ class ProductionOrderDto {
   final String? currentJobId;
   final bool isOpen;
   final String? mixBatchId;
+  final String? mixBatchMixNumber;
 
   const ProductionOrderDto({
     required this.id,
@@ -78,6 +85,7 @@ class ProductionOrderDto {
     required this.currentJobId,
     required this.isOpen,
     required this.mixBatchId,
+    required this.mixBatchMixNumber,
   });
 
   factory ProductionOrderDto.fromJson(Map<String, dynamic> json) {
@@ -112,7 +120,9 @@ class ProductionOrderDto {
       currentJobId:
           currentJobJson != null ? currentJobJson['id'] as String : null,
       isOpen: json['isOpen'],
-      mixBatchId: mixBatchJson != null ? mixBatchJson['id'] : null,
+      mixBatchId: mixBatchJson != null ? mixBatchJson['id'] as String : null,
+      mixBatchMixNumber:
+          mixBatchJson != null ? mixBatchJson['mixNumber'] as String : null,
     );
   }
 }
