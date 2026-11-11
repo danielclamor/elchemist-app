@@ -60,7 +60,6 @@ class ProductionOrderDto {
   final EliquidSummaryDto eliquid;
   final List<ProductionOrderActivityLogDto> activityLogs;
   final List<ProductionOrderAllocationDto> allocations;
-  final String? currentJobId;
   final bool isOpen;
   final String? mixBatchId;
   final String? mixBatchMixNumber;
@@ -77,7 +76,6 @@ class ProductionOrderDto {
     required this.eliquid,
     required this.activityLogs,
     required this.allocations,
-    required this.currentJobId,
     required this.isOpen,
     required this.mixBatchId,
     required this.mixBatchMixNumber,
@@ -89,8 +87,6 @@ class ProductionOrderDto {
     final activityLogsJson = json['activityLogs'] as List<dynamic>;
 
     final allocationsJson = json['allocations'] as List<dynamic>;
-
-    final currentJobJson = json['currentJob'] as Map<String, dynamic>?;
 
     return ProductionOrderDto(
       id: json['id'] as String,
@@ -111,8 +107,6 @@ class ProductionOrderDto {
           .map((a) => ProductionOrderAllocationDto.fromJson(
               Map<String, dynamic>.from(a as Map)))
           .toList(),
-      currentJobId:
-          currentJobJson != null ? currentJobJson['id'] as String : null,
       isOpen: json['isOpen'],
       mixBatchId: mixBatchJson != null ? mixBatchJson['id'] as String : null,
       mixBatchMixNumber:

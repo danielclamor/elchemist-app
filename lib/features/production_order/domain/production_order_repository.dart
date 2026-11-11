@@ -5,8 +5,6 @@ import 'production_order.dart';
 
 typedef AllocationInput = ({String locationId, int quantity});
 
-typedef JobId = String;
-
 abstract class ProductionOrderRepository {
   Future<ProductionOrderListPage> getListPage({
     required int first,
