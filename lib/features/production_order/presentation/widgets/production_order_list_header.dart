@@ -33,6 +33,7 @@ class ProductionOrderListHeader extends StatelessWidget {
                   child: ElCheckbox(
                     value: false,
                     onChanged: (value) {},
+                    tristate: true,
                   ),
                 ),
                 Expanded(flex: 2, child: Text("Order", style: style)),

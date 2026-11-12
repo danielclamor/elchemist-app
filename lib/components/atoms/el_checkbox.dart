@@ -6,6 +6,7 @@ class ElCheckbox extends StatelessWidget {
   final String? labelText;
   final bool? value;
   final ValueChanged<bool?>? onChanged;
+  final bool tristate;
 
   const ElCheckbox({
     super.key,
@@ -13,6 +14,7 @@ class ElCheckbox extends StatelessWidget {
     this.labelText,
     this.value,
     this.onChanged,
+    this.tristate = false,
   });
 
   @override
@@ -32,6 +34,7 @@ class ElCheckbox extends StatelessWidget {
           Checkbox(
             value: value,
             onChanged: onChanged,
+            tristate: tristate,
             visualDensity: VisualDensity.compact,
             side: BorderSide(color: Theme.of(context).focusColor),
             fillColor: onChanged != null
