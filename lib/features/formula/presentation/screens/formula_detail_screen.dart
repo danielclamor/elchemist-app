@@ -23,36 +23,32 @@ class FormulaDetailScreen extends StatelessWidget {
             child: Column(
               children: [
                 Row(
+                  spacing: 8.0,
                   children: [
-                    Row(
-                      spacing: 8.0,
-                      children: [
-                        Tooltip(
-                          message: "Formulas",
-                          child: SizedBox(
-                            width: 30,
-                            height: 30,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                                minimumSize: Size.zero,
-                                shape: const CircleBorder(),
-                              ),
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: const Icon(
-                                Icons.arrow_back_ios_rounded,
-                                size: 14,
-                              ),
-                            ),
+                    Tooltip(
+                      message: "Formulas",
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            shape: const CircleBorder(),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Icon(
+                            Icons.arrow_back_ios_rounded,
+                            size: 14,
                           ),
                         ),
-                        Text(
-                          'Formulas',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                      ),
+                    ),
+                    Text(
+                      'Formulas',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
