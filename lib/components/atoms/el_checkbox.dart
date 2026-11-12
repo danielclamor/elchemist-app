@@ -32,6 +32,7 @@ class ElCheckbox extends StatelessWidget {
           Checkbox(
             value: value,
             onChanged: onChanged,
+            visualDensity: VisualDensity.compact,
             side: BorderSide(color: Theme.of(context).focusColor),
             fillColor: onChanged != null
                 ? WidgetStateProperty.resolveWith<Color>(
