@@ -16,4 +16,8 @@ class Flavoring {
       );
 
   double get percentage => ratio * 100;
+
+  String get name => flavoringOption.name;
+
+  bool get isVg => flavoringOption.isVg;
 }
