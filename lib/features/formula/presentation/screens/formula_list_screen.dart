@@ -22,7 +22,7 @@ class FormulaListScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Mix Session',
+                  'Formulas',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,

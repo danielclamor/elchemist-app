@@ -27,7 +27,7 @@ class _MixSessionListScreenState extends State<MixSessionListScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Mix Session',
+                  'Mix Sessions',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
