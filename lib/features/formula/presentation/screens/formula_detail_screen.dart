@@ -317,6 +317,28 @@ class _FormulaDetailScreenState extends ConsumerState<FormulaDetailScreen> {
                                 ),
                               ],
                             ),
+                            Gap(20.0),
+                            Align(
+                              alignment: AlignmentGeometry.centerEnd,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF0E76BD),
+                                  side: BorderSide(
+                                    color: const Color(0xFF0B5E97),
+                                    width: 1.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                    vertical: 16.0,
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: Text("Mix a batch"),
+                              ),
+                            ),
                           ],
                         ),
                       ),
