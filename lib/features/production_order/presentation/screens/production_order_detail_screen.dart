@@ -1,3 +1,4 @@
+import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_wrapper.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
@@ -803,9 +804,70 @@ class _ProductionOrderDetailScreenState
                                 ],
                               ),
                               TextButton(
-                                onPressed: () {
-                                  // TODO integrate view formula
-                                },
+                                onPressed: formula != null
+                                    ? () {
+                                        var wrapperWidth = 800.0;
+                                        var sectionWidth = 500.0;
+
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => Dialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                            ),
+                                            backgroundColor: Theme.of(context)
+                                                .scaffoldBackgroundColor,
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                maxWidth: 1000,
+                                              ),
+                                              padding: EdgeInsets.all(24.0),
+                                              child: Column(
+                                                children: [
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: SizedBox(
+                                                      width: 30,
+                                                      height: 30,
+                                                      child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          minimumSize:
+                                                              Size.zero,
+                                                          shape:
+                                                              const CircleBorder(),
+                                                          backgroundColor: Theme
+                                                                  .of(context)
+                                                              .colorScheme
+                                                              .surfaceContainer,
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.close,
+                                                          size: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  FormulaDetailWrapper(
+                                                    wrapperWidth: wrapperWidth,
+                                                    sectionWidth: sectionWidth,
+                                                    id: formula.id,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    : null,
                                 style: TextButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
