@@ -8,6 +8,34 @@ class FormulaListTile extends StatelessWidget {
 
   const FormulaListTile({super.key, required this.formula});
 
+  int _getDecimalPlaces(double value) {
+    if (value == value.toInt()) return 0;
+
+    List<String> parts = value.toString().split('.');
+
+    if (parts.length == 1) return 0;
+
+    int decimalPlaces = parts[1].length;
+
+    if (decimalPlaces.isOdd) {
+      decimalPlaces += 1;
+    }
+
+    return decimalPlaces > 6
+        ? _getDecimalPlaces(double.parse(value.toStringAsFixed(6)))
+        : decimalPlaces;
+  }
+
+  String _formatNumericalText(String value) {
+    if (value == '') return value;
+
+    final valueAsDouble = double.parse(value);
+
+    final decimalPlaces = _getDecimalPlaces(valueAsDouble);
+
+    return valueAsDouble.toStringAsFixed(decimalPlaces);
+  }
+
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
@@ -41,7 +69,10 @@ class FormulaListTile extends StatelessWidget {
               flex: 1,
               child: Container(
                   alignment: AlignmentGeometry.centerEnd,
-                  child: Text(formula.nicLevel.toString(), style: textStyle)),
+                  child: Text(
+                    '${_formatNumericalText(formula.nicLevel.toString())} mg',
+                    style: textStyle,
+                  )),
             ),
             Expanded(
               flex: 1,
