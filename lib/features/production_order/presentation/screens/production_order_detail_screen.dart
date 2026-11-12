@@ -224,7 +224,7 @@ class _ProductionOrderDetailScreenState
               spacing: 8.0,
               children: [
                 Tooltip(
-                  message: "Formulas",
+                  message: "Production Orders",
                   child: SizedBox(
                     width: 30,
                     height: 30,
