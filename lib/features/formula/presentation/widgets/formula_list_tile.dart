@@ -1,4 +1,5 @@
 import 'package:elchemist_app/features/formula/domain/formula.dart';
+import 'package:elchemist_app/features/formula/presentation/screens/formula_detail_screen.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,11 @@ class FormulaListTile extends StatelessWidget {
     );
 
     return ListTile(
-      onTap: () {},
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => FormulaDetailScreen(id: formula.id),
+        ),
+      ),
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
       minLeadingWidth: 0,
