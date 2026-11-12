@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/production_order/presentation/providers/production_order_providers.dart';
+import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/eliquid_past_orders_dialog.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/eliquid_past_orders_list_tile.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/eliquid_past_orders_preview_header.dart';
