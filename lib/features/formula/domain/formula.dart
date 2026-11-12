@@ -38,37 +38,49 @@ class Formula {
   final String id;
   final String slug;
   final String name;
+  final double nicLevel;
+  final String brand;
+  final ChillType chillType;
+  final NicType nicType;
   final bool isOldMix;
   final bool isPreMix;
   final double targetNicStr;
   final double targetVg;
   final double targetPg;
   final double nicBaseNicStr;
+  final List<Flavoring> flavorings;
   final List<NicBase> nicBases;
   final double nicBaseVg;
   final double nicBasePg;
-  final List<Flavoring> flavorings;
 
   Formula({
     required this.id,
     required this.slug,
     required this.name,
+    required this.nicLevel,
+    required this.brand,
+    required this.chillType,
+    required this.nicType,
     required this.isOldMix,
     required this.isPreMix,
     required this.targetNicStr,
     required this.targetVg,
     required this.targetPg,
     required this.nicBaseNicStr,
+    required this.flavorings,
     required this.nicBases,
     required this.nicBaseVg,
     required this.nicBasePg,
-    required this.flavorings,
   });
 
   factory Formula.fromDto(FormulaDto d) => Formula(
         id: d.id,
         slug: d.slug,
         name: d.name,
+        brand: d.brand,
+        chillType: ChillType.fromDto(d.chillType),
+        nicType: NicType.fromDto(d.nicType),
+        nicLevel: d.nicLevel,
         isOldMix: d.isOldMix,
         isPreMix: d.isPreMix,
         targetNicStr: d.targetNicStr,
