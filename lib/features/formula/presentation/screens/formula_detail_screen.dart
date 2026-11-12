@@ -9,13 +9,9 @@ class FormulaDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
-    var wrapperWidth = screenSize.width < 1920 ? 800.0 : 1000.0;
-    var sectionWidth = 500.0;
-
     return Scaffold(
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(24.0),
+        padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 24.0),
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(24.0),
@@ -50,14 +46,41 @@ class FormulaDetailScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    Expanded(child: SizedBox.shrink()),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(8.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 16.0,
+                        ),
+                      ),
+                      onPressed: () {}, // TODO implement edit state
+                      label: Text("Edit"),
+                      icon: Icon(Icons.edit),
+                    ),
+                    Gap(4.0),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(8.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 16.0,
+                        ),
+                      ),
+                      onPressed: () {},
+                      label: Text("Mix a batch"),
+                      icon: Icon(Icons.science_rounded),
+                    ),
                   ],
                 ),
                 Gap(16.0),
                 FormulaDetailWrapper(
-                  wrapperWidth: wrapperWidth,
-                  sectionWidth: sectionWidth,
                   id: id,
-                  showMixButton: true,
                 ),
               ],
             ),

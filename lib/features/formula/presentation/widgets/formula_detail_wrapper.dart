@@ -8,17 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 class FormulaDetailWrapper extends ConsumerWidget {
-  final double wrapperWidth;
-  final double sectionWidth;
   final String id;
-  final bool showMixButton;
 
   const FormulaDetailWrapper({
     super.key,
-    required this.wrapperWidth,
-    required this.sectionWidth,
     required this.id,
-    this.showMixButton = false,
   });
 
   int _getDecimalPlaces(double value) {
@@ -60,51 +54,48 @@ class FormulaDetailWrapper extends ConsumerWidget {
     );
 
     return Container(
-      constraints: BoxConstraints(maxWidth: wrapperWidth),
+      constraints: BoxConstraints(maxWidth: 800),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
               children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: sectionWidth),
-                  child: Column(
-                    spacing: 2.0,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              formula?.name ?? '',
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                Column(
+                  spacing: 2.0,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            formula?.name ?? '',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
-                      ),
-                      if (formula != null && formula.isPreMix)
-                        PreMixChip(
-                          fgColor: Colors.black,
-                          bgColor: Colors.grey,
                         ),
-                    ],
-                  ),
+                      ],
+                    ),
+                    if (formula != null && formula.isPreMix)
+                      PreMixChip(
+                        fgColor: Colors.black,
+                        bgColor: Colors.grey,
+                      ),
+                  ],
                 ),
                 Gap(16.0),
                 if (formula != null)
                   FormulaDetailFlavoringSection(
-                    width: sectionWidth,
+                    // width: sectionWidth,
                     flavorings: formula.flavorings,
                   ),
                 Gap(16.0),
                 if (formula != null)
                   FormulaDetailNicBaseSection(
-                    width: sectionWidth,
+                    // width: sectionWidth,
                     nicBases: formula.nicBases,
                     nicStr: formula.nicBaseNicStr,
                     vg: formula.nicBaseVg,
@@ -113,7 +104,7 @@ class FormulaDetailWrapper extends ConsumerWidget {
                 Gap(16.0),
                 if (formula != null)
                   FormulaDetailTargetSection(
-                    width: sectionWidth,
+                    // width: sectionWidth,
                     nicStr: formula.targetNicStr,
                     vg: formula.targetVg,
                     pg: formula.targetPg,
@@ -121,182 +112,156 @@ class FormulaDetailWrapper extends ConsumerWidget {
               ],
             ),
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
-                  spacing: 4.0,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nicotine Level',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+          Gap(40.0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                spacing: 4.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nicotine Level',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        4.0,
                       ),
                     ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          4.0,
-                        ),
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: 12.0,
                       ),
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 12.0,
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          child: formula != null
-                              ? Text(
-                                  '${_formatNumericalText(formula.nicLevel.toString())} mg',
-                                  style: TextStyle(
-                                    fontSize: 16.0,
-                                  ),
-                                )
-                              : SizedBox.shrink(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(20.0),
-                Column(
-                  spacing: 4.0,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Brand',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          4.0,
-                        ),
-                      ),
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 12.0,
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          child: Text(
-                            formula?.brand ?? '',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(20.0),
-                Column(
-                  spacing: 4.0,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Chill Type',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          4.0,
-                        ),
-                      ),
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 12.0,
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          child: Text(
-                            formula?.chillType.toString() ?? '',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(20.0),
-                Column(
-                  spacing: 4.0,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nicotine Type',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          4.0,
-                        ),
-                      ),
-                      margin: EdgeInsets.zero,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12.0,
-                          horizontal: 12.0,
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          child: Text(
-                            formula?.nicType.toString() ?? '',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                if (showMixButton)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Align(
-                      alignment: AlignmentGeometry.centerEnd,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0E76BD),
-                          side: BorderSide(
-                            color: const Color(0xFF0B5E97),
-                            width: 1.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 16.0,
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text("Mix a batch"),
+                      child: SizedBox(
+                        width: 240,
+                        child: formula != null
+                            ? Text(
+                                '${_formatNumericalText(formula.nicLevel.toString())} mg',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              )
+                            : SizedBox.shrink(),
                       ),
                     ),
                   ),
-              ],
-            ),
+                ],
+              ),
+              Gap(20.0),
+              Column(
+                spacing: 4.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Brand',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        4.0,
+                      ),
+                    ),
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: 12.0,
+                      ),
+                      child: SizedBox(
+                        width: 240,
+                        child: Text(
+                          formula?.brand ?? '',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Gap(20.0),
+              Column(
+                spacing: 4.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Chill Type',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        4.0,
+                      ),
+                    ),
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: 12.0,
+                      ),
+                      child: SizedBox(
+                        width: 240,
+                        child: Text(
+                          formula?.chillType.toString() ?? '',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Gap(20.0),
+              Column(
+                spacing: 4.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nicotine Type',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        4.0,
+                      ),
+                    ),
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                        horizontal: 12.0,
+                      ),
+                      child: SizedBox(
+                        width: 240,
+                        child: Text(
+                          formula?.nicType.toString() ?? '',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

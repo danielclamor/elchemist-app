@@ -831,9 +831,6 @@ class _ProductionOrderDetailScreenState
                                   TextButton(
                                     onPressed: formula != null
                                         ? () {
-                                            var wrapperWidth = 800.0;
-                                            var sectionWidth = 500.0;
-
                                             showDialog(
                                               context: context,
                                               builder: (context) => Dialog(
@@ -887,10 +884,6 @@ class _ProductionOrderDetailScreenState
                                                         ),
                                                       ),
                                                       FormulaDetailWrapper(
-                                                        wrapperWidth:
-                                                            wrapperWidth,
-                                                        sectionWidth:
-                                                            sectionWidth,
                                                         id: formula.id,
                                                       ),
                                                     ],
