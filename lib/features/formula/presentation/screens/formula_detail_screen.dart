@@ -1,6 +1,7 @@
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_flavoring_section.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_nic_base_section.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_target_section.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/formula/providers/formula_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -114,18 +115,30 @@ class _FormulaDetailScreenState extends ConsumerState<FormulaDetailScreen> {
                             Container(
                               constraints:
                                   BoxConstraints(maxWidth: sectionWidth),
-                              child: Row(
+                              child: Column(
+                                spacing: 2.0,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Text(
-                                      formula?.name ?? '',
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          formula?.name ?? '',
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
+                                  if (formula != null && formula.isPreMix)
+                                    PreMixChip(
+                                      fgColor: Colors.black,
+                                      bgColor: Colors.grey,
+                                    ),
                                 ],
                               ),
                             ),
