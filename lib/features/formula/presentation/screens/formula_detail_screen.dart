@@ -1,4 +1,3 @@
-import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_flavoring_section.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_nic_base_section.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_target_section.dart';
@@ -56,8 +55,6 @@ class _FormulaDetailScreenState extends ConsumerState<FormulaDetailScreen> {
     var screenSize = MediaQuery.of(context).size;
     var wrapperWidth = screenSize.width < 1920 ? 800.0 : 1000.0;
     var sectionWidth = 500.0;
-    var recipeSectionWidth =
-        screenSize.width < 1920 ? sectionWidth : sectionWidth + 250;
 
     final formula = async.when(
       error: (error, stackTrace) => null,

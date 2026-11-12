@@ -2,7 +2,6 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:elchemist_app/features/formula/domain/flavoring.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 
 class FormulaDetailFlavoringSection extends StatelessWidget {
   final double? width;
