@@ -1,3 +1,4 @@
+import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:flutter/material.dart';
 
 class ProductionOrderListHeader extends StatelessWidget {
@@ -27,6 +28,13 @@ class ProductionOrderListHeader extends StatelessWidget {
             Row(
               spacing: 4.0,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: ElCheckbox(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                ),
                 Expanded(flex: 2, child: Text("Order", style: style)),
                 Expanded(flex: 3, child: Text("E-liquid", style: style)),
                 Expanded(flex: 1, child: Text("Ordered", style: style)),

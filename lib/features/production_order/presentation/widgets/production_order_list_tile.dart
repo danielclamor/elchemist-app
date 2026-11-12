@@ -1,3 +1,4 @@
+import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_mix_chip.dart';
@@ -123,7 +124,6 @@ class ProductionOrderListTile extends StatelessWidget {
             ),
           ),
         );
-        // TODO implement onTap
       },
       contentPadding: EdgeInsets.zero,
       visualDensity: VisualDensity.compact,
@@ -133,6 +133,13 @@ class ProductionOrderListTile extends StatelessWidget {
         child: Row(
           spacing: 4.0,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: ElCheckbox(
+                value: false,
+                onChanged: (value) {},
+              ),
+            ),
             Expanded(
               flex: 2,
               child: Text(
