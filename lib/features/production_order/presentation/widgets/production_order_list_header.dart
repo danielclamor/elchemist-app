@@ -45,7 +45,7 @@ class ProductionOrderListHeader extends ConsumerWidget {
           spacing: 12.0,
           children: [
             Row(
-              spacing: 4.0,
+              spacing: 12.0,
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 12.0),
@@ -68,11 +68,25 @@ class ProductionOrderListHeader extends ConsumerWidget {
                 ),
                 Expanded(flex: 2, child: Text("Order", style: style)),
                 Expanded(flex: 3, child: Text("E-liquid", style: style)),
-                Expanded(flex: 1, child: Text("Ordered", style: style)),
-                Expanded(flex: 1, child: Text("Fulfilled", style: style)),
                 Expanded(flex: 2, child: Text("Date", style: style)),
-                Expanded(flex: 1, child: Text("Assigned to", style: style)),
+                Expanded(
+                    flex: 1,
+                    child: Text(
+                      "Ordered",
+                      style: style,
+                      textAlign: TextAlign.end,
+                    )),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    "Fulfilled",
+                    style: style,
+                    textAlign: TextAlign.end,
+                  ),
+                ),
                 Expanded(flex: 1, child: Text("Status", style: style)),
+                Expanded(flex: 1, child: Text("Premix", style: style)),
+                Expanded(flex: 1, child: Text("Assigned to", style: style)),
                 Expanded(flex: 1, child: Text("Priority", style: style)),
               ],
             ),

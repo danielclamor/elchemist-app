@@ -13,6 +13,7 @@ class ProductionOrderSummaryDto {
   final bool isPriority;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
+  final bool? formulaIsPreMix;
   final String? mixSessionMixNumber;
 
   const ProductionOrderSummaryDto({
@@ -25,10 +26,12 @@ class ProductionOrderSummaryDto {
     required this.isPriority,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
+    required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
   });
 
   factory ProductionOrderSummaryDto.fromJson(Map<String, dynamic> json) {
+    final formulaJson = json['eliquid']['formula'];
     final mixSessionJson = json['mixSession'] as Map<String, dynamic>?;
 
     return ProductionOrderSummaryDto(
@@ -42,6 +45,7 @@ class ProductionOrderSummaryDto {
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
+      formulaIsPreMix: formulaJson != null ? formulaJson['isPreMix'] : null,
       mixSessionMixNumber: mixSessionJson != null
           ? mixSessionJson['sessionNumber'] as String
           : null,

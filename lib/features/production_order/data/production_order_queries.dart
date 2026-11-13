@@ -31,7 +31,12 @@ const String productionOrderListPageQuery = r'''
           eliquid { 
             id
             bottleSize 
-            description 
+            description
+            formula {
+              id
+              name
+              isPreMix
+            }
           }
           mixSession {
             id

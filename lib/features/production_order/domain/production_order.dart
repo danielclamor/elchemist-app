@@ -67,6 +67,7 @@ class ProductionOrderSummary {
   final bool isPriority;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
+  final bool? formulaIsPreMix;
   final String? mixSessionMixNumber;
 
   const ProductionOrderSummary({
@@ -79,6 +80,7 @@ class ProductionOrderSummary {
     required this.isPriority,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
+    required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
   });
 
@@ -93,6 +95,7 @@ class ProductionOrderSummary {
       isPriority: o.isPriority,
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
+      formulaIsPreMix: o.formulaIsPreMix,
       mixSessionMixNumber: o.mixSessionMixNumber,
     );
   }

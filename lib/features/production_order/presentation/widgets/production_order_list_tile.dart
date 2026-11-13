@@ -1,4 +1,5 @@
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
+import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_mix_chip.dart';
@@ -141,7 +142,7 @@ class _ProductionOrderListTileState
       title: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(
-          spacing: 4.0,
+          spacing: 12.0,
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
@@ -171,12 +172,20 @@ class _ProductionOrderListTileState
               ),
             ),
             Expanded(
+              flex: 2,
+              child: Text(
+                formattedDate,
+                style: textStyle,
+              ),
+            ),
+            Expanded(
               flex: 1,
               child: Text(
                 widget.order.orderedQuantity != null
                     ? widget.order.orderedQuantity.toString()
                     : '—',
                 style: textStyle,
+                textAlign: TextAlign.end,
               ),
             ),
             Expanded(
@@ -186,20 +195,7 @@ class _ProductionOrderListTileState
                     ? widget.order.fulfilledQuantity.toString()
                     : '—',
                 style: textStyle,
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Text(
-                formattedDate,
-                style: textStyle,
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                alignment: AlignmentGeometry.centerLeft,
-                child: mixChip,
+                textAlign: TextAlign.end,
               ),
             ),
             Expanded(
@@ -207,6 +203,25 @@ class _ProductionOrderListTileState
               child: Container(
                 alignment: AlignmentGeometry.centerLeft,
                 child: statusChip,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: widget.order.formulaIsPreMix ?? false
+                  ? Container(
+                      alignment: AlignmentGeometry.centerLeft,
+                      child: PreMixChip(
+                        fgColor: Colors.black,
+                        bgColor: Colors.grey,
+                      ),
+                    )
+                  : SizedBox.shrink(),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: AlignmentGeometry.centerLeft,
+                child: mixChip,
               ),
             ),
             Expanded(
