@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/production_order/data/production_order_mutations.dart';
+import 'package:elchemist_app/features/production_order/data/production_order_mutation_strings.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_date_range.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_list_page.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -6,7 +6,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';
 import 'production_order_dto.dart';
-import 'production_order_queries.dart';
+import 'production_order_query_strings.dart';
 
 class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   final GraphQLClient _client;
