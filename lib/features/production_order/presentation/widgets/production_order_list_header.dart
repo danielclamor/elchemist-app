@@ -41,59 +41,111 @@ class ProductionOrderListHeader extends ConsumerWidget {
       shape: RoundedRectangleBorder(),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-        child: Column(
+        child: Row(
           spacing: 12.0,
-          children: [
-            Row(
-              spacing: 12.0,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 12.0),
-                  child: ElCheckbox(
-                    value: checkBoxValue,
-                    onChanged: orders.isEmpty
-                        ? null
-                        : (_) {
-                            final notifier = ref.read(
-                                productionOrderSelectedTilesProvider.notifier);
+          children: selectedCount > 0
+              ? [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: ElCheckbox(
+                      value: checkBoxValue,
+                      onChanged: orders.isEmpty
+                          ? null
+                          : (_) {
+                              final notifier = ref.read(
+                                  productionOrderSelectedTilesProvider
+                                      .notifier);
 
-                            if (checkBoxValue == true) {
-                              notifier.clear();
-                            } else {
-                              notifier.selectAll(orders);
-                            }
-                          },
-                    tristate: true,
-                  ),
-                ),
-                Expanded(flex: 1, child: Text("Order", style: style)),
-                Expanded(flex: 3, child: Text("E-liquid", style: style)),
-                Expanded(flex: 2, child: Text("Date", style: style)),
-                Expanded(
-                    flex: 1,
-                    child: Text(
-                      "Ordered",
-                      style: style,
-                      textAlign: TextAlign.end,
-                    )),
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Text(
-                      "Fulfilled",
-                      style: style,
-                      textAlign: TextAlign.end,
+                              if (checkBoxValue == true) {
+                                notifier.clear();
+                              } else {
+                                notifier.selectAll(orders);
+                              }
+                            },
+                      tristate: true,
                     ),
                   ),
-                ),
-                Expanded(flex: 1, child: Text("Status", style: style)),
-                Expanded(flex: 1, child: Text("Premix", style: style)),
-                Expanded(flex: 1, child: Text("Assigned to", style: style)),
-                Expanded(flex: 1, child: Text("Priority", style: style)),
-              ],
-            ),
-          ],
+                  Text(
+                    '$selectedCount selected',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      try {
+                        ref
+                            .read(productionOrderSelectedTilesProvider.notifier)
+                            .clear();
+                        for (final order in selectedMap.values) {
+                          await ref
+                              .read(productionOrderRepositoryProvider)
+                              .markCancelled(id: order.id);
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(e.toString()),
+                          ));
+                        }
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      foregroundColor: Colors.red,
+                    ),
+                    child: Text('Cancel orders'),
+                  ),
+                ]
+              : [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: ElCheckbox(
+                      value: checkBoxValue,
+                      onChanged: orders.isEmpty
+                          ? null
+                          : (_) {
+                              final notifier = ref.read(
+                                  productionOrderSelectedTilesProvider
+                                      .notifier);
+
+                              if (checkBoxValue == true) {
+                                notifier.clear();
+                              } else {
+                                notifier.selectAll(orders);
+                              }
+                            },
+                      tristate: true,
+                    ),
+                  ),
+                  Expanded(flex: 1, child: Text("Order", style: style)),
+                  Expanded(flex: 3, child: Text("E-liquid", style: style)),
+                  Expanded(flex: 2, child: Text("Date", style: style)),
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                        "Ordered",
+                        style: style,
+                        textAlign: TextAlign.end,
+                      )),
+                  Expanded(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Text(
+                        "Fulfilled",
+                        style: style,
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+                  ),
+                  Expanded(flex: 1, child: Text("Status", style: style)),
+                  Expanded(flex: 1, child: Text("Premix", style: style)),
+                  Expanded(flex: 1, child: Text("Assigned to", style: style)),
+                  Expanded(flex: 1, child: Text("Priority", style: style)),
+                ],
         ),
       ),
     );
