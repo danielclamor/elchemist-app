@@ -22,6 +22,10 @@ const String eliquidListPageQuery = r'''
             id
             name
             isPreMix
+            nicLevel
+            brand
+            chillType
+            nicType
           }
         }
       }
