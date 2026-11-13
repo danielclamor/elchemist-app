@@ -4,10 +4,12 @@ import 'package:elchemist_app/features/production_order/presentation/screens/pro
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_mix_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_priority_chip.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
+import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class ProductionOrderListTile extends StatelessWidget {
+class ProductionOrderListTile extends ConsumerStatefulWidget {
   final ProductionOrderSummary order;
 
   const ProductionOrderListTile({
@@ -15,6 +17,13 @@ class ProductionOrderListTile extends StatelessWidget {
     required this.order,
   });
 
+  @override
+  ConsumerState<ProductionOrderListTile> createState() =>
+      _ProductionOrderListTileState();
+}
+
+class _ProductionOrderListTileState
+    extends ConsumerState<ProductionOrderListTile> {
   ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus status) {
     switch (status) {
       case ProductionOrderStatus.cancelled:
@@ -90,15 +99,16 @@ class ProductionOrderListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isClosed = order.status == ProductionOrderStatus.cancelled ||
-        order.status == ProductionOrderStatus.delivered;
+    final isClosed = widget.order.status == ProductionOrderStatus.cancelled ||
+        widget.order.status == ProductionOrderStatus.delivered;
 
-    final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
+    final ProductionOrderStatusChip statusChip =
+        _getStatusChip(widget.order.status);
     final ProductionOrderMixChip? mixChip =
-        _getMixChip(order.mixSessionMixNumber, statusChip);
-    final String formattedDate = _getFormattedDate(order.createdAt);
-    final renderPriority =
-        order.isPriority && order.status != ProductionOrderStatus.delivered;
+        _getMixChip(widget.order.mixSessionMixNumber, statusChip);
+    final String formattedDate = _getFormattedDate(widget.order.createdAt);
+    final renderPriority = widget.order.isPriority &&
+        widget.order.status != ProductionOrderStatus.delivered;
 
     final textStyle = TextStyle(
       fontSize: 14,
@@ -107,7 +117,7 @@ class ProductionOrderListTile extends StatelessWidget {
           : renderPriority
               ? Colors.red.shade200
               : null,
-      decoration: order.status == ProductionOrderStatus.cancelled
+      decoration: widget.order.status == ProductionOrderStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
       decorationColor: Colors.grey,
@@ -120,7 +130,7 @@ class ProductionOrderListTile extends StatelessWidget {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ProductionOrderDetailScreen(
-              id: order.id,
+              id: widget.order.id,
             ),
           ),
         );
@@ -136,29 +146,35 @@ class ProductionOrderListTile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
               child: ElCheckbox(
-                value: false,
-                onChanged: (value) {},
+                value: ref.watch(productionOrderSelectedTilesProvider.select(
+                  (selectedMap) => selectedMap.containsKey(widget.order.id),
+                )),
+                onChanged: (_) {
+                  ref
+                      .read(productionOrderSelectedTilesProvider.notifier)
+                      .toggle(widget.order);
+                },
               ),
             ),
             Expanded(
               flex: 2,
               child: Text(
-                order.orderNumber,
+                widget.order.orderNumber,
                 style: textStyle,
               ),
             ),
             Expanded(
               flex: 3,
               child: Text(
-                order.eliquidDescription,
+                widget.order.eliquidDescription,
                 style: textStyle,
               ),
             ),
             Expanded(
               flex: 1,
               child: Text(
-                order.orderedQuantity != null
-                    ? order.orderedQuantity.toString()
+                widget.order.orderedQuantity != null
+                    ? widget.order.orderedQuantity.toString()
                     : '—',
                 style: textStyle,
               ),
@@ -166,8 +182,8 @@ class ProductionOrderListTile extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Text(
-                order.fulfilledQuantity != null
-                    ? order.fulfilledQuantity.toString()
+                widget.order.fulfilledQuantity != null
+                    ? widget.order.fulfilledQuantity.toString()
                     : '—',
                 style: textStyle,
               ),

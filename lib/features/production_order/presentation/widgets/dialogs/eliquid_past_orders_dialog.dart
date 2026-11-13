@@ -132,6 +132,11 @@ class _EliquidPastOrdersDialog extends ConsumerState<EliquidPastOrdersDialog> {
                     child: Column(
                       children: [
                         ProductionOrderListHeader(
+                          orders: pageAsync.when(
+                            data: (page) => page.items,
+                            error: (error, stackTrace) => [],
+                            loading: () => [],
+                          ),
                           cardColor:
                               Theme.of(context).colorScheme.surfaceContainer,
                         ),

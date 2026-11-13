@@ -116,7 +116,13 @@ class _ProductionOrderListTable
                   width: tableWidth,
                   child: Column(
                     children: [
-                      ProductionOrderListHeader(),
+                      ProductionOrderListHeader(
+                        orders: pageAsync.when(
+                          data: (page) => page.items,
+                          error: (error, stackTrace) => [],
+                          loading: () => [],
+                        ),
+                      ),
                       Divider(
                         height: 1.0,
                         thickness: 0.25,

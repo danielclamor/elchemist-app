@@ -207,3 +207,33 @@ final productionOrderDetailsProvider =
   (ref, id) => ref.watch(productionOrderRepositoryProvider).getDetails(id: id),
   retry: (retryCount, error) => null,
 );
+
+class ProductionOrderSelectedTiles
+    extends Notifier<Map<String, ProductionOrderSummary>> {
+  @override
+  Map<String, ProductionOrderSummary> build() => const {};
+
+  void toggle(ProductionOrderSummary order) {
+    if (state.containsKey(order.id)) {
+      state = {...state}..remove(order.id);
+    } else {
+      state = {...state, order.id: order};
+    }
+  }
+
+  void selectAll(List<ProductionOrderSummary> orders) {
+    state = {
+      ...state,
+      for (final order in orders) order.id: order,
+    };
+  }
+
+  void clear() {
+    state = const {};
+  }
+}
+
+final productionOrderSelectedTilesProvider = NotifierProvider<
+    ProductionOrderSelectedTiles, Map<String, ProductionOrderSummary>>(
+  ProductionOrderSelectedTiles.new,
+);
