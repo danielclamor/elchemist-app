@@ -112,9 +112,9 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
           spacing: 4.0,
           children: [
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Text(
-                order.orderNumber,
+                '#${order.orderNumber}',
                 style: textStyle,
               ),
             ),

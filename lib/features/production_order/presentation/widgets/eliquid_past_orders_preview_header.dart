@@ -21,7 +21,7 @@ class EliquidPastOrdersPreviewHeader extends StatelessWidget {
             Row(
               spacing: 4.0,
               children: [
-                Expanded(flex: 2, child: Text("Order", style: style)),
+                Expanded(flex: 1, child: Text("Order", style: style)),
                 Expanded(flex: 1, child: Text("Ordered", style: style)),
                 Expanded(flex: 1, child: Text("Fulfilled", style: style)),
                 Expanded(flex: 2, child: Text("Date", style: style)),

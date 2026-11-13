@@ -66,7 +66,7 @@ class ProductionOrderListHeader extends ConsumerWidget {
                     tristate: true,
                   ),
                 ),
-                Expanded(flex: 2, child: Text("Order", style: style)),
+                Expanded(flex: 1, child: Text("Order", style: style)),
                 Expanded(flex: 3, child: Text("E-liquid", style: style)),
                 Expanded(flex: 2, child: Text("Date", style: style)),
                 Expanded(
@@ -78,10 +78,13 @@ class ProductionOrderListHeader extends ConsumerWidget {
                     )),
                 Expanded(
                   flex: 1,
-                  child: Text(
-                    "Fulfilled",
-                    style: style,
-                    textAlign: TextAlign.end,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      "Fulfilled",
+                      style: style,
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 ),
                 Expanded(flex: 1, child: Text("Status", style: style)),

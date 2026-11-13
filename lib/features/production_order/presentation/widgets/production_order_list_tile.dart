@@ -100,16 +100,17 @@ class _ProductionOrderListTileState
 
   @override
   Widget build(BuildContext context) {
-    final isClosed = widget.order.status == ProductionOrderStatus.cancelled ||
-        widget.order.status == ProductionOrderStatus.delivered;
+    final order = widget.order;
 
-    final ProductionOrderStatusChip statusChip =
-        _getStatusChip(widget.order.status);
+    final isClosed = order.status == ProductionOrderStatus.cancelled ||
+        order.status == ProductionOrderStatus.delivered;
+
+    final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
     final ProductionOrderMixChip? mixChip =
-        _getMixChip(widget.order.mixSessionMixNumber, statusChip);
-    final String formattedDate = _getFormattedDate(widget.order.createdAt);
-    final renderPriority = widget.order.isPriority &&
-        widget.order.status != ProductionOrderStatus.delivered;
+        _getMixChip(order.mixSessionMixNumber, statusChip);
+    final String formattedDate = _getFormattedDate(order.createdAt);
+    final renderPriority =
+        order.isPriority && order.status != ProductionOrderStatus.delivered;
 
     final textStyle = TextStyle(
       fontSize: 14,
@@ -118,7 +119,7 @@ class _ProductionOrderListTileState
           : renderPriority
               ? Colors.red.shade200
               : null,
-      decoration: widget.order.status == ProductionOrderStatus.cancelled
+      decoration: order.status == ProductionOrderStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
       decorationColor: Colors.grey,
@@ -131,7 +132,7 @@ class _ProductionOrderListTileState
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => ProductionOrderDetailScreen(
-              id: widget.order.id,
+              id: order.id,
             ),
           ),
         );
@@ -148,26 +149,26 @@ class _ProductionOrderListTileState
               padding: const EdgeInsets.only(right: 12.0),
               child: ElCheckbox(
                 value: ref.watch(productionOrderSelectedTilesProvider.select(
-                  (selectedMap) => selectedMap.containsKey(widget.order.id),
+                  (selectedMap) => selectedMap.containsKey(order.id),
                 )),
                 onChanged: (_) {
                   ref
                       .read(productionOrderSelectedTilesProvider.notifier)
-                      .toggle(widget.order);
+                      .toggle(order);
                 },
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Text(
-                widget.order.orderNumber,
+                '#${order.orderNumber}',
                 style: textStyle,
               ),
             ),
             Expanded(
               flex: 3,
               child: Text(
-                widget.order.eliquidDescription,
+                order.eliquidDescription,
                 style: textStyle,
               ),
             ),
@@ -181,8 +182,8 @@ class _ProductionOrderListTileState
             Expanded(
               flex: 1,
               child: Text(
-                widget.order.orderedQuantity != null
-                    ? widget.order.orderedQuantity.toString()
+                order.orderedQuantity != null
+                    ? order.orderedQuantity.toString()
                     : '—',
                 style: textStyle,
                 textAlign: TextAlign.end,
@@ -190,12 +191,15 @@ class _ProductionOrderListTileState
             ),
             Expanded(
               flex: 1,
-              child: Text(
-                widget.order.fulfilledQuantity != null
-                    ? widget.order.fulfilledQuantity.toString()
-                    : '—',
-                style: textStyle,
-                textAlign: TextAlign.end,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text(
+                  order.fulfilledQuantity != null
+                      ? order.fulfilledQuantity.toString()
+                      : '—',
+                  style: textStyle,
+                  textAlign: TextAlign.end,
+                ),
               ),
             ),
             Expanded(
@@ -207,7 +211,7 @@ class _ProductionOrderListTileState
             ),
             Expanded(
               flex: 1,
-              child: widget.order.formulaIsPreMix ?? false
+              child: order.formulaIsPreMix ?? false
                   ? Container(
                       alignment: AlignmentGeometry.centerLeft,
                       child: PreMixChip(
