@@ -10,4 +10,8 @@ abstract class MixSessionRepository {
   Future<MixSession?> getDetails({
     required String id,
   });
+
+  Future<MixSession?> createWithProductionOrders({
+    required List<String> productionOrderIds,
+  });
 }

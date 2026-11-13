@@ -1,4 +1,5 @@
 import 'package:elchemist_app/features/mix_session/data/mix_session_dto.dart';
+import 'package:elchemist_app/features/mix_session/data/mix_session_mutation_strings.dart';
 import 'package:elchemist_app/features/mix_session/data/mix_session_query_strings.dart';
 import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
 import 'package:elchemist_app/features/mix_session/domain/mix_session_list_page.dart';
@@ -72,6 +73,39 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
     final data = result.data?['mixSession'] as Map<String, dynamic>?;
 
     if (data == null) return null;
+
+    return MixSession.fromDto(MixSessionDto.fromJson(data));
+  }
+
+  @override
+  Future<MixSession?> createWithProductionOrders({
+    required List<String> productionOrderIds,
+  }) async {
+    final productionOrderIdentifiers =
+        productionOrderIds.map((i) => {'id': i}).toList();
+
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(mixSessionCreateWithProductionOrdersMutation),
+        variables: {
+          'productionOrderIdentifers': productionOrderIdentifiers,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload = result.data?['mixSessionCreateWithProductionOrders']
+        as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['mixSession'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not create mix session',
+      );
+    }
 
     return MixSession.fromDto(MixSessionDto.fromJson(data));
   }

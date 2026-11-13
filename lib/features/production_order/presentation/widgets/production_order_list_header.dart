@@ -1,4 +1,5 @@
 import 'package:elchemist_app/components/atoms/el_checkbox.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,8 @@ class ProductionOrderListHeader extends ConsumerWidget {
     );
 
     final selectedMap = ref.watch(productionOrderSelectedTilesProvider);
+
+    final selectedIds = selectedMap.values.map((o) => o.id).toList();
 
     final int selectedCount =
         orders.where((order) => selectedMap.containsKey(order.id)).length;
@@ -77,10 +80,38 @@ class ProductionOrderListHeader extends ConsumerWidget {
                         ref
                             .read(productionOrderSelectedTilesProvider.notifier)
                             .clear();
-                        for (final order in selectedMap.values) {
+                        await ref
+                            .read(mixSessionRepositoryProvider)
+                            .createWithProductionOrders(
+                              productionOrderIds: selectedIds,
+                            );
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(e.toString()),
+                          ));
+                        }
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: Text('Create mix session'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      try {
+                        ref
+                            .read(productionOrderSelectedTilesProvider.notifier)
+                            .clear();
+                        for (final id in selectedIds) {
                           await ref
                               .read(productionOrderRepositoryProvider)
-                              .markCancelled(id: order.id);
+                              .markCancelled(id: id);
                         }
                       } catch (e) {
                         if (context.mounted) {
@@ -95,6 +126,7 @@ class ProductionOrderListHeader extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       foregroundColor: Colors.red,
+                      backgroundColor: Colors.red.withAlpha(25),
                     ),
                     child: Text('Cancel orders'),
                   ),
