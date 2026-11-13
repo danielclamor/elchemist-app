@@ -18,6 +18,7 @@ const String productionOrderCreateMutation = r'''
         fulfilledQuantity
         status
         isPriority
+        isOpen
         createdAt
         updatedAt
         allocations { 
@@ -30,6 +31,15 @@ const String productionOrderCreateMutation = r'''
           upc
           description
           brand
+          formula {
+            id
+            name
+            brand
+            isPreMix
+            nicLevel
+            chillType
+            nicType
+          }
         }
         activityLogs {
           id
@@ -37,6 +47,10 @@ const String productionOrderCreateMutation = r'''
           oldValue
           type
           triggeredAt
+        }
+        mixSession {
+          id
+          sessionNumber
         }
       }
     }
