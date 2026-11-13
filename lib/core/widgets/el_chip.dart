@@ -16,12 +16,19 @@ class ElChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final text = Text(
-      labelText,
-      style: TextStyle(
-        color: fgColor,
-        fontWeight: FontWeight.bold,
-        fontSize: 12.0,
+    final text = Flexible(
+      child: Tooltip(
+        message: labelText,
+        child: Text(
+          labelText,
+          maxLines: 1,
+          softWrap: false,
+          style: TextStyle(
+            color: fgColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 12.0,
+          ),
+        ),
       ),
     );
 
