@@ -38,6 +38,11 @@ abstract class ProductionOrderRepository {
     String? after,
   });
 
+  Future<void> bulkAssignToMixSession({
+    required String mixSessionId,
+    required List<String> productionOrderIds,
+  });
+
   Future<ProductionOrder> createOrder({
     required String eliquidId,
     required int quantity,

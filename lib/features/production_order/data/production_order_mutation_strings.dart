@@ -144,3 +144,25 @@ const String productionOrderMarkFulfilledMutation = r'''
     }
   }
 ''';
+
+const String productionOrderBulkAssignToMixSession = r'''
+  mutation BulkAssignProductionOrderToMix(
+    $mixSessionId: ID!
+    $productionOrderIds: [ProductionOrderIdentifierInput!]!
+  ) {
+    productionOrderBulkAssignToMixSession(
+      mixSessionIdentifier: {id: $mixSessionId}
+      identifiers: $productionOrderIds
+    ) {
+      productionOrderAssignToMixPayloads {
+        productionOrder {
+          id
+        }
+      }
+      feedback {
+        message
+        status
+      }
+    }
+  }
+''';

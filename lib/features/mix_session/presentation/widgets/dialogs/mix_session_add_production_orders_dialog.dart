@@ -1,14 +1,18 @@
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/production_order_picker_list.dart';
+import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 class MixSessionAddProductionOrdersDialog extends ConsumerStatefulWidget {
+  final String mixSessionId;
   final String formulaId;
 
   const MixSessionAddProductionOrdersDialog({
     super.key,
+    required this.mixSessionId,
     required this.formulaId,
   });
 
@@ -222,7 +226,25 @@ class _MixSessionAddProductionOrdersDialogState
                             ),
                           ),
                           onPressed: _selectedList.isNotEmpty
-                              ? () => Navigator.of(context).pop(_selectedList)
+                              ? () {
+                                  final mixSessionId = widget.mixSessionId;
+                                  try {
+                                    ref
+                                        .read(productionOrderRepositoryProvider)
+                                        .bulkAssignToMixSession(
+                                          mixSessionId: mixSessionId,
+                                          productionOrderIds: _selectedList
+                                              .map((o) => o.id)
+                                              .toList(),
+                                        );
+                                    Navigator.of(context).pop();
+                                    ref.invalidate(mixSessionDetailsProvider(
+                                        mixSessionId));
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(e.toString())));
+                                  }
+                                }
                               : null,
                           child: Text("Add"),
                         ),

@@ -389,8 +389,11 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
   }
 
   @override
-  Future<ProductionOrderListPage> getListPageAssignableToMix(
-      {required int first, String? after, required String formulaId}) async {
+  Future<ProductionOrderListPage> getListPageAssignableToMix({
+    required int first,
+    String? after,
+    required String formulaId,
+  }) async {
     final result = await _client.query(
       QueryOptions(
         document: gql(productionOrderAssignableToMixListPageQuery),
@@ -404,7 +407,7 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
     );
 
     if (result.hasException) throw result.exception!;
-    print(result);
+
     final conn =
         result.data!['productionOrdersAssignableToMix'] as Map<String, dynamic>;
     final pageInfo = conn['pageInfo'] as Map<String, dynamic>;
@@ -420,5 +423,37 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
       hasNextPage: pageInfo['hasNextPage'] as bool,
       totalCount: conn['totalCount'] as int,
     );
+  }
+
+  @override
+  Future<void> bulkAssignToMixSession({
+    required String mixSessionId,
+    required List<String> productionOrderIds,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderBulkAssignToMixSession),
+        variables: {
+          'mixSessionId': mixSessionId,
+          'productionOrderIds':
+              productionOrderIds.map((id) => {'id': id}).toList(),
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    print(result);
+
+    final payload = result.data?['productionOrderBulkAssignToMixSession']
+        as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+
+    if (feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not process bulk assignment',
+      );
+    }
   }
 }
