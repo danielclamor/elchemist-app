@@ -16,7 +16,7 @@ abstract class MixSessionRepository {
   });
 
   Future<void> mergeMixSessions({
-    required List<String> mixSessionSourceIds,
-    required String mixSessionTargetId,
+    required List<String> sourceIds,
+    required String targetId,
   });
 }

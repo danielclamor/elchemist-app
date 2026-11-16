@@ -112,15 +112,15 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
 
   @override
   Future<void> mergeMixSessions({
-    required List<String> mixSessionSourceIds,
-    required String mixSessionTargetId,
+    required List<String> sourceIds,
+    required String targetId,
   }) async {
     final result = await _client.mutate(
       MutationOptions(
         document: gql(mixSessionMergeSessionsMutation),
         variables: {
-          'sourceIds': mixSessionSourceIds.map((id) => {'id': id}).toList(),
-          'targetId': mixSessionTargetId
+          'sourceIds': sourceIds.map((id) => {'id': id}).toList(),
+          'targetId': targetId
         },
         fetchPolicy: FetchPolicy.noCache,
       ),
