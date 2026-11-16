@@ -1,14 +1,20 @@
+import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_session/presentation/widgets/mix_session_status_chip.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class MixSessionListTile extends StatelessWidget {
-  final MixSessionSummary batch;
+class MixSessionListTile extends ConsumerWidget {
+  final MixSessionSummary session;
 
-  const MixSessionListTile({super.key, required this.batch});
+  const MixSessionListTile({
+    super.key,
+    required this.session,
+  });
 
   MixSessionStatusChip _getStatusChip(MixSessionStatus status) {
     return switch (status) {
@@ -63,19 +69,19 @@ class MixSessionListTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final isClosed = batch.status == MixSessionStatus.cancelled ||
-        batch.status == MixSessionStatus.completed;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isClosed = session.status == MixSessionStatus.cancelled ||
+        session.status == MixSessionStatus.completed;
 
-    final formattedCreatedAtDate = _getFormattedDate(batch.createdAt);
-    final mixedAt = batch.mixedAt;
+    final formattedCreatedAtDate = _getFormattedDate(session.createdAt);
+    final mixedAt = session.mixedAt;
     final formattedMixedAtDate =
         mixedAt != null ? _getFormattedDate(mixedAt) : "";
 
     final textStyle = TextStyle(
       fontSize: 14,
       color: isClosed ? Colors.grey : null,
-      decoration: batch.status == MixSessionStatus.cancelled
+      decoration: session.status == MixSessionStatus.cancelled
           ? TextDecoration.lineThrough
           : null,
       decorationColor: Colors.grey,
@@ -86,7 +92,8 @@ class MixSessionListTile extends StatelessWidget {
       tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (_) => MixSessionMixScreen(id: batch.id)),
+          MaterialPageRoute(
+              builder: (_) => MixSessionMixScreen(id: session.id)),
         );
       },
       contentPadding: EdgeInsets.zero,
@@ -95,22 +102,35 @@ class MixSessionListTile extends StatelessWidget {
       title: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: Row(
-          spacing: 4.0,
+          spacing: 12.0,
           children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: ElCheckbox(
+                value: ref.watch(mixSessionSelectedTilesProvider.select(
+                  (selectedMap) => selectedMap.containsKey(session.id),
+                )),
+                onChanged: (_) {
+                  ref
+                      .read(mixSessionSelectedTilesProvider.notifier)
+                      .toggle(session);
+                },
+              ),
+            ),
             Expanded(
               flex: 2,
-              child: Text(batch.sessionNumber, style: textStyle),
+              child: Text(session.sessionNumber, style: textStyle),
             ),
             Expanded(
               flex: 4,
               child: Row(
                 spacing: 8.0,
                 children: [
-                  Text(batch.formulaName, style: textStyle),
-                  if (batch.formulaIsPreMix)
+                  Text(session.formulaName, style: textStyle),
+                  if (session.formulaIsPreMix)
                     PreMixChip(
-                      fgColor: _getStatusChip(batch.status).fgColor,
-                      bgColor: _getStatusChip(batch.status).bgColor,
+                      fgColor: _getStatusChip(session.status).fgColor,
+                      bgColor: _getStatusChip(session.status).bgColor,
                     ),
                 ],
               ),
@@ -123,7 +143,7 @@ class MixSessionListTile extends StatelessWidget {
               flex: 1,
               child: Container(
                 alignment: AlignmentGeometry.centerLeft,
-                child: _getStatusChip(batch.status),
+                child: _getStatusChip(session.status),
               ),
             ),
             Expanded(
@@ -132,7 +152,7 @@ class MixSessionListTile extends StatelessWidget {
             ),
             Expanded(
               flex: 2,
-              child: Text(batch.batchCode ?? "", style: textStyle),
+              child: Text(session.batchCode ?? "", style: textStyle),
             ),
           ],
         ),

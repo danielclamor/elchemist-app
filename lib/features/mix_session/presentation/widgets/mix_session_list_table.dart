@@ -113,7 +113,13 @@ class _MixSessionListTableState extends ConsumerState<MixSessionListTable> {
                   width: tableWidth,
                   child: Column(
                     children: [
-                      MixSessionListTableHeader(),
+                      MixSessionListTableHeader(
+                        sessions: pageAsync.when(
+                          data: (page) => page.items,
+                          error: (error, stackTrace) => [],
+                          loading: () => [],
+                        ),
+                      ),
                       Divider(
                         height: 1.0,
                         thickness: 0.25,
@@ -170,7 +176,7 @@ class _MixSessionListTableState extends ConsumerState<MixSessionListTable> {
                                         key: ValueKey(batch.id),
                                         mixSessionId: batch.id,
                                         child: MixSessionListTile(
-                                          batch: batch,
+                                          session: batch,
                                         ),
                                       );
                                     }),

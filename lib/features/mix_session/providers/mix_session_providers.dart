@@ -124,3 +124,32 @@ final mixSessionVolumeMlValueProvider =
     NotifierProvider.autoDispose<MixSessionVolumeMlValue, double>(
   MixSessionVolumeMlValue.new,
 );
+
+class MixSessionSelectedTiles extends Notifier<Map<String, MixSessionSummary>> {
+  @override
+  Map<String, MixSessionSummary> build() => const {};
+
+  void toggle(MixSessionSummary session) {
+    if (state.containsKey(session.id)) {
+      state = {...state}..remove(session.id);
+    } else {
+      state = {...state, session.id: session};
+    }
+  }
+
+  void selectAll(List<MixSessionSummary> sessions) {
+    state = {
+      ...state,
+      for (final session in sessions) session.id: session,
+    };
+  }
+
+  void clear() {
+    state = const {};
+  }
+}
+
+final mixSessionSelectedTilesProvider =
+    NotifierProvider<MixSessionSelectedTiles, Map<String, MixSessionSummary>>(
+  MixSessionSelectedTiles.new,
+);
