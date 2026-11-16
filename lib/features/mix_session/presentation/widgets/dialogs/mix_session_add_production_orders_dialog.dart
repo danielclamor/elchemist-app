@@ -226,10 +226,10 @@ class _MixSessionAddProductionOrdersDialogState
                             ),
                           ),
                           onPressed: _selectedList.isNotEmpty
-                              ? () {
+                              ? () async {
                                   final mixSessionId = widget.mixSessionId;
                                   try {
-                                    ref
+                                    await ref
                                         .read(productionOrderRepositoryProvider)
                                         .bulkAssignToMixSession(
                                           mixSessionId: mixSessionId,
@@ -237,6 +237,9 @@ class _MixSessionAddProductionOrdersDialogState
                                               .map((o) => o.id)
                                               .toList(),
                                         );
+
+                                    if (!context.mounted) return;
+
                                     Navigator.of(context).pop();
                                     ref.invalidate(mixSessionDetailsProvider(
                                         mixSessionId));
