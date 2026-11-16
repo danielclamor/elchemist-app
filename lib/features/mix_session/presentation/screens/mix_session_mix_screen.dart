@@ -107,6 +107,11 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                         Gap(28.0),
                         MixSessionOrdersSection(
                           width: sectionWidth,
+                          mixSessionId: async.when(
+                            data: (data) => data != null ? data.id : "",
+                            error: (error, stackTrace) => "",
+                            loading: () => "",
+                          ),
                           formulaId: async.when(
                             data: (data) => data != null ? data.formula.id : "",
                             error: (error, stackTrace) => "",

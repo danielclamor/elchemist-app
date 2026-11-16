@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 
 class MixSessionOrdersSection extends StatelessWidget {
   final double? width;
+  final String mixSessionId;
   final String formulaId;
   final List<ProductionOrderSummary> productionOrders;
 
   const MixSessionOrdersSection({
     super.key,
     this.width,
+    required this.mixSessionId,
     required this.formulaId,
     required this.productionOrders,
   });
@@ -53,6 +55,7 @@ class MixSessionOrdersSection extends StatelessWidget {
                   await showDialog(
                     context: context,
                     builder: (_) => MixSessionAddProductionOrdersDialog(
+                      mixSessionId: mixSessionId,
                       formulaId: formulaId,
                     ),
                   );
