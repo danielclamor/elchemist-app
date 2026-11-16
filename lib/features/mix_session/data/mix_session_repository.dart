@@ -78,7 +78,7 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
   }
 
   @override
-  Future<MixSession?> createWithProductionOrders({
+  Future<String?> createWithProductionOrders({
     required List<String> productionOrderIds,
   }) async {
     final productionOrderIdentifiers =
@@ -101,12 +101,12 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
     final feedback = payload?['feedback'] as Map<String, dynamic>?;
     final data = payload?['mixSession'] as Map<String, dynamic>?;
 
-    if (data == null || feedback?['status'] != 'SUCCESS') {
+    if (data == null || feedback?['status'] == 'FAILED') {
       throw Exception(
         feedback?['message'] as String? ?? 'Could not create mix session',
       );
     }
 
-    return MixSession.fromDto(MixSessionDto.fromJson(data));
+    return data['id'];
   }
 }
