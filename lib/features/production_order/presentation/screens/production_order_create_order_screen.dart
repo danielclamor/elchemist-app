@@ -234,9 +234,11 @@ class _ProductionOrderCreateOrderScreenState
     setState(() => _isSubmitting = true);
 
     try {
+      final quantity = int.parse(_quantityController.text.trim());
+
       await ref.read(productionOrderRepositoryProvider).createOrder(
             eliquidId: eliquid.id,
-            quantity: int.tryParse(_quantityController.text.trim()),
+            quantity: quantity,
             isPriority: _isPriority,
             allocations: allocations,
           );

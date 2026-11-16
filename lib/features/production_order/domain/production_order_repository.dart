@@ -34,7 +34,7 @@ abstract class ProductionOrderRepository {
 
   Future<ProductionOrder> createOrder({
     required String eliquidId,
-    int? quantity,
+    required int quantity,
     required bool isPriority,
     required List<AllocationInput> allocations,
   });
