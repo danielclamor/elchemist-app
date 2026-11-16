@@ -6,6 +6,12 @@ import 'production_order.dart';
 typedef AllocationInput = ({String locationId, int quantity});
 
 abstract class ProductionOrderRepository {
+  Future<ProductionOrderListPage> getListPageAssignableToMix({
+    required int first,
+    String? after,
+    required String formulaId,
+  });
+
   Future<ProductionOrderListPage> getListPage({
     required int first,
     String? after,

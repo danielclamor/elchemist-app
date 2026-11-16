@@ -387,4 +387,38 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
 
     return;
   }
+
+  @override
+  Future<ProductionOrderListPage> getListPageAssignableToMix(
+      {required int first, String? after, required String formulaId}) async {
+    final result = await _client.query(
+      QueryOptions(
+        document: gql(productionOrderAssignableToMixListPageQuery),
+        variables: {
+          'first': first,
+          'after': after,
+          'formulaId': formulaId,
+        },
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+    print(result);
+    final conn =
+        result.data!['productionOrdersAssignableToMix'] as Map<String, dynamic>;
+    final pageInfo = conn['pageInfo'] as Map<String, dynamic>;
+
+    return ProductionOrderListPage(
+      items: (conn['edges'] as List<dynamic>)
+          .map((e) => ProductionOrderSummaryDto.fromJson(
+              Map<String, dynamic>.from((e as Map)['node'] as Map)))
+          .map((dto) => ProductionOrderSummary.fromDto(dto))
+          .toList(),
+      endCursor: pageInfo['endCursor'] as String?,
+      hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
+      hasNextPage: pageInfo['hasNextPage'] as bool,
+      totalCount: conn['totalCount'] as int,
+    );
+  }
 }

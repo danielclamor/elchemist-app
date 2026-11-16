@@ -143,3 +143,50 @@ const String eliquidPastOrdersQuery = r'''
     }
   }
 ''';
+
+const String productionOrderAssignableToMixListPageQuery = r'''
+  query ProductionOrdersAssignableToMix(
+    $first: Int!
+    $after: String
+    $formulaId: ID!
+  ) {
+    productionOrdersAssignableToMix(
+      first: $first
+      after: $after
+      formulaId: $formulaId
+    ) {
+      totalCount
+      pageInfo {
+        hasPreviousPage
+        hasNextPage 
+        endCursor
+      }
+      edges {  
+        node {
+          id
+          orderNumber
+          orderedQuantity
+          fulfilledQuantity
+          status
+          isPriority
+          isClosed
+          createdAt
+          eliquid { 
+            id
+            bottleSize 
+            description
+            formula {
+              id
+              name
+              isPreMix
+            }
+          }
+          mixSession {
+            id
+            sessionNumber
+          }
+        }
+      }
+    }
+  }
+''';
