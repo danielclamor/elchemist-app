@@ -1,6 +1,7 @@
 import 'package:elchemist_app/features/formula/presentation/widgets/formula_detail_wrapper.dart';
 import 'package:elchemist_app/features/formula/presentation/widgets/pre_mix_chip.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
+import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_activity_log.dart';
 import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
@@ -742,17 +743,38 @@ class _ProductionOrderDetailScreenState
                                   ),
                                 ),
                                 onPressed: !_isSubmitting
-                                    ? () {
-                                        final mixSessionId = data.mixSessionId;
+                                    ? () async {
+                                        try {
+                                          ref
+                                              .read(
+                                                  productionOrderSelectedTilesProvider
+                                                      .notifier)
+                                              .clear();
 
-                                        if (mixSessionId == null) return;
+                                          final mixSessionId = await ref
+                                              .read(
+                                                  mixSessionRepositoryProvider)
+                                              .createWithProductionOrders(
+                                            productionOrderIds: [data.id],
+                                          );
 
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
+                                          if (!context.mounted ||
+                                              mixSessionId == null) {
+                                            return;
+                                          }
+
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
                                             builder: (_) => MixSessionMixScreen(
                                                 id: mixSessionId),
-                                          ),
-                                        );
+                                          ));
+                                        } catch (e) {
+                                          if (!context.mounted) return;
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text(e.toString()),
+                                          ));
+                                        }
                                       }
                                     : null,
                                 child: Text("Mix a batch"),
