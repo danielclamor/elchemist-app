@@ -22,7 +22,7 @@ class ProductionOrderCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(productionOrder.orderNumber),
+                  Text('#${productionOrder.orderNumber}'),
                   Text(productionOrder.eliquidDescription),
                   Text('Qty: ${productionOrder.orderedQuantity.toString()}'),
                 ],
