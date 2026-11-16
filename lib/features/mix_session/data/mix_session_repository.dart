@@ -109,4 +109,33 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
 
     return data['id'];
   }
+
+  @override
+  Future<void> mergeMixSessions({
+    required List<String> mixSessionSourceIds,
+    required String mixSessionTargetId,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(mixSessionMergeSessionsMutation),
+        variables: {
+          'sourceIds': mixSessionSourceIds.map((id) => {'id': id}).toList(),
+          'targetId': mixSessionTargetId
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload = result.data?['mixSessionMerge'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['mixSession'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] == 'FAILED') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not create mix session',
+      );
+    }
+  }
 }

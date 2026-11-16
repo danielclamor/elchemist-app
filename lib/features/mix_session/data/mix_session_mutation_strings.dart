@@ -13,3 +13,24 @@ const String mixSessionCreateWithProductionOrdersMutation = r'''
     }
   }
 ''';
+
+const String mixSessionMergeSessionsMutation = r'''
+  mutation MergeMixSessions(
+    $sourceIds: [MixSessionIdentifierInput!]!
+    $targetId: ID!
+  ) {
+    mixSessionMerge(
+      sourceIdentifiers: $sourceIds
+      targetIdentifier: {id: $targetId}
+    ) {
+      feedback {
+        message
+        status
+      }
+      mixSession {
+        id
+        sessionNumber
+      }
+    }
+  }
+''';

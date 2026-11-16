@@ -14,4 +14,9 @@ abstract class MixSessionRepository {
   Future<String?> createWithProductionOrders({
     required List<String> productionOrderIds,
   });
+
+  Future<void> mergeMixSessions({
+    required List<String> mixSessionSourceIds,
+    required String mixSessionTargetId,
+  });
 }
