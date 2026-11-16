@@ -85,6 +85,7 @@ const String mixSessionDetailsQuery = r'''
         fulfilledQuantity
         status
         isPriority
+        isClosed
         createdAt
         eliquid { 
           id

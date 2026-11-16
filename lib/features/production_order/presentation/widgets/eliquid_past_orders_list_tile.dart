@@ -72,8 +72,7 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isClosed = order.status == ProductionOrderStatus.cancelled ||
-        order.status == ProductionOrderStatus.delivered;
+    final isClosed = order.isClosed;
 
     final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
     final String formattedDate = _getFormattedDate(order.createdAt);

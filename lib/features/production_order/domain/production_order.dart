@@ -14,7 +14,7 @@ class ProductionOrder {
   final List<ProductionOrderAllocation> allocations;
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
-  final bool isOpen;
+  final bool isClosed;
   final String? mixSessionId;
   final String? mixSessionMixNumber;
 
@@ -29,7 +29,7 @@ class ProductionOrder {
     required this.allocations,
     required this.eliquid,
     required this.activityLogs,
-    required this.isOpen,
+    required this.isClosed,
     required this.mixSessionId,
     required this.mixSessionMixNumber,
   });
@@ -50,7 +50,7 @@ class ProductionOrder {
       activityLogs: o.activityLogs
           .map((l) => ProductionOrderActivityLog.fromDto(l))
           .toList(),
-      isOpen: o.isOpen,
+      isClosed: o.isClosed,
       mixSessionId: o.mixSessionId,
       mixSessionMixNumber: o.mixSessionMixNumber,
     );
@@ -65,6 +65,7 @@ class ProductionOrderSummary {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
+  final bool isClosed;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
   final bool? formulaIsPreMix;
@@ -82,6 +83,7 @@ class ProductionOrderSummary {
     required this.eliquidDescription,
     required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
+    required this.isClosed,
   });
 
   factory ProductionOrderSummary.fromDto(ProductionOrderSummaryDto o) {
@@ -93,6 +95,7 @@ class ProductionOrderSummary {
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
+      isClosed: o.isClosed,
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
       formulaIsPreMix: o.formulaIsPreMix,

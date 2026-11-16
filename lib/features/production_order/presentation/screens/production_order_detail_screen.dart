@@ -653,7 +653,7 @@ class _ProductionOrderDetailScreenState
                       error: (e, _) => SizedBox.shrink(),
                       loading: () => SizedBox.shrink(),
                       data: (data) {
-                        if (data == null || !data.isOpen) {
+                        if (data == null || data.isClosed) {
                           return SizedBox.shrink();
                         }
 

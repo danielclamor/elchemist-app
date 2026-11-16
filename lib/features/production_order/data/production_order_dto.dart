@@ -11,6 +11,7 @@ class ProductionOrderSummaryDto {
   final DateTime createdAt;
   final ProductionOrderStatusDto status;
   final bool isPriority;
+  final bool isClosed;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
   final bool? formulaIsPreMix;
@@ -28,6 +29,7 @@ class ProductionOrderSummaryDto {
     required this.eliquidDescription,
     required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
+    required this.isClosed,
   });
 
   factory ProductionOrderSummaryDto.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,7 @@ class ProductionOrderSummaryDto {
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPriority: json['isPriority'] as bool,
+      isClosed: json['isClosed'] as bool,
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
@@ -65,7 +68,7 @@ class ProductionOrderDto {
   final EliquidSummaryDto eliquid;
   final List<ProductionOrderActivityLogDto> activityLogs;
   final List<ProductionOrderAllocationDto> allocations;
-  final bool isOpen;
+  final bool isClosed;
   final String? mixSessionId;
   final String? mixSessionMixNumber;
 
@@ -81,7 +84,7 @@ class ProductionOrderDto {
     required this.eliquid,
     required this.activityLogs,
     required this.allocations,
-    required this.isOpen,
+    required this.isClosed,
     required this.mixSessionId,
     required this.mixSessionMixNumber,
   });
@@ -112,7 +115,7 @@ class ProductionOrderDto {
           .map((a) => ProductionOrderAllocationDto.fromJson(
               Map<String, dynamic>.from(a as Map)))
           .toList(),
-      isOpen: json['isOpen'],
+      isClosed: json['isClosed'],
       mixSessionId:
           mixSessionJson != null ? mixSessionJson['id'] as String : null,
       mixSessionMixNumber: mixSessionJson != null
