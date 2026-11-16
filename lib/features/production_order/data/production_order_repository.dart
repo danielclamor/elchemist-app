@@ -444,8 +444,6 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
 
     if (result.hasException) throw result.exception!;
 
-    print(result);
-
     final payload = result.data?['productionOrderBulkAssignToMixSession']
         as Map<String, dynamic>?;
     final feedback = payload?['feedback'] as Map<String, dynamic>?;
