@@ -454,4 +454,35 @@ class ProductionOrderRepositoryImpl implements ProductionOrderRepository {
       );
     }
   }
+
+  @override
+  Future<void> bulkUnassignFromMixSession({
+    required List<String> productionOrderIds,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(productionOrderBulkUnassignFromMixSession),
+        variables: {
+          'productionOrderIds':
+              productionOrderIds.map((id) => {'id': id}).toList(),
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    print(result);
+
+    final payload = result.data?['productionOrderBulkUnassignFromMixSession']
+        as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+
+    if (feedback?['status'] != 'SUCCESS') {
+      throw Exception(
+        feedback?['message'] as String? ??
+            'Could not process bulk unassignment',
+      );
+    }
+  }
 }

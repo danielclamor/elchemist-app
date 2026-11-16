@@ -43,6 +43,10 @@ abstract class ProductionOrderRepository {
     required List<String> productionOrderIds,
   });
 
+  Future<void> bulkUnassignFromMixSession({
+    required List<String> productionOrderIds,
+  });
+
   Future<ProductionOrder> createOrder({
     required String eliquidId,
     required int quantity,
