@@ -237,3 +237,97 @@ final productionOrderSelectedTilesProvider = NotifierProvider<
     ProductionOrderSelectedTiles, Map<String, ProductionOrderSummary>>(
   ProductionOrderSelectedTiles.new,
 );
+
+class ProductionOrderInfiniteListState {
+  final ProductionOrderListPage page;
+  final bool isLoadingMore;
+  final Object? loadMoreError;
+
+  const ProductionOrderInfiniteListState({
+    required this.page,
+    this.isLoadingMore = false,
+    this.loadMoreError,
+  });
+
+  ProductionOrderInfiniteListState copyWith({
+    ProductionOrderListPage? page,
+    bool? isLoadingMore,
+    Object? loadMoreError,
+    bool clearError = false,
+  }) =>
+      ProductionOrderInfiniteListState(
+        page: page ?? this.page,
+        isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+        loadMoreError:
+            clearError ? null : (loadMoreError ?? this.loadMoreError),
+      );
+}
+
+class ProductionOrderAssignableToMixInfiniteList
+    extends AsyncNotifier<ProductionOrderInfiniteListState> {
+  ProductionOrderAssignableToMixInfiniteList(this.formulaId);
+
+  final String formulaId;
+
+  int _generation = 0;
+
+  @override
+  Future<ProductionOrderInfiniteListState> build() async {
+    _generation++;
+    final page = await ref
+        .watch(productionOrderRepositoryProvider)
+        .getListPageAssignableToMix(
+          first: productionOrderPageSize,
+          formulaId: formulaId,
+        );
+    return ProductionOrderInfiniteListState(page: page);
+  }
+
+  Future<void> loadMore({bool retry = false}) async {
+    final current = state.value;
+    if (current == null || !current.page.hasNextPage || current.isLoadingMore) {
+      return;
+    }
+    if (current.loadMoreError != null && !retry) {
+      return;
+    }
+
+    final token = _generation;
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, clearError: true),
+    );
+
+    try {
+      final next = await ref
+          .read(productionOrderRepositoryProvider)
+          .getListPageAssignableToMix(
+            first: productionOrderPageSize,
+            formulaId: formulaId,
+            after: current.page.endCursor,
+          );
+      if (!ref.mounted || token != _generation) return;
+
+      final latest = state.value ?? current;
+      state = AsyncData(latest.copyWith(
+        page: latest.page.append(next),
+        isLoadingMore: false,
+        clearError: true,
+      ));
+    } catch (e) {
+      if (!ref.mounted || token != _generation) return;
+
+      final latest = state.value ?? current;
+      state = AsyncData(
+        latest.copyWith(isLoadingMore: false, loadMoreError: e),
+      );
+    }
+  }
+}
+
+final productionOrderAssignableToMixInfiniteListProvider =
+    AsyncNotifierProvider.autoDispose.family<
+        ProductionOrderAssignableToMixInfiniteList,
+        ProductionOrderInfiniteListState,
+        String>(
+  ProductionOrderAssignableToMixInfiniteList.new,
+);
