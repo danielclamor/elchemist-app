@@ -14,4 +14,13 @@ class ProductionOrderListPage {
     required this.hasNextPage,
     required this.totalCount,
   });
+
+  ProductionOrderListPage append(ProductionOrderListPage next) =>
+      ProductionOrderListPage(
+        items: [...items, ...next.items],
+        endCursor: next.endCursor,
+        hasPreviousPage: hasPreviousPage,
+        hasNextPage: next.hasNextPage,
+        totalCount: next.totalCount,
+      );
 }
