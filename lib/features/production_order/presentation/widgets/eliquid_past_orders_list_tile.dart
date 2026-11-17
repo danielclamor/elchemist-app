@@ -3,7 +3,6 @@ import 'package:elchemist_app/features/production_order/domain/production_order.
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_detail_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/widgets/chips/production_order_status_chip.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class EliquidPastOrdersPreviewListTile extends StatelessWidget {
   final ProductionOrderSummary order;

@@ -9,7 +9,6 @@ import 'package:elchemist_app/features/production_order/presentation/widgets/chi
 import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class ProductionOrderListTile extends ConsumerStatefulWidget {
   final ProductionOrderSummary order;
