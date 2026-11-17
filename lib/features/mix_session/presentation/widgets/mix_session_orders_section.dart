@@ -1,4 +1,5 @@
 import 'package:elchemist_app/components/molecules/section_card.dart';
+import 'package:elchemist_app/core/widgets/el_hover_close_card.dart';
 import 'package:elchemist_app/features/mix_session/presentation/widgets/dialogs/mix_session_add_production_orders_dialog.dart';
 import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
@@ -47,45 +48,57 @@ class MixSessionOrdersSection extends ConsumerWidget {
             productionOrders.length,
             (index) {
               final productionOrder = productionOrders[index];
-              return Stack(
-                children: [
-                  ProductionOrderCard(
-                    productionOrder: productionOrder,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              minimumSize: Size.zero,
-                              shape: const CircleBorder(),
-                              backgroundColor: Colors.transparent,
-                              elevation: 0.0,
-                            ),
-                            onPressed: () {
-                              ref
-                                  .read(productionOrderRepositoryProvider)
-                                  .bulkUnassignFromMixSession(
-                                productionOrderIds: [productionOrder.id],
-                              );
-                              ref.invalidate(
-                                mixSessionDetailsProvider(mixSessionId),
-                              );
-                            },
-                            child: const Icon(Icons.close, size: 14),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              );
+              return ElHoverCloseCard(
+                  child: ProductionOrderCard(productionOrder: productionOrder),
+                  onClose: () {
+                    ref
+                        .read(productionOrderRepositoryProvider)
+                        .bulkUnassignFromMixSession(
+                      productionOrderIds: [productionOrder.id],
+                    );
+                    ref.invalidate(
+                      mixSessionDetailsProvider(mixSessionId),
+                    );
+                  });
+              // return Stack(
+              //   children: [
+              //     ProductionOrderCard(
+              //       productionOrder: productionOrder,
+              //     ),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.end,
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.all(4.0),
+              //           child: SizedBox(
+              //             width: 30,
+              //             height: 30,
+              //             child: ElevatedButton(
+              //               style: ElevatedButton.styleFrom(
+              //                 padding: EdgeInsets.zero,
+              //                 minimumSize: Size.zero,
+              //                 shape: const CircleBorder(),
+              //                 backgroundColor: Colors.transparent,
+              //                 elevation: 0.0,
+              //               ),
+              //               onPressed: () {
+              //                 ref
+              //                     .read(productionOrderRepositoryProvider)
+              //                     .bulkUnassignFromMixSession(
+              //                   productionOrderIds: [productionOrder.id],
+              //                 );
+              //                 ref.invalidate(
+              //                   mixSessionDetailsProvider(mixSessionId),
+              //                 );
+              //               },
+              //               child: const Icon(Icons.close, size: 14),
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // );
             },
           ),
           Row(
