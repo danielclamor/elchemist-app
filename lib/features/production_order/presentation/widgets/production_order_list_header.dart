@@ -2,6 +2,7 @@ import 'package:elchemist_app/components/atoms/el_checkbox.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
 import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/production_order/presentation/widgets/dialogs/mix_session_select_dialog.dart';
 import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,6 +109,58 @@ class ProductionOrderListHeader extends ConsumerWidget {
                       backgroundColor: Colors.grey,
                     ),
                     child: Text('Mix a batch'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      final List<String?> formulaIds = selectedMap.values
+                          .map((o) => o.formulaId)
+                          .toSet()
+                          .toList();
+
+                      if (formulaIds.contains(null)) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "No formula available for one or more production orders"),
+                        ));
+                        return;
+                      }
+
+                      if (formulaIds.length > 1) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "Selected production orders use different formulas"),
+                        ));
+                        return;
+                      }
+
+                      try {
+                        await showDialog(
+                          context: context,
+                          builder: (_) => MixSessionSelectDialog(
+                            formulaId: formulaIds[0] ?? '',
+                            selectedOrderIds: selectedIds,
+                          ),
+                        );
+
+                        if (!context.mounted) return;
+                        ref
+                            .read(productionOrderSelectedTilesProvider.notifier)
+                            .clear();
+                      } catch (e) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(e.toString()),
+                        ));
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: Text('Assign to session'),
                   ),
                   TextButton(
                     onPressed: () async {
