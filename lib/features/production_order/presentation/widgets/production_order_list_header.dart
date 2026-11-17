@@ -1,4 +1,4 @@
-import 'package:elchemist_app/components/atoms/el_checkbox.dart';
+import 'package:elchemist_app/core/widgets/el_checkbox.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_mix_screen.dart';
 import 'package:elchemist_app/features/mix_session/providers/mix_session_providers.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';

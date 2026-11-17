@@ -1,4 +1,4 @@
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/features/eliquid/domain/eliquid.dart';
 import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order_repository.dart';

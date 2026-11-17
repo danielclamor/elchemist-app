@@ -1,4 +1,4 @@
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:elchemist_app/features/diy_mix/providers/diy_mix_providers.dart';
 import 'package:flutter/widgets.dart';

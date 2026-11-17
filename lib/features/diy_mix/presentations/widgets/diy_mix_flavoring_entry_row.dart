@@ -1,5 +1,5 @@
-import 'package:elchemist_app/components/atoms/el_checkbox.dart';
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/core/widgets/el_checkbox.dart';
+import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/features/diy_mix/providers/diy_mix_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,4 +1,4 @@
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/features/production_order/providers/production_order_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

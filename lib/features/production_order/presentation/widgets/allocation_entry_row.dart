@@ -1,4 +1,4 @@
-import 'package:elchemist_app/components/atoms/el_text_field.dart';
+import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/features/location/domain/location.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
