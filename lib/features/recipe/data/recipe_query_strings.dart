@@ -8,6 +8,7 @@ query Recipe (
     input: {batchVolumeMl: $batchVolumeMl}
   ) {
     formula {
+      id
       slug
       name
     }
