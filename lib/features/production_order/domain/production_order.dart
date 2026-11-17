@@ -68,6 +68,7 @@ class ProductionOrderSummary {
   final bool isClosed;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
+  final String? formulaId;
   final bool? formulaIsPreMix;
   final String? mixSessionMixNumber;
 
@@ -81,6 +82,7 @@ class ProductionOrderSummary {
     required this.isPriority,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
+    required this.formulaId,
     required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
     required this.isClosed,
@@ -98,6 +100,7 @@ class ProductionOrderSummary {
       isClosed: o.isClosed,
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
+      formulaId: o.formulaId,
       formulaIsPreMix: o.formulaIsPreMix,
       mixSessionMixNumber: o.mixSessionMixNumber,
     );

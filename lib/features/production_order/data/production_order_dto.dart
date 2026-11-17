@@ -14,6 +14,7 @@ class ProductionOrderSummaryDto {
   final bool isClosed;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
+  final String? formulaId;
   final bool? formulaIsPreMix;
   final String? mixSessionMixNumber;
 
@@ -27,6 +28,7 @@ class ProductionOrderSummaryDto {
     required this.isPriority,
     required this.eliquidBottleSize,
     required this.eliquidDescription,
+    required this.formulaId,
     required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
     required this.isClosed,
@@ -48,6 +50,7 @@ class ProductionOrderSummaryDto {
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
+      formulaId: formulaJson != null ? formulaJson['id'] : null,
       formulaIsPreMix: formulaJson != null ? formulaJson['isPreMix'] : null,
       mixSessionMixNumber: mixSessionJson != null
           ? mixSessionJson['sessionNumber'] as String
