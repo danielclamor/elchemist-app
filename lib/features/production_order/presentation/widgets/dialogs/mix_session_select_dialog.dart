@@ -227,7 +227,11 @@ class _MixSessionSelectDialogState
                                     if (!context.mounted) return;
 
                                     Navigator.of(context).pop();
-
+                                    ref
+                                        .read(
+                                            productionOrderSelectedTilesProvider
+                                                .notifier)
+                                        .clear();
                                     ref.invalidate(
                                         productionOrderRepositoryProvider);
                                   } catch (e) {

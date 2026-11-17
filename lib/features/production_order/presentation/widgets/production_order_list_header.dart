@@ -143,9 +143,6 @@ class ProductionOrderListHeader extends ConsumerWidget {
                         );
 
                         if (!context.mounted) return;
-                        ref
-                            .read(productionOrderSelectedTilesProvider.notifier)
-                            .clear();
                       } catch (e) {
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
