@@ -26,13 +26,9 @@ class _ElHoverCloseCardState extends State<ElHoverCloseCard> {
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: Stack(
-        clipBehavior:
-            Clip.none, // Allows the close button to overlap the edge slightly
+        clipBehavior: Clip.none,
         children: [
-          // Main content
           widget.child,
-
-          // Close button positioned in the top-right corner
           Positioned(
             top: 0,
             bottom: 0,
@@ -41,7 +37,6 @@ class _ElHoverCloseCardState extends State<ElHoverCloseCard> {
               duration: const Duration(milliseconds: 150),
               opacity: _isHovered ? 1.0 : 0.0,
               child: IgnorePointer(
-                // Prevents invisible button from capturing clicks when not hovered
                 ignoring: !_isHovered,
                 child: Material(
                   color: Colors.transparent,
