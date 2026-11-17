@@ -5,6 +5,13 @@ abstract class MixSessionRepository {
   Stream<MixSessionListPage> watchListPage({
     required int first,
     String? after,
+    String? formulaId,
+  });
+
+  Future<MixSessionListPage> getListPage({
+    required int first,
+    String? after,
+    String? formulaId,
   });
 
   Future<MixSession?> getDetails({

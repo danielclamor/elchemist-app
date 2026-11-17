@@ -14,4 +14,12 @@ class MixSessionListPage {
     required this.hasNextPage,
     required this.totalCount,
   });
+
+  MixSessionListPage append(MixSessionListPage next) => MixSessionListPage(
+        items: [...items, ...next.items],
+        endCursor: next.endCursor,
+        hasPreviousPage: hasPreviousPage,
+        hasNextPage: next.hasNextPage,
+        totalCount: next.totalCount,
+      );
 }

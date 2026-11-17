@@ -2,10 +2,12 @@ const String mixSessionListPageQuery = r'''
   query MixSessions(
     $first: Int!
     $after: String
+    $formulaIdentifier: FormulaIdentifierInput
   ) {
     mixSessions(
       first: $first
       after: $after
+      formulaIdentifier: $formulaIdentifier
     ) {
       totalCount
       pageInfo {
@@ -22,6 +24,7 @@ const String mixSessionListPageQuery = r'''
           mixedAt
           createdAt
           formula {
+            id
             name
             isPreMix
           }

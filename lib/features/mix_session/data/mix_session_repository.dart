@@ -12,9 +12,46 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
   MixSessionRepositoryImpl(this._client);
 
   @override
+  Future<MixSessionListPage> getListPage({
+    required int first,
+    String? after,
+    String? formulaId,
+  }) async {
+    final result = await _client.query(
+      QueryOptions(
+        document: gql(mixSessionListPageQuery),
+        variables: {
+          'first': first,
+          'after': after,
+          'formulaIdentifier': formulaId != null ? {'id': formulaId} : null,
+        },
+        fetchPolicy: FetchPolicy.cacheAndNetwork,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final conn = result.data!['mixSessions'] as Map<String, dynamic>;
+    final pageInfo = conn['pageInfo'] as Map<String, dynamic>;
+
+    return MixSessionListPage(
+      items: (conn['edges'] as List<dynamic>)
+          .map((e) => MixSessionSummaryDto.fromJson(
+              Map<String, dynamic>.from((e as Map)['node'] as Map)))
+          .map((dto) => MixSessionSummary.fromDto(dto))
+          .toList(),
+      endCursor: pageInfo['endCursor'] as String?,
+      hasPreviousPage: pageInfo['hasPreviousPage'] as bool,
+      hasNextPage: pageInfo['hasNextPage'] as bool,
+      totalCount: conn['totalCount'] as int,
+    );
+  }
+
+  @override
   Stream<MixSessionListPage> watchListPage({
     required int first,
     String? after,
+    String? formulaId,
   }) async* {
     final observable = _client.watchQuery(
       WatchQueryOptions(
@@ -22,6 +59,7 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
         variables: {
           'first': first,
           'after': after,
+          'formulaIdentifier': formulaId != null ? {'id': formulaId} : null,
         },
         fetchPolicy: FetchPolicy.noCache,
         fetchResults: true,
