@@ -12,44 +12,36 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
     required this.order,
   });
 
-  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus status) {
-    switch (status) {
-      case ProductionOrderStatus.cancelled:
-        return ProductionOrderStatusChip.cancelled();
-      case ProductionOrderStatus.delivered:
-        return ProductionOrderStatusChip.delivered();
-      case ProductionOrderStatus.fulfilled:
-        return ProductionOrderStatusChip.fulfilled();
-      case ProductionOrderStatus.inProgress:
-        return ProductionOrderStatusChip.inProgress();
-      case ProductionOrderStatus.pending:
-        return ProductionOrderStatusChip.pending();
+  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus? status) {
+    if (status == null) {
+      return ProductionOrderStatusChip(
+        labelIcon: null,
+        labelText: "",
+        fgColor: Colors.grey,
+        bgColor: Colors.grey,
+      );
     }
+
+    return ProductionOrderStatusChip.fromStatus(status: status);
   }
 
   @override
   Widget build(BuildContext context) {
-    final isClosed = order.isClosed;
-
-    final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
-    final String formattedDate = order.createdAt.toTileDateString();
-
+    final isArchived = order.isArchived;
     final textStyle = TextStyle(
       fontSize: 14,
-      color: isClosed
+      color: isArchived
           ? Colors.grey
           : order.isPriority
               ? Colors.red.shade200
               : null,
-      decoration: order.status == ProductionOrderStatus.cancelled
-          ? TextDecoration.lineThrough
-          : null,
+      decoration: order.isCanceled ? TextDecoration.lineThrough : null,
       decorationColor: Colors.grey,
       decorationThickness: 1.0,
     );
 
     return ListTile(
-      tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
+      tileColor: isArchived ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -95,7 +87,7 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(
-                formattedDate,
+                order.createdAt.toTileDateString(),
                 style: textStyle,
               ),
             ),
@@ -103,7 +95,7 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
               flex: 2,
               child: Container(
                 alignment: AlignmentGeometry.centerLeft,
-                child: statusChip,
+                child: _getStatusChip(order.status),
               ),
             ),
           ],

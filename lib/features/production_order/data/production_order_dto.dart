@@ -11,7 +11,8 @@ class ProductionOrderSummaryDto {
   final DateTime createdAt;
   final ProductionOrderStatusDto status;
   final bool isPriority;
-  final bool isClosed;
+  final bool isCanceled;
+  final bool isArchived;
   final BottleSizeDto eliquidBottleSize;
   final String eliquidDescription;
   final String? formulaId;
@@ -31,7 +32,8 @@ class ProductionOrderSummaryDto {
     required this.formulaId,
     required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
-    required this.isClosed,
+    required this.isCanceled,
+    required this.isArchived,
   });
 
   factory ProductionOrderSummaryDto.fromJson(Map<String, dynamic> json) {
@@ -46,7 +48,8 @@ class ProductionOrderSummaryDto {
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isPriority: json['isPriority'] as bool,
-      isClosed: json['isClosed'] as bool,
+      isCanceled: json['isCanceled'] as bool,
+      isArchived: json['isArchived'] as bool,
       eliquidBottleSize:
           BottleSizeDto.fromString(json['eliquid']['bottleSize'] as String),
       eliquidDescription: json['eliquid']['description'] as String,
@@ -65,13 +68,14 @@ class ProductionOrderDto {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
+  final bool isCanceled;
+  final bool isArchived;
   final ProductionOrderStatusDto status;
   final DateTime createdAt;
   final DateTime updatedAt;
   final EliquidSummaryDto eliquid;
   final List<ProductionOrderActivityLogDto> activityLogs;
   final List<ProductionOrderAllocationDto> allocations;
-  final bool isClosed;
   final String? mixSessionId;
   final String? mixSessionMixNumber;
 
@@ -81,13 +85,14 @@ class ProductionOrderDto {
     required this.orderedQuantity,
     required this.fulfilledQuantity,
     required this.isPriority,
+    required this.isCanceled,
+    required this.isArchived,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
     required this.eliquid,
     required this.activityLogs,
     required this.allocations,
-    required this.isClosed,
     required this.mixSessionId,
     required this.mixSessionMixNumber,
   });
@@ -105,6 +110,8 @@ class ProductionOrderDto {
       orderedQuantity: json['orderedQuantity'] as int?,
       fulfilledQuantity: json['fulfilledQuantity'] as int?,
       isPriority: json['isPriority'] as bool,
+      isCanceled: json['isCanceled'] as bool,
+      isArchived: json['isArchived'] as bool,
       status: ProductionOrderStatusDto.fromString(json['status'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -118,7 +125,6 @@ class ProductionOrderDto {
           .map((a) => ProductionOrderAllocationDto.fromJson(
               Map<String, dynamic>.from(a as Map)))
           .toList(),
-      isClosed: json['isClosed'],
       mixSessionId:
           mixSessionJson != null ? mixSessionJson['id'] as String : null,
       mixSessionMixNumber: mixSessionJson != null

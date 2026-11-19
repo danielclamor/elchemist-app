@@ -1,4 +1,5 @@
 import 'package:elchemist_app/core/widgets/el_chip.dart';
+import 'package:elchemist_app/features/production_order/domain/production_order.dart';
 import 'package:flutter/material.dart';
 
 class ProductionOrderStatusChip extends StatelessWidget {
@@ -15,55 +16,41 @@ class ProductionOrderStatusChip extends StatelessWidget {
     required this.bgColor,
   });
 
-  factory ProductionOrderStatusChip.cancelled({
-    String label = 'Cancelled',
+  factory ProductionOrderStatusChip.fromStatus({
+    required ProductionOrderStatus status,
   }) =>
-      ProductionOrderStatusChip(
-        labelIcon: Icons.remove_circle_outline_rounded,
-        labelText: label,
-        fgColor: Colors.grey.shade800,
-        bgColor: Colors.grey,
-      );
-
-  factory ProductionOrderStatusChip.delivered({
-    String label = 'Delivered',
-  }) =>
-      ProductionOrderStatusChip(
-        labelIcon: Icons.radio_button_checked_rounded,
-        labelText: label,
-        fgColor: Colors.grey.shade800,
-        bgColor: Colors.grey,
-      );
-
-  factory ProductionOrderStatusChip.fulfilled({
-    String label = 'Fulfilled',
-  }) =>
-      ProductionOrderStatusChip(
-        labelIcon: Icons.radio_button_checked_rounded,
-        labelText: label,
-        fgColor: Colors.green.shade900,
-        bgColor: Colors.green.shade300,
-      );
-
-  factory ProductionOrderStatusChip.inProgress({
-    String label = 'In progress',
-  }) =>
-      ProductionOrderStatusChip(
-        labelIcon: Icons.timelapse_rounded,
-        labelText: label,
-        fgColor: Colors.blue.shade900,
-        bgColor: Colors.blue.shade200,
-      );
-
-  factory ProductionOrderStatusChip.pending({
-    String label = 'Pending',
-  }) =>
-      ProductionOrderStatusChip(
-        labelIcon: Icons.radio_button_unchecked_rounded,
-        labelText: label,
-        fgColor: Colors.grey.shade800,
-        bgColor: Colors.yellow.shade400,
-      );
+      switch (status) {
+        ProductionOrderStatus.fulfilled => ProductionOrderStatusChip(
+            labelIcon: Icons.radio_button_checked_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.grey.shade800,
+            bgColor: Colors.grey,
+          ),
+        ProductionOrderStatus.inProgress => ProductionOrderStatusChip(
+            labelIcon: Icons.timelapse_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.blue.shade900,
+            bgColor: Colors.blue.shade200,
+          ),
+        ProductionOrderStatus.pending => ProductionOrderStatusChip(
+            labelIcon: Icons.radio_button_unchecked_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.grey.shade800,
+            bgColor: Colors.yellow.shade400,
+          ),
+        ProductionOrderStatus.mixed => ProductionOrderStatusChip(
+            labelIcon: Icons.timelapse_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.blue.shade900,
+            bgColor: Colors.blue.shade200,
+          ),
+        ProductionOrderStatus.pumped => ProductionOrderStatusChip(
+            labelIcon: Icons.timelapse_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.blue.shade900,
+            bgColor: Colors.blue.shade200,
+          ),
+      };
 
   @override
   Widget build(BuildContext context) {

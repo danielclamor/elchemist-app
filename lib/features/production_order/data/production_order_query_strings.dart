@@ -27,7 +27,8 @@ const String productionOrderListPageQuery = r'''
           fulfilledQuantity
           status
           isPriority
-          isClosed
+          isCanceled
+          isArchived
           createdAt
           eliquid { 
             id
@@ -70,7 +71,8 @@ const String productionOrderDetailsQuery = r'''
       fulfilledQuantity
       status
       isPriority
-      isClosed
+      isCanceled
+      isArchived
       createdAt
       updatedAt
       allocations { 
@@ -133,7 +135,8 @@ const String eliquidPastOrdersQuery = r'''
             fulfilledQuantity
             status
             isPriority
-            isClosed
+            isCanceled
+            isArchived
             createdAt
             eliquid { id description bottleSize }
             mixSession { id sessionNumber }
@@ -169,7 +172,8 @@ const String productionOrderAssignableToMixListPageQuery = r'''
           fulfilledQuantity
           status
           isPriority
-          isClosed
+          isCanceled
+          isArchived
           createdAt
           eliquid { 
             id

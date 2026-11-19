@@ -88,7 +88,8 @@ const String mixSessionDetailsQuery = r'''
         fulfilledQuantity
         status
         isPriority
-        isClosed
+        isCanceled
+        isArchived
         createdAt
         eliquid { 
           id

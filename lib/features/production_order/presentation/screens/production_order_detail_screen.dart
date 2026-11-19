@@ -45,25 +45,16 @@ class ProductionOrderDetailScreen extends ConsumerStatefulWidget {
 class _ProductionOrderDetailScreenState
     extends ConsumerState<ProductionOrderDetailScreen> {
   ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus? status) {
-    switch (status) {
-      case ProductionOrderStatus.cancelled:
-        return ProductionOrderStatusChip.cancelled();
-      case ProductionOrderStatus.delivered:
-        return ProductionOrderStatusChip.delivered();
-      case ProductionOrderStatus.fulfilled:
-        return ProductionOrderStatusChip.fulfilled();
-      case ProductionOrderStatus.inProgress:
-        return ProductionOrderStatusChip.inProgress();
-      case ProductionOrderStatus.pending:
-        return ProductionOrderStatusChip.pending();
-      default:
-        return ProductionOrderStatusChip(
-          labelIcon: null,
-          labelText: "",
-          fgColor: Colors.grey,
-          bgColor: Colors.grey,
-        );
+    if (status == null) {
+      return ProductionOrderStatusChip(
+        labelIcon: null,
+        labelText: "",
+        fgColor: Colors.grey,
+        bgColor: Colors.grey,
+      );
     }
+
+    return ProductionOrderStatusChip.fromStatus(status: status);
   }
 
   ProductionOrderMixChip? _getMixChip(
@@ -254,7 +245,7 @@ class _ProductionOrderDetailScreenState
                   error: (e, _) => SizedBox.shrink(),
                   loading: () => SizedBox.shrink(),
                   data: (data) {
-                    if (data?.status == ProductionOrderStatus.cancelled) {
+                    if (data?.isCanceled ?? true) {
                       return SizedBox.shrink();
                     }
 
@@ -653,7 +644,7 @@ class _ProductionOrderDetailScreenState
                       error: (e, _) => SizedBox.shrink(),
                       loading: () => SizedBox.shrink(),
                       data: (data) {
-                        if (data == null || data.isClosed) {
+                        if (data == null || data.isArchived) {
                           return SizedBox.shrink();
                         }
 

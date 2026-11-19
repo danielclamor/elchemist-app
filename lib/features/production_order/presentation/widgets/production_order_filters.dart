@@ -57,14 +57,20 @@ class _ProductionOrderFiltersState extends State<ProductionOrderFilters> {
                       ),
                       const Expanded(
                         child: ProductionOrderFilterStatusCard(
-                          label: 'Fulfilled',
-                          status: ProductionOrderStatus.fulfilled,
+                          label: 'Mixed',
+                          status: ProductionOrderStatus.mixed,
                         ),
                       ),
                       const Expanded(
                         child: ProductionOrderFilterStatusCard(
-                          label: 'Delivered',
-                          status: ProductionOrderStatus.delivered,
+                          label: 'Pumped',
+                          status: ProductionOrderStatus.pumped,
+                        ),
+                      ),
+                      const Expanded(
+                        child: ProductionOrderFilterStatusCard(
+                          label: 'Fulfilled',
+                          status: ProductionOrderStatus.fulfilled,
                         ),
                       ),
                     ],

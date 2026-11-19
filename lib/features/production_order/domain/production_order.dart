@@ -11,10 +11,11 @@ class ProductionOrder {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
+  final bool isCanceled;
+  final bool isArchived;
   final List<ProductionOrderAllocation> allocations;
   final EliquidSummary eliquid;
   final List<ProductionOrderActivityLog> activityLogs;
-  final bool isClosed;
   final String? mixSessionId;
   final String? mixSessionMixNumber;
 
@@ -29,9 +30,10 @@ class ProductionOrder {
     required this.allocations,
     required this.eliquid,
     required this.activityLogs,
-    required this.isClosed,
     required this.mixSessionId,
     required this.mixSessionMixNumber,
+    required this.isCanceled,
+    required this.isArchived,
   });
 
   factory ProductionOrder.fromDto(ProductionOrderDto o) {
@@ -50,9 +52,10 @@ class ProductionOrder {
       activityLogs: o.activityLogs
           .map((l) => ProductionOrderActivityLog.fromDto(l))
           .toList(),
-      isClosed: o.isClosed,
       mixSessionId: o.mixSessionId,
       mixSessionMixNumber: o.mixSessionMixNumber,
+      isCanceled: o.isCanceled,
+      isArchived: o.isArchived,
     );
   }
 }
@@ -65,7 +68,8 @@ class ProductionOrderSummary {
   final int? orderedQuantity;
   final int? fulfilledQuantity;
   final bool isPriority;
-  final bool isClosed;
+  final bool isCanceled;
+  final bool isArchived;
   final BottleSize eliquidBottleSize;
   final String eliquidDescription;
   final String? formulaId;
@@ -85,7 +89,8 @@ class ProductionOrderSummary {
     required this.formulaId,
     required this.formulaIsPreMix,
     required this.mixSessionMixNumber,
-    required this.isClosed,
+    required this.isCanceled,
+    required this.isArchived,
   });
 
   factory ProductionOrderSummary.fromDto(ProductionOrderSummaryDto o) {
@@ -97,12 +102,13 @@ class ProductionOrderSummary {
       orderedQuantity: o.orderedQuantity,
       fulfilledQuantity: o.fulfilledQuantity,
       isPriority: o.isPriority,
-      isClosed: o.isClosed,
       eliquidBottleSize: BottleSize.fromDto(o.eliquidBottleSize),
       eliquidDescription: o.eliquidDescription,
       formulaId: o.formulaId,
       formulaIsPreMix: o.formulaIsPreMix,
       mixSessionMixNumber: o.mixSessionMixNumber,
+      isCanceled: o.isCanceled,
+      isArchived: o.isArchived,
     );
   }
 

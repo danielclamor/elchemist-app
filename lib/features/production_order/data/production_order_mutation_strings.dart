@@ -18,7 +18,8 @@ const String productionOrderCreateMutation = r'''
         fulfilledQuantity
         status
         isPriority
-        isClosed
+        isCanceled
+        isArchived
         createdAt
         updatedAt
         allocations { 

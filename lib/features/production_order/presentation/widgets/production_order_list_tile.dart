@@ -25,19 +25,17 @@ class ProductionOrderListTile extends ConsumerStatefulWidget {
 
 class _ProductionOrderListTileState
     extends ConsumerState<ProductionOrderListTile> {
-  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus status) {
-    switch (status) {
-      case ProductionOrderStatus.cancelled:
-        return ProductionOrderStatusChip.cancelled();
-      case ProductionOrderStatus.delivered:
-        return ProductionOrderStatusChip.delivered();
-      case ProductionOrderStatus.fulfilled:
-        return ProductionOrderStatusChip.fulfilled();
-      case ProductionOrderStatus.inProgress:
-        return ProductionOrderStatusChip.inProgress();
-      case ProductionOrderStatus.pending:
-        return ProductionOrderStatusChip.pending();
+  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus? status) {
+    if (status == null) {
+      return ProductionOrderStatusChip(
+        labelIcon: null,
+        labelText: "",
+        fgColor: Colors.grey,
+        bgColor: Colors.grey,
+      );
     }
+
+    return ProductionOrderStatusChip.fromStatus(status: status);
   }
 
   ProductionOrderMixChip? _getMixChip(
@@ -59,32 +57,28 @@ class _ProductionOrderListTileState
   Widget build(BuildContext context) {
     final order = widget.order;
 
-    final isClosed = order.status == ProductionOrderStatus.cancelled ||
-        order.status == ProductionOrderStatus.delivered;
+    final isArchived = order.isArchived;
 
     final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
     final ProductionOrderMixChip? mixChip =
         _getMixChip(order.mixSessionMixNumber, statusChip);
     final String formattedDate = order.createdAt.toTileDateString();
-    final renderPriority =
-        order.isPriority && order.status != ProductionOrderStatus.delivered;
+    final renderPriority = order.isPriority && !isArchived;
 
     final textStyle = TextStyle(
       fontSize: 14,
-      color: isClosed
+      color: isArchived
           ? Colors.grey
           : renderPriority
               ? Colors.red.shade200
               : null,
-      decoration: order.status == ProductionOrderStatus.cancelled
-          ? TextDecoration.lineThrough
-          : null,
+      decoration: order.isCanceled ? TextDecoration.lineThrough : null,
       decorationColor: Colors.grey,
       decorationThickness: 1.0,
     );
 
     return ListTile(
-      tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
+      tileColor: isArchived ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
