@@ -129,19 +129,19 @@ class ProductionOrderDto {
 }
 
 enum ProductionOrderStatusDto {
-  cancelled,
-  delivered,
   fulfilled,
   inProgress,
-  pending;
+  pending,
+  mixed,
+  pumped;
 
   static ProductionOrderStatusDto fromString(String value) {
     return switch (value) {
-      'CANCELLED' => ProductionOrderStatusDto.cancelled,
-      'DELIVERED' => ProductionOrderStatusDto.delivered,
       'FULFILLED' => ProductionOrderStatusDto.fulfilled,
       'IN_PROGRESS' => ProductionOrderStatusDto.inProgress,
       'PENDING' => ProductionOrderStatusDto.pending,
+      'MIXED' => ProductionOrderStatusDto.mixed,
+      'PUMPED' => ProductionOrderStatusDto.pumped,
       _ => throw FormatException('Unknown ProductionOrderStatus: $value'),
     };
   }
@@ -152,7 +152,7 @@ extension ProductionOrderStatusGraphQl on ProductionOrderStatus {
         ProductionOrderStatus.pending => 'PENDING',
         ProductionOrderStatus.inProgress => 'IN_PROGRESS',
         ProductionOrderStatus.fulfilled => 'FULFILLED',
-        ProductionOrderStatus.delivered => 'DELIVERED',
-        ProductionOrderStatus.cancelled => 'CANCELLED',
+        ProductionOrderStatus.mixed => 'MIXED',
+        ProductionOrderStatus.pumped => 'PUMPED',
       };
 }

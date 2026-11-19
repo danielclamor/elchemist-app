@@ -114,30 +114,30 @@ class ProductionOrderSummary {
 }
 
 enum ProductionOrderStatus {
-  cancelled,
-  delivered,
   fulfilled,
   inProgress,
-  pending;
+  pending,
+  mixed,
+  pumped;
 
   @override
   String toString() {
     return switch (this) {
-      ProductionOrderStatus.cancelled => 'Cancelled',
-      ProductionOrderStatus.delivered => 'Delivered',
       ProductionOrderStatus.fulfilled => 'Fulfilled',
       ProductionOrderStatus.inProgress => 'In progress',
       ProductionOrderStatus.pending => 'Pending',
+      ProductionOrderStatus.mixed => 'Mixed',
+      ProductionOrderStatus.pumped => 'Pumped',
     };
   }
 
   static ProductionOrderStatus fromDto(ProductionOrderStatusDto s) {
     return switch (s) {
-      ProductionOrderStatusDto.cancelled => ProductionOrderStatus.cancelled,
-      ProductionOrderStatusDto.delivered => ProductionOrderStatus.delivered,
       ProductionOrderStatusDto.fulfilled => ProductionOrderStatus.fulfilled,
       ProductionOrderStatusDto.inProgress => ProductionOrderStatus.inProgress,
       ProductionOrderStatusDto.pending => ProductionOrderStatus.pending,
+      ProductionOrderStatusDto.mixed => ProductionOrderStatus.mixed,
+      ProductionOrderStatusDto.pumped => ProductionOrderStatus.pumped,
     };
   }
 }
