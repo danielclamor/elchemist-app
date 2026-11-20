@@ -16,19 +16,21 @@ class MixSessionListTile extends ConsumerWidget {
     required this.session,
   });
 
-  MixSessionStatusChip _getStatusChip(MixSessionStatus status) {
-    return switch (status) {
-      MixSessionStatus.cancelled => MixSessionStatusChip.cancelled(),
-      MixSessionStatus.completed => MixSessionStatusChip.completed(),
-      MixSessionStatus.inProgress => MixSessionStatusChip.inProgress(),
-      MixSessionStatus.mixed => MixSessionStatusChip.mixed(),
-    };
+  MixSessionStatusChip _getStatusChip(MixSessionStatus? status) {
+    if (status == null) {
+      return MixSessionStatusChip(
+        labelIcon: null,
+        labelText: "",
+        fgColor: Colors.grey,
+        bgColor: Colors.grey,
+      );
+    }
+    return MixSessionStatusChip.fromStatus(status: status);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isClosed = session.status == MixSessionStatus.cancelled ||
-        session.status == MixSessionStatus.completed;
+    final isArchived = session.isArchived;
 
     final formattedCreatedAtDate = session.createdAt.toTileDateString();
     final mixedAt = session.mixedAt;
@@ -37,16 +39,13 @@ class MixSessionListTile extends ConsumerWidget {
 
     final textStyle = TextStyle(
       fontSize: 14,
-      color: isClosed ? Colors.grey : null,
-      decoration: session.status == MixSessionStatus.cancelled
-          ? TextDecoration.lineThrough
-          : null,
+      color: isArchived ? Colors.grey : null,
       decorationColor: Colors.grey,
       decorationThickness: 1.0,
     );
 
     return ListTile(
-      tileColor: isClosed ? Theme.of(context).scaffoldBackgroundColor : null,
+      tileColor: isArchived ? Theme.of(context).scaffoldBackgroundColor : null,
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(

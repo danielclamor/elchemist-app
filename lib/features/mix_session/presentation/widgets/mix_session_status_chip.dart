@@ -1,4 +1,5 @@
 import 'package:elchemist_app/core/widgets/el_chip.dart';
+import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
 import 'package:flutter/material.dart';
 
 class MixSessionStatusChip extends StatelessWidget {
@@ -15,45 +16,23 @@ class MixSessionStatusChip extends StatelessWidget {
     required this.bgColor,
   });
 
-  factory MixSessionStatusChip.cancelled({
-    String label = 'Cancelled',
+  factory MixSessionStatusChip.fromStatus({
+    required MixSessionStatus status,
   }) =>
-      MixSessionStatusChip(
-        labelIcon: Icons.remove_circle_outline_rounded,
-        labelText: label,
-        fgColor: Colors.grey.shade800,
-        bgColor: Colors.grey,
-      );
-
-  factory MixSessionStatusChip.completed({
-    String label = 'Completed',
-  }) =>
-      MixSessionStatusChip(
-        labelIcon: Icons.radio_button_checked_rounded,
-        labelText: label,
-        fgColor: Colors.grey.shade800,
-        bgColor: Colors.grey,
-      );
-
-  factory MixSessionStatusChip.inProgress({
-    String label = 'In progress',
-  }) =>
-      MixSessionStatusChip(
-        labelIcon: Icons.radio_button_checked_rounded,
-        labelText: label,
-        fgColor: Colors.blue.shade900,
-        bgColor: Colors.blue.shade200,
-      );
-
-  factory MixSessionStatusChip.mixed({
-    String label = 'Mixed',
-  }) =>
-      MixSessionStatusChip(
-        labelIcon: Icons.radio_button_checked_rounded,
-        labelText: label,
-        fgColor: Colors.green.shade900,
-        bgColor: Colors.green.shade200,
-      );
+      switch (status) {
+        MixSessionStatus.inProgress => MixSessionStatusChip(
+            labelIcon: Icons.radio_button_checked_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.blue.shade900,
+            bgColor: Colors.blue.shade200,
+          ),
+        MixSessionStatus.mixed => MixSessionStatusChip(
+            labelIcon: Icons.radio_button_checked_rounded,
+            labelText: status.toString(),
+            fgColor: Colors.grey.shade800,
+            bgColor: Colors.grey,
+          ),
+      };
 
   @override
   Widget build(BuildContext context) {
