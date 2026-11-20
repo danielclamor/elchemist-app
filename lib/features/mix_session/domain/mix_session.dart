@@ -97,4 +97,12 @@ enum MixSessionStatus {
       MixSessionStatusDto.mixed => MixSessionStatus.mixed,
     };
   }
+
+  @override
+  String toString() {
+    return switch (this) {
+      MixSessionStatus.inProgress => 'In progress',
+      MixSessionStatus.mixed => 'Mixed',
+    };
+  }
 }
