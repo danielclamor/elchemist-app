@@ -21,6 +21,7 @@ const String mixSessionListPageQuery = r'''
           sessionNumber
           status
           batchCode
+          isArchived
           mixedAt
           createdAt
           formula {
@@ -43,6 +44,7 @@ const String mixSessionDetailsQuery = r'''
       sessionNumber
       status
       batchCode
+      isArchived
       mixedAt
       createdAt
       totalVolumeMl

@@ -5,23 +5,25 @@ class MixSessionDto {
   final String id;
   final String sessionNumber;
   final MixSessionStatusDto status;
-  final FormulaDto formula;
   final String? batchCode;
+  final int? totalVolumeMl;
+  final bool isArchived;
+  final List<ProductionOrderSummaryDto> productionOrders;
+  final FormulaDto formula;
   final DateTime? mixedAt;
   final DateTime createdAt;
-  final int? totalVolumeMl;
-  final List<ProductionOrderSummaryDto> productionOrders;
 
   const MixSessionDto({
     required this.id,
     required this.sessionNumber,
     required this.status,
-    required this.formula,
     required this.batchCode,
+    required this.totalVolumeMl,
+    required this.isArchived,
+    required this.productionOrders,
+    required this.formula,
     required this.mixedAt,
     required this.createdAt,
-    required this.totalVolumeMl,
-    required this.productionOrders,
   });
 
   factory MixSessionDto.fromJson(Map<String, dynamic> json) {
@@ -36,15 +38,16 @@ class MixSessionDto {
       id: json['id'] as String,
       sessionNumber: json['sessionNumber'] as String,
       status: MixSessionStatusDto.fromString(json['status'] as String),
+      batchCode: json['batchCode'] as String?,
+      totalVolumeMl: json['totalVolumeMl'] as int?,
+      isArchived: json['isArchived'] as bool,
+      productionOrders: productionOrders,
       formula:
           FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson as Map)),
-      batchCode: json['batchCode'] as String?,
       mixedAt: json['mixedAt'] != null
           ? DateTime.parse(json['mixedAt'] as String)
           : null,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      totalVolumeMl: json['totalVolumeMl'] as int?,
-      productionOrders: productionOrders,
     );
   }
 }
@@ -56,6 +59,7 @@ class MixSessionSummaryDto {
   final String formulaName;
   final bool formulaIsPreMix;
   final String? batchCode;
+  final bool isArchived;
   final DateTime? mixedAt;
   final DateTime createdAt;
 
@@ -66,6 +70,7 @@ class MixSessionSummaryDto {
     required this.formulaName,
     required this.formulaIsPreMix,
     required this.batchCode,
+    required this.isArchived,
     required this.mixedAt,
     required this.createdAt,
   });
@@ -80,6 +85,7 @@ class MixSessionSummaryDto {
       formulaName: formulaJson['name'] as String,
       formulaIsPreMix: formulaJson['isPreMix'] as bool,
       batchCode: json['batchCode'] as String?,
+      isArchived: json['isArchived'] as bool,
       mixedAt: json['mixedAt'] != null
           ? DateTime.parse(json['mixedAt'] as String)
           : null,
@@ -93,15 +99,11 @@ class MixSessionSummaryDto {
 }
 
 enum MixSessionStatusDto {
-  cancelled,
-  completed,
   inProgress,
   mixed;
 
   static MixSessionStatusDto fromString(String value) {
     return switch (value) {
-      'CANCELLED' => MixSessionStatusDto.cancelled,
-      'COMPLETED' => MixSessionStatusDto.completed,
       'IN_PROGRESS' => MixSessionStatusDto.inProgress,
       'MIXED' => MixSessionStatusDto.mixed,
       _ => throw FormatException('Unknown MixSessionStatus: $value'),

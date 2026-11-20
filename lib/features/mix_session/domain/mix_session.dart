@@ -8,6 +8,7 @@ class MixSession {
   final MixSessionStatus status;
   final Formula formula;
   final String? batchCode;
+  final bool isArchived;
   final DateTime? mixedAt;
   final DateTime createdAt;
   final int? totalVolumeMl;
@@ -19,6 +20,7 @@ class MixSession {
     required this.status,
     required this.formula,
     required this.batchCode,
+    required this.isArchived,
     required this.mixedAt,
     required this.createdAt,
     required this.totalVolumeMl,
@@ -32,6 +34,7 @@ class MixSession {
       status: MixSessionStatus.fromDto(b.status),
       formula: Formula.fromDto(b.formula),
       batchCode: b.batchCode,
+      isArchived: b.isArchived,
       mixedAt: b.mixedAt,
       createdAt: b.createdAt,
       totalVolumeMl: b.totalVolumeMl,
@@ -49,6 +52,7 @@ class MixSessionSummary {
   final String formulaName;
   final bool formulaIsPreMix;
   final String? batchCode;
+  final bool isArchived;
   final DateTime? mixedAt;
   final DateTime createdAt;
 
@@ -59,6 +63,7 @@ class MixSessionSummary {
     required this.formulaName,
     required this.formulaIsPreMix,
     required this.batchCode,
+    required this.isArchived,
     required this.mixedAt,
     required this.createdAt,
   });
@@ -71,6 +76,7 @@ class MixSessionSummary {
       formulaName: b.formulaName,
       formulaIsPreMix: b.formulaIsPreMix,
       batchCode: b.batchCode,
+      isArchived: b.isArchived,
       mixedAt: b.mixedAt,
       createdAt: b.createdAt,
     );
@@ -82,15 +88,11 @@ class MixSessionSummary {
 }
 
 enum MixSessionStatus {
-  cancelled,
-  completed,
   inProgress,
   mixed;
 
   static MixSessionStatus fromDto(MixSessionStatusDto value) {
     return switch (value) {
-      MixSessionStatusDto.cancelled => MixSessionStatus.cancelled,
-      MixSessionStatusDto.completed => MixSessionStatus.completed,
       MixSessionStatusDto.inProgress => MixSessionStatus.inProgress,
       MixSessionStatusDto.mixed => MixSessionStatus.mixed,
     };
