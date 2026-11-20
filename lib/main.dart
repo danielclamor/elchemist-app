@@ -6,6 +6,7 @@ import 'package:elchemist_app/features/diy_mix/presentations/screens/diy_mix_scr
 import 'package:elchemist_app/features/formula/presentation/screens/formula_list_screen.dart';
 import 'package:elchemist_app/features/mix_session/presentation/screens/mix_session_list_screen.dart';
 import 'package:elchemist_app/features/production_order/presentation/screens/production_order_list_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -15,11 +16,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await windowManager.ensureInitialized();
-
   await initHiveForFlutter();
 
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    await windowManager.ensureInitialized();
+
     WindowOptions windowOptions = const WindowOptions(
       // size: Size(1920, 1080),
       // fullScreen: false,
