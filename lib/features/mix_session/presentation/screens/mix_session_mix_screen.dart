@@ -127,10 +127,14 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                           return SizedBox.shrink();
                         }
                         final formula = data.formula;
-                        final nicBases = formula.nicBases;
-                        final flavorings = formula.flavorings;
                         final nicLevel =
                             formula.targetNicStr * formula.nicLevelMultiplier;
+
+                        final recipe = data.recipe;
+                        final mixParameters = recipe.mixParameters;
+
+                        final nicBases = mixParameters.nicBases;
+                        final flavorings = mixParameters.flavorings;
 
                         return Center(
                           child: Container(

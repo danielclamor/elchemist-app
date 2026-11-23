@@ -1,5 +1,5 @@
 import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
-import 'package:elchemist_app/features/formula/data/flavoring_dto.dart';
+import 'package:elchemist_app/features/flavoring/data/flavoring_dto.dart';
 
 class Flavoring {
   final FlavoringOption flavoringOption;

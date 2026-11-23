@@ -1,6 +1,6 @@
 import 'package:elchemist_app/core/widgets/el_checkbox.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
-import 'package:elchemist_app/features/formula/domain/flavoring.dart';
+import 'package:elchemist_app/features/flavoring/domain/flavoring.dart';
 import 'package:flutter/material.dart';
 
 class FormulaDetailFlavoringSection extends StatelessWidget {

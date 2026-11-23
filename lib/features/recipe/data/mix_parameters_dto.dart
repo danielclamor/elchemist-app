@@ -1,5 +1,5 @@
 import 'package:elchemist_app/core/utils/parse_double_helper.dart';
-import 'package:elchemist_app/features/formula/data/flavoring_dto.dart';
+import 'package:elchemist_app/features/flavoring/data/flavoring_dto.dart';
 import 'package:elchemist_app/features/formula/data/nic_base_dto.dart';
 
 class MixParametersDto {

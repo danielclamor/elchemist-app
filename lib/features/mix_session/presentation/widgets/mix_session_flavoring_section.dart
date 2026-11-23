@@ -1,6 +1,6 @@
 import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
-import 'package:elchemist_app/features/formula/domain/flavoring.dart';
-import 'package:elchemist_app/features/formula/presentation/widgets/flavoring_entry_row.dart';
+import 'package:elchemist_app/features/flavoring/domain/flavoring.dart';
+import 'package:elchemist_app/features/flavoring/presentation/widgets/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

@@ -1,5 +1,5 @@
 import 'package:elchemist_app/features/formula/data/formula_dto.dart';
-import 'package:elchemist_app/features/formula/domain/flavoring.dart';
+import 'package:elchemist_app/features/flavoring/domain/flavoring.dart';
 import 'package:elchemist_app/features/formula/domain/nic_base.dart';
 
 class FormulaSummary {

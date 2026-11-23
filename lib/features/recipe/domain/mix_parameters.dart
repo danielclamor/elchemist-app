@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/formula/domain/flavoring.dart';
+import 'package:elchemist_app/features/flavoring/domain/flavoring.dart';
 import 'package:elchemist_app/features/formula/domain/nic_base.dart';
 import 'package:elchemist_app/features/recipe/data/mix_parameters_dto.dart';
 
