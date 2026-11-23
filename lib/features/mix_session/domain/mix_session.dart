@@ -1,6 +1,7 @@
 import 'package:elchemist_app/features/mix_session/data/mix_session_dto.dart';
 import 'package:elchemist_app/features/formula/domain/formula.dart';
 import 'package:elchemist_app/features/production_order/domain/production_order.dart';
+import 'package:elchemist_app/features/recipe/domain/recipe.dart';
 
 class MixSession {
   final String id;
@@ -14,6 +15,7 @@ class MixSession {
   final DateTime createdAt;
   final List<ProductionOrderSummary> productionOrders;
   final int totalOrdersVolumeMl;
+  final Recipe recipe;
 
   const MixSession({
     required this.id,
@@ -27,6 +29,7 @@ class MixSession {
     required this.createdAt,
     required this.productionOrders,
     required this.totalOrdersVolumeMl,
+    required this.recipe,
   });
 
   factory MixSession.fromDto(MixSessionDto b) {
@@ -44,6 +47,7 @@ class MixSession {
           .map((o) => ProductionOrderSummary.fromDto(o))
           .toList(),
       totalOrdersVolumeMl: b.totalOrdersVolumeMl,
+      recipe: Recipe.fromDto(b.recipe),
     );
   }
 }

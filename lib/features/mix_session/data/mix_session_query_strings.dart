@@ -100,6 +100,37 @@ const String mixSessionDetailsQuery = r'''
           description 
         }
       }
+      recipe {
+        ingredients {
+          name
+          ratio
+          volumeMl
+          weightG
+        }
+        totalRatio
+        totalVolumeMl
+        totalWeightG
+        mixParameters {
+          batchVolumeMl
+          flavorings {
+            isVg
+            name
+            ratio
+          }
+          nicBaseNicStr
+          nicBasePg
+          nicBaseVg
+          nicBases {
+            code
+            isVg
+            name
+            ratio
+          }
+          targetNicStr
+          targetPg
+          targetVg
+        }
+      }
     }
   }
 ''';

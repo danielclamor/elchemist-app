@@ -1,5 +1,6 @@
 import 'package:elchemist_app/features/formula/data/formula_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
+import 'package:elchemist_app/features/recipe/data/recipe_dto.dart';
 
 class MixSessionDto {
   final String id;
@@ -13,6 +14,7 @@ class MixSessionDto {
   final FormulaDto formula;
   final DateTime? mixedAt;
   final DateTime createdAt;
+  final RecipeDto recipe;
 
   const MixSessionDto({
     required this.id,
@@ -26,16 +28,13 @@ class MixSessionDto {
     required this.formula,
     required this.mixedAt,
     required this.createdAt,
+    required this.recipe,
   });
 
   factory MixSessionDto.fromJson(Map<String, dynamic> json) {
-    final formulaJson = json['formula'];
+    final formulaJson = json['formula'] as Map;
     final productionOrderJson = json['productionOrders'] as List<dynamic>;
-    final productionOrders = productionOrderJson
-        .map((o) =>
-            ProductionOrderSummaryDto.fromJson(o as Map<String, dynamic>))
-        .toList();
-
+    final recipeJson = json['recipe'] as Map;
     return MixSessionDto(
       id: json['id'] as String,
       sessionNumber: json['sessionNumber'] as String,
@@ -43,14 +42,17 @@ class MixSessionDto {
       batchCode: json['batchCode'] as String?,
       batchVolumeMl: json['batchVolumeMl'] as int?,
       isArchived: json['isArchived'] as bool,
-      productionOrders: productionOrders,
+      productionOrders: productionOrderJson
+          .map((o) =>
+              ProductionOrderSummaryDto.fromJson(o as Map<String, dynamic>))
+          .toList(),
       totalOrdersVolumeMl: json['totalOrdersVolumeMl'] as int? ?? 0,
-      formula:
-          FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson as Map)),
+      formula: FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson)),
       mixedAt: json['mixedAt'] != null
           ? DateTime.parse(json['mixedAt'] as String)
           : null,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      recipe: RecipeDto.fromJson(Map<String, dynamic>.from(recipeJson)),
     );
   }
 }
