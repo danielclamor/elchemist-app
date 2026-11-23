@@ -1,3 +1,5 @@
+import 'package:elchemist_app/features/formula/domain/flavoring.dart';
+import 'package:elchemist_app/features/formula/domain/nic_base.dart';
 import 'package:elchemist_app/features/recipe/data/mix_parameters_dto.dart';
 
 class MixParameters {
@@ -8,8 +10,8 @@ class MixParameters {
   final double targetNicStr;
   final double targetPg;
   final double targetVg;
-  final List<MixParametersFlavoring> flavorings;
-  final List<MixParametersNicBase> nicBases;
+  final List<Flavoring> flavorings;
+  final List<NicBase> nicBases;
 
   const MixParameters({
     required this.batchVolumeMl,
@@ -32,52 +34,8 @@ class MixParameters {
       targetNicStr: p.targetNicStr,
       targetPg: p.targetPg,
       targetVg: p.targetVg,
-      flavorings:
-          p.flavorings.map((f) => MixParametersFlavoring.fromDto(f)).toList(),
-      nicBases: p.nicBases.map((b) => MixParametersNicBase.fromDto(b)).toList(),
-    );
-  }
-}
-
-class MixParametersFlavoring {
-  final String name;
-  final bool isVg;
-  final double ratio;
-
-  const MixParametersFlavoring({
-    required this.name,
-    required this.isVg,
-    required this.ratio,
-  });
-
-  factory MixParametersFlavoring.fromDto(MixParametersFlavoringDto f) {
-    return MixParametersFlavoring(
-      name: f.name,
-      isVg: f.isVg,
-      ratio: f.ratio,
-    );
-  }
-}
-
-class MixParametersNicBase {
-  final String code;
-  final String name;
-  final bool isVg;
-  final double ratio;
-
-  const MixParametersNicBase({
-    required this.code,
-    required this.name,
-    required this.isVg,
-    required this.ratio,
-  });
-
-  factory MixParametersNicBase.fromDto(MixParametersNicBaseDto b) {
-    return MixParametersNicBase(
-      code: b.code,
-      name: b.name,
-      isVg: b.isVg,
-      ratio: b.ratio,
+      flavorings: p.flavorings.map((f) => Flavoring.fromDto(f)).toList(),
+      nicBases: p.nicBases.map((b) => NicBase.fromDto(b)).toList(),
     );
   }
 }

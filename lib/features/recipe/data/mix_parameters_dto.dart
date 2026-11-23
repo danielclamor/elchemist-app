@@ -1,4 +1,6 @@
 import 'package:elchemist_app/core/utils/parse_double_helper.dart';
+import 'package:elchemist_app/features/formula/data/flavoring_dto.dart';
+import 'package:elchemist_app/features/formula/data/nic_base_dto.dart';
 
 class MixParametersDto {
   final double batchVolumeMl;
@@ -8,8 +10,8 @@ class MixParametersDto {
   final double targetNicStr;
   final double targetPg;
   final double targetVg;
-  final List<MixParametersFlavoringDto> flavorings;
-  final List<MixParametersNicBaseDto> nicBases;
+  final List<FlavoringDto> flavorings;
+  final List<NicBaseDto> nicBases;
 
   const MixParametersDto({
     required this.batchVolumeMl,
@@ -37,59 +39,16 @@ class MixParametersDto {
       targetVg: (json['targetVg'] as Object?).toDoubleOrZero(),
       flavorings: flavoringsJson != null
           ? flavoringsJson
-              .map((f) => MixParametersFlavoringDto.fromJson(
-                  Map<String, dynamic>.from(f as Map)))
+              .map((f) =>
+                  FlavoringDto.fromJson(Map<String, dynamic>.from(f as Map)))
               .toList()
           : [],
       nicBases: nicBasesJson != null
           ? nicBasesJson
-              .map((b) => MixParametersNicBaseDto.fromJson(
-                  Map<String, dynamic>.from(b as Map)))
+              .map((b) =>
+                  NicBaseDto.fromJson(Map<String, dynamic>.from(b as Map)))
               .toList()
           : [],
-    );
-  }
-}
-
-class MixParametersFlavoringDto {
-  final String name;
-  final bool isVg;
-  final double ratio;
-
-  const MixParametersFlavoringDto({
-    required this.name,
-    required this.isVg,
-    required this.ratio,
-  });
-
-  factory MixParametersFlavoringDto.fromJson(Map<String, dynamic> json) {
-    return MixParametersFlavoringDto(
-      name: json['name'] as String? ?? 'Unavailable',
-      isVg: json['isVg'] as bool? ?? false,
-      ratio: (json['ratio'] as Object?).toDoubleOrZero(),
-    );
-  }
-}
-
-class MixParametersNicBaseDto {
-  final String code;
-  final String name;
-  final bool isVg;
-  final double ratio;
-
-  const MixParametersNicBaseDto({
-    required this.code,
-    required this.name,
-    required this.isVg,
-    required this.ratio,
-  });
-
-  factory MixParametersNicBaseDto.fromJson(Map<String, dynamic> json) {
-    return MixParametersNicBaseDto(
-      code: json['code'] as String? ?? 'Unavailable',
-      name: json['name'] as String? ?? 'Unavaialble',
-      isVg: json['isVg'] as bool? ?? false,
-      ratio: (json['ratio'] as Object?).toDoubleOrZero(),
     );
   }
 }
