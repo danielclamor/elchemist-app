@@ -1,17 +1,16 @@
 import 'package:elchemist_app/features/recipe/data/recipe_dto.dart';
 import 'package:elchemist_app/features/recipe/domain/ingredient.dart';
+import 'package:elchemist_app/features/recipe/domain/mix_parameters.dart';
 
 class Recipe {
-  final String formulaSlug;
-  final String formulaName;
+  final MixParameters mixParameters;
   final List<Ingredient> ingredients;
   final double totalRatio;
   final double totalVolumeMl;
   final double totalWeightG;
 
   const Recipe({
-    required this.formulaSlug,
-    required this.formulaName,
+    required this.mixParameters,
     required this.ingredients,
     required this.totalRatio,
     required this.totalVolumeMl,
@@ -20,8 +19,7 @@ class Recipe {
 
   factory Recipe.fromDto(RecipeDto r) {
     return Recipe(
-      formulaSlug: r.formulaSlug,
-      formulaName: r.formulaName,
+      mixParameters: MixParameters.fromDto(r.mixParameters),
       ingredients: r.ingredients.map((i) => Ingredient.fromDto(i)).toList(),
       totalRatio: r.totalRatio,
       totalVolumeMl: r.totalVolumeMl,
@@ -31,5 +29,5 @@ class Recipe {
 
   @override
   toString() =>
-      '<RecipeDto $formulaName totalRatio=$totalRatio totalVolumeMl=$totalVolumeMl totalWeightG=$totalWeightG>';
+      '<RecipeDto totalRatio=$totalRatio totalVolumeMl=$totalVolumeMl totalWeightG=$totalWeightG>';
 }

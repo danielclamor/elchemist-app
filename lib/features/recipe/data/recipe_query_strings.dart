@@ -7,11 +7,6 @@ query Recipe (
     formulaIdentifier: {id: $formulaId}
     input: {batchVolumeMl: $batchVolumeMl}
   ) {
-    formula {
-      id
-      slug
-      name
-    }
     ingredients {
       name
       ratio
