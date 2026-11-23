@@ -1,5 +1,5 @@
 import 'package:elchemist_app/features/flavoring/data/flavoring_dto.dart';
-import 'package:elchemist_app/features/formula/data/nic_base_dto.dart';
+import 'package:elchemist_app/features/nic_base/data/nic_base_dto.dart';
 
 class FormulaDto {
   final String id;

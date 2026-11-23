@@ -1,6 +1,6 @@
 import 'package:elchemist_app/core/widgets/el_text_field.dart';
-import 'package:elchemist_app/features/formula/domain/nic_base.dart';
-import 'package:elchemist_app/features/formula/presentation/widgets/nic_base_entry_row.dart';
+import 'package:elchemist_app/features/nic_base/domain/nic_base.dart';
+import 'package:elchemist_app/features/nic_base/presentation/widgets/nic_base_entry_row.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
 import 'package:elchemist_app/features/nic_base_option/domain/nic_base_option.dart';
 import 'package:flutter/material.dart';

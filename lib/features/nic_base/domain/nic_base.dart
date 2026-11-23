@@ -1,4 +1,4 @@
-import 'package:elchemist_app/features/formula/data/nic_base_dto.dart';
+import 'package:elchemist_app/features/nic_base/data/nic_base_dto.dart';
 import 'package:elchemist_app/features/nic_base_option/domain/nic_base_option.dart';
 
 class NicBase {
