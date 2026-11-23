@@ -47,7 +47,8 @@ const String mixSessionDetailsQuery = r'''
       isArchived
       mixedAt
       createdAt
-      totalVolumeMl
+      batchVolumeMl
+      totalOrdersVolumeMl
       formula {
         id
         slug

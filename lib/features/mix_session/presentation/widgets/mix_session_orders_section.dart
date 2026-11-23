@@ -8,6 +8,7 @@ class MixSessionOrdersSection extends StatelessWidget {
   final double? width;
   final String mixSessionId;
   final String formulaId;
+  final int totalOrdersVolumeMl;
   final List<ProductionOrderSummary> productionOrders;
 
   const MixSessionOrdersSection({
@@ -16,14 +17,11 @@ class MixSessionOrdersSection extends StatelessWidget {
     required this.mixSessionId,
     required this.formulaId,
     required this.productionOrders,
+    required this.totalOrdersVolumeMl,
   });
 
   @override
   Widget build(BuildContext context) {
-    final totalVolumeMl = productionOrders
-        .map((o) => o.eliquidBottleSize.toInt() * (o.orderedQuantity ?? 0))
-        .fold(0, (sum, volumeMl) => sum + volumeMl);
-
     return SectionCard(
       width: width,
       title: "ORDERS",
@@ -39,7 +37,7 @@ class MixSessionOrdersSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 16.0,
         children: [
-          Text('Total order volume: $totalVolumeMl mL'),
+          Text('Total order volume: $totalOrdersVolumeMl mL'),
           ...List.generate(
             productionOrders.length,
             (index) => MixSessionOrderCard(

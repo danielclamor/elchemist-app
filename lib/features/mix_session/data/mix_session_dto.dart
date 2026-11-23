@@ -6,9 +6,10 @@ class MixSessionDto {
   final String sessionNumber;
   final MixSessionStatusDto status;
   final String? batchCode;
-  final int? totalVolumeMl;
+  final int? batchVolumeMl;
   final bool isArchived;
   final List<ProductionOrderSummaryDto> productionOrders;
+  final int totalOrdersVolumeMl;
   final FormulaDto formula;
   final DateTime? mixedAt;
   final DateTime createdAt;
@@ -18,9 +19,10 @@ class MixSessionDto {
     required this.sessionNumber,
     required this.status,
     required this.batchCode,
-    required this.totalVolumeMl,
+    required this.batchVolumeMl,
     required this.isArchived,
     required this.productionOrders,
+    required this.totalOrdersVolumeMl,
     required this.formula,
     required this.mixedAt,
     required this.createdAt,
@@ -39,9 +41,10 @@ class MixSessionDto {
       sessionNumber: json['sessionNumber'] as String,
       status: MixSessionStatusDto.fromString(json['status'] as String),
       batchCode: json['batchCode'] as String?,
-      totalVolumeMl: json['totalVolumeMl'] as int?,
+      batchVolumeMl: json['batchVolumeMl'] as int?,
       isArchived: json['isArchived'] as bool,
       productionOrders: productionOrders,
+      totalOrdersVolumeMl: json['totalOrdersVolumeMl'] as int? ?? 0,
       formula:
           FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson as Map)),
       mixedAt: json['mixedAt'] != null

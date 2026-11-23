@@ -105,24 +105,18 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                           ),
                         ),
                         Gap(28.0),
-                        MixSessionOrdersSection(
-                          width: sectionWidth,
-                          mixSessionId: async.when(
-                            data: (data) => data != null ? data.id : "",
-                            error: (error, stackTrace) => "",
-                            loading: () => "",
-                          ),
-                          formulaId: async.when(
-                            data: (data) => data != null ? data.formula.id : "",
-                            error: (error, stackTrace) => "",
-                            loading: () => "",
-                          ),
-                          productionOrders: async.when(
-                            data: (data) =>
-                                data != null ? data.productionOrders : [],
-                            error: (error, stackTrace) => [],
-                            loading: () => [],
-                          ),
+                        async.when(
+                          error: (error, stackTrace) => SizedBox.shrink(),
+                          loading: () => SizedBox.shrink(),
+                          data: (session) => session != null
+                              ? MixSessionOrdersSection(
+                                  mixSessionId: session.id,
+                                  formulaId: session.formula.id,
+                                  productionOrders: session.productionOrders,
+                                  totalOrdersVolumeMl:
+                                      session.totalOrdersVolumeMl,
+                                )
+                              : SizedBox.shrink(),
                         ),
                       ],
                     ),

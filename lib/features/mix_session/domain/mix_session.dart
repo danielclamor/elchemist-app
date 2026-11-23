@@ -8,11 +8,12 @@ class MixSession {
   final MixSessionStatus status;
   final Formula formula;
   final String? batchCode;
+  final int? batchVolumeMl;
   final bool isArchived;
   final DateTime? mixedAt;
   final DateTime createdAt;
-  final int? totalVolumeMl;
   final List<ProductionOrderSummary> productionOrders;
+  final int totalOrdersVolumeMl;
 
   const MixSession({
     required this.id,
@@ -20,11 +21,12 @@ class MixSession {
     required this.status,
     required this.formula,
     required this.batchCode,
+    required this.batchVolumeMl,
     required this.isArchived,
     required this.mixedAt,
     required this.createdAt,
-    required this.totalVolumeMl,
     required this.productionOrders,
+    required this.totalOrdersVolumeMl,
   });
 
   factory MixSession.fromDto(MixSessionDto b) {
@@ -34,13 +36,14 @@ class MixSession {
       status: MixSessionStatus.fromDto(b.status),
       formula: Formula.fromDto(b.formula),
       batchCode: b.batchCode,
+      batchVolumeMl: b.batchVolumeMl,
       isArchived: b.isArchived,
       mixedAt: b.mixedAt,
       createdAt: b.createdAt,
-      totalVolumeMl: b.totalVolumeMl,
       productionOrders: b.productionOrders
           .map((o) => ProductionOrderSummary.fromDto(o))
           .toList(),
+      totalOrdersVolumeMl: b.totalOrdersVolumeMl,
     );
   }
 }
