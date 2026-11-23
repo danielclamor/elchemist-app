@@ -29,6 +29,8 @@ query Recipe (
         ratio
       }
       nicBaseNicStr
+      nicBasePg
+      nicBaseVg
       nicBases {
         code
         isVg

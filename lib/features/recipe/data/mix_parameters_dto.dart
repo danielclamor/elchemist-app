@@ -3,6 +3,8 @@ import 'package:elchemist_app/core/utils/parse_double_helper.dart';
 class MixParametersDto {
   final double batchVolumeMl;
   final double nicBaseNicStr;
+  final double nicBasePg;
+  final double nicBaseVg;
   final double targetNicStr;
   final double targetPg;
   final double targetVg;
@@ -12,6 +14,8 @@ class MixParametersDto {
   const MixParametersDto({
     required this.batchVolumeMl,
     required this.nicBaseNicStr,
+    required this.nicBasePg,
+    required this.nicBaseVg,
     required this.targetNicStr,
     required this.targetPg,
     required this.targetVg,
@@ -26,6 +30,8 @@ class MixParametersDto {
     return MixParametersDto(
       batchVolumeMl: (json['batchVolumeMl'] as Object?).toDoubleOrZero(),
       nicBaseNicStr: (json['nicBaseNicStr'] as Object?).toDoubleOrZero(),
+      nicBasePg: (json['nicBasePg'] as Object?).toDoubleOrZero(),
+      nicBaseVg: (json['nicBaseVg'] as Object?).toDoubleOrZero(),
       targetNicStr: (json['targetNicStr'] as Object?).toDoubleOrZero(),
       targetPg: (json['targetPg'] as Object?).toDoubleOrZero(),
       targetVg: (json['targetVg'] as Object?).toDoubleOrZero(),
