@@ -33,26 +33,36 @@ class MixSessionDto {
 
   factory MixSessionDto.fromJson(Map<String, dynamic> json) {
     final formulaJson = json['formula'] as Map;
+    final formula = FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson));
+    print(formula);
+
     final productionOrderJson = json['productionOrders'] as List<dynamic>;
+    final productionOrders = productionOrderJson
+        .map((o) => ProductionOrderSummaryDto.fromJson(
+              Map<String, dynamic>.from(o as Map),
+            ))
+        .toList();
+    print(productionOrders);
+
     final recipeJson = json['recipe'] as Map;
+    final recipe = RecipeDto.fromJson(Map<String, dynamic>.from(recipeJson));
+    print(recipe);
+
     return MixSessionDto(
       id: json['id'] as String,
       sessionNumber: json['sessionNumber'] as String,
       status: MixSessionStatusDto.fromString(json['status'] as String),
       batchCode: json['batchCode'] as String?,
-      batchVolumeMl: json['batchVolumeMl'] as int?,
+      batchVolumeMl: (json['batchVolumeMl'] as num?)?.toInt(),
       isArchived: json['isArchived'] as bool,
-      productionOrders: productionOrderJson
-          .map((o) =>
-              ProductionOrderSummaryDto.fromJson(o as Map<String, dynamic>))
-          .toList(),
-      totalOrdersVolumeMl: json['totalOrdersVolumeMl'] as int? ?? 0,
-      formula: FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson)),
+      productionOrders: productionOrders,
+      totalOrdersVolumeMl: (json['totalOrdersVolumeMl'] as num?)?.toInt() ?? 0,
+      formula: formula,
       mixedAt: json['mixedAt'] != null
           ? DateTime.parse(json['mixedAt'] as String)
           : null,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      recipe: RecipeDto.fromJson(Map<String, dynamic>.from(recipeJson)),
+      recipe: recipe,
     );
   }
 }

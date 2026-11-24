@@ -97,7 +97,16 @@ const String mixSessionDetailsQuery = r'''
         eliquid { 
           id
           bottleSize 
-          description 
+          description
+          formula {
+            id
+            name
+            isPreMix
+          }
+        }
+        mixSession {
+          id
+          sessionNumber
         }
       }
       recipe {
@@ -113,6 +122,8 @@ const String mixSessionDetailsQuery = r'''
         mixParameters {
           batchVolumeMl
           flavorings {
+            id
+            slug
             isVg
             name
             ratio
@@ -121,6 +132,7 @@ const String mixSessionDetailsQuery = r'''
           nicBasePg
           nicBaseVg
           nicBases {
+            id
             code
             isVg
             name

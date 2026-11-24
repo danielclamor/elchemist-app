@@ -1,6 +1,4 @@
 import 'package:elchemist_app/core/utils/parse_double_helper.dart';
-import 'package:elchemist_app/features/flavoring/data/flavoring_dto.dart';
-import 'package:elchemist_app/features/nic_base/data/nic_base_dto.dart';
 
 class MixParametersDto {
   final double batchVolumeMl;
@@ -10,8 +8,8 @@ class MixParametersDto {
   final double targetNicStr;
   final double targetPg;
   final double targetVg;
-  final List<FlavoringDto> flavorings;
-  final List<NicBaseDto> nicBases;
+  final List<MixParametersFlavoringDto> flavorings;
+  final List<MixParametersNicBaseDto> nicBases;
 
   const MixParametersDto({
     required this.batchVolumeMl,
@@ -27,7 +25,20 @@ class MixParametersDto {
 
   factory MixParametersDto.fromJson(Map<String, dynamic> json) {
     final flavoringsJson = json['flavorings'] as List<dynamic>?;
+    final flavorings = flavoringsJson != null
+        ? flavoringsJson
+            .map((f) => MixParametersFlavoringDto.fromJson(
+                Map<String, dynamic>.from(f as Map)))
+            .toList()
+        : <MixParametersFlavoringDto>[];
+
     final nicBasesJson = json['nicBases'] as List<dynamic>?;
+    final nicBases = nicBasesJson != null
+        ? nicBasesJson
+            .map((b) => MixParametersNicBaseDto.fromJson(
+                Map<String, dynamic>.from(b as Map)))
+            .toList()
+        : <MixParametersNicBaseDto>[];
 
     return MixParametersDto(
       batchVolumeMl: (json['batchVolumeMl'] as Object?).toDoubleOrZero(),
@@ -37,18 +48,100 @@ class MixParametersDto {
       targetNicStr: (json['targetNicStr'] as Object?).toDoubleOrZero(),
       targetPg: (json['targetPg'] as Object?).toDoubleOrZero(),
       targetVg: (json['targetVg'] as Object?).toDoubleOrZero(),
-      flavorings: flavoringsJson != null
-          ? flavoringsJson
-              .map((f) =>
-                  FlavoringDto.fromJson(Map<String, dynamic>.from(f as Map)))
-              .toList()
-          : [],
-      nicBases: nicBasesJson != null
-          ? nicBasesJson
-              .map((b) =>
-                  NicBaseDto.fromJson(Map<String, dynamic>.from(b as Map)))
-              .toList()
-          : [],
+      flavorings: flavorings,
+      nicBases: nicBases,
     );
   }
+}
+
+class MixParametersFlavoringDto {
+  final String id;
+  final String? slug;
+  final String name;
+  final bool isVg;
+  final double ratio;
+
+  const MixParametersFlavoringDto({
+    required this.id,
+    required this.slug,
+    required this.name,
+    required this.isVg,
+    required this.ratio,
+  });
+
+  factory MixParametersFlavoringDto.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'id': String id,
+        'slug': String? slug,
+        'name': String name,
+        'isVg': bool isVg,
+        'ratio': num ratio,
+      } =>
+        MixParametersFlavoringDto(
+          id: id,
+          slug: slug,
+          name: name,
+          isVg: isVg,
+          ratio: ratio.toDouble(),
+        ),
+      _ => throw const FormatException('Failed to load MixParametersFlavoring')
+    };
+  }
+
+  /// Matches the backend's RecipeIngredientsFlavoringInput
+  /// (name, isVg, ratio), for sending overrides back.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'slug': slug,
+        'name': name,
+        'isVg': isVg,
+        'ratio': ratio,
+      };
+}
+
+class MixParametersNicBaseDto {
+  final String id;
+  final String? code;
+  final String name;
+  final bool isVg;
+  final double ratio;
+
+  const MixParametersNicBaseDto({
+    required this.id,
+    required this.code,
+    required this.name,
+    required this.isVg,
+    required this.ratio,
+  });
+
+  factory MixParametersNicBaseDto.fromJson(Map<String, dynamic> json) {
+    return switch (json) {
+      {
+        'id': String id,
+        'code': String? code,
+        'name': String name,
+        'isVg': bool isVg,
+        'ratio': num ratio,
+      } =>
+        MixParametersNicBaseDto(
+          id: id,
+          code: code,
+          name: name,
+          isVg: isVg,
+          ratio: ratio.toDouble(),
+        ),
+      _ => throw const FormatException('Failed to load MixParametersNicBase')
+    };
+  }
+
+  /// Matches the backend's RecipeIngredientsNicBaseInput
+  /// (code, name, isVg, ratio), for sending overrides back.
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'code': code,
+        'name': name,
+        'isVg': isVg,
+        'ratio': ratio,
+      };
 }
