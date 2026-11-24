@@ -41,7 +41,7 @@ const String mixSessionSetBatchVolumeMlMutation = r'''
     $volumeMl: Float!
   ) {
     mixSessionSetBatchVolumeMl(
-      identifier: {id: $id}, 
+      identifier: {id: $id}
       batchVolumeMl:$volumeMl
     ) {
       mixSession {
@@ -81,6 +81,30 @@ const String mixSessionSetBatchVolumeMlMutation = r'''
             targetVg
           }
         }
+      }
+      feedback {
+        status
+        message
+      }
+    }
+  }
+''';
+
+const String mixSessionMarkMixedMutation = r'''
+  mutation MarkMixSessionMixed(
+    $id: ID!
+  ) {
+    mixSessionMarkMixed(
+      identifier: {id: $id}
+    ) {
+      mixSession {
+        id
+        status
+        isArchived
+      }
+      feedback {
+        status
+        message
       }
     }
   }

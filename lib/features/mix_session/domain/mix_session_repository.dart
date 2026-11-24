@@ -32,4 +32,8 @@ abstract class MixSessionRepository {
     required String id,
     required double volumeMl,
   });
+
+  Future<void> markMixed({
+    required String id,
+  });
 }

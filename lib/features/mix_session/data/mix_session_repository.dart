@@ -204,10 +204,36 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
 
     if (data == null || feedback?['status'] == 'FAILED') {
       throw Exception(
-        feedback?['message'] as String? ?? 'Could not create mix session',
+        feedback?['message'] as String? ??
+            'Could not set mix session batch volume',
       );
     }
 
     return Recipe.fromDto(RecipeDto.fromJson(data['recipe']));
+  }
+
+  @override
+  Future<void> markMixed({required String id}) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(mixSessionMarkMixedMutation),
+        variables: {
+          'id': id,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['mixSessionMarkMixed'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['mixSession'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] == 'FAILED') {
+      throw Exception(feedback?['message'] as String? ??
+          'Could not mark mix session mixed');
+    }
   }
 }

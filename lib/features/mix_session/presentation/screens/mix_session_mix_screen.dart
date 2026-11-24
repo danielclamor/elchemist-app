@@ -44,7 +44,7 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                 Align(
                   alignment: AlignmentGeometry.centerEnd,
                   child: Tooltip(
-                    message: "Cancel mix session",
+                    message: "Close mix session",
                     child: SizedBox(
                       width: 30,
                       height: 30,
@@ -104,7 +104,37 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                             fontSize: 14.0,
                           ),
                         ),
-                        Gap(28.0),
+                        Gap(12.0),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0E76BD),
+                            side: BorderSide(
+                              color: const Color(0xFF0B5E97),
+                              width: 1.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 8.0,
+                            ),
+                          ),
+                          onPressed: () async {
+                            await ref
+                                .read(mixSessionRepositoryProvider)
+                                .markMixed(id: id);
+
+                            if (!context.mounted) return;
+                            Navigator.of(context).pop();
+                            final pager =
+                                ref.watch(mixSessionListPagerProvider);
+                            final pageKey = (after: pager.currentCursor);
+                            ref.invalidate(mixSessionListPageProvider(pageKey));
+                          },
+                          child: Text('Mark as mixed'),
+                        ),
+                        Gap(12.0),
                         async.when(
                           error: (error, stackTrace) => Center(
                             child: TextButton(
