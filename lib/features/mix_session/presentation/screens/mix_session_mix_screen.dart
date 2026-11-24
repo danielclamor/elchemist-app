@@ -132,15 +132,15 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                     ),
                     Gap(20.0),
                     async.when(
-                      data: (data) {
-                        if (data == null) {
+                      data: (session) {
+                        if (session == null) {
                           return SizedBox.shrink();
                         }
-                        final formula = data.formula;
+                        final formula = session.formula;
                         final nicLevel =
                             formula.targetNicStr * formula.nicLevelMultiplier;
 
-                        final recipe = data.recipe;
+                        final recipe = session.recipe;
                         final mixParameters = recipe.mixParameters;
 
                         final nicBases = mixParameters.nicBases;
@@ -193,7 +193,9 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                                       child: Column(
                                         spacing: 20.0,
                                         children: [
-                                          MixSessionVolumeSection(),
+                                          MixSessionVolumeSection(
+                                            mixSession: session,
+                                          ),
                                           MixSessionRecipeSection(
                                             recipe: recipe,
                                           ),
