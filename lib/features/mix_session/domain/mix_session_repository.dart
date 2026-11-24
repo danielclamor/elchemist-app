@@ -1,5 +1,6 @@
 import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
 import 'package:elchemist_app/features/mix_session/domain/mix_session_list_page.dart';
+import 'package:elchemist_app/features/recipe/domain/recipe.dart';
 
 abstract class MixSessionRepository {
   Stream<MixSessionListPage> watchListPage({
@@ -25,5 +26,10 @@ abstract class MixSessionRepository {
   Future<void> mergeMixSessions({
     required List<String> sourceIds,
     required String targetId,
+  });
+
+  Future<Recipe> setBatchVolumeMl({
+    required String id,
+    required double volumeMl,
   });
 }

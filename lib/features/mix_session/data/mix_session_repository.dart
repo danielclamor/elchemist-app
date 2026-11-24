@@ -4,6 +4,8 @@ import 'package:elchemist_app/features/mix_session/data/mix_session_query_string
 import 'package:elchemist_app/features/mix_session/domain/mix_session.dart';
 import 'package:elchemist_app/features/mix_session/domain/mix_session_list_page.dart';
 import 'package:elchemist_app/features/mix_session/domain/mix_session_repository.dart';
+import 'package:elchemist_app/features/recipe/data/recipe_dto.dart';
+import 'package:elchemist_app/features/recipe/domain/recipe.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class MixSessionRepositoryImpl implements MixSessionRepository {
@@ -175,5 +177,37 @@ class MixSessionRepositoryImpl implements MixSessionRepository {
         feedback?['message'] as String? ?? 'Could not create mix session',
       );
     }
+  }
+
+  @override
+  Future<Recipe> setBatchVolumeMl({
+    required String id,
+    required double volumeMl,
+  }) async {
+    final result = await _client.mutate(
+      MutationOptions(
+        document: gql(mixSessionSetBatchVolumeMlMutation),
+        variables: {
+          'id': id,
+          'volumeMl': volumeMl,
+        },
+        fetchPolicy: FetchPolicy.noCache,
+      ),
+    );
+
+    if (result.hasException) throw result.exception!;
+
+    final payload =
+        result.data?['mixSessionSetBatchVolumeMl'] as Map<String, dynamic>?;
+    final feedback = payload?['feedback'] as Map<String, dynamic>?;
+    final data = payload?['mixSession'] as Map<String, dynamic>?;
+
+    if (data == null || feedback?['status'] == 'FAILED') {
+      throw Exception(
+        feedback?['message'] as String? ?? 'Could not create mix session',
+      );
+    }
+
+    return Recipe.fromDto(RecipeDto.fromJson(data['recipe']));
   }
 }
