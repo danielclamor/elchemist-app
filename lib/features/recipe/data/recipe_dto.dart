@@ -19,13 +19,11 @@ class RecipeDto {
   factory RecipeDto.fromJson(Map<String, dynamic> json) {
     final mixParametersJson = json['mixParameters'] as Map<String, dynamic>;
     final mixParameters = MixParametersDto.fromJson(mixParametersJson);
-    print(mixParameters);
 
     final ingredientsJson = json['ingredients'] as List<dynamic>;
     final ingredients = ingredientsJson
         .map((i) => IngredientDto.fromJson((i as Map<String, dynamic>)))
         .toList();
-    print(ingredients);
 
     return RecipeDto(
       mixParameters: mixParameters,
