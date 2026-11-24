@@ -34,3 +34,54 @@ const String mixSessionMergeSessionsMutation = r'''
     }
   }
 ''';
+
+const String mixSessionSetBatchVolumeMlMutation = r'''
+  mutation SetMixSessionBatchVolumeMl(
+    $id: ID!
+    $volumeMl: Float!
+  ) {
+    mixSessionSetBatchVolumeMl(
+      identifier: {id: $id}, 
+      batchVolumeMl:$volumeMl
+    ) {
+      mixSession {
+        id
+        batchVolumeMl
+        recipe {
+          ingredients {
+            name
+            ratio
+            volumeMl
+            weightG
+          }
+          totalRatio
+          totalVolumeMl
+          totalWeightG
+          mixParameters {
+            batchVolumeMl
+            flavorings {
+              id
+              slug
+              isVg
+              name
+              ratio
+            }
+            nicBaseNicStr
+            nicBasePg
+            nicBaseVg
+            nicBases {
+              id
+              code
+              isVg
+              name
+              ratio
+            }
+            targetNicStr
+            targetPg
+            targetVg
+          }
+        }
+      }
+    }
+  }
+''';
