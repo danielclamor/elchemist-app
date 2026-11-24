@@ -1,3 +1,4 @@
+import 'package:elchemist_app/core/utils/parse_double_helper.dart';
 import 'package:elchemist_app/features/formula/data/formula_dto.dart';
 import 'package:elchemist_app/features/production_order/data/production_order_dto.dart';
 import 'package:elchemist_app/features/recipe/data/recipe_dto.dart';
@@ -7,7 +8,7 @@ class MixSessionDto {
   final String sessionNumber;
   final MixSessionStatusDto status;
   final String? batchCode;
-  final int? batchVolumeMl;
+  final double? batchVolumeMl;
   final bool isArchived;
   final List<ProductionOrderSummaryDto> productionOrders;
   final int totalOrdersVolumeMl;
@@ -34,7 +35,6 @@ class MixSessionDto {
   factory MixSessionDto.fromJson(Map<String, dynamic> json) {
     final formulaJson = json['formula'] as Map;
     final formula = FormulaDto.fromJson(Map<String, dynamic>.from(formulaJson));
-    print(formula);
 
     final productionOrderJson = json['productionOrders'] as List<dynamic>;
     final productionOrders = productionOrderJson
@@ -42,18 +42,16 @@ class MixSessionDto {
               Map<String, dynamic>.from(o as Map),
             ))
         .toList();
-    print(productionOrders);
 
     final recipeJson = json['recipe'] as Map;
     final recipe = RecipeDto.fromJson(Map<String, dynamic>.from(recipeJson));
-    print(recipe);
 
     return MixSessionDto(
       id: json['id'] as String,
       sessionNumber: json['sessionNumber'] as String,
       status: MixSessionStatusDto.fromString(json['status'] as String),
       batchCode: json['batchCode'] as String?,
-      batchVolumeMl: (json['batchVolumeMl'] as num?)?.toInt(),
+      batchVolumeMl: (json['batchVolumeMl'] as Object?)?.toDoubleOrZero(),
       isArchived: json['isArchived'] as bool,
       productionOrders: productionOrders,
       totalOrdersVolumeMl: (json['totalOrdersVolumeMl'] as num?)?.toInt() ?? 0,
