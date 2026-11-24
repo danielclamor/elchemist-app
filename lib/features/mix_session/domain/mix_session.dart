@@ -9,7 +9,7 @@ class MixSession {
   final MixSessionStatus status;
   final Formula formula;
   final String? batchCode;
-  final int? batchVolumeMl;
+  final double? batchVolumeMl;
   final bool isArchived;
   final DateTime? mixedAt;
   final DateTime createdAt;
@@ -17,7 +17,7 @@ class MixSession {
   final int totalOrdersVolumeMl;
   final Recipe recipe;
 
-  const MixSession({
+  MixSession({
     required this.id,
     required this.sessionNumber,
     required this.status,
@@ -48,6 +48,27 @@ class MixSession {
           .toList(),
       totalOrdersVolumeMl: b.totalOrdersVolumeMl,
       recipe: Recipe.fromDto(b.recipe),
+    );
+  }
+
+  MixSession copyWith({
+    String? id,
+    Recipe? recipe,
+    double? batchVolumeMl,
+  }) {
+    return MixSession(
+      id: id ?? this.id,
+      recipe: recipe ?? this.recipe,
+      batchVolumeMl: batchVolumeMl ?? this.batchVolumeMl,
+      sessionNumber: sessionNumber,
+      status: status,
+      formula: formula,
+      batchCode: batchCode,
+      isArchived: isArchived,
+      mixedAt: mixedAt,
+      createdAt: createdAt,
+      productionOrders: productionOrders,
+      totalOrdersVolumeMl: totalOrdersVolumeMl,
     );
   }
 }
