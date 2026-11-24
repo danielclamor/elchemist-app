@@ -1,26 +1,23 @@
 import 'package:elchemist_app/components/molecules/section_card.dart';
-import 'package:elchemist_app/features/recipe/providers/recipe_providers.dart';
+import 'package:elchemist_app/features/recipe/domain/recipe.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MixSessionRecipeSection extends ConsumerWidget {
+class MixSessionRecipeSection extends StatelessWidget {
   final double? width;
-  final String formulaId;
+  final Recipe recipe;
 
   const MixSessionRecipeSection({
     super.key,
     this.width,
-    required this.formulaId,
+    required this.recipe,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(recipeDetailsProvider(formulaId));
-    final recipe = async.hasValue ? async.value : null;
-    final ingredients = recipe?.ingredients ?? [];
-    final totalVolumeMl = recipe?.totalVolumeMl ?? 0.0;
-    final totalWeightG = recipe?.totalWeightG ?? 0.0;
+  Widget build(BuildContext context) {
+    final ingredients = recipe.ingredients;
+    final totalVolumeMl = recipe.totalVolumeMl;
+    final totalWeightG = recipe.totalWeightG;
 
     return SectionCard(
       width: width,

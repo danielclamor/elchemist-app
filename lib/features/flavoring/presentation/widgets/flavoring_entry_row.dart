@@ -1,21 +1,42 @@
 import 'package:elchemist_app/core/widgets/el_checkbox.dart';
 import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
+import 'package:elchemist_app/features/recipe/domain/mix_parameters.dart';
 import 'package:flutter/material.dart';
 
 class FlavoringEntry {
   FlavoringEntry({
-    required this.flavoringOption,
-    double? ratio,
-  })  : id = flavoringOption.id,
-        nameController = TextEditingController(text: flavoringOption.name),
-        percController =
-            TextEditingController(text: ((ratio ?? 0) * 100).toString()),
+    required this.id,
+    this.slug,
+    required String name,
+    required this.isVg,
+    double ratio = 0,
+  })  : nameController = TextEditingController(text: name),
+        percController = TextEditingController(text: (ratio * 100).toString()),
         nameFocusNode = FocusNode(),
         percFocusNode = FocusNode();
 
+  factory FlavoringEntry.fromOption(FlavoringOption option, {double? ratio}) =>
+      FlavoringEntry(
+        id: option.id,
+        slug: option.slug,
+        name: option.name,
+        isVg: option.isVg,
+        ratio: ratio ?? 0,
+      );
+
+  factory FlavoringEntry.fromMixParameters(MixParametersFlavoring f) =>
+      FlavoringEntry(
+        id: f.id,
+        slug: f.slug,
+        name: f.name,
+        isVg: f.isVg,
+        ratio: f.ratio,
+      );
+
   final String id;
-  final FlavoringOption flavoringOption;
+  final String? slug;
+  final bool isVg;
   final TextEditingController nameController;
   final TextEditingController percController;
   final FocusNode nameFocusNode;
@@ -23,7 +44,7 @@ class FlavoringEntry {
 
   String get name => nameController.text;
 
-  double get ratio => double.parse(percController.text) / 100;
+  double get ratio => (double.tryParse(percController.text) ?? 0) / 100;
 
   void dispose() {
     nameController.dispose();
@@ -76,13 +97,12 @@ class FlavoringEntryRow extends StatelessWidget {
                   controller: entry.nameController,
                   focusNode: entry.nameFocusNode,
                   contentType: ElTextFieldContentType.text,
-                  // labelText: withHeaders ? 'Percentage' : null,
                   suffixText: '%',
                   readOnly: onNameSubmitted == null,
                   onSubmitted: onNameSubmitted,
                 )
               : Text(
-                  entry.flavoringOption.name,
+                  entry.name,
                   style: const TextStyle(
                     fontSize: 14.0,
                     fontWeight: FontWeight.bold,
@@ -99,7 +119,6 @@ class FlavoringEntryRow extends StatelessWidget {
               controller: entry.percController,
               focusNode: entry.percFocusNode,
               contentType: ElTextFieldContentType.numeric,
-              // labelText: withHeaders ? 'Percentage' : null,
               suffixText: '%',
               readOnly: onPercentSubmitted == null,
               onSubmitted: onPercentSubmitted,
@@ -111,8 +130,7 @@ class FlavoringEntryRow extends StatelessWidget {
           child: Align(
             alignment: AlignmentGeometry.center,
             child: ElCheckbox(
-              // labelText: withHeaders ? 'VG' : null,
-              value: entry.flavoringOption.isVg,
+              value: entry.isVg,
               // onChanged: onIsVGChanged,
             ),
           ),

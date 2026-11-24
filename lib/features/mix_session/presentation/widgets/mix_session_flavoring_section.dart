@@ -1,13 +1,12 @@
-import 'package:elchemist_app/features/flavoring_option.dart/domain/flavoring_option.dart';
-import 'package:elchemist_app/features/flavoring/domain/flavoring.dart';
 import 'package:elchemist_app/features/flavoring/presentation/widgets/flavoring_entry_row.dart';
 import 'package:elchemist_app/components/molecules/section_card.dart';
+import 'package:elchemist_app/features/recipe/domain/mix_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 class MixSessionFlavoringSection extends StatefulWidget {
   final double? width;
-  final List<Flavoring> flavorings;
+  final List<MixParametersFlavoring> flavorings;
   final bool isCustom;
   final Widget? addEntryButton;
 
@@ -28,9 +27,33 @@ class _MixSessionFlavoringSectionState
     extends State<MixSessionFlavoringSection> {
   final _flavoringEntries = <String, FlavoringEntry>{};
 
-  FlavoringEntry _flavoringEntry(FlavoringOption o, double? ratio) =>
+  // FlavoringEntry _flavoringEntry(FlavoringOption o, double? ratio) =>
+  //     _flavoringEntries.putIfAbsent(
+  //         o.id, () => FlavoringEntry(flavoringOption: o, ratio: ratio));
+
+  FlavoringEntry _flavoringEntry(MixParametersFlavoring f) =>
       _flavoringEntries.putIfAbsent(
-          o.id, () => FlavoringEntry(flavoringOption: o, ratio: ratio));
+        f.id,
+        () => FlavoringEntry.fromMixParameters(f),
+      );
+
+  // final _flavoringEntries = <FlavoringEntry>[];
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _flavoringEntries.addAll(
+  //     widget.flavorings.map(FlavoringEntry.fromMixParameters),
+  //   );
+  // }
+
+  // @override
+  // void dispose() {
+  //   for (final e in _flavoringEntries) {
+  //     e.dispose();
+  //   }
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +106,8 @@ class _MixSessionFlavoringSectionState
                 flavorings.length,
                 (index) {
                   final flavoring = flavorings[index];
-                  final entry = _flavoringEntry(
-                    flavoring.flavoringOption,
-                    flavoring.ratio,
-                  );
+                  final entry = _flavoringEntry(flavoring);
+
                   return FlavoringEntryRow(
                     entry: entry,
                     isCustom: isCustom,

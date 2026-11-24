@@ -106,17 +106,27 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                         ),
                         Gap(28.0),
                         async.when(
-                          error: (error, stackTrace) => SizedBox.shrink(),
+                          error: (error, stackTrace) => Center(
+                            child: TextButton(
+                              onPressed: () => ref.invalidate(
+                                mixSessionDetailsProvider(id),
+                              ),
+                              child: Text('Failed to load. Retry\n$error'),
+                            ),
+                          ),
                           loading: () => SizedBox.shrink(),
                           data: (session) => session != null
                               ? MixSessionOrdersSection(
+                                  width: sectionWidth,
                                   mixSessionId: session.id,
                                   formulaId: session.formula.id,
                                   productionOrders: session.productionOrders,
                                   totalOrdersVolumeMl:
                                       session.totalOrdersVolumeMl,
                                 )
-                              : SizedBox.shrink(),
+                              : SizedBox(
+                                  width: sectionWidth,
+                                ),
                         ),
                       ],
                     ),
@@ -185,7 +195,7 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                                         children: [
                                           MixSessionVolumeSection(),
                                           MixSessionRecipeSection(
-                                            formulaId: formula.id,
+                                            recipe: recipe,
                                           ),
                                         ],
                                       ),
@@ -201,14 +211,14 @@ class _MixSessionScreenState extends ConsumerState<MixSessionMixScreen> {
                                             flavorings: flavorings,
                                           ),
                                           MixSessionTargetSection(
-                                            nicStr: formula.targetNicStr,
-                                            vg: formula.targetVg,
-                                            pg: formula.targetPg,
+                                            nicStr: mixParameters.targetNicStr,
+                                            vg: mixParameters.targetVg,
+                                            pg: mixParameters.targetPg,
                                           ),
                                           MixNicBaseSection(
-                                            nicStr: formula.nicBaseNicStr,
-                                            vg: formula.nicBaseVg,
-                                            pg: formula.nicBasePg,
+                                            nicStr: mixParameters.nicBaseNicStr,
+                                            vg: mixParameters.nicBaseVg,
+                                            pg: mixParameters.nicBasePg,
                                             nicBases: nicBases,
                                           ),
                                         ],

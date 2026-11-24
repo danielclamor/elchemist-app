@@ -1,23 +1,49 @@
 import 'package:elchemist_app/core/widgets/el_checkbox.dart';
 import 'package:elchemist_app/core/widgets/el_text_field.dart';
 import 'package:elchemist_app/features/nic_base_option/domain/nic_base_option.dart';
+import 'package:elchemist_app/features/recipe/domain/mix_parameters.dart';
 import 'package:flutter/material.dart';
 
 class NicBaseEntry {
   NicBaseEntry({
-    required this.nicBaseOption,
-    double? ratio,
-  })  : id = nicBaseOption.id,
-        percController =
-            TextEditingController(text: ((ratio ?? 0) * 100).toString()),
+    required this.id,
+    this.code,
+    required this.name,
+    required this.isVg,
+    double ratio = 0,
+  })  : percController = TextEditingController(text: (ratio * 100).toString()),
         percFocusNode = FocusNode();
 
+  /// From a formula's nic base option (the old path).
+  factory NicBaseEntry.fromOption(NicBaseOption option, {double? ratio}) =>
+      NicBaseEntry(
+        id: option.id,
+        code: option.code,
+        name: option.name,
+        isVg: option.isVg,
+        ratio: ratio ?? 0,
+      );
+
+  /// From the GraphQL mix parameters.
+  factory NicBaseEntry.fromMixParameters(MixParametersNicBase n) =>
+      NicBaseEntry(
+        id: n.id,
+        code: n.code,
+        name: n.name,
+        isVg: n.isVg,
+        ratio: n.ratio,
+      );
+
   final String id;
-  final NicBaseOption nicBaseOption;
+  final String? code;
+  final String name;
+  final bool isVg;
   final TextEditingController percController;
   final FocusNode percFocusNode;
 
-  double get ratio => double.parse(percController.text) / 100;
+  double get ratio => (double.tryParse(percController.text) ?? 0) / 100;
+
+  String get label => code != null ? '$name ($code)' : name;
 
   void dispose() {
     percController.dispose();
@@ -28,20 +54,12 @@ class NicBaseEntry {
 class NicBaseEntryRow extends StatelessWidget {
   final NicBaseEntry entry;
   final bool isCustom;
-  // final bool withHeaders;
-  // final bool showDeleteIcon;
-  // final VoidCallback? onEntryDeleted;
-  // final ValueChanged<NicBaseOption?>? onOptionSelected;
   final VoidCallback? onRemoved;
   final ValueChanged<String>? onPercentSubmitted;
 
   NicBaseEntryRow({
     required this.entry,
     this.isCustom = false,
-    // required this.withHeaders,
-    // required this.showDeleteIcon,
-    // this.onEntryDeleted,
-    // this.onOptionSelected,
     this.onRemoved,
     this.onPercentSubmitted,
   }) : super(key: ValueKey(entry.id));
@@ -52,37 +70,6 @@ class NicBaseEntryRow extends StatelessWidget {
       spacing: 4.0,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // showDeleteIcon
-        //     ? Padding(
-        //         padding: EdgeInsets.only(top: withHeaders ? 28.0 : 4.0),
-        //         child: IconButton(
-        //           onPressed: onEntryDeleted,
-        //           icon: const Icon(
-        //             Icons.delete,
-        //           ),
-        //         ),
-        //       )
-        //     : const SizedBox.shrink(),
-        // Expanded(
-        //   child: LayoutBuilder(
-        //     builder: (context, constraints) => ElDropdownMenu<NicBaseOption>(
-        //       width: constraints.maxWidth,
-        //       enabled: isCustom,
-        //       initialSelection: entry.option,
-        //       labelText: withHeaders ? 'Name' : null,
-        //       dropdownMenuEntries:
-        //           UnmodifiableListView<DropdownMenuEntry<NicBaseOption>>(
-        //         nicBaseOptions.map<DropdownMenuEntry<NicBaseOption>>(
-        //           (option) => DropdownMenuEntry<NicBaseOption>(
-        //             value: option,
-        //             label: option.label,
-        //           ),
-        //         ),
-        //       ),
-        //       onSelected: onOptionSelected,
-        //     ),
-        //   ),
-        // ),
         isCustom
             ? SizedBox(
                 width: 30,
@@ -101,7 +88,7 @@ class NicBaseEntryRow extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Text(
-            entry.nicBaseOption.label,
+            entry.label,
             style: const TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.bold,
@@ -131,7 +118,7 @@ class NicBaseEntryRow extends StatelessWidget {
             alignment: AlignmentGeometry.center,
             child: ElCheckbox(
               // labelText: 'VG',
-              value: entry.nicBaseOption.isVg,
+              value: entry.isVg,
             ),
           ),
         ),
