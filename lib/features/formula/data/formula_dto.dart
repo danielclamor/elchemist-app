@@ -42,7 +42,14 @@ class FormulaDto {
 
   factory FormulaDto.fromJson(Map<String, dynamic> json) {
     final flavoringsJson = json['flavorings'] as List<dynamic>;
+    final flavorings = flavoringsJson
+        .map((f) => FlavoringDto.fromJson(Map<String, dynamic>.from(f as Map)))
+        .toList();
+
     final nicBasesJson = json['nicBases'] as List<dynamic>;
+    final nicBases = nicBasesJson
+        .map((b) => NicBaseDto.fromJson(Map<String, dynamic>.from(b as Map)))
+        .toList();
 
     return FormulaDto(
       id: json['id'] as String,
@@ -58,14 +65,10 @@ class FormulaDto {
       targetVg: _toDouble(json['targetVg']),
       targetPg: _toDouble(json['targetPg']),
       nicBaseNicStr: _toDouble(json['nicBaseNicStr']),
-      flavorings: flavoringsJson
-          .map((f) => FlavoringDto.fromJson((f as Map<String, dynamic>)))
-          .toList(),
-      nicBases: nicBasesJson
-          .map((b) => NicBaseDto.fromJson((b as Map<String, dynamic>)))
-          .toList(),
-      nicBaseVg: json['nicBaseVg'],
-      nicBasePg: json['nicBasePg'],
+      flavorings: flavorings,
+      nicBases: nicBases,
+      nicBaseVg: _toDouble(json['nicBaseVg']),
+      nicBasePg: _toDouble(json['nicBasePg']),
     );
   }
 
