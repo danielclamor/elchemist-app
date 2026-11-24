@@ -107,9 +107,38 @@ final mixSessionNewIdsProvider =
   MixSessionNewIds.new,
 );
 
-final mixSessionDetailsProvider =
-    FutureProvider.autoDispose.family<MixSession?, String>(
-  (ref, id) => ref.watch(mixSessionRepositoryProvider).getDetails(id: id),
+class MixSessionDetailsNotifier extends AsyncNotifier<MixSession?> {
+  MixSessionDetailsNotifier(this.id);
+  final String id;
+
+  @override
+  Future<MixSession?> build() {
+    // Runs only ONCE when first watched
+    return ref.watch(mixSessionRepositoryProvider).getDetails(id: id);
+  }
+
+  Future<void> setBatchVolumeMl(String value) async {
+    final currentSession = state.value;
+    if (currentSession == null) return;
+
+    final updatedRecipe =
+        await ref.read(mixSessionRepositoryProvider).setBatchVolumeMl(
+              id: id,
+              volumeMl: double.tryParse(value) ?? 0.0,
+            );
+
+    state = AsyncData(
+      currentSession.copyWith(
+        recipe: updatedRecipe,
+        batchVolumeMl: double.tryParse(value),
+      ),
+    );
+  }
+}
+
+final mixSessionDetailsProvider = AsyncNotifierProvider.autoDispose
+    .family<MixSessionDetailsNotifier, MixSession?, String>(
+  MixSessionDetailsNotifier.new,
   retry: (retryCount, error) => null,
 );
 
