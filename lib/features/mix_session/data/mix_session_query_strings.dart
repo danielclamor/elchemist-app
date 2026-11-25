@@ -83,6 +83,9 @@ const String mixSessionDetailsQuery = r'''
         }
         nicBaseVg
         nicBasePg
+        flavor {
+          id
+        }
       }
       productionOrders {
         id
