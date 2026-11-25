@@ -29,7 +29,7 @@ class EliquidDto {
 
   factory EliquidDto.fromJson(Map<String, dynamic> json) {
     final flavorJson = json['flavor'] as Map;
-    final formulaJson = json['formula'] as Map;
+    final formulaJson = json['formula'] as Map?;
 
     return EliquidDto(
       id: json['id'] as String,
