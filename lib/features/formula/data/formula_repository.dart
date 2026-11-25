@@ -34,6 +34,7 @@ class FormulaRepositoryImpl implements FormulaRepository {
   Future<FormulaListPage> getListPage({
     required int first,
     String? after,
+    String? flavorId,
   }) async {
     final result = await _client.query(
       QueryOptions(
@@ -41,6 +42,7 @@ class FormulaRepositoryImpl implements FormulaRepository {
         variables: {
           'first': first,
           'after': after,
+          'flavorIdentifier': flavorId != null ? {'id': flavorId} : null,
         },
         fetchPolicy: FetchPolicy.networkOnly,
       ),

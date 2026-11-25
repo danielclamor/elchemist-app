@@ -46,10 +46,12 @@ const String formulaListPageQuery = r'''
   query Formulas(
     $first: Int!
     $after: String
+    $flavorIdentifier: FlavorIdentifierInput
   ) {
     formulas(
       first: $first
       after: $after
+      flavorIdentifier: $flavorIdentifier
     ) {
       totalCount
       pageInfo {

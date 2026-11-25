@@ -7,5 +7,6 @@ abstract class FormulaRepository {
   Future<FormulaListPage> getListPage({
     required int first,
     String? after,
+    String? flavorId,
   });
 }
