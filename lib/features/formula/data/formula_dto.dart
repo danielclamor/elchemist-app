@@ -19,6 +19,7 @@ class FormulaDto {
   final List<NicBaseDto> nicBases;
   final double nicBaseVg;
   final double nicBasePg;
+  final String flavorId;
 
   const FormulaDto({
     required this.id,
@@ -38,9 +39,12 @@ class FormulaDto {
     required this.nicBases,
     required this.nicBaseVg,
     required this.nicBasePg,
+    required this.flavorId,
   });
 
   factory FormulaDto.fromJson(Map<String, dynamic> json) {
+    final flavorJson = json['flavor'] as Map;
+
     final flavoringsJson = json['flavorings'] as List<dynamic>;
     final flavorings = flavoringsJson
         .map((f) => FlavoringDto.fromJson(Map<String, dynamic>.from(f as Map)))
@@ -69,6 +73,7 @@ class FormulaDto {
       nicBases: nicBases,
       nicBaseVg: _toDouble(json['nicBaseVg']),
       nicBasePg: _toDouble(json['nicBasePg']),
+      flavorId: flavorJson['id'],
     );
   }
 
@@ -83,6 +88,7 @@ class FormulaSummaryDto {
   final String brand;
   final ChillTypeDto chillType;
   final NicTypeDto nicType;
+  final String flavorId;
 
   const FormulaSummaryDto({
     required this.id,
@@ -92,9 +98,12 @@ class FormulaSummaryDto {
     required this.brand,
     required this.chillType,
     required this.nicType,
+    required this.flavorId,
   });
 
   factory FormulaSummaryDto.fromJson(Map<String, dynamic> json) {
+    final flavorJson = json['flavor'] as Map;
+
     return FormulaSummaryDto(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -103,6 +112,7 @@ class FormulaSummaryDto {
       brand: json['brand'] as String,
       chillType: ChillTypeDto.fromString(json['chillType'] as String),
       nicType: NicTypeDto.fromString(json['nicType'] as String),
+      flavorId: flavorJson['id'],
     );
   }
 

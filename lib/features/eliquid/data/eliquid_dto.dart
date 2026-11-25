@@ -10,6 +10,7 @@ class EliquidDto {
   final BottleSizeDto bottleSize;
   final NicLevelDto nicLevel;
   final BottleColorDto bottleColor;
+  final String flavorId;
   final String? formulaId;
 
   const EliquidDto({
@@ -22,11 +23,13 @@ class EliquidDto {
     required this.bottleSize,
     required this.nicLevel,
     required this.bottleColor,
+    required this.flavorId,
     required this.formulaId,
   });
 
   factory EliquidDto.fromJson(Map<String, dynamic> json) {
-    final formulaJson = json['formula'];
+    final flavorJson = json['flavor'] as Map;
+    final formulaJson = json['formula'] as Map;
 
     return EliquidDto(
       id: json['id'] as String,
@@ -38,6 +41,7 @@ class EliquidDto {
       bottleSize: BottleSizeDto.fromString(json['bottleSize'] as String),
       nicLevel: NicLevelDto.fromString(json['nicLevel'] as String),
       bottleColor: BottleColorDto.fromString(json['bottleColor'] as String),
+      flavorId: flavorJson['id'],
       formulaId: formulaJson != null ? formulaJson['id'] as String : null,
     );
   }
@@ -48,6 +52,7 @@ class EliquidSummaryDto {
   final String upc;
   final String description;
   final String brand;
+  final String flavorId;
   final FormulaSummaryDto? formula;
 
   const EliquidSummaryDto({
@@ -55,19 +60,23 @@ class EliquidSummaryDto {
     required this.upc,
     required this.description,
     required this.brand,
+    required this.flavorId,
     required this.formula,
   });
 
   factory EliquidSummaryDto.fromJson(Map<String, dynamic> json) {
-    final formulaJson = json['formula'] as Map<String, dynamic>?;
+    final flavorJson = json['flavor'] as Map;
+    final formulaJson = json['formula'] as Map?;
 
     return EliquidSummaryDto(
       id: json['id'] as String,
       upc: json['upc'] as String,
       description: json['description'] as String,
       brand: json['brand'] as String,
-      formula:
-          formulaJson != null ? FormulaSummaryDto.fromJson(formulaJson) : null,
+      flavorId: flavorJson['id'],
+      formula: formulaJson != null
+          ? FormulaSummaryDto.fromJson(Map<String, dynamic>.from(formulaJson))
+          : null,
     );
   }
 }

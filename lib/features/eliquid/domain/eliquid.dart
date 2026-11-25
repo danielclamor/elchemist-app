@@ -11,6 +11,7 @@ class Eliquid {
   final BottleSize bottleSize;
   final NicLevel nicLevel;
   final BottleColor bottleColor;
+  final String? flavorId;
   final String? formulaId;
 
   const Eliquid({
@@ -23,6 +24,7 @@ class Eliquid {
     required this.bottleSize,
     required this.nicLevel,
     required this.bottleColor,
+    required this.flavorId,
     required this.formulaId,
   });
 
@@ -37,6 +39,7 @@ class Eliquid {
       bottleSize: BottleSize.fromDto(e.bottleSize),
       nicLevel: NicLevel.fromDto(e.nicLevel),
       bottleColor: BottleColor.fromDto(e.bottleColor),
+      flavorId: e.flavorId,
       formulaId: e.formulaId,
     );
   }
@@ -47,6 +50,7 @@ class EliquidSummary {
   final String upc;
   final String description;
   final String brand;
+  final String flavorId;
   final FormulaSummary? formula;
 
   const EliquidSummary({
@@ -54,6 +58,7 @@ class EliquidSummary {
     required this.upc,
     required this.description,
     required this.brand,
+    required this.flavorId,
     required this.formula,
   });
 
@@ -65,6 +70,7 @@ class EliquidSummary {
       upc: e.upc,
       description: e.description,
       brand: e.brand,
+      flavorId: e.flavorId,
       formula: formula != null ? FormulaSummary.fromDto(formula) : null,
     );
   }

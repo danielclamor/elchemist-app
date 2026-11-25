@@ -66,6 +66,9 @@ const String formulaListPageQuery = r'''
           brand
           chillType
           nicType
+          flavor {
+            id
+          }
         }
       }
     }

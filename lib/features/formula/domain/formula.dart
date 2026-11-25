@@ -10,6 +10,7 @@ class FormulaSummary {
   final String brand;
   final ChillType chillType;
   final NicType nicType;
+  final String flavorId;
 
   const FormulaSummary({
     required this.id,
@@ -19,17 +20,19 @@ class FormulaSummary {
     required this.brand,
     required this.chillType,
     required this.nicType,
+    required this.flavorId,
   });
 
-  factory FormulaSummary.fromDto(FormulaSummaryDto p) {
+  factory FormulaSummary.fromDto(FormulaSummaryDto f) {
     return FormulaSummary(
-      id: p.id,
-      name: p.name,
-      isPreMix: p.isPreMix,
-      nicLevel: p.nicLevel,
-      brand: p.brand,
-      chillType: ChillType.fromDto(p.chillType),
-      nicType: NicType.fromDto(p.nicType),
+      id: f.id,
+      name: f.name,
+      isPreMix: f.isPreMix,
+      nicLevel: f.nicLevel,
+      brand: f.brand,
+      chillType: ChillType.fromDto(f.chillType),
+      nicType: NicType.fromDto(f.nicType),
+      flavorId: f.flavorId,
     );
   }
 }
@@ -52,6 +55,7 @@ class Formula {
   final List<NicBase> nicBases;
   final double nicBaseVg;
   final double nicBasePg;
+  final String flavorId;
 
   Formula({
     required this.id,
@@ -71,29 +75,31 @@ class Formula {
     required this.nicBases,
     required this.nicBaseVg,
     required this.nicBasePg,
+    required this.flavorId,
   });
 
-  factory Formula.fromDto(FormulaDto d) => Formula(
-        id: d.id,
-        slug: d.slug,
-        name: d.name,
-        brand: d.brand,
-        chillType: ChillType.fromDto(d.chillType),
-        nicType: NicType.fromDto(d.nicType),
-        nicLevel: d.nicLevel,
-        isOldMix: d.isOldMix,
-        isPreMix: d.isPreMix,
-        targetNicStr: d.targetNicStr,
-        targetVg: d.targetVg,
-        targetPg: d.targetPg,
-        nicBaseNicStr: d.nicBaseNicStr,
+  factory Formula.fromDto(FormulaDto f) => Formula(
+        id: f.id,
+        slug: f.slug,
+        name: f.name,
+        brand: f.brand,
+        chillType: ChillType.fromDto(f.chillType),
+        nicType: NicType.fromDto(f.nicType),
+        nicLevel: f.nicLevel,
+        isOldMix: f.isOldMix,
+        isPreMix: f.isPreMix,
+        targetNicStr: f.targetNicStr,
+        targetVg: f.targetVg,
+        targetPg: f.targetPg,
+        nicBaseNicStr: f.nicBaseNicStr,
         nicBases:
-            d.nicBases.map((nicBase) => NicBase.fromDto(nicBase)).toList(),
-        nicBaseVg: d.nicBaseVg,
-        nicBasePg: d.nicBasePg,
-        flavorings: d.flavorings
+            f.nicBases.map((nicBase) => NicBase.fromDto(nicBase)).toList(),
+        nicBaseVg: f.nicBaseVg,
+        nicBasePg: f.nicBasePg,
+        flavorings: f.flavorings
             .map((flavoring) => Flavoring.fromDto(flavoring))
             .toList(),
+        flavorId: f.flavorId,
       );
 
   double get nicLevelMultiplier => isOldMix ? 250 : 1000;
