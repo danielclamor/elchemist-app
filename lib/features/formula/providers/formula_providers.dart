@@ -13,6 +13,7 @@ const formulaPageSize = 50;
 
 typedef FormulaPageKey = ({
   String? after,
+  String? flavorId,
 });
 
 final formulaListPageProvider =
@@ -20,6 +21,7 @@ final formulaListPageProvider =
   (ref, key) => ref.watch(formulaRepositoryProvider).getListPage(
         first: formulaPageSize,
         after: key.after,
+        flavorId: key.flavorId,
       ),
   retry: (retryCount, error) => null,
 );

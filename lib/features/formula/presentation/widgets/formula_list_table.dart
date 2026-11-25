@@ -33,7 +33,7 @@ class _FormulaListTableState extends ConsumerState<FormulaListTable> {
   @override
   Widget build(BuildContext context) {
     final pager = ref.watch(formulaListPagerProvider);
-    final pageKey = (after: pager.currentCursor);
+    final pageKey = (after: pager.currentCursor, flavorId: null);
     final pageAsync = ref.watch(formulaListPageProvider(pageKey));
 
     return Card(
