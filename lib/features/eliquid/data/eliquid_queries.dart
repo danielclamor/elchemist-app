@@ -29,6 +29,9 @@ const String eliquidListPageQuery = r'''
             brand
             chillType
             nicType
+            flavor {
+              id
+            }
           }
         }
       }
