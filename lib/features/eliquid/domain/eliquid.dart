@@ -1,13 +1,12 @@
 import 'package:elchemist_app/features/eliquid/data/eliquid_dto.dart';
+import 'package:elchemist_app/features/flavor/domain/flavor.dart';
 import 'package:elchemist_app/features/formula/domain/formula.dart';
 
 class Eliquid {
   final String id;
   final String upc;
   final String description;
-  final String brand;
-  final ChillType chillType;
-  final NicType nicType;
+  final Flavor flavor;
   final BottleSize bottleSize;
   final NicLevel nicLevel;
   final BottleColor bottleColor;
@@ -17,9 +16,7 @@ class Eliquid {
     required this.id,
     required this.upc,
     required this.description,
-    required this.brand,
-    required this.chillType,
-    required this.nicType,
+    required this.flavor,
     required this.bottleSize,
     required this.nicLevel,
     required this.bottleColor,
@@ -31,15 +28,17 @@ class Eliquid {
       id: e.id,
       upc: e.upc,
       description: e.description,
-      brand: e.brand,
-      chillType: ChillType.fromDto(e.chillType),
-      nicType: NicType.fromDto(e.nicType),
+      flavor: Flavor.fromDto(e.flavor),
       bottleSize: BottleSize.fromDto(e.bottleSize),
       nicLevel: NicLevel.fromDto(e.nicLevel),
       bottleColor: BottleColor.fromDto(e.bottleColor),
       formulaId: e.formulaId,
     );
   }
+
+  String get brand => flavor.brand;
+  ChillType get chillType => flavor.chillType;
+  NicType get nicType => flavor.nicType;
 }
 
 class EliquidSummary {
@@ -81,46 +80,6 @@ class EliquidSummary {
 
   @override
   int get hashCode => Object.hash(id, upc);
-}
-
-enum ChillType {
-  chilled,
-  nonChilled;
-
-  @override
-  String toString() {
-    return switch (this) {
-      ChillType.chilled => 'Chilled',
-      ChillType.nonChilled => 'Non-chilled',
-    };
-  }
-
-  static ChillType fromDto(ChillTypeDto c) {
-    return switch (c) {
-      ChillTypeDto.chilled => ChillType.chilled,
-      ChillTypeDto.nonChilled => ChillType.nonChilled,
-    };
-  }
-}
-
-enum NicType {
-  freebase,
-  salt;
-
-  @override
-  String toString() {
-    return switch (this) {
-      NicType.freebase => 'Freebase',
-      NicType.salt => 'Salt',
-    };
-  }
-
-  static NicType fromDto(NicTypeDto n) {
-    return switch (n) {
-      NicTypeDto.freebase => NicType.freebase,
-      NicTypeDto.salt => NicType.salt,
-    };
-  }
 }
 
 enum BottleSize {

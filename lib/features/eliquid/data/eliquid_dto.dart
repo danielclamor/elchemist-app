@@ -1,12 +1,11 @@
+import 'package:elchemist_app/features/flavor/data/flavor_dto.dart';
 import 'package:elchemist_app/features/formula/data/formula_dto.dart';
 
 class EliquidDto {
   final String id;
   final String upc;
   final String description;
-  final String brand;
-  final ChillTypeDto chillType;
-  final NicTypeDto nicType;
+  final FlavorDto flavor;
   final BottleSizeDto bottleSize;
   final NicLevelDto nicLevel;
   final BottleColorDto bottleColor;
@@ -16,9 +15,7 @@ class EliquidDto {
     required this.id,
     required this.upc,
     required this.description,
-    required this.brand,
-    required this.chillType,
-    required this.nicType,
+    required this.flavor,
     required this.bottleSize,
     required this.nicLevel,
     required this.bottleColor,
@@ -32,9 +29,8 @@ class EliquidDto {
       id: json['id'] as String,
       upc: json['upc'] as String,
       description: json['description'] as String,
-      brand: json['brand'] as String,
-      chillType: ChillTypeDto.fromString(json['chillType'] as String),
-      nicType: NicTypeDto.fromString(json['nicType'] as String),
+      flavor:
+          FlavorDto.fromJson(Map<String, dynamic>.from(json['flavor'] as Map)),
       bottleSize: BottleSizeDto.fromString(json['bottleSize'] as String),
       nicLevel: NicLevelDto.fromString(json['nicLevel'] as String),
       bottleColor: BottleColorDto.fromString(json['bottleColor'] as String),
@@ -65,7 +61,7 @@ class EliquidSummaryDto {
       id: json['id'] as String,
       upc: json['upc'] as String,
       description: json['description'] as String,
-      brand: json['brand'] as String,
+      brand: json['flavor']['brand'] as String,
       formula:
           formulaJson != null ? FormulaSummaryDto.fromJson(formulaJson) : null,
     );

@@ -9,9 +9,16 @@ const String formulaDetailsQuery = r'''
       slug
       name
       nicLevel
-      brand
-      chillType
-      nicType
+      flavor {
+        id
+        slug
+        name
+        brand
+        chillType
+        nicType
+        createdAt
+        updatedAt
+      }
       isOldMix
       isPreMix
       targetNicStr
@@ -63,9 +70,16 @@ const String formulaListPageQuery = r'''
           name
           isPreMix
           nicLevel
-          brand
-          chillType
-          nicType
+          flavor {
+            id
+            slug
+            name
+            brand
+            chillType
+            nicType
+            createdAt
+            updatedAt
+          }
         }
       }
     }

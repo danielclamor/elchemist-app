@@ -1,3 +1,4 @@
+import 'package:elchemist_app/features/flavor/data/flavor_dto.dart';
 import 'package:elchemist_app/features/flavoring/data/flavoring_dto.dart';
 import 'package:elchemist_app/features/nic_base/data/nic_base_dto.dart';
 
@@ -6,9 +7,7 @@ class FormulaDto {
   final String slug;
   final String name;
   final double nicLevel;
-  final String brand;
-  final ChillTypeDto chillType;
-  final NicTypeDto nicType;
+  final FlavorDto flavor;
   final bool isOldMix;
   final bool isPreMix;
   final double targetNicStr;
@@ -25,9 +24,7 @@ class FormulaDto {
     required this.slug,
     required this.name,
     required this.nicLevel,
-    required this.brand,
-    required this.chillType,
-    required this.nicType,
+    required this.flavor,
     required this.isOldMix,
     required this.isPreMix,
     required this.targetNicStr,
@@ -56,9 +53,8 @@ class FormulaDto {
       slug: json['slug'] as String,
       name: json['name'] as String,
       nicLevel: _toDouble(json['nicLevel']),
-      brand: json['brand'] as String,
-      chillType: ChillTypeDto.fromString(json['chillType'] as String),
-      nicType: NicTypeDto.fromString(json['nicType'] as String),
+      flavor:
+          FlavorDto.fromJson(Map<String, dynamic>.from(json['flavor'] as Map)),
       isOldMix: json['isOldMix'] as bool,
       isPreMix: json['isPreMix'] as bool,
       targetNicStr: _toDouble(json['targetNicStr']),
@@ -80,18 +76,14 @@ class FormulaSummaryDto {
   final String name;
   final bool isPreMix;
   final double nicLevel;
-  final String brand;
-  final ChillTypeDto chillType;
-  final NicTypeDto nicType;
+  final FlavorDto flavor;
 
   const FormulaSummaryDto({
     required this.id,
     required this.name,
     required this.isPreMix,
     required this.nicLevel,
-    required this.brand,
-    required this.chillType,
-    required this.nicType,
+    required this.flavor,
   });
 
   factory FormulaSummaryDto.fromJson(Map<String, dynamic> json) {
@@ -100,9 +92,8 @@ class FormulaSummaryDto {
       name: json['name'] as String,
       isPreMix: json['isPreMix'] as bool,
       nicLevel: _toDouble(json['nicLevel']),
-      brand: json['brand'] as String,
-      chillType: ChillTypeDto.fromString(json['chillType'] as String),
-      nicType: NicTypeDto.fromString(json['nicType'] as String),
+      flavor:
+          FlavorDto.fromJson(Map<String, dynamic>.from(json['flavor'] as Map)),
     );
   }
 
