@@ -85,6 +85,9 @@ const String productionOrderDetailsQuery = r'''
         upc
         description
         brand
+        flavor {
+          id
+        }
         formula {
           id
           name
@@ -93,6 +96,9 @@ const String productionOrderDetailsQuery = r'''
           nicLevel
           chillType
           nicType
+          flavor {
+            id
+          }
         }
       }
       activityLogs {
