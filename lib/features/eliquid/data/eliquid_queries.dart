@@ -15,7 +15,7 @@ const String eliquidListPageQuery = r'''
       edges {
         node {
           id
-          upc
+          sku
           description
           brand
           flavor {

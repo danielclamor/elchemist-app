@@ -29,7 +29,7 @@ const String productionOrderCreateMutation = r'''
         }
         eliquid {
           id
-          upc
+          sku
           description
           brand
           formula {

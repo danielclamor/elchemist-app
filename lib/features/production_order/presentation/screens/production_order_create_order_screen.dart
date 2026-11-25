@@ -426,7 +426,7 @@ class _ProductionOrderCreateOrderScreenState
                                                                         ),
                                                                         Text(
                                                                           _selectedEliquid!
-                                                                              .upc,
+                                                                              .sku,
                                                                           style:
                                                                               TextStyle(
                                                                             fontSize:

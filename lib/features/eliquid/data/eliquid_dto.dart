@@ -2,7 +2,7 @@ import 'package:elchemist_app/features/formula/data/formula_dto.dart';
 
 class EliquidDto {
   final String id;
-  final String upc;
+  final String sku;
   final String description;
   final String brand;
   final ChillTypeDto chillType;
@@ -15,7 +15,7 @@ class EliquidDto {
 
   const EliquidDto({
     required this.id,
-    required this.upc,
+    required this.sku,
     required this.description,
     required this.brand,
     required this.chillType,
@@ -33,7 +33,7 @@ class EliquidDto {
 
     return EliquidDto(
       id: json['id'] as String,
-      upc: json['upc'] as String,
+      sku: json['sku'] as String,
       description: json['description'] as String,
       brand: json['brand'] as String,
       chillType: ChillTypeDto.fromString(json['chillType'] as String),
@@ -49,7 +49,7 @@ class EliquidDto {
 
 class EliquidSummaryDto {
   final String id;
-  final String upc;
+  final String sku;
   final String description;
   final String brand;
   final String flavorId;
@@ -57,7 +57,7 @@ class EliquidSummaryDto {
 
   const EliquidSummaryDto({
     required this.id,
-    required this.upc,
+    required this.sku,
     required this.description,
     required this.brand,
     required this.flavorId,
@@ -70,7 +70,7 @@ class EliquidSummaryDto {
 
     return EliquidSummaryDto(
       id: json['id'] as String,
-      upc: json['upc'] as String,
+      sku: json['sku'] as String,
       description: json['description'] as String,
       brand: json['brand'] as String,
       flavorId: flavorJson['id'],

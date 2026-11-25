@@ -25,7 +25,7 @@ class EliquidPickerListTile extends StatelessWidget {
         vertical: 4.0,
       ),
       subtitle: Text(
-        eliquid.upc,
+        eliquid.sku,
         style: TextStyle(
           fontSize: 14.0,
           color: Colors.grey,

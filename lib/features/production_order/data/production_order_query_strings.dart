@@ -82,7 +82,7 @@ const String productionOrderDetailsQuery = r'''
       }
       eliquid {
         id
-        upc
+        sku
         description
         brand
         flavor {

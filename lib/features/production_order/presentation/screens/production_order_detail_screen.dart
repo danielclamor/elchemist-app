@@ -452,7 +452,7 @@ class _ProductionOrderDetailScreenState
                                                     ),
                                                   ),
                                                   Text(
-                                                    data.eliquid.upc,
+                                                    data.eliquid.sku,
                                                     style: TextStyle(
                                                         fontSize: 14.0),
                                                   ),

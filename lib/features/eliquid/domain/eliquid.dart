@@ -3,7 +3,7 @@ import 'package:elchemist_app/features/formula/domain/formula.dart';
 
 class Eliquid {
   final String id;
-  final String upc;
+  final String sku;
   final String description;
   final String brand;
   final ChillType chillType;
@@ -16,7 +16,7 @@ class Eliquid {
 
   const Eliquid({
     required this.id,
-    required this.upc,
+    required this.sku,
     required this.description,
     required this.brand,
     required this.chillType,
@@ -31,7 +31,7 @@ class Eliquid {
   factory Eliquid.fromDto(EliquidDto e) {
     return Eliquid(
       id: e.id,
-      upc: e.upc,
+      sku: e.sku,
       description: e.description,
       brand: e.brand,
       chillType: ChillType.fromDto(e.chillType),
@@ -47,7 +47,7 @@ class Eliquid {
 
 class EliquidSummary {
   final String id;
-  final String upc;
+  final String sku;
   final String description;
   final String brand;
   final String flavorId;
@@ -55,7 +55,7 @@ class EliquidSummary {
 
   const EliquidSummary({
     required this.id,
-    required this.upc,
+    required this.sku,
     required this.description,
     required this.brand,
     required this.flavorId,
@@ -67,7 +67,7 @@ class EliquidSummary {
 
     return EliquidSummary(
       id: e.id,
-      upc: e.upc,
+      sku: e.sku,
       description: e.description,
       brand: e.brand,
       flavorId: e.flavorId,
@@ -82,11 +82,11 @@ class EliquidSummary {
     return other is EliquidSummary &&
         other.runtimeType == runtimeType &&
         other.id == id &&
-        other.upc == upc;
+        other.sku == sku;
   }
 
   @override
-  int get hashCode => Object.hash(id, upc);
+  int get hashCode => Object.hash(id, sku);
 }
 
 enum ChillType {
