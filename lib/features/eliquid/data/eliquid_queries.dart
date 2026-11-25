@@ -17,24 +17,15 @@ const String eliquidListPageQuery = r'''
           id
           upc
           description
-          flavor {
-            brand
-          }
+          brand
           formula {
             id
             name
             isPreMix
             nicLevel
-            flavor {
-              id
-              slug
-              name
-              brand
-              chillType
-              nicType
-              createdAt
-              updatedAt
-            }
+            brand
+            chillType
+            nicType
           }
         }
       }

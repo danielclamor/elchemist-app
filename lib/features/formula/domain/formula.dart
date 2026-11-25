@@ -1,4 +1,3 @@
-import 'package:elchemist_app/features/flavor/domain/flavor.dart';
 import 'package:elchemist_app/features/formula/data/formula_dto.dart';
 import 'package:elchemist_app/features/flavoring/domain/flavoring.dart';
 import 'package:elchemist_app/features/nic_base/domain/nic_base.dart';
@@ -8,13 +7,18 @@ class FormulaSummary {
   final String name;
   final bool isPreMix;
   final double nicLevel;
-  final Flavor flavor;
+  final String brand;
+  final ChillType chillType;
+  final NicType nicType;
+
   const FormulaSummary({
     required this.id,
     required this.name,
     required this.isPreMix,
     required this.nicLevel,
-    required this.flavor,
+    required this.brand,
+    required this.chillType,
+    required this.nicType,
   });
 
   factory FormulaSummary.fromDto(FormulaSummaryDto p) {
@@ -23,13 +27,11 @@ class FormulaSummary {
       name: p.name,
       isPreMix: p.isPreMix,
       nicLevel: p.nicLevel,
-      flavor: Flavor.fromDto(p.flavor),
+      brand: p.brand,
+      chillType: ChillType.fromDto(p.chillType),
+      nicType: NicType.fromDto(p.nicType),
     );
   }
-
-  String get brand => flavor.brand;
-  ChillType get chillType => flavor.chillType;
-  NicType get nicType => flavor.nicType;
 }
 
 class Formula {
@@ -37,7 +39,9 @@ class Formula {
   final String slug;
   final String name;
   final double nicLevel;
-  final Flavor flavor;
+  final String brand;
+  final ChillType chillType;
+  final NicType nicType;
   final bool isOldMix;
   final bool isPreMix;
   final double targetNicStr;
@@ -54,7 +58,9 @@ class Formula {
     required this.slug,
     required this.name,
     required this.nicLevel,
-    required this.flavor,
+    required this.brand,
+    required this.chillType,
+    required this.nicType,
     required this.isOldMix,
     required this.isPreMix,
     required this.targetNicStr,
@@ -71,7 +77,9 @@ class Formula {
         id: d.id,
         slug: d.slug,
         name: d.name,
-        flavor: Flavor.fromDto(d.flavor),
+        brand: d.brand,
+        chillType: ChillType.fromDto(d.chillType),
+        nicType: NicType.fromDto(d.nicType),
         nicLevel: d.nicLevel,
         isOldMix: d.isOldMix,
         isPreMix: d.isPreMix,
@@ -92,8 +100,44 @@ class Formula {
 
   @override
   String toString() => 'Formula: {name: $name}';
+}
 
-  String get brand => flavor.brand;
-  ChillType get chillType => flavor.chillType;
-  NicType get nicType => flavor.nicType;
+enum ChillType {
+  chilled,
+  nonChilled;
+
+  @override
+  String toString() {
+    return switch (this) {
+      ChillType.chilled => 'Chilled',
+      ChillType.nonChilled => 'Non-chilled',
+    };
+  }
+
+  static ChillType fromDto(ChillTypeDto c) {
+    return switch (c) {
+      ChillTypeDto.chilled => ChillType.chilled,
+      ChillTypeDto.nonChilled => ChillType.nonChilled,
+    };
+  }
+}
+
+enum NicType {
+  freebase,
+  salt;
+
+  @override
+  String toString() {
+    return switch (this) {
+      NicType.freebase => 'Freebase',
+      NicType.salt => 'Salt',
+    };
+  }
+
+  static NicType fromDto(NicTypeDto n) {
+    return switch (n) {
+      NicTypeDto.freebase => NicType.freebase,
+      NicTypeDto.salt => NicType.salt,
+    };
+  }
 }
