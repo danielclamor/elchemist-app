@@ -12,7 +12,8 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
     required this.order,
   });
 
-  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus? status) {
+  ProductionOrderStatusChip _getStatusChip(
+      bool isCanceled, ProductionOrderStatus? status) {
     if (status == null) {
       return ProductionOrderStatusChip(
         labelIcon: null,
@@ -22,7 +23,10 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
       );
     }
 
-    return ProductionOrderStatusChip.fromStatus(status: status);
+    return ProductionOrderStatusChip.fromStatus(
+      isCanceled: isCanceled,
+      status: status,
+    );
   }
 
   @override
@@ -95,7 +99,7 @@ class EliquidPastOrdersPreviewListTile extends StatelessWidget {
               flex: 2,
               child: Container(
                 alignment: AlignmentGeometry.centerLeft,
-                child: _getStatusChip(order.status),
+                child: _getStatusChip(order.isCanceled, order.status),
               ),
             ),
           ],

@@ -44,7 +44,8 @@ class ProductionOrderDetailScreen extends ConsumerStatefulWidget {
 
 class _ProductionOrderDetailScreenState
     extends ConsumerState<ProductionOrderDetailScreen> {
-  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus? status) {
+  ProductionOrderStatusChip _getStatusChip(
+      bool isCanceled, ProductionOrderStatus? status) {
     if (status == null) {
       return ProductionOrderStatusChip(
         labelIcon: null,
@@ -54,7 +55,8 @@ class _ProductionOrderDetailScreenState
       );
     }
 
-    return ProductionOrderStatusChip.fromStatus(status: status);
+    return ProductionOrderStatusChip.fromStatus(
+        isCanceled: isCanceled, status: status);
   }
 
   ProductionOrderMixChip? _getMixChip(
@@ -353,6 +355,12 @@ class _ProductionOrderDetailScreenState
                                     ),
                                     _getStatusChip(
                                       async.when(
+                                        data: (data) =>
+                                            data?.isCanceled ?? false,
+                                        error: (e, _) => false,
+                                        loading: () => false,
+                                      ),
+                                      async.when(
                                         data: (data) => data?.status,
                                         error: (e, _) => null,
                                         loading: () => null,
@@ -362,7 +370,10 @@ class _ProductionOrderDetailScreenState
                                       data: (data) => data != null
                                           ? _getMixChip(
                                                 data.mixSessionMixNumber,
-                                                _getStatusChip(data.status),
+                                                _getStatusChip(
+                                                  data.isCanceled,
+                                                  data.status,
+                                                ),
                                               ) ??
                                               SizedBox.shrink()
                                           : SizedBox.shrink(),

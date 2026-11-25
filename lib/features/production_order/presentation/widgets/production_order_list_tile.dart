@@ -25,7 +25,8 @@ class ProductionOrderListTile extends ConsumerStatefulWidget {
 
 class _ProductionOrderListTileState
     extends ConsumerState<ProductionOrderListTile> {
-  ProductionOrderStatusChip _getStatusChip(ProductionOrderStatus? status) {
+  ProductionOrderStatusChip _getStatusChip(
+      bool isCanceled, ProductionOrderStatus? status) {
     if (status == null) {
       return ProductionOrderStatusChip(
         labelIcon: null,
@@ -35,7 +36,10 @@ class _ProductionOrderListTileState
       );
     }
 
-    return ProductionOrderStatusChip.fromStatus(status: status);
+    return ProductionOrderStatusChip.fromStatus(
+      isCanceled: isCanceled,
+      status: status,
+    );
   }
 
   ProductionOrderMixChip? _getMixChip(
@@ -59,7 +63,10 @@ class _ProductionOrderListTileState
 
     final isArchived = order.isArchived;
 
-    final ProductionOrderStatusChip statusChip = _getStatusChip(order.status);
+    final ProductionOrderStatusChip statusChip = _getStatusChip(
+      order.isCanceled,
+      order.status,
+    );
     final ProductionOrderMixChip? mixChip =
         _getMixChip(order.mixSessionMixNumber, statusChip);
     final String formattedDate = order.createdAt.toTileDateString();
